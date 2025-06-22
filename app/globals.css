@@ -177,3 +177,32 @@ body {
     width: max-content;
   }
 }
+
+/* Custom Neon Button */
+.btn-sidebar-neon {
+  position: relative;
+  background-color: transparent;
+  color: #a7f3d0; /* emerald-200 */
+  border: 1px solid #34d399; /* emerald-400 */
+  box-shadow: 0 0 5px #34d399, 0 0 10px #34d399;
+  transition: all 0.3s ease;
+}
+
+.btn-sidebar-neon:hover {
+  color: #ffffff;
+  background-color: #34d399;
+  box-shadow: 0 0 10px #34d399, 0 0 20px #34d399;
+}
+
+.btn-sidebar-neon-active {
+  background-color: #10b981; /* emerald-600 */
+  color: #ffffff;
+  box-shadow: 0 0 8px #10b981, 0 0 15px #10b981;
+  border-color: #10b981;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}

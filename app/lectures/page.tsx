@@ -106,53 +106,56 @@ export default function LecturesPage() {
           <p className="text-muted-foreground">Gestiona y lee tus materiales de estudio</p>
         </div>
 
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="btn-green-neon">Crear Nueva Lecture</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Agregar Nueva Lectura</DialogTitle>
-              <DialogDescription>Crea una nueva lectura para tu biblioteca</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Título</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Título de la lectura"
-                />
+        <div className="flex items-center gap-4">
+          <Badge variant="outline">{lectures.length}/10 lectures</Badge>
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button>Crear Nueva Lecture</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Agregar Nueva Lectura</DialogTitle>
+                <DialogDescription>Crea una nueva lectura para tu biblioteca</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título</Label>
+                  <Input
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="Título de la lectura"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Descripción</Label>
+                  <Input
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Breve descripción"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="content">Contenido</Label>
+                  <Textarea
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    placeholder="Contenido de la lectura..."
+                    rows={6}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleAddLecture}>Agregar</Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Descripción</Label>
-                <Input
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Breve descripción"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="content">Contenido</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  placeholder="Contenido de la lectura..."
-                  rows={6}
-                />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button className="btn-green-neon" onClick={handleAddLecture}>Agregar</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Grid de lecturas */}
@@ -238,7 +241,7 @@ export default function LecturesPage() {
               <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
                 Cancelar
               </Button>
-              <Button className="btn-green-neon" onClick={handleEditLecture}>Guardar Cambios</Button>
+              <Button onClick={handleEditLecture}>Guardar Cambios</Button>
             </div>
           </div>
         </DialogContent>

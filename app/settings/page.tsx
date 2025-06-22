@@ -40,7 +40,10 @@ export default function Settings() {
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="tu@email.com" />
             </div>
-            <Button className="btn-green-neon">Guardar Cambios</Button>
+            <div className="flex items-center gap-2">
+              <Button>Guardar Cambios</Button>
+              <Button variant="destructive">Restablecer</Button>
+            </div>
           </CardContent>
         </Card>
 

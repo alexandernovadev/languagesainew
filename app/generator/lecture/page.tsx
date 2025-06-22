@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -105,7 +105,7 @@ export default function LectureGenerator() {
                   <Button type="button" variant="outline" onClick={() => setIsFilterOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button type="submit" className="btn-green-neon">Aplicar Filtros</Button>
+                  <Button type="submit">Aplicar Filtros</Button>
                 </div>
               </form>
             </DialogContent>
@@ -139,7 +139,9 @@ export default function LectureGenerator() {
                 <Input id="quickDuration" type="number" placeholder="45" min="10" max="120" />
               </div>
             </div>
-            <Button className="w-full btn-green-neon">Generar Presentación Rápida</Button>
+            <CardFooter>
+              <Button className="w-full">Generar Presentación Rápida</Button>
+            </CardFooter>
           </CardContent>
         </Card>
 

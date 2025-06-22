@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { RotateCcw, ChevronLeft, ChevronRight, Shuffle, RefreshCw } from "lucide-react"
+import { RotateCcw, ChevronLeft, ChevronRight, Shuffle, RefreshCw, X, Check } from "lucide-react"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLayout } from "@/components/layouts/page-layout"
 import { StatsGrid } from "@/components/ui/stats-grid"
@@ -140,10 +140,10 @@ export default function AnkiGame() {
 
         {isFlipped && (
           <>
-            <Button variant="destructive" onClick={handleDontKnow}>
+            <Button variant="outline" onClick={handleDontKnow}>
               No la sabía
             </Button>
-            <Button className="btn-green-neon" onClick={handleKnow}>
+            <Button onClick={handleKnow}>
               La sabía
             </Button>
           </>
