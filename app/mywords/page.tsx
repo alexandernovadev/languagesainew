@@ -138,8 +138,8 @@ export default function MyWordsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto px-2 sm:px-4 md:px-8 space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Words</h1>
           <p className="text-muted-foreground">Tu vocabulario personal con pronunciación</p>
@@ -210,16 +210,16 @@ export default function MyWordsPage() {
           <CardDescription>Haz clic en el icono de audio para escuchar la pronunciación</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="table-container">
+          <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[150px]">Word</TableHead>
-                  <TableHead className="w-[200px]">IPA</TableHead>
-                  <TableHead className="w-[200px]">Mean (SP)</TableHead>
-                  <TableHead className="w-[120px]">Seen</TableHead>
-                  <TableHead className="w-[100px]">Parlanciso</TableHead>
-                  <TableHead className="w-[100px]">Acciones</TableHead>
+                  <TableHead>Word</TableHead>
+                  <TableHead>IPA</TableHead>
+                  <TableHead>Mean (SP)</TableHead>
+                  <TableHead>Seen</TableHead>
+                  <TableHead>Parlanciso</TableHead>
+                  <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -228,7 +228,7 @@ export default function MyWordsPage() {
                     <TableCell className="font-medium">{word.word}</TableCell>
                     <TableCell className="font-mono text-sm">{word.ipa}</TableCell>
                     <TableCell>{word.meaning}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{word.seen.toLocaleDateString()}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{new Date(word.seen).toLocaleDateString()}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
