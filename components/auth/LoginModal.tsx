@@ -2,8 +2,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { User as UserIcon, Lock } from "lucide-react"
-import { useLogin } from "./useLogin"
 import React from "react"
+import { useLogin } from "./useLogin"
 
 interface LoginModalProps {
   open: boolean
