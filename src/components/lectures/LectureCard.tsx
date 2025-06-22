@@ -29,8 +29,8 @@ export function LectureCard({ lecture, onView, onEdit, onDelete }: LectureCardPr
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 w-full group">
         <img
-          src={lecture.img || "/placeholder.svg"}
-          alt={lecture.language}
+          src={lecture.img || "/images/noImage.png"}
+          alt={title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">

@@ -131,11 +131,11 @@ export default function LecturesPage() {
       </div>
 
       {/* Grid de lecturas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {loading ? (
-          <div className="col-span-3 text-center py-10">Cargando...</div>
+          <div className="col-span-full text-center py-10">Cargando...</div>
         ) : lectures.length === 0 ? (
-          <div className="col-span-3 text-center py-10 text-muted-foreground">
+          <div className="col-span-full text-center py-10 text-muted-foreground">
             No hay lecturas disponibles.
           </div>
         ) : (
