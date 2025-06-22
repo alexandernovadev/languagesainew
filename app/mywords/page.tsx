@@ -150,9 +150,9 @@ export default function MyWordsPage() {
 
           <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
-              <Button disabled={words.length >= 20}>
+              <Button className="btn-green-neon" disabled={words.length >= 20}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nueva Palabra
+                Agregar Palabra
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -192,7 +192,7 @@ export default function MyWordsPage() {
                   <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button onClick={handleAddWord}>Agregar</Button>
+                  <Button className="btn-green-neon" onClick={handleAddWord}>Agregar</Button>
                 </div>
               </div>
             </DialogContent>
@@ -343,7 +343,7 @@ export default function MyWordsPage() {
               <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleEditWord}>Guardar Cambios</Button>
+              <Button className="btn-green-neon" onClick={handleEditWord}>Guardar Cambios</Button>
             </div>
           </div>
         </DialogContent>

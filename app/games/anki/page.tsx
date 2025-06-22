@@ -5,6 +5,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { RotateCcw, ChevronLeft, ChevronRight, Shuffle, RefreshCw } from "lucide-react"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLayout } from "@/components/layouts/page-layout"
+import { StatsGrid } from "@/components/ui/stats-grid"
+import { ProgressBar } from "@/components/ui/progress-bar"
+import { useGameStats } from "@/hooks/use-game-stats"
 
 // Datos de ejemplo para las tarjetas
 const flashcards = [
@@ -21,32 +26,25 @@ const flashcards = [
 ]
 
 export default function AnkiGame() {
-  const [currentCard, setCurrentCard] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
-  const [completedCards, setCompletedCards] = useState<number[]>([])
+  const gameStats = useGameStats(flashcards.length)
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped)
   }
 
   const handleNext = () => {
-    if (currentCard < flashcards.length - 1) {
-      setCurrentCard(currentCard + 1)
-      setIsFlipped(false)
-    }
+    gameStats.next()
+    setIsFlipped(false)
   }
 
   const handlePrevious = () => {
-    if (currentCard > 0) {
-      setCurrentCard(currentCard - 1)
-      setIsFlipped(false)
-    }
+    gameStats.previous()
+    setIsFlipped(false)
   }
 
   const handleKnow = () => {
-    if (!completedCards.includes(flashcards[currentCard].id)) {
-      setCompletedCards([...completedCards, flashcards[currentCard].id])
-    }
+    gameStats.markAsCompleted(flashcards[gameStats.currentIndex].id)
     handleNext()
   }
 
@@ -55,75 +53,46 @@ export default function AnkiGame() {
   }
 
   const handleShuffle = () => {
-    // En una implementación real, aquí barajarías las cartas
-    setCurrentCard(0)
+    gameStats.reset()
     setIsFlipped(false)
-    setCompletedCards([])
   }
 
   const handleReset = () => {
-    setCurrentCard(0)
+    gameStats.reset()
     setIsFlipped(false)
-    setCompletedCards([])
   }
 
-  const progress = ((currentCard + 1) / flashcards.length) * 100
-  const correctAnswers = completedCards.length
+  const stats = [
+    { label: "Tarjeta actual", value: gameStats.currentIndex + 1 },
+    { label: "Total de tarjetas", value: gameStats.totalItems },
+    { label: "Conocidas", value: gameStats.correctAnswers },
+    { label: "Progreso", value: Math.round(gameStats.progress), suffix: "%" },
+  ]
+
+  const actions = (
+    <>
+      <Button variant="outline" onClick={handleShuffle}>
+        <Shuffle className="h-4 w-4 mr-2" />
+        Barajar
+      </Button>
+      <Button variant="outline" onClick={handleReset}>
+        <RefreshCw className="h-4 w-4 mr-2" />
+        Reiniciar
+      </Button>
+    </>
+  )
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Anki Game</h1>
-          <p className="text-muted-foreground">Practica vocabulario con tarjetas interactivas</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleShuffle}>
-            <Shuffle className="h-4 w-4 mr-2" />
-            Barajar
-          </Button>
-          <Button variant="outline" onClick={handleReset}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Reiniciar
-          </Button>
-        </div>
-      </div>
+    <PageLayout>
+      <PageHeader
+        title="Anki Game"
+        description="Practica vocabulario con tarjetas interactivas"
+        actions={actions}
+      />
 
-      {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold">{currentCard + 1}</div>
-            <p className="text-xs text-muted-foreground">Tarjeta actual</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold">{flashcards.length}</div>
-            <p className="text-xs text-muted-foreground">Total de tarjetas</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold">{correctAnswers}</div>
-            <p className="text-xs text-muted-foreground">Conocidas</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold">{Math.round(progress)}%</div>
-            <p className="text-xs text-muted-foreground">Progreso</p>
-          </CardContent>
-        </Card>
-      </div>
+      <StatsGrid stats={stats} />
 
-      {/* Barra de progreso */}
-      <div className="w-full bg-secondary rounded-full h-2">
-        <div
-          className="bg-primary h-2 rounded-full transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
+      <ProgressBar progress={gameStats.progress} />
 
       {/* Tarjeta principal */}
       <div className="flex justify-center">
@@ -134,9 +103,9 @@ export default function AnkiGame() {
               <Card className="flip-card-front absolute w-full h-full backface-hidden">
                 <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
                   <Badge variant="secondary" className="mb-4">
-                    {flashcards[currentCard].category}
+                    {flashcards[gameStats.currentIndex].category}
                   </Badge>
-                  <h2 className="text-3xl font-bold mb-4">{flashcards[currentCard].front}</h2>
+                  <h2 className="text-3xl font-bold mb-4">{flashcards[gameStats.currentIndex].front}</h2>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <RotateCcw className="h-4 w-4 mr-1" />
                     Haz clic para voltear
@@ -148,9 +117,9 @@ export default function AnkiGame() {
               <Card className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
                 <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center bg-primary/5">
                   <Badge variant="secondary" className="mb-4">
-                    {flashcards[currentCard].category}
+                    {flashcards[gameStats.currentIndex].category}
                   </Badge>
-                  <h2 className="text-3xl font-bold mb-4 text-primary">{flashcards[currentCard].back}</h2>
+                  <h2 className="text-3xl font-bold mb-4 text-primary">{flashcards[gameStats.currentIndex].back}</h2>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <RotateCcw className="h-4 w-4 mr-1" />
                     Haz clic para voltear
@@ -164,7 +133,7 @@ export default function AnkiGame() {
 
       {/* Controles */}
       <div className="flex justify-center gap-4">
-        <Button variant="outline" onClick={handlePrevious} disabled={currentCard === 0}>
+        <Button variant="outline" onClick={handlePrevious} disabled={gameStats.currentIndex === 0}>
           <ChevronLeft className="h-4 w-4 mr-1" />
           Anterior
         </Button>
@@ -174,13 +143,13 @@ export default function AnkiGame() {
             <Button variant="destructive" onClick={handleDontKnow}>
               No la sabía
             </Button>
-            <Button variant="default" onClick={handleKnow}>
+            <Button className="btn-green-neon" onClick={handleKnow}>
               La sabía
             </Button>
           </>
         )}
 
-        <Button variant="outline" onClick={handleNext} disabled={currentCard === flashcards.length - 1}>
+        <Button variant="outline" onClick={handleNext} disabled={gameStats.currentIndex === flashcards.length - 1}>
           Siguiente
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
@@ -200,19 +169,14 @@ export default function AnkiGame() {
           transform: rotateY(180deg);
         }
         
-        .flip-card-front,
-        .flip-card-back {
+        .backface-hidden {
           backface-visibility: hidden;
         }
         
         .rotate-y-180 {
           transform: rotateY(180deg);
         }
-        
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
       `}</style>
-    </div>
+    </PageLayout>
   )
 }

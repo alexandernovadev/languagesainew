@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -5,14 +7,16 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLayout } from "@/components/layouts/page-layout"
 
 export default function Settings() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Configuración</h1>
-        <p className="text-muted-foreground">Gestiona la configuración de tu aplicación</p>
-      </div>
+    <PageLayout>
+      <PageHeader
+        title="Configuración"
+        description="Gestiona la configuración de tu aplicación"
+      />
 
       <div className="grid gap-6">
         {/* Perfil de Usuario */}
@@ -36,33 +40,30 @@ export default function Settings() {
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="tu@email.com" />
             </div>
-            <Button>Guardar Cambios</Button>
+            <Button className="btn-green-neon">Guardar Cambios</Button>
           </CardContent>
         </Card>
 
-        {/* Configuración de la Aplicación */}
+        {/* Configuración General */}
         <Card>
           <CardHeader>
-            <CardTitle>Configuración de la Aplicación</CardTitle>
-            <CardDescription>Personaliza el comportamiento de la aplicación</CardDescription>
+            <CardTitle>Configuración General</CardTitle>
+            <CardDescription>Preferencias básicas de la aplicación</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Notificaciones</Label>
+                <div className="text-sm font-medium">Notificaciones por Email</div>
                 <div className="text-sm text-muted-foreground">Recibir notificaciones por email</div>
               </div>
               <Switch />
             </div>
-
-            <Separator />
-
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Actualizaciones Automáticas</Label>
+                <div className="text-sm font-medium">Actualizaciones Automáticas</div>
                 <div className="text-sm text-muted-foreground">Instalar actualizaciones automáticamente</div>
               </div>
-              <Switch defaultChecked />
+              <Switch />
             </div>
           </CardContent>
         </Card>
@@ -71,33 +72,26 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <CardTitle>Información del Sistema</CardTitle>
-            <CardDescription>Detalles sobre la versión y el estado de la aplicación</CardDescription>
+            <CardDescription>Detalles técnicos de la aplicación</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Versión</span>
-              <Badge variant="secondary">v1.0.0</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Estado</span>
-              <Badge variant="default">Activo</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Última actualización</span>
-              <span className="text-sm text-muted-foreground">Hace 2 días</span>
-            </div>
-            <Separator />
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                Verificar Actualizaciones
-              </Button>
-              <Button variant="outline" size="sm">
-                Exportar Configuración
-              </Button>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Versión</span>
+                <Badge variant="secondary">v1.0.0</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Última Actualización</span>
+                <span className="text-sm text-muted-foreground">Hace 2 días</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Estado</span>
+                <Badge variant="default">Operativo</Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageLayout>
   )
 }

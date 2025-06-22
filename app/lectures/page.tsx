@@ -108,10 +108,7 @@ export default function LecturesPage() {
 
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Nueva Lectura
-            </Button>
+            <Button className="btn-green-neon">Crear Nueva Lecture</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
@@ -151,7 +148,7 @@ export default function LecturesPage() {
                 <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
                   Cancelar
                 </Button>
-                <Button onClick={handleAddLecture}>Agregar</Button>
+                <Button className="btn-green-neon" onClick={handleAddLecture}>Agregar</Button>
               </div>
             </div>
           </DialogContent>
@@ -241,7 +238,7 @@ export default function LecturesPage() {
               <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleEditLecture}>Guardar Cambios</Button>
+              <Button className="btn-green-neon" onClick={handleEditLecture}>Guardar Cambios</Button>
             </div>
           </div>
         </DialogContent>

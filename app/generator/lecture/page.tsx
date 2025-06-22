@@ -2,7 +2,6 @@
 
 import type React from "react"
 
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,111 +17,101 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Filter, BookOpen, Download, Eye, Clock } from "lucide-react"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLayout } from "@/components/layouts/page-layout"
+import { useGenerator } from "@/hooks/use-generator"
 
 export default function LectureGenerator() {
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [filters, setFilters] = useState({
-    topic: "",
-    objectives: "",
-    level: "",
-    difficulty: "",
-  })
-
-  const handleFilterSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Filtros aplicados:", filters)
-    setIsFilterOpen(false)
-  }
+  const { isFilterOpen, setIsFilterOpen, filters, updateFilter, handleFilterSubmit } = useGenerator('lecture')
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Lecture Generator</h1>
-          <p className="text-muted-foreground">Crea presentaciones y material educativo con IA</p>
-        </div>
-
-        <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              <Filter className="h-4 w-4" />
-              Filtros
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Configurar Presentación</DialogTitle>
-              <DialogDescription>Define los parámetros para generar tu material educativo</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleFilterSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="topic">Tema de la Presentación</Label>
-                <Textarea
-                  id="topic"
-                  placeholder="Describe el tema principal de la presentación..."
-                  value={filters.topic}
-                  onChange={(e) => setFilters({ ...filters, topic: e.target.value })}
-                  rows={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="objectives">Objetivos de Aprendizaje</Label>
-                <Textarea
-                  id="objectives"
-                  placeholder="¿Qué deben aprender los estudiantes?..."
-                  value={filters.objectives}
-                  onChange={(e) => setFilters({ ...filters, objectives: e.target.value })}
-                  rows={3}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+    <PageLayout>
+      <PageHeader
+        title="Lecture Generator"
+        description="Crea presentaciones y material educativo con IA"
+        actions={
+          <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filtros
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Configurar Presentación</DialogTitle>
+                <DialogDescription>Define los parámetros para generar tu material educativo</DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleFilterSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="level">Nivel</Label>
-                  <Select value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar nivel" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="A1">A1 - Principiante</SelectItem>
-                      <SelectItem value="A2">A2 - Elemental</SelectItem>
-                      <SelectItem value="B1">B1 - Intermedio</SelectItem>
-                      <SelectItem value="B2">B2 - Intermedio Alto</SelectItem>
-                      <SelectItem value="C1">C1 - Avanzado</SelectItem>
-                      <SelectItem value="C2">C2 - Maestría</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="topic">Tema de la Presentación</Label>
+                  <Textarea
+                    id="topic"
+                    placeholder="Describe el tema principal de la presentación..."
+                    value={filters.topic}
+                    onChange={(e) => updateFilter('topic', e.target.value)}
+                    rows={3}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="difficulty">Dificultad</Label>
-                  <Select
-                    value={filters.difficulty}
-                    onValueChange={(value) => setFilters({ ...filters, difficulty: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar dificultad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="easy">Fácil</SelectItem>
-                      <SelectItem value="medium">Medio</SelectItem>
-                      <SelectItem value="hard">Difícil</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="objectives">Objetivos de Aprendizaje</Label>
+                  <Textarea
+                    id="objectives"
+                    placeholder="¿Qué deben aprender los estudiantes?..."
+                    value={filters.objectives}
+                    onChange={(e) => updateFilter('objectives', e.target.value)}
+                    rows={3}
+                  />
                 </div>
-              </div>
 
-              <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsFilterOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit">Aplicar Filtros</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="level">Nivel</Label>
+                    <Select value={filters.level} onValueChange={(value) => updateFilter('level', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar nivel" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A1">A1 - Principiante</SelectItem>
+                        <SelectItem value="A2">A2 - Elemental</SelectItem>
+                        <SelectItem value="B1">B1 - Intermedio</SelectItem>
+                        <SelectItem value="B2">B2 - Intermedio Alto</SelectItem>
+                        <SelectItem value="C1">C1 - Avanzado</SelectItem>
+                        <SelectItem value="C2">C2 - Maestría</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="difficulty">Dificultad</Label>
+                    <Select
+                      value={filters.difficulty}
+                      onValueChange={(value) => updateFilter('difficulty', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar dificultad" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="easy">Fácil</SelectItem>
+                        <SelectItem value="medium">Medio</SelectItem>
+                        <SelectItem value="hard">Difícil</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-4">
+                  <Button type="button" variant="outline" onClick={() => setIsFilterOpen(false)}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" className="btn-green-neon">Aplicar Filtros</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        }
+      />
 
       {/* Contenido principal */}
       <div className="grid gap-6">
@@ -150,7 +139,7 @@ export default function LectureGenerator() {
                 <Input id="quickDuration" type="number" placeholder="45" min="10" max="120" />
               </div>
             </div>
-            <Button className="w-full">Generar Presentación Rápida</Button>
+            <Button className="w-full btn-green-neon">Generar Presentación Rápida</Button>
           </CardContent>
         </Card>
 
@@ -198,9 +187,7 @@ export default function LectureGenerator() {
                         <Clock className="h-3 w-3" />
                         45 min
                       </span>
-                      <span>
-                        Generado hace {lecture} día{lecture > 1 ? "s" : ""}
-                      </span>
+                      <span>Generado hace {lecture} hora{lecture > 1 ? "s" : ""}</span>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -219,6 +206,6 @@ export default function LectureGenerator() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageLayout>
   )
 }

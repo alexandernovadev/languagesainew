@@ -124,7 +124,7 @@ export default function VerbsParticipios() {
             <RotateCcw className="h-4 w-4 mr-2" />
             Limpiar
           </Button>
-          <Button onClick={checkAnswers} disabled={showAnswers}>
+          <Button className="btn-green-neon" onClick={checkAnswers} disabled={showAnswers}>
             <Check className="h-4 w-4 mr-2" />
             Verificar
           </Button>

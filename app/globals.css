@@ -64,8 +64,8 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    /* Cambio a verde neón */
-    --primary: 142 76% 36%;
+    /* Verde vibrante pero no intrusivo */
+    --primary: 142 70% 45%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -77,7 +77,7 @@ body {
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 142 76% 36%;
+    --ring: 142 70% 45%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -85,12 +85,12 @@ body {
     --chart-5: 340 75% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary: 142 70% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142 76% 36%;
+    --sidebar-ring: 142 70% 45%;
   }
 }
 
@@ -103,98 +103,45 @@ body {
   }
 }
 
-/* Efectos neón para botones */
+/* Efectos simplificados */
 @layer components {
-  .btn-neon {
-    position: relative;
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    border: 1px solid hsl(var(--primary));
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.5), 0 0 10px hsl(var(--primary) / 0.3), 0 0 15px
-      hsl(var(--primary) / 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .btn-neon:hover {
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.8), 0 0 20px hsl(var(--primary) / 0.6), 0 0 30px
-      hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2);
-    transform: translateY(-1px);
-  }
-
-  .btn-neon:active {
-    transform: translateY(0);
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.6), 0 0 10px hsl(var(--primary) / 0.4);
-  }
-
-  /* Efecto neón para botones outline */
-  .btn-neon-outline {
-    background: transparent;
+  /* Botón verde con estilo neón sutil */
+  .btn-green-neon {
+    background: white;
     color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary));
-    box-shadow: inset 0 0 5px hsl(var(--primary) / 0.2), 0 0 5px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.3);
     transition: all 0.3s ease;
   }
 
-  .btn-neon-outline:hover {
-    background: hsl(var(--primary) / 0.1);
-    box-shadow: inset 0 0 10px hsl(var(--primary) / 0.3), 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px
-      hsl(var(--primary) / 0.3);
+  .btn-green-neon:hover {
+    background: hsl(var(--primary) / 0.05);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.5);
     transform: translateY(-1px);
   }
 
-  /* Efecto neón para sidebar items activos */
+  .btn-green-neon:active {
+    transform: translateY(0);
+    box-shadow: 0 0 3px hsl(var(--primary) / 0.4);
+  }
+
+  /* Efecto sutil para sidebar items activos */
   .sidebar-neon-active {
-    background: hsl(var(--primary) / 0.15);
+    background: hsl(var(--primary) / 0.08);
     color: hsl(var(--primary));
     border-left: 2px solid hsl(var(--primary));
-    box-shadow: inset 0 0 10px hsl(var(--primary) / 0.2), 0 0 5px hsl(var(--primary) / 0.3);
   }
 
-  /* Efecto neón para cards */
-  .card-neon {
-    border: 1px solid hsl(var(--border));
-    transition: all 0.3s ease;
+  /* Efecto sutil para hover */
+  .hover-neon:hover {
+    background: hsl(var(--primary) / 0.05);
+    border-color: hsl(var(--primary) / 0.3);
   }
 
-  .card-neon:hover {
-    border-color: hsl(var(--primary) / 0.5);
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.1), 0 0 20px hsl(var(--primary) / 0.05);
-  }
-
-  /* Efecto neón para inputs focus */
-  .input-neon:focus {
+  /* Efecto sutil para focus */
+  .focus-neon:focus {
     border-color: hsl(var(--primary));
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.3), 0 0 10px hsl(var(--primary) / 0.1);
-  }
-
-  /* Efecto neón para badges */
-  .badge-neon {
-    background: hsl(var(--primary) / 0.2);
-    color: hsl(var(--primary));
-    border: 1px solid hsl(var(--primary) / 0.5);
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.2);
-  }
-
-  /* Animación de pulso neón */
-  .neon-pulse {
-    animation: neon-pulse 2s ease-in-out infinite alternate;
-  }
-
-  @keyframes neon-pulse {
-    from {
-      box-shadow: 0 0 5px hsl(var(--primary) / 0.5), 0 0 10px hsl(var(--primary) / 0.3), 0 0 15px
-        hsl(var(--primary) / 0.2);
-    }
-    to {
-      box-shadow: 0 0 10px hsl(var(--primary) / 0.8), 0 0 20px hsl(var(--primary) / 0.6), 0 0 30px
-        hsl(var(--primary) / 0.4);
-    }
-  }
-
-  /* Efecto neón para texto */
-  .text-neon {
-    color: hsl(var(--primary));
-    text-shadow: 0 0 5px hsl(var(--primary) / 0.5), 0 0 10px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
   }
 
   /* Mejoras para scroll horizontal en tablas */
@@ -218,12 +165,10 @@ body {
   .table-container::-webkit-scrollbar-thumb {
     background: hsl(var(--primary));
     border-radius: 4px;
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.3);
   }
 
   .table-container::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary) / 0.8);
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
   }
 
   /* Asegurar que las tablas mantengan su ancho mínimo */
