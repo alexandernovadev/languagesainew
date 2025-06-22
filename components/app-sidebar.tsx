@@ -16,6 +16,7 @@ import {
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/lib/store/user-store";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { useState } from "react";
 import {
   Dialog,
@@ -161,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Button size="sm" variant="ghost" className="w-full justify-start gap-2">
                     <Avatar className="size-7">
                       <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
-                      <AvatarFallback>{(user?.firstName?.[0] || user?.username?.[0] || "U").toUpperCase()}</AvatarFallback>
+                      <AvatarFallbackClient user={user} />
                     </Avatar>
                     <span className="text-xs text-muted-foreground">
                       {user?.firstName || user?.username || "Usuario"}
@@ -173,7 +174,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <div className="flex items-center gap-2">
                       <Avatar className="size-8">
                         <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
-                        <AvatarFallback>{(user?.firstName?.[0] || user?.username?.[0] || "U").toUpperCase()}</AvatarFallback>
+                        <AvatarFallbackClient user={user} />
                       </Avatar>
                       <div>
                         <div className="font-semibold text-sm">
