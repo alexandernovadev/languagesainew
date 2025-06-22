@@ -1,0 +1,27 @@
+export interface LectureType {
+  value: string;
+  label: string;
+}
+
+export const lectureTypes: LectureType[] = [
+  { value: "analysis", label: "Análisis" },
+  { value: "argumentative", label: "Argumentativo" },
+  { value: "narrative", label: "Narrativo" },
+  { value: "descriptive", label: "Descriptivo" },
+  { value: "expository", label: "Expositivo" },
+  { value: "persuasive", label: "Persuasivo" },
+  { value: "creative", label: "Creativo" },
+  { value: "technical", label: "Técnico" },
+  { value: "scientific", label: "Científico" },
+  { value: "historical", label: "Histórico" },
+  { value: "biographical", label: "Biográfico" },
+  { value: "fiction", label: "Ficción" },
+  { value: "review", label: "Reseña" },
+  { value: "report", label: "Reporte" },
+  { value: "case_study", label: "Estudio de Caso" },
+  { value: "tutorial", label: "Tutorial" },
+  { value: "speech", label: "Discurso" },
+  { value: "poetry", label: "Poesía" },
+  { value: "dialogue", label: "Diálogo" },
+  { value: "letter", label: "Carta" },
+]; 

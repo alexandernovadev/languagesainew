@@ -110,19 +110,21 @@ export default function LecturesPage() {
             <DialogTrigger asChild>
               <Button onClick={openAddModal}>Crear Nueva Lecture</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden">
-              <DialogHeader className="pb-4">
+            <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
+              <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
                 <DialogTitle className="text-xl">Crear Nueva Lectura</DialogTitle>
                 <DialogDescription>
                   Crea una nueva lectura para tu biblioteca. Completa todos los campos para una mejor experiencia.
                 </DialogDescription>
               </DialogHeader>
-              <LectureForm
-                onSubmit={handleAddLecture}
-                onCancel={closeAddModal}
-                loading={actionLoading.post}
-                submitText="Crear Lectura"
-              />
+              <div className="flex-grow overflow-y-auto px-6 pb-6">
+                <LectureForm
+                  onSubmit={handleAddLecture}
+                  onCancel={closeAddModal}
+                  loading={actionLoading.post}
+                  submitText="Crear Lectura"
+                />
+              </div>
             </DialogContent>
           </Dialog>
         </div>
@@ -158,20 +160,22 @@ export default function LecturesPage() {
 
       {/* Modal de edición */}
       <Dialog open={isEditModalOpen} onOpenChange={closeEditModal}>
-        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden">
-          <DialogHeader className="pb-4">
+        <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
+          <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
             <DialogTitle className="text-xl">Editar Lectura</DialogTitle>
             <DialogDescription>
               Modifica los detalles de la lectura. Todos los campos son importantes para una mejor experiencia.
             </DialogDescription>
           </DialogHeader>
-          <LectureForm
-            initialData={getSelectedLecture()}
-            onSubmit={handleEditLecture}
-            onCancel={closeEditModal}
-            loading={actionLoading.put}
-            submitText="Guardar Cambios"
-          />
+          <div className="flex-grow overflow-y-auto px-6 pb-6">
+            <LectureForm
+              initialData={getSelectedLecture()}
+              onSubmit={handleEditLecture}
+              onCancel={closeEditModal}
+              loading={actionLoading.put}
+              submitText="Guardar Cambios"
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
