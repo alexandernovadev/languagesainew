@@ -83,7 +83,7 @@ export default function StatisticsPage() {
 
       {/* Métricas principales */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Usuarios Activos</CardTitle>
             <Users className="h-4 w-4 text-primary" />
@@ -95,7 +95,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Sesiones Totales</CardTitle>
             <Activity className="h-4 w-4 text-primary" />
@@ -107,7 +107,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tiempo Promedio</CardTitle>
             <Clock className="h-4 w-4 text-primary" />
@@ -119,7 +119,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tasa de Retención</CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
@@ -134,7 +134,7 @@ export default function StatisticsPage() {
 
       {/* Gráficos principales */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Crecimiento Mensual</CardTitle>
             <CardDescription>Usuarios, sesiones y tiempo de uso por mes</CardDescription>
@@ -173,7 +173,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Popularidad de Lecturas</CardTitle>
             <CardDescription>Distribución de lecturas más consultadas</CardDescription>
@@ -203,7 +203,7 @@ export default function StatisticsPage() {
 
       {/* Más estadísticas */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Rendimiento en Juegos</CardTitle>
             <CardDescription>Precisión y completitud por juego</CardDescription>
@@ -227,7 +227,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Actividad Semanal</CardTitle>
             <CardDescription>Nivel de actividad por día de la semana</CardDescription>
@@ -251,7 +251,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Distribución de Tiempo</CardTitle>
             <CardDescription>Tiempo dedicado por actividad</CardDescription>
@@ -268,7 +268,7 @@ export default function StatisticsPage() {
       </div>
 
       {/* Progreso de aprendizaje */}
-      <Card className="card-neon">
+      <Card>
         <CardHeader>
           <CardTitle className="text-primary">Progreso por Nivel</CardTitle>
           <CardDescription>Avance en cada nivel de competencia</CardDescription>
@@ -290,7 +290,7 @@ export default function StatisticsPage() {
 
       {/* Métricas adicionales */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Palabras Aprendidas</CardTitle>
             <Brain className="h-4 w-4 text-primary" />
@@ -301,7 +301,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Exámenes Completados</CardTitle>
             <Award className="h-4 w-4 text-primary" />
@@ -312,7 +312,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Racha Actual</CardTitle>
             <Zap className="h-4 w-4 text-primary" />
@@ -323,7 +323,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Precisión Global</CardTitle>
             <Target className="h-4 w-4 text-primary" />
@@ -337,7 +337,7 @@ export default function StatisticsPage() {
 
       {/* Estadísticas detalladas */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Top Palabras Practicadas</CardTitle>
             <CardDescription>Las palabras más estudiadas esta semana</CardDescription>
@@ -368,7 +368,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader>
             <CardTitle className="text-primary">Logros Recientes</CardTitle>
             <CardDescription>Últimos hitos alcanzados</CardDescription>

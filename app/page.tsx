@@ -12,7 +12,7 @@ export default function Dashboard() {
 
       {/* Tarjetas de estadísticas */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total de Usuarios</CardTitle>
             <Users className="h-4 w-4 text-primary" />
@@ -23,7 +23,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ventas</CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
@@ -34,7 +34,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Actividad</CardTitle>
             <Activity className="h-4 w-4 text-primary" />
@@ -45,7 +45,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-neon">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Conversiones</CardTitle>
             <BarChart3 className="h-4 w-4 text-primary" />
@@ -59,7 +59,7 @@ export default function Dashboard() {
 
       {/* Contenido principal */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4 card-neon">
+        <Card className="col-span-4">
           <CardHeader>
             <CardTitle className="text-primary">Resumen</CardTitle>
             <CardDescription>Vista general de tu aplicación</CardDescription>
@@ -82,7 +82,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 card-neon">
+        <Card className="col-span-3">
           <CardHeader>
             <CardTitle className="text-primary">Acciones Rápidas</CardTitle>
             <CardDescription>Tareas comunes que puedes realizar</CardDescription>
