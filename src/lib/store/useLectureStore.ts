@@ -45,11 +45,26 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       const {data} = await lectureService.getLectures(page, limit);
       console.log("Data", data);
       
-      set((state) => ({
-        lectures: [...state.lectures, ...data.data],
-        totalPages: data.pages,
-        loading: false,
-      }));
+      set((state) => {
+        if (page === 1) {
+          // Si es la primera página, reemplazar completamente
+          return {
+            lectures: data.data,
+            totalPages: data.pages,
+            loading: false,
+          };
+        } else {
+          // Si no es la primera página, concatenar pero evitar duplicados
+          const existingIds = new Set(state.lectures.map(lecture => lecture._id));
+          const newLectures = data.data.filter((lecture: Lecture) => !existingIds.has(lecture._id));
+          
+          return {
+            lectures: [...state.lectures, ...newLectures],
+            totalPages: data.pages,
+            loading: false,
+          };
+        }
+      });
     } catch (error: any) {
       set({ errors: { ...get().errors, get: error.message }, loading: false });
     }
