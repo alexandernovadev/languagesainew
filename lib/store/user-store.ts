@@ -26,8 +26,7 @@ export const useUserStore = create<UserState>()(
         set({ loading: true, error: null });
         try {
           const { data } = await authService.login(username, password);
-          set({ user: null, token: data.token, loading: false });
-          // Optionally, decode user from token if needed
+          set({ user: data.user, token: data.token, loading: false });
         } catch (error: any) {
           set({ error: error.message || "Error de login", loading: false });
         }

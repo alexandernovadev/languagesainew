@@ -53,7 +53,7 @@ import {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const { token, logout, isAuthenticated } = useUserStore();
+  const { user, token, logout, isAuthenticated } = useUserStore();
   const [open, setOpen] = useState(false);
 
   return (
@@ -160,17 +160,39 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuTrigger asChild>
                   <Button size="sm" variant="ghost" className="w-full justify-start gap-2">
                     <Avatar className="size-7">
-                      <AvatarImage src="" alt="Usuario" />
-                      <AvatarFallback>U</AvatarFallback>
+                      <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
+                      <AvatarFallback>{(user?.firstName?.[0] || user?.username?.[0] || "U").toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <span>Usuario</span>
+                    <span className="text-xs text-muted-foreground">
+                      {user?.firstName || user?.username || "Usuario"}
+                    </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="size-8">
+                        <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
+                        <AvatarFallback>{(user?.firstName?.[0] || user?.username?.[0] || "U").toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-semibold text-sm">
+                          {user?.firstName || ""} {user?.lastName || ""}
+                        </div>
+                        <div className="text-xs text-muted-foreground">{user?.username}</div>
+                      </div>
+                    </div>
+                    {user?.email && (
+                      <div className="text-xs text-muted-foreground mt-1">{user.email}</div>
+                    )}
+                    {user?.role && (
+                      <div className="text-xs text-muted-foreground mt-0.5 capitalize">{user.role}</div>
+                    )}
+                  </div>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => { /* TODO: go to profile */ }}>
                     Mi perfil
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="text-red-600">
                     Cerrar sesión
                   </DropdownMenuItem>
