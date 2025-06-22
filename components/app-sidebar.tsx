@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { useUserStore } from "@/lib/store/user-store"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -24,82 +24,13 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-
-// Datos del menú
-const menuItems = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Configuración",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
-    title: "Lectures",
-    url: "/lectures",
-    icon: BookOpen,
-  },
-  {
-    title: "My Words",
-    url: "/mywords",
-    icon: BookOpen,
-  },
-  {
-    title: "Estadísticas",
-    url: "/statistics",
-    icon: BarChart3,
-  },
-]
-
-const generatorItems = [
-  {
-    title: "Exam Generator",
-    url: "/generator/exam",
-    icon: FileText,
-  },
-  {
-    title: "Lecture Generator",
-    url: "/generator/lecture",
-    icon: BookOpen,
-  },
-]
-
-const gamesItems = [
-  {
-    title: "Anki Game",
-    url: "/games/anki",
-    icon: RotateCcw,
-  },
-  {
-    title: "Verbs Participios",
-    url: "/games/verbs",
-    icon: Gamepad2,
-  },
-]
+import { LoginModal } from "@/components/auth/LoginModal"
+import { menuItems, generatorItems, gamesItems } from "@/components/sidebar-menus"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { user, logout, login, loading, error } = useUserStore()
+  const { user, logout } = useUserStore()
   const [open, setOpen] = useState(false)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [touched, setTouched] = useState(false)
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setTouched(true)
-    await login(username, password)
-    // Si login fue exitoso, cerrar modal
-    if (useUserStore.getState().user) {
-      setOpen(false)
-      setUsername("")
-      setPassword("")
-      setTouched(false)
-    }
-  }
 
   return (
     <Sidebar {...props}>
@@ -210,56 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarRail />
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-sm mx-auto rounded-xl p-6">
-          <DialogHeader className="items-center text-center">
-            <div className="flex flex-col items-center gap-2 mb-2">
-              <div className="bg-sidebar-accent p-3 rounded-full mb-1 flex items-center justify-center">
-                <img src="/loogo.png" alt="Logo" className="size-10 rounded-full object-cover" />
-              </div>
-              <DialogTitle className="text-2xl font-bold">Bienvenido de nuevo</DialogTitle>
-              <p className="text-muted-foreground text-sm max-w-xs">Inicia sesión para acceder a tu espacio personal y continuar aprendiendo con LanguagesAI.</p>
-            </div>
-          </DialogHeader>
-          <form onSubmit={handleLogin} className="space-y-4 mt-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" htmlFor="login-username">
-                <UserIcon className="size-4 text-muted-foreground" /> Usuario o email
-              </label>
-              <Input
-                id="login-username"
-                placeholder="Usuario o email"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                autoFocus
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" htmlFor="login-password">
-                <Lock className="size-4 text-muted-foreground" /> Contraseña
-              </label>
-              <Input
-                id="login-password"
-                placeholder="Contraseña"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && touched && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
-            )}
-            <Button type="submit" className="w-full btn-green-neon mt-2" size="lg" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
-            </Button>
-            <div className="text-xs text-center mt-2">
-              ¿Olvidaste tu contraseña? <a href="#" className="text-primary underline hover:text-primary/80 transition-colors">Recupérala aquí</a>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <LoginModal open={open} setOpen={setOpen} />
     </Sidebar>
   )
 }
