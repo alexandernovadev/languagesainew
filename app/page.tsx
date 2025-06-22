@@ -88,7 +88,7 @@ export default function Dashboard() {
             <CardDescription>Tareas comunes que puedes realizar</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button className="w-full justify-start btn-neon">
+            <Button className="w-full justify-start">
               <Users className="mr-2 h-4 w-4" />
               Gestionar Usuarios
             </Button>
