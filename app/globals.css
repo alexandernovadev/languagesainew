@@ -132,18 +132,6 @@ body {
     border-left: 2px solid hsl(var(--primary));
   }
 
-  /* Efecto sutil para hover */
-  .hover-neon:hover {
-    background: hsl(var(--primary) / 0.05);
-    border-color: hsl(var(--primary) / 0.3);
-  }
-
-  /* Efecto sutil para focus */
-  .focus-neon:focus {
-    border-color: hsl(var(--primary));
-    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
-  }
-
   /* Mejoras para scroll horizontal en tablas */
   .table-container {
     overflow-x: auto;
@@ -176,29 +164,6 @@ body {
     min-width: 100%;
     width: max-content;
   }
-}
-
-/* Custom Neon Button */
-.btn-sidebar-neon {
-  position: relative;
-  background-color: transparent;
-  color: #a7f3d0; /* emerald-200 */
-  border: 1px solid #34d399; /* emerald-400 */
-  box-shadow: 0 0 5px #34d399, 0 0 10px #34d399;
-  transition: all 0.3s ease;
-}
-
-.btn-sidebar-neon:hover {
-  color: #ffffff;
-  background-color: #34d399;
-  box-shadow: 0 0 10px #34d399, 0 0 20px #34d399;
-}
-
-.btn-sidebar-neon-active {
-  background-color: #10b981; /* emerald-600 */
-  color: #ffffff;
-  box-shadow: 0 0 8px #10b981, 0 0 15px #10b981;
-  border-color: #10b981;
 }
 
 /* Scrollbar Styles */
