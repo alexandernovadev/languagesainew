@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -154,29 +152,6 @@ export default function AnkiGame() {
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
-
-      <style jsx>{`
-        .flip-card {
-          perspective: 1000px;
-        }
-        
-        .flip-card-inner {
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-        }
-        
-        .flip-card.flipped .flip-card-inner {
-          transform: rotateY(180deg);
-        }
-        
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
-        
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-      `}</style>
     </PageLayout>
   )
 }
