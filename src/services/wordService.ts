@@ -1,73 +1,86 @@
 import { Word } from "../models/Word";
-import { handleResponse } from "./utils/handleResponse";
 import { getAuthHeaders } from "./utils/headers";
-import { api } from './api';
+import { api } from "./api";
 
 export const wordService = {
-  getWords: async (page: number, limit: number, wordUser?: string) => {
+  async getWords(page: number, limit: number, wordUser?: string) {
     const url = `/api/words?page=${page}&limit=${limit}${
       wordUser ? `&wordUser=${wordUser}` : ""
     }`;
-    const { data } = await api.get(url);
-    return handleResponse(data);
+    const res = await api.get(url, { headers: getAuthHeaders() });
+    return res.data;
   },
 
-  getWordById: async (id: string) => {
-    const response = await api.get(`/api/words/${id}`);
-    return handleResponse(response.data);
+  async getWordById(id: string) {
+    const res = await api.get(`/api/words/${id}`, { headers: getAuthHeaders() });
+    return res.data;
   },
 
-  getWordByName: async (word: string) => {
-    const response = await api.get(`/api/words/word/${word}`);
-    return handleResponse(response.data);
-  },
-
-  createWord: async (wordData: Omit<Word, "_id">) => {
-    const response = await api.post(`/api/words`, wordData, {
+  async getWordByName(word: string) {
+    const res = await api.get(`/api/words/word/${word}`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response.data);
+    return res.data;
   },
 
-  updateWord: async (id: string, wordData: Partial<Word>) => {
-    const response = await api.put(`/api/words/${id}`, wordData, {
+  async createWord(wordData: Omit<Word, "_id">) {
+    const res = await api.post(`/api/words`, wordData, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response.data);
+    return res.data;
   },
 
-  updateWordLevel: async (id: string, level: string) => {
-    const response = await api.put(`/api/words/${id}/level`, { level }, {
+  async updateWord(id: string, wordData: Partial<Word>) {
+    const res = await api.put(`/api/words/${id}`, wordData, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response.data);
+    return res.data;
   },
 
-  incrementWordSeen: async (id: string) => {
-    const response = await api.put(`/api/words/${id}/increment-seen`, {}, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(response.data);
+  async updateWordLevel(id: string, level: string) {
+    const res = await api.put(
+      `/api/words/${id}/level`,
+      { level },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
   },
 
-  deleteWord: async (id: string) => {
-    const response = await api.delete(`/api/words/${id}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(response.data);
+  async incrementWordSeen(id: string) {
+    const res = await api.put(
+      `/api/words/${id}/increment-seen`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
   },
 
-  getRecentHardOrMediumWords: async () => {
-    const response = await api.get(`/api/words/get-cards-anki`, {
+  async deleteWord(id: string) {
+    const res = await api.delete(`/api/words/${id}`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response.data);
+    return res.data;
   },
 
-  generateWordJSON: async (prompt: string, language = "en") => {
-    const response = await api.post(`/api/ai/generate-wordJson`, { prompt, language }, {
+  async getRecentHardOrMediumWords() {
+    const res = await api.get(`/api/words/get-cards-anki`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response.data);
+    return res.data;
+  },
+
+  async generateWordJSON(prompt: string, language = "en") {
+    const res = await api.post(
+      `/api/ai/generate-wordJson`,
+      { prompt, language },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
   },
 };
