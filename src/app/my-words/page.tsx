@@ -43,6 +43,7 @@ export default function MyWordsPage() {
     searchQuery,
   } = useWordStore()
 
+  const [localSearch, setLocalSearch] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -57,8 +58,18 @@ export default function MyWordsPage() {
   })
 
   useEffect(() => {
-    getWords(1)
-  }, [getWords])
+    const handler = setTimeout(() => {
+      setSearchQuery(localSearch)
+    }, 500) // 500ms debounce delay
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [localSearch, setSearchQuery])
+
+  useEffect(() => {
+    getWords()
+  }, [searchQuery]) // Re-fetch when the debounced search query changes
 
   const handleAddWord = () => {
     // Logic for adding a word will be adapted to the new store
@@ -122,8 +133,8 @@ export default function MyWordsPage() {
         <div className="flex items-center gap-2">
           <Input
             placeholder="Buscar palabra..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             className="w-full sm:w-auto"
           />
           <Button>
