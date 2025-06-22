@@ -24,4 +24,8 @@ export const lectureTypes: LectureType[] = [
   { value: "poetry", label: "Poesía" },
   { value: "dialogue", label: "Diálogo" },
   { value: "letter", label: "Carta" },
+  { value: "instructions", label: "Instrucciones" },
+  { value: "guide", label: "Guía" },
+  { value: "chronicle", label: "Crónica" },
+  { value: "blog", label: "Blog" },
 ]; 
