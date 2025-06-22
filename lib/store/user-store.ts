@@ -1,42 +1,47 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
-import { authService } from "@/services/authService"
-import type { User } from "@/models/User"
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { authService } from "@/services/authService";
+import type { User } from "@/models/User";
 
 interface UserState {
-  user: User | null
-  loading: boolean
-  error: string | null
-  login: (username: string, password: string) => Promise<void>
-  logout: () => void
-  setUser: (user: User | null) => void
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => void;
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
+  isAuthenticated: () => boolean;
 }
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
+      token: null,
       loading: false,
       error: null,
       login: async (username, password) => {
-        set({ loading: true, error: null })
+        set({ loading: true, error: null });
         try {
-          const data = await authService.login(username, password)
-          set({ user: data.user, loading: false })
-          localStorage.setItem("token", data.token)
+          const { data } = await authService.login(username, password);
+          set({ user: null, token: data.token, loading: false });
+          // Optionally, decode user from token if needed
         } catch (error: any) {
-          set({ error: error.message || "Error de login", loading: false })
+          set({ error: error.message || "Error de login", loading: false });
         }
       },
       logout: () => {
-        set({ user: null })
-        localStorage.removeItem("token")
+        set({ user: null, token: null });
       },
       setUser: (user) => set({ user }),
+      setToken: (token) => set({ token }),
+      isAuthenticated: () => !!get().token,
     }),
     {
       name: "user-storage",
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ user: state.user, token: state.token }),
     }
   )
-) 
+);

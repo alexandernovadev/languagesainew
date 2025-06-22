@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api } from "./api";
 
 const handleResponseToken = async (response: Response) => {
   const data = await response.json();
@@ -10,7 +10,7 @@ const handleResponseToken = async (response: Response) => {
 
 export const authService = {
   async login(username: string, password: string) {
-    const res = await api.post('/api/auth/login', { username, password });
+    const res = await api.post("/api/auth/login", { username, password });
     return res.data;
   },
 };

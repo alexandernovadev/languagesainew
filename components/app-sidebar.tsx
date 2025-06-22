@@ -1,14 +1,31 @@
-"use client"
+"use client";
 
-import type * as React from "react"
-import { Home, Settings, User, FileText, BookOpen, Gamepad2, RotateCcw, BarChart3, User as UserIcon, Lock } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { useUserStore } from "@/lib/store/user-store"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import type * as React from "react";
+import {
+  Home,
+  Settings,
+  User,
+  FileText,
+  BookOpen,
+  Gamepad2,
+  RotateCcw,
+  BarChart3,
+  User as UserIcon,
+  Lock,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useUserStore } from "@/lib/store/user-store";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import {
   Sidebar,
@@ -22,15 +39,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
-import { LoginModal } from "@/components/auth/LoginModal"
-import { menuItems, generatorItems, gamesItems } from "@/components/sidebar-menus"
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { gamesItems, generatorItems, menuItems } from "./sidebar-menus";
+import { LoginModal } from "./auth/LoginModal";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname()
-  const { user, logout } = useUserStore()
-  const [open, setOpen] = useState(false)
+  const pathname = usePathname();
+  const { token, logout, isAuthenticated } = useUserStore();
+  const [open, setOpen] = useState(false);
 
   return (
     <Sidebar {...props}>
@@ -39,7 +63,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <div className="flex items-center gap-2">
-                <img src="/loogo.png" alt="Logo" className="size-8 rounded-lg bg-sidebar-accent object-cover" />
+                <img
+                  src="/loogo.png"
+                  alt="Logo"
+                  className="size-8 rounded-lg bg-sidebar-accent object-cover"
+                />
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">LanguagesAI</span>
                   <span className="text-xs">v1.0.0</span>
@@ -59,7 +87,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={cn("transition-all duration-300", pathname === item.url && "sidebar-neon-active")}
+                    className={cn(
+                      "transition-all duration-300",
+                      pathname === item.url && "sidebar-neon-active"
+                    )}
                   >
                     <a href={item.url}>
                       <item.icon />
@@ -80,7 +111,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={cn("transition-all duration-300", pathname === item.url && "sidebar-neon-active")}
+                    className={cn(
+                      "transition-all duration-300",
+                      pathname === item.url && "sidebar-neon-active"
+                    )}
                   >
                     <a href={item.url}>
                       <item.icon />
@@ -101,7 +135,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={cn("transition-all duration-300", pathname === item.url && "sidebar-neon-active")}
+                    className={cn(
+                      "transition-all duration-300",
+                      pathname === item.url && "sidebar-neon-active"
+                    )}
                   >
                     <a href={item.url}>
                       <item.icon />
@@ -118,19 +155,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            {user ? (
-              <div className="flex items-center gap-2 w-full justify-between">
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage src={user.image || "/placeholder-user.jpg"} alt={user.firstName || user.username} />
-                    <AvatarFallback>{(user.firstName || user.username || "U").charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <span>{user.firstName || user.username}</span>
-                </div>
-                <Button size="sm" variant="ghost" onClick={logout}>Salir</Button>
-              </div>
+            {isAuthenticated() ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" variant="ghost" className="w-full justify-start gap-2">
+                    <Avatar className="size-7">
+                      <AvatarImage src="" alt="Usuario" />
+                      <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                    <span>Usuario</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => { /* TODO: go to profile */ }}>
+                    Mi perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="text-red-600">
+                    Cerrar sesión
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <SidebarMenuButton className="transition-all duration-300 w-full" onClick={() => setOpen(true)}>
+              <SidebarMenuButton
+                className="transition-all duration-300 w-full"
+                onClick={() => setOpen(true)}
+              >
                 <User />
                 <span>Iniciar sesión</span>
               </SidebarMenuButton>
@@ -143,5 +193,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <LoginModal open={open} setOpen={setOpen} />
     </Sidebar>
-  )
+  );
 }

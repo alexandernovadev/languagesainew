@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { User as UserIcon, Lock } from "lucide-react"
-import React from "react"
+import React, { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useUserStore } from "@/lib/store/user-store"
 
@@ -17,7 +17,7 @@ interface LoginForm {
 }
 
 export function LoginModal({ open, setOpen }: LoginModalProps) {
-  const { login, loading, error } = useUserStore()
+  const { login, loading, error, token } = useUserStore()
   const {
     register,
     handleSubmit,
@@ -34,16 +34,17 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
   const username = watch("username")
   const password = watch("password")
 
+  // Close modal and reset form when login is successful
+  useEffect(() => {
+    if (token && open) {
+      setOpen(false)
+      reset()
+    }
+  }, [token, open, setOpen, reset])
+
   const onSubmit = async (data: LoginForm) => {
     clearErrors()
     await login(data.username, data.password)
-    if (useUserStore.getState().user) {
-      setOpen(false)
-      reset()
-    } else if (error) {
-      setError("username", { type: "manual", message: error })
-      setError("password", { type: "manual" })
-    }
   }
 
   return (
