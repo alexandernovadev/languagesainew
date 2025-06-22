@@ -1,5 +1,3 @@
-
-
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
@@ -10,7 +8,13 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -162,6 +166,8 @@ const Sidebar = React.forwardRef<
     side?: "left" | "right"
     variant?: "sidebar" | "floating" | "inset"
     collapsible?: "offcanvas" | "icon" | "none"
+    title?: string
+    description?: string
   }
 >(
   (
@@ -169,6 +175,8 @@ const Sidebar = React.forwardRef<
       side = "left",
       variant = "sidebar",
       collapsible = "offcanvas",
+      title,
+      description,
       className,
       children,
       ...props
@@ -206,7 +214,15 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <div className="flex h-full w-full flex-col">{children}</div>
+            {(title || description) && (
+              <SheetHeader className="p-6 pb-0">
+                {title && <SheetTitle>{title}</SheetTitle>}
+                {description && (
+                  <SheetDescription>{description}</SheetDescription>
+                )}
+              </SheetHeader>
+            )}
+            <div className="flex h-full w-full flex-col p-6">{children}</div>
           </SheetContent>
         </Sheet>
       )

@@ -56,7 +56,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Sidebar {...props}>
+    <Sidebar
+      {...props}
+      title="Menú"
+      description="Navegación principal para la aplicación."
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
