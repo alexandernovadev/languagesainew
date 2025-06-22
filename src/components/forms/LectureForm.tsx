@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -215,16 +216,16 @@ export function LectureForm({
             <Label htmlFor="content" className="text-sm font-medium">
               Contenido Completo <span className="text-red-500">*</span>
             </Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              placeholder="Escribe aquí el contenido completo de la lectura..."
-              rows={12}
-              className={`resize-none font-mono text-sm ${!formData.content ? 'border-red-300 focus:border-red-500' : ''}`}
-            />
+            <div data-color-mode="dark">
+              <MDEditor
+                value={formData.content}
+                onChange={(value) =>
+                  setFormData({ ...formData, content: value || "" })
+                }
+                height={400}
+                preview="edit"
+              />
+            </div>
             <div className="flex justify-between items-center text-xs text-muted-foreground">
               <span>
                 {formData.content.length} caracteres
