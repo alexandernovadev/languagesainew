@@ -84,11 +84,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <div className="flex items-center gap-2">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground neon-pulse">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-accent text-sidebar-accent-foreground">
                   <User className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold text-neon">Mi Aplicación</span>
+                  <span className="font-semibold">Mi Aplicación</span>
                   <span className="text-xs">v1.0.0</span>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-primary">Navegación</SidebarGroupLabel>
+          <SidebarGroupLabel>Navegación</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -120,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-primary">Generator</SidebarGroupLabel>
+          <SidebarGroupLabel>Generator</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {generatorItems.map((item) => (
@@ -141,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-primary">Games</SidebarGroupLabel>
+          <SidebarGroupLabel>Games</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {gamesItems.map((item) => (
@@ -165,7 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="hover:sidebar-neon-active transition-all duration-300">
+            <SidebarMenuButton className="transition-all duration-300">
               <User />
               <span>Usuario</span>
             </SidebarMenuButton>
