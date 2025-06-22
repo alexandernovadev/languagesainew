@@ -82,26 +82,30 @@ export default function LectureDetailPage() {
     setSelectedWords([]);
   };
 
+  // Función para convertir Markdown básico a HTML
+  const convertMarkdownToHtml = (text: string) => {
+    return text
+      // Títulos
+      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mt-6 mb-3">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>')
+      // Negritas
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+      // Cursivas
+      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+      // Listas
+      .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
+      // Párrafos
+      .replace(/\n\n/g, '</p><p class="mb-4">')
+      .replace(/^(?!<[h|li])(.*$)/gim, '<p class="mb-4">$1</p>')
+      // Limpiar párrafos vacíos
+      .replace(/<p class="mb-4"><\/p>/g, '')
+      .replace(/<p class="mb-4"><\/p>/g, '');
+  };
+
   const renderInteractiveText = (text: string) => {
-    const words = text.split(" ");
-    return words.map((word, index) => {
-      const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase();
-      const isSelected = selectedWords.includes(cleanWord);
-      const isCurrentlyPlaying = currentWord === cleanWord && isPlaying;
-      return (
-        <span
-          key={index}
-          className={cn(
-            "cursor-pointer hover:bg-primary/20 rounded px-1 transition-colors",
-            isSelected && "bg-primary/30 text-primary-foreground",
-            isCurrentlyPlaying && "bg-yellow-400/50 animate-pulse"
-          )}
-          onClick={() => handleWordClick(word)}
-        >
-          {word}{" "}
-        </span>
-      );
-    });
+    const htmlContent = convertMarkdownToHtml(text);
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
   };
 
   if (loading) {
@@ -199,19 +203,7 @@ export default function LectureDetailPage() {
         </CardHeader>
         <CardContent>
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            {words.map((word, index) => (
-              <span
-                key={index}
-                className={`cursor-pointer transition-colors hover:bg-yellow-200 dark:hover:bg-yellow-700 ${
-                  selectedWords.includes(word)
-                    ? "bg-yellow-300 dark:bg-yellow-600"
-                    : ""
-                }`}
-                onClick={() => handleWordClick(word)}
-              >
-                {word}{" "}
-              </span>
-            ))}
+            {renderInteractiveText(lecture.content)}
           </div>
         </CardContent>
       </Card>
