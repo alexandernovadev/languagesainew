@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useWordStore } from "@/lib/store/useWordStore"
 import { Word } from "@/models/Word"
+import { WordForm } from "@/components/forms/WordForm"
 import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -34,7 +35,10 @@ export default function MyWordsPage() {
     words,
     getWords,
     deleteWord,
+    createWord,
+    updateWord,
     loading,
+    actionLoading,
     currentPage,
     totalPages,
     total,
@@ -43,19 +47,12 @@ export default function MyWordsPage() {
     searchQuery,
   } = useWordStore()
 
-  const [localSearch, setLocalSearch] = useState("")
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedWord, setSelectedWord] = useState<Word | null>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentPlayingWord, setCurrentPlayingWord] = useState<string | null>(null)
 
-  const [formData, setFormData] = useState<Partial<Word>>({
-    word: "",
-    IPA: "",
-    spanish: { word: "", definition: "" },
-  })
+  const [localSearch, setLocalSearch] = useState("")
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -69,24 +66,31 @@ export default function MyWordsPage() {
 
   useEffect(() => {
     getWords()
-  }, [searchQuery]) // Re-fetch when the debounced search query changes
+  }, [searchQuery, getWords]) // Re-fetch when the debounced search query changes
 
-  const handleAddWord = () => {
-    // Logic for adding a word will be adapted to the new store
+  const handleFormSubmit = async (data: Partial<Word>) => {
+    if (isEditing && selectedWord) {
+      await updateWord(selectedWord._id, data)
+    } else {
+      await createWord(data as Omit<Word, "_id">)
+    }
+    setDialogOpen(false)
   }
 
-  const handleEditWord = () => {
-    // Logic for editing a word will be adapted to the new store
+  const openDialog = (word?: Word) => {
+    if (word) {
+      setSelectedWord(word)
+      setIsEditing(true)
+    } else {
+      setSelectedWord(null)
+      setIsEditing(false)
+    }
+    setDialogOpen(true)
   }
 
-  const openEditModal = (word: Word) => {
+  const openDeleteDialog = (word: Word) => {
     setSelectedWord(word)
-    setFormData({
-      word: word.word,
-      IPA: word.IPA,
-      spanish: word.spanish,
-    })
-    setIsEditModalOpen(true)
+    setDeleteDialogOpen(true)
   }
 
   const handleDeleteConfirm = () => {
@@ -97,28 +101,10 @@ export default function MyWordsPage() {
     }
   }
 
-  const openDeleteDialog = (word: Word) => {
-    setSelectedWord(word)
-    setDeleteDialogOpen(true)
-  }
-
-  const speakWord = (word: string, wordId: string) => {
-    if ("speechSynthesis" in window && !isPlaying) {
-      setIsPlaying(true)
-      setCurrentPlayingWord(wordId)
-
-      const utterance = new SpeechSynthesisUtterance(word)
-      utterance.lang = "en-US"
-      utterance.rate = 0.8
-      utterance.pitch = 1
-
-      utterance.onend = () => {
-        setIsPlaying(false)
-        setCurrentPlayingWord(null)
-      }
-
-      speechSynthesis.speak(utterance)
-    }
+  const speakWord = (word: string) => {
+    // Simplified speak logic, can be enhanced later
+    const utterance = new SpeechSynthesisUtterance(word)
+    speechSynthesis.speak(utterance)
   }
 
   return (
@@ -137,7 +123,7 @@ export default function MyWordsPage() {
             onChange={(e) => setLocalSearch(e.target.value)}
             className="w-full sm:w-auto"
           />
-          <Button>
+          <Button onClick={() => openDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             Agregar Palabra
           </Button>
@@ -159,18 +145,16 @@ export default function MyWordsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Palabra</TableHead>
-                  <TableHead>IPA</TableHead>
                   <TableHead>Traducción</TableHead>
-                  <TableHead>Visto</TableHead>
                   <TableHead>Nivel</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {loading ? (
+                {loading && words.length === 0 ? (
                   Array.from({ length: 7 }).map((_, i) => (
                     <TableRow key={i}>
-                      <TableCell colSpan={6}>
+                      <TableCell colSpan={4}>
                         <Skeleton className="h-8 w-full" />
                       </TableCell>
                     </TableRow>
@@ -182,18 +166,14 @@ export default function MyWordsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => speakWord(word.word, word._id)}
+                          onClick={() => speakWord(word.word)}
                           className="h-8 w-8 p-0"
                         >
                           <Volume2 className="h-4 w-4" />
                         </Button>
                         {word.word}
                       </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {word.IPA || "N/A"}
-                      </TableCell>
                       <TableCell>{word.spanish?.word || "N/A"}</TableCell>
-                      <TableCell>{word.seen || 0} veces</TableCell>
                       <TableCell>
                         <Badge
                           variant={
@@ -211,7 +191,7 @@ export default function MyWordsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => openEditModal(word)}
+                          onClick={() => openDialog(word)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -229,7 +209,7 @@ export default function MyWordsPage() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={4}
                       className="text-center h-24 text-muted-foreground"
                     >
                       No se encontraron palabras.
@@ -264,7 +244,46 @@ export default function MyWordsPage() {
         </Button>
       </div>
 
-      {/* Modals and Dialogs would be here, adapted to the new data structure */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>
+              {isEditing ? "Editar Palabra" : "Agregar Nueva Palabra"}
+            </DialogTitle>
+            <DialogDescription>
+              {isEditing
+                ? "Modifica los detalles de la palabra."
+                : "Añade una nueva palabra a tu vocabulario."}
+            </DialogDescription>
+          </DialogHeader>
+          <WordForm
+            initialData={isEditing && selectedWord ? selectedWord : {}}
+            onSubmit={handleFormSubmit}
+            onCancel={() => setDialogOpen(false)}
+            loading={actionLoading.create || actionLoading.update}
+          />
+        </DialogContent>
+      </Dialog>
+      
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+         <AlertDialogContent>
+           <AlertDialogHeader>
+             <AlertDialogTitle>¿Estás seguro de eliminar esta palabra?</AlertDialogTitle>
+             <AlertDialogDescription>
+               Esta acción no se puede deshacer.
+             </AlertDialogDescription>
+           </AlertDialogHeader>
+           <AlertDialogFooter>
+             <AlertDialogCancel>Cancelar</AlertDialogCancel>
+             <AlertDialogAction
+               onClick={handleDeleteConfirm}
+               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+             >
+               {actionLoading.delete ? "Eliminando..." : "Eliminar"}
+             </AlertDialogAction>
+           </AlertDialogFooter>
+         </AlertDialogContent>
+       </AlertDialog>
     </div>
   )
 }
