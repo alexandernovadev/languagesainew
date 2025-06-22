@@ -4,17 +4,17 @@ import { getAuthHeaders } from "./utils/headers";
 
 export const lectureService = {
   async getLectures(page = 1, limit = 10) {
-    const res = await api.get("/lectures", { headers: getAuthHeaders() });
+    const res = await api.get("/api/lectures", { headers: getAuthHeaders() });
     return res.data;
   },
 
   async getLectureById(id: string) {
-    const res = await api.get(`/lectures/${id}`, { headers: getAuthHeaders() });
+    const res = await api.get(`/api/lectures/${id}`, { headers: getAuthHeaders() });
     return res.data;
   },
 
   async postLecture(lectureData: Lecture) {
-    const res = await api.post("/lectures", {
+    const res = await api.post("/api/lectures", {
       headers: getAuthHeaders(),
       body: JSON.stringify(lectureData),
     });
@@ -22,7 +22,7 @@ export const lectureService = {
   },
 
   async updateLectureAudioUrl(id: string, audioUrl: string, voice = "nova") {
-    const res = await api.post("/lectures/generateAudio", {
+    const res = await api.post("/api/lectures/generateAudio", {
       headers: getAuthHeaders(),
       body: JSON.stringify({ oldUrl: audioUrl, voice }),
     });
@@ -30,7 +30,7 @@ export const lectureService = {
   },
 
   async putLecture(id: string, lectureData: Lecture) {
-    const res = await api.put(`/lectures/${id}`, {
+    const res = await api.put(`/api/lectures/${id}`, {
       headers: getAuthHeaders(),
       body: JSON.stringify(lectureData),
     });
@@ -39,7 +39,7 @@ export const lectureService = {
 
   async putLectureImage(id: string, lectureString: string, imgOld: string) {
     const trimmedLectureString = lectureString.slice(0, 3500);
-    const res = await api.post("/ai/generate-image-lecture", {
+    const res = await api.post("/api/ai/generate-image-lecture", {
       headers: getAuthHeaders(),
       body: JSON.stringify({ lectureString: trimmedLectureString, imgOld }),
     });
@@ -47,7 +47,7 @@ export const lectureService = {
   },
 
   async deleteLecture(id: string | number) {
-    const res = await api.delete(`/lectures/${id}`, {
+    const res = await api.delete(`/api/lectures/${id}`, {
       headers: getAuthHeaders(),
     });
     return res.data;

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,72 +25,94 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
-import { useLecturesStore } from "@/lib/store/lectures-store"
+import { useLectureStore } from "@/lib/store/useLectureStore"
 import { Eye, Edit, Trash2, Plus, BookOpen, Calendar } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import type { Lecture } from "@/models/Lecture"
 
 export default function LecturesPage() {
   const router = useRouter()
-  const { lectures, addLecture, updateLecture, deleteLecture } = useLecturesStore()
+  const {
+    lectures,
+    loading,
+    errors,
+    getLectures,
+    postLecture,
+    putLecture,
+    deleteLecture,
+    actionLoading,
+  } = useLectureStore()
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [selectedLecture, setSelectedLecture] = useState<string | null>(null)
+  const [selectedLectureId, setSelectedLectureId] = useState<string | null>(null)
 
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+  const [formData, setFormData] = useState<Omit<Lecture, "_id" | "createdAt" | "updatedAt">>({
+    time: 0,
+    level: "",
+    typeWrite: "",
+    language: "",
+    img: "",
+    urlAudio: "",
     content: "",
-    image: "/placeholder.svg?height=200&width=300",
   })
 
-  const handleAddLecture = () => {
-    if (formData.title && formData.content) {
-      addLecture(formData)
+  // Fetch lectures on mount
+  useEffect(() => {
+    getLectures()
+    // eslint-disable-next-line
+  }, [])
+
+  const handleAddLecture = async () => {
+    if (formData.content && formData.level && formData.language && formData.typeWrite) {
+      await postLecture(formData as Lecture)
       setFormData({
-        title: "",
-        description: "",
+        time: 0,
+        level: "",
+        typeWrite: "",
+        language: "",
+        img: "",
+        urlAudio: "",
         content: "",
-        image: "/placeholder.svg?height=200&width=300",
       })
       setIsAddModalOpen(false)
     }
   }
 
-  const handleEditLecture = () => {
-    if (selectedLecture && formData.title && formData.content) {
-      updateLecture(selectedLecture, formData)
+  const handleEditLecture = async () => {
+    if (selectedLectureId && formData.content && formData.level && formData.language && formData.typeWrite) {
+      await putLecture(selectedLectureId, formData as Lecture)
       setIsEditModalOpen(false)
-      setSelectedLecture(null)
+      setSelectedLectureId(null)
     }
   }
 
-  const openEditModal = (lectureId: string) => {
-    const lecture = lectures.find((l) => l.id === lectureId)
-    if (lecture) {
-      setFormData({
-        title: lecture.title,
-        description: lecture.description || "",
-        content: lecture.content,
-        image: lecture.image,
-      })
-      setSelectedLecture(lectureId)
-      setIsEditModalOpen(true)
-    }
+  const openEditModal = (lecture: Lecture) => {
+    setFormData({
+      time: lecture.time,
+      level: lecture.level,
+      typeWrite: lecture.typeWrite,
+      language: lecture.language,
+      img: lecture.img || "",
+      urlAudio: lecture.urlAudio || "",
+      content: lecture.content,
+    })
+    setSelectedLectureId(lecture._id)
+    setIsEditModalOpen(true)
   }
 
-  const handleDeleteConfirm = () => {
-    if (selectedLecture) {
-      deleteLecture(selectedLecture)
+  const handleDeleteConfirm = async () => {
+    if (selectedLectureId) {
+      await deleteLecture(selectedLectureId)
       setDeleteDialogOpen(false)
-      setSelectedLecture(null)
+      setSelectedLectureId(null)
     }
   }
 
   const openDeleteDialog = (lectureId: string) => {
-    setSelectedLecture(lectureId)
+    setSelectedLectureId(lectureId)
     setDeleteDialogOpen(true)
   }
 
@@ -107,7 +129,7 @@ export default function LecturesPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Badge variant="outline">{lectures.length}/10 lectures</Badge>
+          <Badge variant="outline">{lectures.length} lectures</Badge>
           <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
               <Button>Crear Nueva Lecture</Button>
@@ -119,21 +141,49 @@ export default function LecturesPage() {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Título</Label>
+                  <Label htmlFor="level">Nivel</Label>
                   <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Título de la lectura"
+                    id="level"
+                    value={formData.level}
+                    onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+                    placeholder="Nivel (ej: beginner, intermediate, advanced)"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripción</Label>
+                  <Label htmlFor="typeWrite">Tipo</Label>
                   <Input
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Breve descripción"
+                    id="typeWrite"
+                    value={formData.typeWrite}
+                    onChange={(e) => setFormData({ ...formData, typeWrite: e.target.value })}
+                    placeholder="Tipo de escritura (ej: essay, story, article)"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="language">Idioma</Label>
+                  <Input
+                    id="language"
+                    value={formData.language}
+                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                    placeholder="Idioma (ej: English, Spanish)"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="time">Duración (minutos)</Label>
+                  <Input
+                    id="time"
+                    type="number"
+                    value={formData.time}
+                    onChange={(e) => setFormData({ ...formData, time: Number(e.target.value) })}
+                    placeholder="Duración estimada"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="img">Imagen (URL)</Label>
+                  <Input
+                    id="img"
+                    value={formData.img}
+                    onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+                    placeholder="URL de la imagen"
                   />
                 </div>
                 <div className="space-y-2">
@@ -150,7 +200,7 @@ export default function LecturesPage() {
                   <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button onClick={handleAddLecture}>Agregar</Button>
+                  <Button onClick={handleAddLecture} disabled={actionLoading.post}>Agregar</Button>
                 </div>
               </div>
             </DialogContent>
@@ -160,45 +210,51 @@ export default function LecturesPage() {
 
       {/* Grid de lecturas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {lectures.map((lecture) => (
-          <Card key={lecture.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative h-48 w-full">
-              <Image src={lecture.image || "/placeholder.svg"} alt={lecture.title} fill className="object-cover" />
-            </div>
-            <CardHeader className="pb-3">
-              <CardTitle className="line-clamp-2">{lecture.title}</CardTitle>
-              {lecture.description && <CardDescription className="line-clamp-2">{lecture.description}</CardDescription>}
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Calendar className="h-3 w-3" />
-                {new Date(lecture.createdAt).toLocaleDateString()}
+        {loading ? (
+          <div className="col-span-3 text-center py-10">Cargando...</div>
+        ) : lectures.length === 0 ? (
+          <div className="col-span-3 text-center py-10 text-muted-foreground">No hay lecturas disponibles.</div>
+        ) : (
+          lectures.map((lecture) => (
+            <Card key={lecture._id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="relative h-48 w-full">
+                <Image src={lecture.img || "/placeholder.svg"} alt={lecture.language} fill className="object-cover" />
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex justify-between items-center">
-                <Badge variant="secondary" className="text-xs">
-                  <BookOpen className="h-3 w-3 mr-1" />
-                  Lectura
-                </Badge>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="sm" onClick={() => viewLecture(lecture.id)} className="h-8 w-8 p-0">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => openEditModal(lecture.id)} className="h-8 w-8 p-0">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => openDeleteDialog(lecture.id)}
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+              <CardHeader className="pb-3">
+                <CardTitle className="line-clamp-2">{lecture.language} - {lecture.level}</CardTitle>
+                <CardDescription className="line-clamp-2">{lecture.typeWrite}</CardDescription>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Calendar className="h-3 w-3" />
+                  {lecture.createdAt ? new Date(lecture.createdAt).toLocaleDateString() : ""}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex justify-between items-center">
+                  <Badge variant="secondary" className="text-xs">
+                    <BookOpen className="h-3 w-3 mr-1" />
+                    {lecture.time} min
+                  </Badge>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm" onClick={() => viewLecture(lecture._id)} className="h-8 w-8 p-0">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => openEditModal(lecture)} className="h-8 w-8 p-0">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => openDeleteDialog(lecture._id)}
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
 
       {/* Modal de edición */}
@@ -210,21 +266,49 @@ export default function LecturesPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-title">Título</Label>
+              <Label htmlFor="edit-level">Nivel</Label>
               <Input
-                id="edit-title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Título de la lectura"
+                id="edit-level"
+                value={formData.level}
+                onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+                placeholder="Nivel (ej: beginner, intermediate, advanced)"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description">Descripción</Label>
+              <Label htmlFor="edit-typeWrite">Tipo</Label>
               <Input
-                id="edit-description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Breve descripción"
+                id="edit-typeWrite"
+                value={formData.typeWrite}
+                onChange={(e) => setFormData({ ...formData, typeWrite: e.target.value })}
+                placeholder="Tipo de escritura (ej: essay, story, article)"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-language">Idioma</Label>
+              <Input
+                id="edit-language"
+                value={formData.language}
+                onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                placeholder="Idioma (ej: English, Spanish)"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-time">Duración (minutos)</Label>
+              <Input
+                id="edit-time"
+                type="number"
+                value={formData.time}
+                onChange={(e) => setFormData({ ...formData, time: Number(e.target.value) })}
+                placeholder="Duración estimada"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-img">Imagen (URL)</Label>
+              <Input
+                id="edit-img"
+                value={formData.img}
+                onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+                placeholder="URL de la imagen"
               />
             </div>
             <div className="space-y-2">
@@ -241,7 +325,7 @@ export default function LecturesPage() {
               <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleEditLecture}>Guardar Cambios</Button>
+              <Button onClick={handleEditLecture} disabled={actionLoading.put}>Guardar Cambios</Button>
             </div>
           </div>
         </DialogContent>
@@ -261,6 +345,7 @@ export default function LecturesPage() {
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={actionLoading.delete}
             >
               Eliminar
             </AlertDialogAction>

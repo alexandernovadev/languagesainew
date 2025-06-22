@@ -5,32 +5,39 @@ import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useLecturesStore } from "@/lib/store/lectures-store"
+import { useLectureStore } from "@/lib/store/useLectureStore"
 import { ArrowLeft, Volume2, X, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { Lecture } from "@/models/Lecture"
 
 export default function LectureDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { getLecture, selectedWords, addSelectedWord, removeSelectedWord, clearSelectedWords } = useLecturesStore()
+  const {
+    getLectureById,
+    activeLecture,
+    loading,
+    errors,
+  } = useLectureStore()
 
-  const [lecture, setLecture] = useState<any>(null)
+  // Palabras seleccionadas y pronunciación
+  const [selectedWords, setSelectedWords] = useState<string[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentWord, setCurrentWord] = useState<string | null>(null)
 
   useEffect(() => {
     if (params.id) {
-      const foundLecture = getLecture(params.id as string)
-      setLecture(foundLecture)
+      getLectureById(params.id as string)
     }
-  }, [params.id, getLecture])
+    // eslint-disable-next-line
+  }, [params.id])
 
   const speakWord = (word: string) => {
     if ("speechSynthesis" in window) {
       setIsPlaying(true)
       setCurrentWord(word)
 
-      const utterance = new SpeechSynthesisUtterance(word)
+      const utterance = new window.SpeechSynthesisUtterance(word)
       utterance.lang = "en-US"
       utterance.rate = 0.8
       utterance.pitch = 1
@@ -40,27 +47,32 @@ export default function LectureDetailPage() {
         setCurrentWord(null)
       }
 
-      speechSynthesis.speak(utterance)
+      window.speechSynthesis.speak(utterance)
     }
   }
 
   const handleWordClick = (word: string) => {
-    // Limpiar la palabra de puntuación
     const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase()
-    if (cleanWord.length > 2) {
-      addSelectedWord(cleanWord)
+    if (cleanWord.length > 2 && !selectedWords.includes(cleanWord)) {
+      setSelectedWords((prev) => [...prev, cleanWord])
       speakWord(cleanWord)
     }
   }
 
+  const removeSelectedWord = (word: string) => {
+    setSelectedWords((prev) => prev.filter((w) => w !== word))
+  }
+
+  const clearSelectedWords = () => {
+    setSelectedWords([])
+  }
+
   const renderInteractiveText = (text: string) => {
     const words = text.split(" ")
-
     return words.map((word, index) => {
       const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase()
       const isSelected = selectedWords.includes(cleanWord)
       const isCurrentlyPlaying = currentWord === cleanWord && isPlaying
-
       return (
         <span
           key={index}
@@ -77,13 +89,23 @@ export default function LectureDetailPage() {
     })
   }
 
-  if (!lecture) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground">Cargando lectura...</p>
+      </div>
+    )
+  }
+
+  if (!activeLecture) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-muted-foreground">Lectura no encontrada</p>
       </div>
     )
   }
+
+  const lecture: Lecture = activeLecture
 
   return (
     <div className="space-y-6">
@@ -94,10 +116,22 @@ export default function LectureDetailPage() {
           Volver
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{lecture.title}</h1>
-          {lecture.description && <p className="text-muted-foreground">{lecture.description}</p>}
+          <h1 className="text-3xl font-bold tracking-tight">
+            {lecture.language} - {lecture.level}
+          </h1>
+          <div className="text-muted-foreground text-sm">
+            {lecture.typeWrite} | {lecture.time} min
+          </div>
         </div>
       </div>
+
+      {/* Imagen */}
+      {lecture.img && (
+        <div className="w-full flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={lecture.img} alt={lecture.language} className="rounded-lg max-h-64 object-cover" />
+        </div>
+      )}
 
       {/* Contenido de la lectura */}
       <Card>

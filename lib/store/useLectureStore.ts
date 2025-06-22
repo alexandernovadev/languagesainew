@@ -42,7 +42,9 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       ...(page === 1 ? { lectures: [] } : {}),
     });
     try {
-      const data = await lectureService.getLectures(page, limit);
+      const {data} = await lectureService.getLectures(page, limit);
+      console.log("Data", data);
+      
       set((state) => ({
         lectures: [...state.lectures, ...data.data],
         totalPages: data.pages,
