@@ -3,24 +3,48 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { User as UserIcon, Lock } from "lucide-react"
 import React from "react"
-import { useLogin } from "./useLogin"
+import { useForm } from "react-hook-form"
+import { useUserStore } from "@/lib/store/user-store"
 
 interface LoginModalProps {
   open: boolean
   setOpen: (open: boolean) => void
 }
 
+interface LoginForm {
+  username: string
+  password: string
+}
+
 export function LoginModal({ open, setOpen }: LoginModalProps) {
+  const { login, loading, error } = useUserStore()
   const {
-    username,
-    setUsername,
-    password,
-    setPassword,
-    loading,
-    error,
-    touched,
-    handleLogin
-  } = useLogin(setOpen)
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setError,
+    clearErrors,
+    reset,
+  } = useForm<LoginForm>({
+    defaultValues: { username: "", password: "" },
+    mode: "onChange",
+  })
+
+  const username = watch("username")
+  const password = watch("password")
+
+  const onSubmit = async (data: LoginForm) => {
+    clearErrors()
+    await login(data.username, data.password)
+    if (useUserStore.getState().user) {
+      setOpen(false)
+      reset()
+    } else if (error) {
+      setError("username", { type: "manual", message: error })
+      setError("password", { type: "manual" })
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +58,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
             <DialogDescription>Inicia sesión para acceder a tu espacio personal y continuar aprendiendo con LanguagesAI.</DialogDescription>
           </div>
         </DialogHeader>
-        <form onSubmit={handleLogin} className="space-y-4 mt-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
           <div className="space-y-2">
             <label className="text-sm font-medium flex items-center gap-2" htmlFor="login-username">
               <UserIcon className="size-4 text-muted-foreground" /> Usuario o email
@@ -42,12 +66,17 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
             <Input
               id="login-username"
               placeholder="Usuario o email"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
               autoFocus
-              required
               autoComplete="username"
+              {...register("username", {
+                required: "El usuario o email es obligatorio",
+                minLength: { value: 3, message: "Mínimo 3 caracteres" },
+                validate: value => value.includes("@") || value.length >= 3 || "Debe ser un email válido o un usuario"
+              })}
             />
+            {errors.username && (
+              <span className="text-red-500 text-xs">{errors.username.message}</span>
+            )}
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium flex items-center gap-2" htmlFor="login-password">
@@ -57,13 +86,17 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
               id="login-password"
               placeholder="Contraseña"
               type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
               autoComplete="current-password"
+              {...register("password", {
+                required: "La contraseña es obligatoria",
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+              })}
             />
+            {errors.password && (
+              <span className="text-red-500 text-xs">{errors.password.message}</span>
+            )}
           </div>
-          {error && touched && (
+          {error && !errors.username && !errors.password && (
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
           <Button type="submit" className="w-full btn-green-neon mt-2" size="lg" disabled={loading}>
