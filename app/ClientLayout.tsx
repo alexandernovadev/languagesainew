@@ -42,9 +42,9 @@ function DynamicBreadcrumb() {
     const pathSegments = pathname.split("/").filter((segment) => segment !== "")
     const breadcrumbs = []
 
-    // Siempre incluir "Mi Aplicación" como raíz
+    // Siempre incluir "LanguagesAI" como raíz
     breadcrumbs.push({
-      label: "Mi Aplicación",
+      label: "LanguagesAI",
       href: "/",
       isCurrentPage: pathname === "/",
     })

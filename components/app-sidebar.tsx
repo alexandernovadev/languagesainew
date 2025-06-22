@@ -88,7 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <User className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Mi Aplicación</span>
+                  <span className="font-semibold">LanguagesAI</span>
                   <span className="text-xs">v1.0.0</span>
                 </div>
               </div>
