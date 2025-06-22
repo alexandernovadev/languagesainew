@@ -10,7 +10,7 @@ import GeneratorLecture from './app/generator/lecture/page';
 import GeneratorExam from './app/generator/exam/page';
 import Settings from './app/settings/page';
 import Statistics from './app/statistics/page';
-import MyWords from './app/mywords/page';
+import MyWords from './app/my-words/page';
 
 export default function App() {
   return (
@@ -26,7 +26,7 @@ export default function App() {
           <Route path="/generator/exam" element={<GeneratorExam />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/statistics" element={<Statistics />} />
-          <Route path="/mywords" element={<MyWords />} />
+          <Route path="/my-words" element={<MyWords />} />
         </Routes>
       </ClientLayout>
     </BrowserRouter>

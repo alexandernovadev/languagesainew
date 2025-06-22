@@ -18,7 +18,7 @@ export const menuItems = [
   },
   {
     title: "My Words",
-    url: "/mywords",
+    url: "/my-words",
     icon: BookOpen,
   },
   {
