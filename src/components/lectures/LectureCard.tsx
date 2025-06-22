@@ -43,7 +43,7 @@ export function LectureCard({
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
       <div className="relative h-48 w-full group">
         <img
           src={lecture.img || "/images/noImage.png"}
@@ -62,7 +62,7 @@ export function LectureCard({
           )}
         </div>
       </div>
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 flex-grow">
         <CardTitle className="line-clamp-2 text-xl font-semibold" title={title}>
           {title}
         </CardTitle>
@@ -75,12 +75,12 @@ export function LectureCard({
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-2">
           <Badge variant="secondary" className="text-xs">
             <BookOpen className="h-3 w-3 mr-1" />
             {lecture.time} min
           </Badge>
-          <div className="flex gap-1">
+          <div className="flex gap-1 flex-shrink-0">
             <Button
               variant="ghost"
               size="sm"

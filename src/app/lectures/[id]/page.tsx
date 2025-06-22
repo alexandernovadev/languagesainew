@@ -84,44 +84,55 @@ export default function LectureDetailPage() {
 
   // Función para convertir Markdown básico a HTML
   const convertMarkdownToHtml = (text: string) => {
-    return text
-      // Títulos
-      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mt-6 mb-3">$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>')
-      // Negritas
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
-      // Cursivas
-      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-      // Listas
-      .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
-      // Párrafos
-      .replace(/\n\n/g, '</p><p class="mb-4">')
-      .replace(/^(?!<[h|li])(.*$)/gim, '<p class="mb-4">$1</p>')
-      // Limpiar párrafos vacíos
-      .replace(/<p class="mb-4"><\/p>/g, '')
-      .replace(/<p class="mb-4"><\/p>/g, '');
+    return (
+      text
+        // Títulos
+        .replace(
+          /^### (.*$)/gim,
+          '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>'
+        )
+        .replace(
+          /^## (.*$)/gim,
+          '<h2 class="text-xl font-semibold mt-6 mb-3">$1</h2>'
+        )
+        .replace(
+          /^# (.*$)/gim,
+          '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>'
+        )
+        // Negritas
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+        // Cursivas
+        .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+        // Listas
+        .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
+        // Párrafos
+        .replace(/\n\n/g, '</p><p class="mb-4">')
+        .replace(/^(?!<[h|li])(.*$)/gim, '<p class="mb-4">$1</p>')
+        // Limpiar párrafos vacíos
+        .replace(/<p class="mb-4"><\/p>/g, "")
+        .replace(/<p class="mb-4"><\/p>/g, "")
+    );
   };
 
   const renderInteractiveText = (text: string) => {
     // Primero convertimos el Markdown a HTML
     const htmlContent = convertMarkdownToHtml(text);
-    
+
     // Parseamos el HTML para crear elementos React interactivos
     const parseHtmlToReact = (html: string) => {
-      const tempDiv = document.createElement('div');
+      const tempDiv = document.createElement("div");
       tempDiv.innerHTML = html;
-      
+
       const processNode = (node: Node): React.ReactNode => {
         if (node.nodeType === Node.TEXT_NODE) {
-          const text = node.textContent || '';
-          const words = text.split(' ');
-          
+          const text = node.textContent || "";
+          const words = text.split(" ");
+
           return words.map((word, index) => {
             const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase();
             const isSelected = selectedWords.includes(cleanWord);
             const isCurrentlyPlaying = currentWord === cleanWord && isPlaying;
-            
+
             return (
               <span
                 key={`${index}-${word}`}
@@ -132,45 +143,74 @@ export default function LectureDetailPage() {
                 )}
                 onClick={() => handleWordClick(word)}
               >
-                {word}{index < words.length - 1 ? ' ' : ''}
+                {word}
+                {index < words.length - 1 ? " " : ""}
               </span>
             );
           });
         }
-        
+
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as Element;
           const tagName = element.tagName.toLowerCase();
           const children = Array.from(element.childNodes).map(processNode);
-          
-          const className = element.className || '';
-          
+
+          const className = element.className || "";
+
           switch (tagName) {
-            case 'h1':
-              return <h1 key={Math.random()} className={className}>{children}</h1>;
-            case 'h2':
-              return <h2 key={Math.random()} className={className}>{children}</h2>;
-            case 'h3':
-              return <h3 key={Math.random()} className={className}>{children}</h3>;
-            case 'p':
-              return <p key={Math.random()} className={className}>{children}</p>;
-            case 'strong':
-              return <strong key={Math.random()} className={className}>{children}</strong>;
-            case 'em':
-              return <em key={Math.random()} className={className}>{children}</em>;
-            case 'li':
-              return <li key={Math.random()} className={className}>{children}</li>;
+            case "h1":
+              return (
+                <h1 key={Math.random()} className={className}>
+                  {children}
+                </h1>
+              );
+            case "h2":
+              return (
+                <h2 key={Math.random()} className={className}>
+                  {children}
+                </h2>
+              );
+            case "h3":
+              return (
+                <h3 key={Math.random()} className={className}>
+                  {children}
+                </h3>
+              );
+            case "p":
+              return (
+                <p key={Math.random()} className={className}>
+                  {children}
+                </p>
+              );
+            case "strong":
+              return (
+                <strong key={Math.random()} className={className}>
+                  {children}
+                </strong>
+              );
+            case "em":
+              return (
+                <em key={Math.random()} className={className}>
+                  {children}
+                </em>
+              );
+            case "li":
+              return (
+                <li key={Math.random()} className={className}>
+                  {children}
+                </li>
+              );
             default:
               return <span key={Math.random()}>{children}</span>;
           }
         }
-        
+
         return null;
       };
-      
+
       return Array.from(tempDiv.childNodes).map(processNode);
     };
-    
+
     return <div>{parseHtmlToReact(htmlContent)}</div>;
   };
 
@@ -201,14 +241,6 @@ export default function LectureDetailPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <Button
-          variant="outline"
-          onClick={() => navigate(-1)}
-          className="w-fit"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Volver a las Lecturas
-        </Button>
         <div className="space-y-3">
           <div className="flex items-center gap-4">
             <Avatar className="h-40 w-40 border-2 border-primary/50">
