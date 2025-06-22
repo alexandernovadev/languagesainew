@@ -20,11 +20,20 @@ interface LectureCardProps {
   onDelete: (id: string) => void;
 }
 
-export function LectureCard({ lecture, onView, onEdit, onDelete }: LectureCardProps) {
-  const title = getMarkdownTitle(lecture.content) || `${lecture.language} - ${lecture.level}`;
-  const typeLabel = lectureTypes.find(type => type.value === lecture.typeWrite)?.label || lecture.typeWrite;
-  const lang = languageData.find(l => l.code === lecture.language);
-  
+export function LectureCard({
+  lecture,
+  onView,
+  onEdit,
+  onDelete,
+}: LectureCardProps) {
+  const title =
+    getMarkdownTitle(lecture.content) ||
+    `${lecture.language} - ${lecture.level}`;
+  const typeLabel =
+    lectureTypes.find((type) => type.value === lecture.typeWrite)?.label ||
+    lecture.typeWrite;
+  const lang = languageData.find((l) => l.code === lecture.language);
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 w-full group">
@@ -95,4 +104,4 @@ export function LectureCard({ lecture, onView, onEdit, onDelete }: LectureCardPr
       </CardContent>
     </Card>
   );
-} 
+}

@@ -64,12 +64,16 @@ export default function LecturesPage() {
     getLectures(page, 10);
   };
 
-  const handleAddLecture = async (data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">) => {
+  const handleAddLecture = async (
+    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  ) => {
     await postLecture(data as Lecture);
     closeAddModal();
   };
 
-  const handleEditLecture = async (data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">) => {
+  const handleEditLecture = async (
+    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  ) => {
     if (selectedLectureId) {
       await putLecture(selectedLectureId, data as Lecture);
       closeEditModal();
@@ -88,7 +92,7 @@ export default function LecturesPage() {
   };
 
   const getSelectedLecture = () => {
-    return lectures.find(lecture => lecture._id === selectedLectureId);
+    return lectures.find((lecture) => lecture._id === selectedLectureId);
   };
 
   return (
@@ -112,9 +116,12 @@ export default function LecturesPage() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
               <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
-                <DialogTitle className="text-xl">Crear Nueva Lectura</DialogTitle>
+                <DialogTitle className="text-xl">
+                  Crear Nueva Lectura
+                </DialogTitle>
                 <DialogDescription>
-                  Crea una nueva lectura para tu biblioteca. Completa todos los campos para una mejor experiencia.
+                  Crea una nueva lectura para tu biblioteca. Completa todos los
+                  campos para una mejor experiencia.
                 </DialogDescription>
               </DialogHeader>
               <div className="flex-grow overflow-y-auto px-6 pb-6">
@@ -164,7 +171,8 @@ export default function LecturesPage() {
           <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
             <DialogTitle className="text-xl">Editar Lectura</DialogTitle>
             <DialogDescription>
-              Modifica los detalles de la lectura. Todos los campos son importantes para una mejor experiencia.
+              Modifica los detalles de la lectura. Todos los campos son
+              importantes para una mejor experiencia.
             </DialogDescription>
           </DialogHeader>
           <div className="flex-grow overflow-y-auto px-6 pb-6">
@@ -192,7 +200,9 @@ export default function LecturesPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={closeDeleteDialog}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel onClick={closeDeleteDialog}>
+              Cancelar
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

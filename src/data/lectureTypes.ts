@@ -28,4 +28,4 @@ export const lectureTypes: LectureType[] = [
   { value: "guide", label: "Guía" },
   { value: "chronicle", label: "Crónica" },
   { value: "blog", label: "Blog" },
-]; 
+];

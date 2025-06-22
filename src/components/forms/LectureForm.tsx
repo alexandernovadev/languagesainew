@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
@@ -18,7 +18,9 @@ import type { Lecture } from "@/models/Lecture";
 
 interface LectureFormProps {
   initialData?: Partial<Lecture>;
-  onSubmit: (data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">) => Promise<void>;
+  onSubmit: (
+    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  ) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
   submitText?: string;
@@ -29,9 +31,11 @@ export function LectureForm({
   onSubmit,
   onCancel,
   loading = false,
-  submitText = "Guardar"
+  submitText = "Guardar",
 }: LectureFormProps) {
-  const [formData, setFormData] = useState<Omit<Lecture, "_id" | "createdAt" | "updatedAt">>({
+  const [formData, setFormData] = useState<
+    Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  >({
     time: 0,
     level: "",
     typeWrite: "",
@@ -39,10 +43,14 @@ export function LectureForm({
     img: "",
     urlAudio: "",
     content: "",
-    ...initialData
+    ...initialData,
   });
 
-  const isFormValid = formData.content && formData.level && formData.language && formData.typeWrite;
+  const isFormValid =
+    formData.content &&
+    formData.level &&
+    formData.language &&
+    formData.typeWrite;
 
   const handleSubmit = async () => {
     if (isFormValid) {
@@ -70,7 +78,9 @@ export function LectureForm({
                 }
               >
                 <SelectTrigger
-                  className={`h-10 ${!formData.level ? 'border-red-300 focus:border-red-500' : ''}`}
+                  className={`h-10 ${
+                    !formData.level ? "border-red-300 focus:border-red-500" : ""
+                  }`}
                 >
                   <SelectValue placeholder="Selecciona un nivel" />
                 </SelectTrigger>
@@ -86,7 +96,7 @@ export function LectureForm({
                 Define el nivel de dificultad de la lectura
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="typeWrite" className="text-sm font-medium">
                 Tipo de Contenido <span className="text-red-500">*</span>
@@ -97,8 +107,12 @@ export function LectureForm({
                   setFormData({ ...formData, typeWrite: value })
                 }
               >
-                <SelectTrigger 
-                  className={`h-10 ${!formData.typeWrite ? 'border-red-300 focus:border-red-500' : ''}`}
+                <SelectTrigger
+                  className={`h-10 ${
+                    !formData.typeWrite
+                      ? "border-red-300 focus:border-red-500"
+                      : ""
+                  }`}
                 >
                   <SelectValue placeholder="Selecciona un tipo" />
                 </SelectTrigger>
@@ -114,7 +128,7 @@ export function LectureForm({
                 Especifica el tipo de contenido
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="language" className="text-sm font-medium">
                 Idioma <span className="text-red-500">*</span>
@@ -126,7 +140,11 @@ export function LectureForm({
                 }
               >
                 <SelectTrigger
-                  className={`h-10 ${!formData.language ? 'border-red-300 focus:border-red-500' : ''}`}
+                  className={`h-10 ${
+                    !formData.language
+                      ? "border-red-300 focus:border-red-500"
+                      : ""
+                  }`}
                 >
                   <SelectValue placeholder="Selecciona un idioma" />
                 </SelectTrigger>
@@ -135,7 +153,9 @@ export function LectureForm({
                     <SelectItem key={lang.code} value={lang.code}>
                       <div className="flex items-center gap-2">
                         <span className="text-lg">{lang.flag}</span>
-                        <span>{lang.name} ({lang.code})</span>
+                        <span>
+                          {lang.name} ({lang.code})
+                        </span>
                       </div>
                     </SelectItem>
                   ))}
@@ -145,7 +165,7 @@ export function LectureForm({
                 Idioma principal del contenido
               </p>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="time" className="text-sm font-medium">
                 Duración Estimada (minutos)
@@ -193,12 +213,12 @@ export function LectureForm({
               </p>
               {formData.img && (
                 <div className="mt-2">
-                  <img 
-                    src={formData.img} 
-                    alt="Preview" 
+                  <img
+                    src={formData.img}
+                    alt="Preview"
                     className="w-32 h-20 object-cover rounded border"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.style.display = "none";
                     }}
                   />
                 </div>
@@ -227,11 +247,10 @@ export function LectureForm({
               />
             </div>
             <div className="flex justify-between items-center text-xs text-muted-foreground">
+              <span>{formData.content.length} caracteres</span>
               <span>
-                {formData.content.length} caracteres
-              </span>
-              <span>
-                Aproximadamente {Math.ceil(formData.content.length / 200)} minutos de lectura
+                Aproximadamente {Math.ceil(formData.content.length / 200)}{" "}
+                minutos de lectura
               </span>
             </div>
           </div>
@@ -239,11 +258,7 @@ export function LectureForm({
       </div>
       {/* Footer con botones */}
       <div className="flex-shrink-0 flex justify-end gap-3 pt-4 border-t mt-6">
-        <Button
-          variant="outline"
-          onClick={onCancel}
-          className="px-6"
-        >
+        <Button variant="outline" onClick={onCancel} className="px-6">
           Cancelar
         </Button>
         <Button
@@ -256,4 +271,4 @@ export function LectureForm({
       </div>
     </div>
   );
-} 
+}
