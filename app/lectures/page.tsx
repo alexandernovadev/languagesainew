@@ -170,7 +170,7 @@ export default function LecturesPage() {
               {lecture.description && <CardDescription className="line-clamp-2">{lecture.description}</CardDescription>}
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3" />
-                {lecture.createdAt.toLocaleDateString()}
+                {new Date(lecture.createdAt).toLocaleDateString()}
               </div>
             </CardHeader>
             <CardContent className="pt-0">
