@@ -47,7 +47,7 @@ export function EditableList({
             }
           }}
         />
-        <Button type="button" onClick={handleAddItem} variant="outline">
+        <Button type="button" onClick={handleAddItem} variant="secondary">
           <Plus className="h-4 w-4" />
         </Button>
       </div>
@@ -63,10 +63,10 @@ export function EditableList({
               />
               <Button
                 type="button"
-                variant="ghost"
+                variant="destructive"
                 size="sm"
                 onClick={() => handleRemoveItem(index)}
-                className="opacity-50 group-hover:opacity-100"
+                className="opacity-50 group-hover:opacity-100 bg-red-500/80 hover:bg-red-500 text-white"
               >
                 <X className="h-4 w-4" />
               </Button>
