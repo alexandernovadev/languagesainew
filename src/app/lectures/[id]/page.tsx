@@ -104,8 +104,74 @@ export default function LectureDetailPage() {
   };
 
   const renderInteractiveText = (text: string) => {
+    // Primero convertimos el Markdown a HTML
     const htmlContent = convertMarkdownToHtml(text);
-    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+    
+    // Parseamos el HTML para crear elementos React interactivos
+    const parseHtmlToReact = (html: string) => {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      const processNode = (node: Node): React.ReactNode => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent || '';
+          const words = text.split(' ');
+          
+          return words.map((word, index) => {
+            const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase();
+            const isSelected = selectedWords.includes(cleanWord);
+            const isCurrentlyPlaying = currentWord === cleanWord && isPlaying;
+            
+            return (
+              <span
+                key={`${index}-${word}`}
+                className={cn(
+                  "cursor-pointer hover:bg-primary/20 rounded px-1 transition-colors",
+                  isSelected && "bg-primary/30 text-primary-foreground",
+                  isCurrentlyPlaying && "bg-yellow-400/50 animate-pulse"
+                )}
+                onClick={() => handleWordClick(word)}
+              >
+                {word}{index < words.length - 1 ? ' ' : ''}
+              </span>
+            );
+          });
+        }
+        
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const element = node as Element;
+          const tagName = element.tagName.toLowerCase();
+          const children = Array.from(element.childNodes).map(processNode);
+          
+          const className = element.className || '';
+          
+          switch (tagName) {
+            case 'h1':
+              return <h1 key={Math.random()} className={className}>{children}</h1>;
+            case 'h2':
+              return <h2 key={Math.random()} className={className}>{children}</h2>;
+            case 'h3':
+              return <h3 key={Math.random()} className={className}>{children}</h3>;
+            case 'p':
+              return <p key={Math.random()} className={className}>{children}</p>;
+            case 'strong':
+              return <strong key={Math.random()} className={className}>{children}</strong>;
+            case 'em':
+              return <em key={Math.random()} className={className}>{children}</em>;
+            case 'li':
+              return <li key={Math.random()} className={className}>{children}</li>;
+            default:
+              return <span key={Math.random()}>{children}</span>;
+          }
+        }
+        
+        return null;
+      };
+      
+      return Array.from(tempDiv.childNodes).map(processNode);
+    };
+    
+    return <div>{parseHtmlToReact(htmlContent)}</div>;
   };
 
   if (loading) {
