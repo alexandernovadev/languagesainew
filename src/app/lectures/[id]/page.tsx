@@ -244,7 +244,10 @@ export default function LectureDetailPage() {
         <div className="space-y-3">
           <div className="flex items-center gap-4">
             <Avatar className="h-40 w-40 border-2 border-primary/50">
-              <AvatarImage src={lecture.img} alt={title} />
+              <AvatarImage
+                src={lecture.img || "/images/noImage.png"}
+                alt={title}
+              />
               <AvatarFallback>
                 <User className="h-10 w-10" />
               </AvatarFallback>
@@ -293,7 +296,6 @@ export default function LectureDetailPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Contenido de la Lectura</span>
             <Badge variant="secondary">
               Haz clic en las palabras para escucharlas
             </Badge>
