@@ -1,101 +1,115 @@
-import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { useLectureStore } from "@/lib/store/useLectureStore"
-import { ArrowLeft, Volume2, X, RotateCcw } from "lucide-react"
-import { cn } from "@/lib/utils"
-import type { Lecture } from "@/models/Lecture"
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useLectureStore } from "@/lib/store/useLectureStore";
+import {
+  ArrowLeft,
+  Volume2,
+  X,
+  RotateCcw,
+  PlayCircle,
+  FileText,
+  Clock,
+  Languages,
+  Star,
+  User,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Lecture } from "@/models/Lecture";
+import { getMarkdownTitle } from "@/lib/utils";
+import { lectureTypes } from "@/data/lectureTypes";
 
 export default function LectureDetailPage() {
-  const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
-  const { lectures, getLectureById, loading } = useLectureStore()
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { lectures, getLectureById, loading } = useLectureStore();
 
-  const [lecture, setLecture] = useState<Lecture | null>(null)
+  const [lecture, setLecture] = useState<Lecture | null>(null);
 
   // Palabras seleccionadas y pronunciación
-  const [selectedWords, setSelectedWords] = useState<string[]>([])
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentWord, setCurrentWord] = useState<string | null>(null)
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentWord, setCurrentWord] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
-      getLectureById(id)
+      getLectureById(id);
     }
-  }, [id, getLectureById])
+  }, [id, getLectureById]);
 
   useEffect(() => {
     if (id) {
-      const foundLecture = lectures.find((l) => l._id === id)
-      setLecture(foundLecture || null)
+      const foundLecture = lectures.find((l) => l._id === id);
+      setLecture(foundLecture || null);
     }
-  }, [id, lectures])
+  }, [id, lectures]);
 
   const speakWord = (word: string) => {
     if ("speechSynthesis" in window) {
-      setIsPlaying(true)
-      setCurrentWord(word)
+      setIsPlaying(true);
+      setCurrentWord(word);
 
-      const utterance = new window.SpeechSynthesisUtterance(word)
-      utterance.lang = "en-US"
-      utterance.rate = 0.8
-      utterance.pitch = 1
+      const utterance = new window.SpeechSynthesisUtterance(word);
+      utterance.lang = "en-US";
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
 
       utterance.onend = () => {
-        setIsPlaying(false)
-        setCurrentWord(null)
-      }
+        setIsPlaying(false);
+        setCurrentWord(null);
+      };
 
-      window.speechSynthesis.speak(utterance)
+      window.speechSynthesis.speak(utterance);
     }
-  }
+  };
 
   const handleWordClick = (word: string) => {
-    const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase()
+    const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase();
     if (cleanWord.length > 2 && !selectedWords.includes(cleanWord)) {
-      setSelectedWords((prev) => [...prev, cleanWord])
-      speakWord(cleanWord)
+      setSelectedWords((prev) => [...prev, cleanWord]);
+      speakWord(cleanWord);
     }
-  }
+  };
 
   const removeSelectedWord = (word: string) => {
-    setSelectedWords((prev) => prev.filter((w) => w !== word))
-  }
+    setSelectedWords((prev) => prev.filter((w) => w !== word));
+  };
 
   const clearSelectedWords = () => {
-    setSelectedWords([])
-  }
+    setSelectedWords([]);
+  };
 
   const renderInteractiveText = (text: string) => {
-    const words = text.split(" ")
+    const words = text.split(" ");
     return words.map((word, index) => {
-      const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase()
-      const isSelected = selectedWords.includes(cleanWord)
-      const isCurrentlyPlaying = currentWord === cleanWord && isPlaying
+      const cleanWord = word.replace(/[.,!?;:"()]/g, "").toLowerCase();
+      const isSelected = selectedWords.includes(cleanWord);
+      const isCurrentlyPlaying = currentWord === cleanWord && isPlaying;
       return (
         <span
           key={index}
           className={cn(
             "cursor-pointer hover:bg-primary/20 rounded px-1 transition-colors",
             isSelected && "bg-primary/30 text-primary-foreground",
-            isCurrentlyPlaying && "bg-yellow-400/50 animate-pulse",
+            isCurrentlyPlaying && "bg-yellow-400/50 animate-pulse"
           )}
           onClick={() => handleWordClick(word)}
         >
           {word}{" "}
         </span>
-      )
-    })
-  }
+      );
+    });
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-muted-foreground">Cargando lectura...</p>
       </div>
-    )
+    );
   }
 
   if (!lecture) {
@@ -103,43 +117,84 @@ export default function LectureDetailPage() {
       <div className="flex items-center justify-center h-64">
         <p className="text-muted-foreground">Lectura no encontrada</p>
       </div>
-    )
+    );
   }
 
-  const words = lecture.content.split(/\s+/)
+  const words = lecture.content.split(/\s+/);
+
+  const title = getMarkdownTitle(lecture.content) || "Detalle de la Lectura";
+  const typeLabel =
+    lectureTypes.find((type) => type.value === lecture.typeWrite)?.label ||
+    lecture.typeWrite;
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={() => navigate(-1)}>
+      <div className="flex flex-col gap-4">
+        <Button
+          variant="outline"
+          onClick={() => navigate(-1)}
+          className="w-fit"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Volver
+          Volver a las Lecturas
         </Button>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            {lecture.language} - {lecture.level}
-          </h1>
-          <div className="text-muted-foreground text-sm">
-            {lecture.typeWrite} | {lecture.time} min
+        <div className="space-y-3">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-40 w-40 border-2 border-primary/50">
+              <AvatarImage src={lecture.img} alt={title} />
+              <AvatarFallback>
+                <User className="h-10 w-10" />
+              </AvatarFallback>
+            </Avatar>
+            <h1 className="text-4xl font-bold tracking-tight text-primary">
+              {title}
+            </h1>
+          </div>
+          <div className="flex items-center gap-6 text-muted-foreground text-sm flex-wrap">
+            <div className="flex items-center gap-2"></div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge
+                variant="outline"
+                className="border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
+              >
+                <Star className="h-3.5 w-3.5" />
+                <span>{lecture.level}</span>
+              </Badge>
+              <Badge
+                variant="outline"
+                className="border-blue-400 text-blue-400 hover:bg-blue-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                <span>{typeLabel}</span>
+              </Badge>
+              <Badge
+                variant="outline"
+                className="border-green-400 text-green-400 hover:bg-green-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
+              >
+                <Clock className="h-3.5 w-3.5" />
+                <span>{lecture.time} min</span>
+              </Badge>
+              <Badge
+                variant="outline"
+                className="border-purple-400 text-purple-400 hover:bg-purple-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
+              >
+                <Languages className="h-3.5 w-3.5" />
+                <span>{lecture.language.toUpperCase()}</span>
+              </Badge>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Imagen */}
-      {lecture.img && (
-        <div className="w-full flex justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={lecture.img} alt={lecture.language} className="rounded-lg max-h-64 object-cover" />
-        </div>
-      )}
 
       {/* Contenido de la lectura */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Contenido de la Lectura</span>
-            <Badge variant="secondary">Haz clic en las palabras para escucharlas</Badge>
+            <Badge variant="secondary">
+              Haz clic en las palabras para escucharlas
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -168,7 +223,11 @@ export default function LectureDetailPage() {
             <CardTitle className="flex items-center justify-between text-lg">
               <span>Palabras Seleccionadas ({selectedWords.length})</span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={clearSelectedWords}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearSelectedWords}
+                >
                   <RotateCcw className="h-4 w-4 mr-1" />
                   Limpiar
                 </Button>
@@ -178,7 +237,11 @@ export default function LectureDetailPage() {
           <CardContent className="pt-0">
             <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
               {selectedWords.map((word, index) => (
-                <Badge key={index} variant="secondary" className="cursor-pointer hover:bg-primary/20 transition-colors">
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="cursor-pointer hover:bg-primary/20 transition-colors"
+                >
                   <span onClick={() => speakWord(word)}>{word}</span>
                   <Button
                     variant="ghost"
@@ -195,7 +258,12 @@ export default function LectureDetailPage() {
                     onClick={() => speakWord(word)}
                     disabled={isPlaying && currentWord === word}
                   >
-                    <Volume2 className={cn("h-3 w-3", isPlaying && currentWord === word && "animate-pulse")} />
+                    <Volume2
+                      className={cn(
+                        "h-3 w-3",
+                        isPlaying && currentWord === word && "animate-pulse"
+                      )}
+                    />
                   </Button>
                 </Badge>
               ))}
@@ -207,5 +275,5 @@ export default function LectureDetailPage() {
       {/* Espaciado para el panel fijo */}
       {selectedWords.length > 0 && <div className="h-32" />}
     </div>
-  )
+  );
 }
