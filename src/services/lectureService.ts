@@ -4,7 +4,7 @@ import { getAuthHeaders } from "./utils/headers";
 
 export const lectureService = {
   async getLectures(page = 1, limit = 10) {
-    const res = await api.get("/api/lectures", { headers: getAuthHeaders() });
+    const res = await api.get(`/api/lectures?page=${page}&limit=${limit}`, { headers: getAuthHeaders() });
     return res.data;
   },
 

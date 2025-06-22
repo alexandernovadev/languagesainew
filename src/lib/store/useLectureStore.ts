@@ -23,6 +23,7 @@ interface LectureStore {
   deleteLecture: (id: string | number) => Promise<void>;
   clearErrors: () => void;
   updateUrlAudio: (id: string, urlAudio: string) => Promise<void>;
+  loadMoreLectures: (page: number, limit?: number) => Promise<void>;
 }
 
 export const useLectureStore = create<LectureStore>((set, get) => ({
@@ -39,31 +40,38 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       loading: true,
       errors: { ...get().errors, get: null },
       currentPage: page,
-      ...(page === 1 ? { lectures: [] } : {}),
     });
     try {
       const {data} = await lectureService.getLectures(page, limit);
       console.log("Data", data);
       
+      set({
+        lectures: data.data,
+        totalPages: data.pages,
+        loading: false,
+      });
+    } catch (error: any) {
+      set({ errors: { ...get().errors, get: error.message }, loading: false });
+    }
+  },
+
+  loadMoreLectures: async (page: number, limit = 10) => {
+    set({
+      loading: true,
+      errors: { ...get().errors, get: null },
+    });
+    try {
+      const {data} = await lectureService.getLectures(page, limit);
+      
       set((state) => {
-        if (page === 1) {
-          // Si es la primera página, reemplazar completamente
-          return {
-            lectures: data.data,
-            totalPages: data.pages,
-            loading: false,
-          };
-        } else {
-          // Si no es la primera página, concatenar pero evitar duplicados
-          const existingIds = new Set(state.lectures.map(lecture => lecture._id));
-          const newLectures = data.data.filter((lecture: Lecture) => !existingIds.has(lecture._id));
-          
-          return {
-            lectures: [...state.lectures, ...newLectures],
-            totalPages: data.pages,
-            loading: false,
-          };
-        }
+        const existingIds = new Set(state.lectures.map(lecture => lecture._id));
+        const newLectures = data.data.filter((lecture: Lecture) => !existingIds.has(lecture._id));
+        
+        return {
+          lectures: [...state.lectures, ...newLectures],
+          totalPages: data.pages,
+          loading: false,
+        };
       });
     } catch (error: any) {
       set({ errors: { ...get().errors, get: error.message }, loading: false });
