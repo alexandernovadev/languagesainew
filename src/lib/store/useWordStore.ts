@@ -52,7 +52,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       ...(page === 1 ? { words: [] } : {}),
     });
     try {
-      const data = await wordService.getWords(page, limit, wordUser);
+      const { data } = await wordService.getWords(page, limit, wordUser);
+
       set({
         words: data.data,
         totalPages: data.pages,
@@ -92,7 +93,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
   getWordById: async (id: string) => {
     set({ loading: true, errors: null });
     try {
-      const data = await wordService.getWordById(id);
+      const { data } = await wordService.getWordById(id);
       set({ activeWord: data, loading: false });
     } catch (error: any) {
       set({ errors: error.message, loading: false });
@@ -102,7 +103,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
   getWordByName: async (word: string) => {
     set({ loading: true, errors: null });
     try {
-      const data = await wordService.getWordByName(word);
+      const { data } = await wordService.getWordByName(word);
       set({ activeWord: data, loading: false });
     } catch (error: any) {
       set({ errors: error.message, loading: false });
@@ -115,7 +116,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       errors: null,
     });
     try {
-      const data = await wordService.createWord(wordData);
+      const { data } = await wordService.createWord(wordData);
       set((state) => ({
         words: [...state.words, data],
         actionLoading: { ...state.actionLoading, create: false },
@@ -134,7 +135,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       errors: null,
     });
     try {
-      const data = await wordService.updateWord(id, wordData);
+      const { data } = await wordService.updateWord(id, wordData);
       set((state) => ({
         words: state.words.map((word) => (word._id === id ? data : word)),
         activeWord: data,
@@ -154,7 +155,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       errors: null,
     });
     try {
-      const data = await wordService.updateWordLevel(id, level);
+      const { data } = await wordService.updateWordLevel(id, level);
       set((state) => ({
         words: state.words.map((word) => (word._id === id ? data : word)),
         activeWord: data,
