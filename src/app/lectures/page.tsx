@@ -27,12 +27,11 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useLectureStore } from "@/lib/store/useLectureStore"
 import { Eye, Edit, Trash2, Plus, BookOpen, Calendar } from "lucide-react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
+import { useNavigate } from "react-router-dom"
 import type { Lecture } from "@/models/Lecture"
 
 export default function LecturesPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const {
     lectures,
     loading,
@@ -117,7 +116,7 @@ export default function LecturesPage() {
   }
 
   const viewLecture = (lectureId: string) => {
-    router.push(`/lectures/${lectureId}`)
+    navigate(`/lectures/${lectureId}`)
   }
 
   return (
@@ -218,7 +217,7 @@ export default function LecturesPage() {
           lectures.map((lecture) => (
             <Card key={lecture._id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative h-48 w-full">
-                <Image src={lecture.img || "/placeholder.svg"} alt={lecture.language} fill className="object-cover" />
+                <img src={lecture.img || "/placeholder.svg"} alt={lecture.language} className="h-full w-full object-cover" />
               </div>
               <CardHeader className="pb-3">
                 <CardTitle className="line-clamp-2">{lecture.language} - {lecture.level}</CardTitle>

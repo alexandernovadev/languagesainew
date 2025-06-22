@@ -13,7 +13,7 @@ import {
   User as UserIcon,
   Lock,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useLocation, Link } from "react-router-dom";
 import { useUserStore } from "@/lib/store/user-store";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
@@ -53,7 +53,7 @@ import {
 } from "./ui/dropdown-menu";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const { user, token, logout, isAuthenticated } = useUserStore();
   const [open, setOpen] = useState(false);
 
@@ -93,10 +93,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       pathname === item.url && "sidebar-neon-active"
                     )}
                   >
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -117,10 +117,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       pathname === item.url && "sidebar-neon-active"
                     )}
                   >
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -141,10 +141,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       pathname === item.url && "sidebar-neon-active"
                     )}
                   >
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

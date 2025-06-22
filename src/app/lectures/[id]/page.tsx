@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,14 +11,11 @@ import { cn } from "@/lib/utils"
 import type { Lecture } from "@/models/Lecture"
 
 export default function LectureDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const {
-    getLectureById,
-    activeLecture,
-    loading,
-    errors,
-  } = useLectureStore()
+  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+  const { lectures, getLectureById, loading } = useLectureStore()
+
+  const [lecture, setLecture] = useState<Lecture | null>(null)
 
   // Palabras seleccionadas y pronunciación
   const [selectedWords, setSelectedWords] = useState<string[]>([])
@@ -26,11 +23,17 @@ export default function LectureDetailPage() {
   const [currentWord, setCurrentWord] = useState<string | null>(null)
 
   useEffect(() => {
-    if (params.id) {
-      getLectureById(params.id as string)
+    if (id) {
+      getLectureById(id)
     }
-    // eslint-disable-next-line
-  }, [params.id])
+  }, [id, getLectureById])
+
+  useEffect(() => {
+    if (id) {
+      const foundLecture = lectures.find((l) => l._id === id)
+      setLecture(foundLecture || null)
+    }
+  }, [id, lectures])
 
   const speakWord = (word: string) => {
     if ("speechSynthesis" in window) {
@@ -97,7 +100,7 @@ export default function LectureDetailPage() {
     )
   }
 
-  if (!activeLecture) {
+  if (!lecture) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-muted-foreground">Lectura no encontrada</p>
@@ -105,13 +108,13 @@ export default function LectureDetailPage() {
     )
   }
 
-  const lecture: Lecture = activeLecture
+  const words = lecture.content.split(/\s+/)
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={() => router.back()}>
+        <Button variant="outline" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Volver
         </Button>
@@ -143,10 +146,18 @@ export default function LectureDetailPage() {
         </CardHeader>
         <CardContent>
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            {lecture.content.split("\n\n").map((paragraph: string, index: number) => (
-              <p key={index} className="mb-4 leading-relaxed text-justify">
-                {renderInteractiveText(paragraph)}
-              </p>
+            {words.map((word, index) => (
+              <span
+                key={index}
+                className={`cursor-pointer transition-colors hover:bg-yellow-200 dark:hover:bg-yellow-700 ${
+                  selectedWords.includes(word)
+                    ? "bg-yellow-300 dark:bg-yellow-600"
+                    : ""
+                }`}
+                onClick={() => handleWordClick(word)}
+              >
+                {word}{" "}
+              </span>
             ))}
           </div>
         </CardContent>
