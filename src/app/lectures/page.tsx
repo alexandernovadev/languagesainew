@@ -111,9 +111,7 @@ export default function LecturesPage() {
             Página {currentPage} de {totalPages} • {lectures.length} lectures
           </Badge>
           <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
-            <DialogTrigger asChild>
-              <Button onClick={openAddModal}>Crear Nueva Lecture</Button>
-            </DialogTrigger>
+            <Button onClick={openAddModal}>Crear Nueva Lecture</Button>
             <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
               <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
                 <DialogTitle className="text-xl">
