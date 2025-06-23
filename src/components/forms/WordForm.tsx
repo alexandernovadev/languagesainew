@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,18 +31,29 @@ export function WordForm({
   onCancel,
   loading = false,
 }: WordFormProps) {
-  const [formData, setFormData] = useState<Partial<Word>>({
-    word: "",
-    IPA: "",
-    definition: "",
-    examples: [],
-    sinonyms: [],
-    codeSwitching: [],
-    level: "easy",
-    language: "en",
-    spanish: { word: "", definition: "" },
-    ...initialData,
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<Partial<Word>>({
+    defaultValues: {
+      word: "",
+      IPA: "",
+      definition: "",
+      examples: [],
+      sinonyms: [],
+      codeSwitching: [],
+      level: "easy",
+      language: "en",
+      spanish: { word: "", definition: "" },
+      ...initialData,
+    },
   });
+
+  const formData = watch();
 
   useEffect(() => {
     // Ensure arrays are not undefined when resetting form
@@ -51,35 +63,31 @@ export function WordForm({
       sinonyms: initialData.sinonyms || [],
       codeSwitching: initialData.codeSwitching || [],
     };
-    setFormData(dataWithArrays);
-  }, [initialData]);
+    reset(dataWithArrays);
+  }, [initialData, reset]);
 
   const isFormValid = formData.word && formData.spanish?.word;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmitForm = (data: Partial<Word>) => {
     if (isFormValid) {
-      onSubmit(formData);
+      onSubmit(data);
     }
   };
 
   const handleChange = (field: keyof Word, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setValue(field, value);
   };
 
   const handleSpanishChange = (
     field: "word" | "definition",
     value: string
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      spanish: { ...prev.spanish, [field]: value } as any,
-    }));
+    setValue(`spanish.${field}`, value);
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmitForm)}
       className="flex flex-col flex-grow min-h-0"
     >
       <div className="flex-grow overflow-y-auto px-1 min-h-0">
@@ -111,8 +119,7 @@ export function WordForm({
                     <Label htmlFor="word">Palabra (Inglés)</Label>
                     <Input
                       id="word"
-                      value={formData.word || ""}
-                      onChange={(e) => handleChange("word", e.target.value)}
+                      {...register("word", { required: true })}
                       required
                     />
                   </div>
@@ -130,8 +137,7 @@ export function WordForm({
                   <Label htmlFor="definition">Definición (Inglés)</Label>
                   <Textarea
                     id="definition"
-                    value={formData.definition || ""}
-                    onChange={(e) => handleChange("definition", e.target.value)}
+                    {...register("definition")}
                     placeholder="Escribe una definición detallada aquí..."
                   />
                 </div>
@@ -149,8 +155,7 @@ export function WordForm({
                    <Label htmlFor="ipa">IPA (Opcional)</Label>
                     <Input
                       id="ipa"
-                      value={formData.IPA || ""}
-                      onChange={(e) => handleChange("IPA", e.target.value)}
+                      {...register("IPA")}
                     />
                  </div>
                  <div className="space-y-2">
@@ -205,13 +210,13 @@ export function WordForm({
              <Card>
                <CardHeader>
                   <CardTitle className="flex items-center gap-2"><ListPlus className="h-5 w-5"/> Code Switching</CardTitle>
-                 <CardDescription>Palabras que se utilizan para ilustrar el uso de code switching.</CardDescription>
+                 <CardDescription>Expresiones que combinan idiomas.</CardDescription>
                </CardHeader>
                <CardContent>
                  <EditableList
                    items={formData.codeSwitching || []}
                    onChange={(items) => handleChange("codeSwitching", items)}
-                   placeholder="Añadir ejemplo de code switching..."
+                   placeholder="Añadir expresión..."
                  />
                </CardContent>
              </Card>
@@ -219,12 +224,12 @@ export function WordForm({
         </Tabs>
       </div>
 
-      <div className="flex justify-end gap-2 pt-4 border-t shrink-0 bg-background">
+      <div className="flex justify-end gap-2 pt-4 pb-4 border-t shrink-0 bg-background px-6">
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancelar
         </Button>
         <Button type="submit" disabled={!isFormValid || loading}>
-          {loading ? "Guardando..." : "Guardar Cambios"}
+          {loading ? "Guardando..." : "Guardar"}
         </Button>
       </div>
     </form>

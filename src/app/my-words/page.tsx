@@ -176,13 +176,12 @@ export default function MyWordsPage() {
                       <TableCell>{word.spanish?.word || "N/A"}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
-                            word.level === "easy"
-                              ? "default"
-                              : word.level === "medium"
-                              ? "secondary"
-                              : "destructive"
-                          }
+                          variant="outline"
+                          className={cn(
+                            word.level === "easy" && "border-green-500 text-green-500",
+                            word.level === "medium" && "border-blue-500 text-blue-500",
+                            word.level === "hard" && "border-red-600 text-red-600"
+                          )}
                         >
                           {word.level}
                         </Badge>
