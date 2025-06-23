@@ -152,15 +152,14 @@ export default function LectureGenerator() {
     setIsSaving(true);
     const data = getValues();
 
-    const lecture: Lecture = {
-      _id: "",
+    const lecture = {
       time: estimatedTime,
       level: data.level,
       typeWrite: data.typeWrite,
       language: "es",
       img: "",
       content: generatedText,
-    };
+    } as Lecture;
 
     try {
       await postLecture(lecture);

@@ -42,9 +42,9 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       currentPage: page,
     });
     try {
-      const {data} = await lectureService.getLectures(page, limit);
+      const { data } = await lectureService.getLectures(page, limit);
       console.log("Data", data);
-      
+
       set({
         lectures: data.data,
         totalPages: data.pages,
@@ -61,12 +61,16 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       errors: { ...get().errors, get: null },
     });
     try {
-      const {data} = await lectureService.getLectures(page, limit);
-      
+      const { data } = await lectureService.getLectures(page, limit);
+
       set((state) => {
-        const existingIds = new Set(state.lectures.map(lecture => lecture._id));
-        const newLectures = data.data.filter((lecture: Lecture) => !existingIds.has(lecture._id));
-        
+        const existingIds = new Set(
+          state.lectures.map((lecture) => lecture._id)
+        );
+        const newLectures = data.data.filter(
+          (lecture: Lecture) => !existingIds.has(lecture._id)
+        );
+
         return {
           lectures: [...state.lectures, ...newLectures],
           totalPages: data.pages,
@@ -97,7 +101,9 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       errors: { ...get().errors, post: null },
     });
     try {
-      const data = await lectureService.postLecture(lectureData);
+      const { data } = await lectureService.postLecture(lectureData);
+      console.log(data);
+
       set((state) => ({
         lectures: [...state.lectures, data],
         actionLoading: { ...state.actionLoading, post: false },
@@ -116,7 +122,11 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       errors: { ...get().errors, updateAudio: null },
     });
     try {
-      const data = await lectureService.updateLectureAudioUrl(id, urlAudio, voice);
+      const data = await lectureService.updateLectureAudioUrl(
+        id,
+        urlAudio,
+        voice
+      );
       set((state) => ({
         lectures: state.lectures.map((lecture) =>
           lecture._id === id ? { ...lecture, urlAudio: data.urlAudio } : lecture
