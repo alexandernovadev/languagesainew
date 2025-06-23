@@ -19,6 +19,7 @@ import { cn } from "@/utils/common/classnames";
 import type { Lecture } from "@/models/Lecture";
 import { getMarkdownTitle, convertMarkdownToHtml } from "@/utils/common/string";
 import { lectureTypes } from "@/data/lectureTypes";
+import { SPEECH_RATES } from "../../speechRates";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -51,7 +52,7 @@ export default function LectureDetailPage() {
 
       const utterance = new window.SpeechSynthesisUtterance(word);
       utterance.lang = "en-US";
-      utterance.rate = 0.8;
+      utterance.rate = SPEECH_RATES.NORMAL;
       utterance.pitch = 1;
 
       utterance.onend = () => {

@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
+import { SPEECH_RATES } from "../../../speechRates";
 
 export default function AnkiGamePage() {
   const {
@@ -144,7 +145,7 @@ export default function AnkiGamePage() {
                             currentCard.word
                           );
                           utterance.lang = "en-US";
-                          utterance.rate = 1;
+                          utterance.rate = SPEECH_RATES.NORMAL;
                           window.speechSynthesis.speak(utterance);
                         }
                       }}
@@ -162,7 +163,7 @@ export default function AnkiGamePage() {
                             currentCard.word
                           );
                           utterance.lang = "en-US";
-                          utterance.rate = 0.1;
+                          utterance.rate = SPEECH_RATES.SUPERSLOW;
                           window.speechSynthesis.speak(utterance);
                         }
                       }}

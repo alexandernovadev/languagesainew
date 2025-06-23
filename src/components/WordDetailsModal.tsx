@@ -5,6 +5,7 @@ import { RefreshCw } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
+import { SPEECH_RATES } from "../speechRates";
 
 interface WordDetailsModalProps {
   word: Word;
@@ -39,25 +40,13 @@ export function WordDetailsModal({
   loadingCodeSwitching = false,
   loadingTypes = false,
 }: WordDetailsModalProps) {
-  const speakWord = (rate = 0.8, language = "en-US") => {
+  const speakWord = (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
     const utterance = new SpeechSynthesisUtterance(word.word);
     utterance.rate = rate;
     utterance.lang = language;
     speechSynthesis.speak(utterance);
   };
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case "easy":
-        return "text-green-600 border-green-600";
-      case "medium":
-        return "text-blue-600 border-blue-600";
-      case "hard":
-        return "text-red-600 border-red-600";
-      default:
-        return "text-gray-600 border-gray-600";
-    }
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -166,7 +155,7 @@ export function WordDetailsModal({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => speakWord(0.5)}
+                  onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
                   className="h-9 w-9 p-0 rounded-full border-2"
                 >
                   🐢

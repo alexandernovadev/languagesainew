@@ -52,6 +52,7 @@ import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
+import { SPEECH_RATES } from "../../speechRates";
 
 export default function MyWordsPage() {
   const {
@@ -242,9 +243,9 @@ export default function MyWordsPage() {
     }
   };
 
-  const speakWord = (word: string) => {
-    // Simplified speak logic, can be enhanced later
+  const speakWord = (word: string, rate = SPEECH_RATES.NORMAL) => {
     const utterance = new SpeechSynthesisUtterance(word);
+    utterance.rate = rate;
     speechSynthesis.speak(utterance);
   };
 
@@ -318,10 +319,18 @@ export default function MyWordsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => speakWord(word.word)}
+                        onClick={() => speakWord(word.word, SPEECH_RATES.NORMAL)}
                         className="h-8 w-8 p-0"
                       >
                         <Volume2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => speakWord(word.word, SPEECH_RATES.SUPERSLOW)}
+                        className="h-8 w-8 p-0"
+                      >
+                        🐢
                       </Button>
                       {word.word}
                     </TableCell>
