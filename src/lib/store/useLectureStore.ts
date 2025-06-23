@@ -43,7 +43,6 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     });
     try {
       const { data } = await lectureService.getLectures(page, limit);
-      console.log("Data", data);
 
       set({
         lectures: data.data,
@@ -102,7 +101,6 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     });
     try {
       const { data } = await lectureService.postLecture(lectureData);
-      console.log(data);
 
       set((state) => ({
         lectures: [...state.lectures, data],

@@ -18,7 +18,6 @@ export function useGenerator(type: 'exam' | 'lecture') {
 
   const handleFilterSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(`${type} filters applied:`, filters)
     setIsFilterOpen(false)
   }
 
