@@ -224,8 +224,6 @@ body {
 }
 
 .shimmer-text {
-  font-size: 1.1rem;
-  font-weight: bold;
   background: linear-gradient(
     90deg,
     #888 0%,
