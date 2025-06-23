@@ -17,6 +17,11 @@ interface WordDetailsModalProps {
   onRefreshCodeSwitching?: () => void;
   onRefreshTypes?: () => void;
   loading?: boolean;
+  loadingImage?: boolean;
+  loadingExamples?: boolean;
+  loadingSynonyms?: boolean;
+  loadingCodeSwitching?: boolean;
+  loadingTypes?: boolean;
 }
 
 export function WordDetailsModal({
@@ -29,6 +34,11 @@ export function WordDetailsModal({
   onRefreshCodeSwitching,
   onRefreshTypes,
   loading = false,
+  loadingImage = false,
+  loadingExamples = false,
+  loadingSynonyms = false,
+  loadingCodeSwitching = false,
+  loadingTypes = false,
 }: WordDetailsModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -82,10 +92,12 @@ export function WordDetailsModal({
 
   const SectionHeader = ({ 
     title, 
-    onRefresh 
+    onRefresh,
+    loading = false
   }: { 
     title: string;
     onRefresh?: () => void;
+    loading?: boolean;
   }) => (
     <div className="flex items-center justify-between mb-4">
       <h3 className="text-lg font-semibold text-muted-foreground">{title}</h3>
@@ -196,12 +208,12 @@ export function WordDetailsModal({
                     variant="ghost"
                     size="sm"
                     onClick={onRefreshImage}
-                    disabled={loading}
+                    disabled={loadingImage}
                     className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 rounded-full"
                   >
                     <RefreshCw className={cn(
                       "h-4 w-4",
-                      loading && "animate-spin"
+                      loadingImage && "animate-spin"
                     )} />
                   </Button>
                 )}
@@ -226,7 +238,7 @@ export function WordDetailsModal({
             {/* Examples */}
             {word.examples && word.examples.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Examples" onRefresh={onRefreshExamples} />
+                <SectionHeader title="Examples" onRefresh={onRefreshExamples} loading={loadingExamples} />
                 <div className="space-y-2">
                   {word.examples.map((example, index) => (
                     <p
@@ -243,7 +255,7 @@ export function WordDetailsModal({
             {/* Code Switching */}
             {word.codeSwitching && word.codeSwitching.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Code-Switching" onRefresh={onRefreshCodeSwitching} />
+                <SectionHeader title="Code-Switching" onRefresh={onRefreshCodeSwitching} loading={loadingCodeSwitching} />
                 <div className="space-y-2">
                   {word.codeSwitching.map((example, index) => (
                     <p
@@ -260,7 +272,7 @@ export function WordDetailsModal({
             {/* Synonyms */}
             {word.sinonyms && word.sinonyms.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Synonyms" onRefresh={onRefreshSynonyms} />
+                <SectionHeader title="Synonyms" onRefresh={onRefreshSynonyms} loading={loadingSynonyms} />
                 <div className="space-y-2">
                   {word.sinonyms.map((synonym, index) => (
                     <p
@@ -277,7 +289,7 @@ export function WordDetailsModal({
             {/* Word Types */}
             {word.type && word.type.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Word Types" onRefresh={onRefreshTypes} />
+                <SectionHeader title="Word Types" onRefresh={onRefreshTypes} loading={loadingTypes} />
                 <div className="space-y-2">
                   {word.type.map((type, index) => (
                     <p

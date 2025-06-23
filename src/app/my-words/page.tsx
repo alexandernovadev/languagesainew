@@ -76,6 +76,16 @@ export default function MyWordsPage() {
     getWords()
   }, [searchQuery, getWords]) // Re-fetch when the debounced search query changes
 
+  // Sync selectedWord with updated data from store
+  useEffect(() => {
+    if (selectedWord && detailsModalOpen) {
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord && JSON.stringify(updatedWord) !== JSON.stringify(selectedWord)) {
+        setSelectedWord(updatedWord)
+      }
+    }
+  }, [words, selectedWord, detailsModalOpen])
+
   const handleFormSubmit = async (data: Partial<Word>) => {
     if (isEditing && selectedWord) {
       await updateWord(selectedWord._id, data)
@@ -117,12 +127,22 @@ export default function MyWordsPage() {
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
     if (selectedWord?._id) {
       await updateWordLevel(selectedWord._id, level)
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
   const handleRefreshImage = async () => {
     if (selectedWord?._id) {
       await updateWordImage(selectedWord._id, selectedWord.word, selectedWord.img)
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
@@ -134,6 +154,11 @@ export default function MyWordsPage() {
         selectedWord.language, 
         selectedWord.examples || []
       )
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
@@ -145,6 +170,11 @@ export default function MyWordsPage() {
         selectedWord.language, 
         selectedWord.sinonyms || []
       )
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
@@ -156,6 +186,11 @@ export default function MyWordsPage() {
         selectedWord.language, 
         selectedWord.codeSwitching || []
       )
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
@@ -167,6 +202,11 @@ export default function MyWordsPage() {
         selectedWord.language, 
         selectedWord.type || []
       )
+      // Update selectedWord with the latest data
+      const updatedWord = words.find(w => w._id === selectedWord._id)
+      if (updatedWord) {
+        setSelectedWord(updatedWord)
+      }
     }
   }
 
@@ -371,14 +411,12 @@ export default function MyWordsPage() {
           onRefreshSynonyms={handleRefreshSynonyms}
           onRefreshCodeSwitching={handleRefreshCodeSwitching}
           onRefreshTypes={handleRefreshTypes}
-          loading={
-            actionLoading.updateLevel ||
-            actionLoading.updateImage ||
-            actionLoading.updateExamples ||
-            actionLoading.updateSynonyms ||
-            actionLoading.updateCodeSwitching ||
-            actionLoading.updateTypes
-          }
+          loading={actionLoading.updateLevel}
+          loadingImage={actionLoading.updateImage}
+          loadingExamples={actionLoading.updateExamples}
+          loadingSynonyms={actionLoading.updateSynonyms}
+          loadingCodeSwitching={actionLoading.updateCodeSwitching}
+          loadingTypes={actionLoading.updateTypes}
         />
       )}
     </div>

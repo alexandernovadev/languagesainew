@@ -241,13 +241,15 @@ export const useWordStore = create<WordStore>((set, get) => ({
     });
     try {
       const { data } = await wordService.updateWordExamples(wordId, word, language, oldExamples);
+      // Refresh the word data to get the updated content
+      const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
         words: state.words.map((w) =>
-          w._id === wordId ? { ...w, examples: data.examples, updatedAt: data.updatedAt } : w
+          w._id === wordId ? updatedWord.data : w
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, examples: data.examples, updatedAt: data.updatedAt }
+            ? updatedWord.data
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateExamples: false },
       }));
@@ -266,13 +268,15 @@ export const useWordStore = create<WordStore>((set, get) => ({
     });
     try {
       const { data } = await wordService.updateWordCodeSwitching(wordId, word, language, oldExamples);
+      // Refresh the word data to get the updated content
+      const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
         words: state.words.map((w) =>
-          w._id === wordId ? { ...w, codeSwitching: data.codeSwitching, updatedAt: data.updatedAt } : w
+          w._id === wordId ? updatedWord.data : w
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, codeSwitching: data.codeSwitching, updatedAt: data.updatedAt }
+            ? updatedWord.data
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateCodeSwitching: false },
       }));
@@ -291,13 +295,15 @@ export const useWordStore = create<WordStore>((set, get) => ({
     });
     try {
       const { data } = await wordService.updateWordSynonyms(wordId, word, language, oldExamples);
+      // Refresh the word data to get the updated content
+      const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
         words: state.words.map((w) =>
-          w._id === wordId ? { ...w, sinonyms: data.sinonyms, updatedAt: data.updatedAt } : w
+          w._id === wordId ? updatedWord.data : w
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, sinonyms: data.sinonyms, updatedAt: data.updatedAt }
+            ? updatedWord.data
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateSynonyms: false },
       }));
@@ -316,13 +322,15 @@ export const useWordStore = create<WordStore>((set, get) => ({
     });
     try {
       const { data } = await wordService.updateWordTypes(wordId, word, language, oldExamples);
+      // Refresh the word data to get the updated content
+      const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
         words: state.words.map((w) =>
-          w._id === wordId ? { ...w, type: data.type, updatedAt: data.updatedAt } : w
+          w._id === wordId ? updatedWord.data : w
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, type: data.type, updatedAt: data.updatedAt }
+            ? updatedWord.data
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateTypes: false },
       }));
@@ -341,13 +349,15 @@ export const useWordStore = create<WordStore>((set, get) => ({
     });
     try {
       const { data } = await wordService.updateWordImage(wordId, word, imgOld);
+      // Refresh the word data to get the updated content
+      const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
         words: state.words.map((w) =>
-          w._id === wordId ? { ...w, img: data.img, updatedAt: data.updatedAt } : w
+          w._id === wordId ? updatedWord.data : w
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, img: data.img, updatedAt: data.updatedAt }
+            ? updatedWord.data
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateImage: false },
       }));
