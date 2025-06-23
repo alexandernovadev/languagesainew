@@ -70,12 +70,10 @@ export default function AnkiGame() {
   const actions = (
     <>
       <Button variant="outline" onClick={handleShuffle}>
-        <Shuffle className="h-4 w-4 mr-2" />
-        Barajar
+        <Shuffle className="h-4 w-4" />
       </Button>
       <Button variant="outline" onClick={handleReset}>
-        <RefreshCw className="h-4 w-4 mr-2" />
-        Reiniciar
+        <RefreshCw className="h-4 w-4" />
       </Button>
     </>
   );
@@ -93,10 +91,10 @@ export default function AnkiGame() {
         actions={actions}
       />
 
-      <div className="flex justify-center py-8">
+      <div className="flex justify-center py-2">
         <div className="relative w-full max-w-lg">
           <div
-            className={`flip-card group w-full h-[28rem] cursor-pointer ${isFlipped ? "flipped" : ""}`}
+            className={`flip-card group w-full h-[20rem] cursor-pointer ${isFlipped ? "flipped" : ""}`}
             onClick={handleFlip}
             style={{ perspective: 1200 }}
           >
@@ -108,68 +106,99 @@ export default function AnkiGame() {
               }}
             >
               {/* Frente */}
-              <Card className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl shadow-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between items-center p-8 transition-all duration-300">
-                <div className="w-full flex justify-between items-center mb-2">
-                  <Badge variant="secondary" className="uppercase tracking-wider">{currentCard?.level}</Badge>
-                  {currentCard?.seen !== undefined && currentCard.seen < 3 && (
-                    <Badge variant="destructive" className="animate-pulse">Nuevo</Badge>
-                  )}
-                </div>
-                <div className="flex-1 flex flex-col justify-center items-center">
-                  <h2 className="text-5xl font-extrabold text-primary mb-2 drop-shadow">{currentCard?.word}</h2>
+              <Card className="flip-card-front absolute w-full h-full backface-hidden rounded-2xl shadow-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 flex flex-col justify-center items-center p-4 transition-all duration-300">
+                <div className="flex-1 flex flex-col justify-center items-center w-full">
+                  <h2 className="text-4xl font-extrabold text-primary mb-2 drop-shadow text-center">{currentCard?.word}</h2>
                   {currentCard?.IPA && (
-                    <div className="text-lg text-blue-500 mb-2 font-mono">/{currentCard.IPA}/</div>
-                  )}
-                  <div className="flex items-center gap-2 text-base text-center mb-4">
-                    <span className="text-zinc-600 dark:text-zinc-300"><b>Definición:</b></span>
-                    <span className="italic">{currentCard?.definition}</span>
-                  </div>
-                  {currentCard?.img && (
-                    <img
-                      src={currentCard.img}
-                      alt={currentCard.word}
-                      className="max-h-32 mb-2 rounded-lg shadow-lg border-2 border-zinc-300 dark:border-zinc-700"
-                    />
+                    <div className="text-lg text-blue-500 mb-1 font-mono text-center">/{currentCard.IPA}/</div>
                   )}
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground mt-4 opacity-70">
+                <div className="flex items-center text-xs text-muted-foreground mt-2 opacity-70">
                   <RotateCcw className="h-4 w-4 mr-1" />
                   Haz clic para voltear
                 </div>
               </Card>
               {/* Reverso */}
-              <Card className="flip-card-back absolute w-full h-full backface-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-primary/10 to-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between items-center p-8" style={{ transform: "rotateY(180deg)" }}>
-                <div className="w-full flex justify-between items-center mb-2">
-                  <Badge variant="secondary" className="uppercase tracking-wider">{currentCard?.level}</Badge>
-                  <span className="text-green-400 font-bold text-lg">{currentCard?.spanish?.word}</span>
+              <Card className="flip-card-back absolute w-full h-full backface-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-primary/10 to-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between items-center p-0" style={{ transform: "rotateY(180deg)" }}>
+                {/* Cabecera fija */}
+                <div className="w-full flex justify-between items-center px-3 pt-2 pb-1 bg-transparent z-10">
+                  <span className="font-bold text-base capitalize text-white">{currentCard?.spanish?.word}</span>
+                  <Badge
+                    variant="outline"
+                    className={`uppercase tracking-wider font-semibold px-3 py-1
+                      ${currentCard?.level === 'easy' && 'border-green-500 text-green-500'}
+                      ${currentCard?.level === 'medium' && 'border-blue-500 text-blue-500'}
+                      ${currentCard?.level === 'hard' && 'border-red-600 text-red-600'}`}
+                  >
+                    {currentCard?.level}
+                  </Badge>
+                  <span className="flex items-center gap-1 text-xs text-zinc-200"><span role="img" aria-label="visto">👁️</span> {currentCard?.seen ?? 0}</span>
                 </div>
-                <div className="flex-1 flex flex-col justify-center items-center w-full">
-                  <div className="text-base text-center mb-4">
-                    <span className="text-zinc-600 dark:text-zinc-300"><b>Definición:</b></span>
-                    <span className="italic">{currentCard?.spanish?.definition}</span>
-                  </div>
+                <div className="flex-1 w-full overflow-y-auto p-3 bg-zinc-900/60 rounded-xl shadow-inner border border-primary/30 custom-scroll">
+                  {/* Definición ES */}
+                  {currentCard?.spanish?.definition && (
+                    <div className="mb-3">
+                      <div className="font-semibold text-blue-300 flex items-center gap-2 mb-1">
+                        <span>🇪🇸</span> Definición (ES)
+                      </div>
+                      <div className="italic text-zinc-100 capitalize">{currentCard.spanish.definition}</div>
+                    </div>
+                  )}
+                  {/* Ejemplos */}
                   {currentCard?.examples && (
-                    <div className="mb-2 w-full max-h-28 overflow-y-auto bg-zinc-800/30 rounded p-2 shadow-inner">
-                      <b>Ejemplos:</b>
-                      <ul className="list-disc ml-5 text-left text-sm">
+                    <div className="mb-3">
+                      <div className="font-semibold text-green-300 flex items-center gap-2 mb-1">
+                        <span>💬</span> Ejemplos
+                      </div>
+                      <ul className="list-disc ml-5 text-left text-xs text-zinc-200 space-y-1">
                         {currentCard.examples.map((ex, i) => (
                           <li key={i}>{ex}</li>
                         ))}
                       </ul>
                     </div>
                   )}
-                  {currentCard?.sinonyms && currentCard.sinonyms.length > 0 && (
-                    <div className="mb-2 w-full text-left text-sm">
-                      <b>Sinónimos:</b> {currentCard.sinonyms.join(", ")}
+                  {/* Code-Switching */}
+                  {currentCard?.codeSwitching && currentCard.codeSwitching.length > 0 && (
+                    <div className="mb-3">
+                      <div className="font-semibold text-purple-300 flex items-center gap-2 mb-1">
+                        <span>🔀</span> Code-Switching
+                      </div>
+                      <ul className="list-disc ml-5 text-left text-xs text-zinc-200 space-y-1">
+                        {currentCard.codeSwitching.map((ex, i) => (
+                          <li key={i}>{ex}</li>
+                        ))}
+                      </ul>
                     </div>
                   )}
+                  {/* Sinónimos */}
+                  {currentCard?.sinonyms && currentCard.sinonyms.length > 0 && (
+                    <div className="mb-3">
+                      <div className="font-semibold text-yellow-300 flex items-center gap-2 mb-1">
+                        <span>🔗</span> Sinónimos
+                      </div>
+                      <div className="text-xs text-zinc-200">{currentCard.sinonyms.join(", ")}</div>
+                    </div>
+                  )}
+                  {/* Tipo */}
                   {currentCard?.type && currentCard.type.length > 0 && (
-                    <div className="mb-2 w-full text-left text-sm">
-                      <b>Tipo:</b> {currentCard.type.join(", ")}
+                    <div className="mb-3">
+                      <div className="font-semibold text-pink-300 flex items-center gap-2 mb-1">
+                        <span>🏷️</span> Tipo
+                      </div>
+                      <div className="text-xs text-zinc-200">{currentCard.type.join(", ")}</div>
+                    </div>
+                  )}
+                  {/* Definición EN */}
+                  {currentCard?.definition && (
+                    <div className="mt-4">
+                      <div className="font-semibold text-blue-200 flex items-center gap-2 mb-1">
+                        <span>🇬🇧</span> Definición (EN)
+                      </div>
+                      <div className="italic text-zinc-100 capitalize">{currentCard.definition}</div>
                     </div>
                   )}
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground mt-4 opacity-70">
+                <div className="flex items-center text-xs text-muted-foreground mt-2 opacity-70 pb-1">
                   <RotateCcw className="h-4 w-4 mr-1" />
                   Haz clic para voltear
                 </div>
@@ -179,7 +208,7 @@ export default function AnkiGame() {
         </div>
       </div>
 
-      <div className="flex justify-center gap-4 mt-6">
+      <div className="flex justify-center gap-4 mt-2">
         <Button
           variant="outline"
           onClick={handlePrevious}
@@ -269,5 +298,23 @@ Agrega este CSS a tu global.css o módulo para el efecto flip y glassmorphism:
   -webkit-backdrop-filter: blur(8px);
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.18);
+}
+*/
+
+/*
+Agrega este CSS a tu global.css o tailwind config para la scrollbar personalizada:
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #18181b;
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  background: #18181b;
+  border-radius: 8px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 8px;
 }
 */
