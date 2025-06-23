@@ -126,9 +126,8 @@ export default function MyWordsPage() {
               className="pl-10 w-full"
             />
           </div>
-          <Button onClick={() => openDialog()}>
-            <Plus className="h-4 w-4 mr-2" />
-            Agregar Palabra
+          <Button variant="ghost" size="icon" onClick={() => openDialog()} className="h-12 w-12 rounded-full">
+            <Plus className="h-6 w-6" />
           </Button>
         </div>
       </div>

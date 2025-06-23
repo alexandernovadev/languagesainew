@@ -26,6 +26,7 @@ import { LectureCard } from "@/components/lectures/LectureCard";
 import { LecturePagination } from "@/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
 import type { Lecture } from "@/models/Lecture";
+import { Plus } from "lucide-react";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -111,7 +112,9 @@ export default function LecturesPage() {
             Página {currentPage} de {totalPages} • {lectures.length} lectures
           </Badge>
           <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
-            <Button onClick={openAddModal}>Crear Nueva Lecture</Button>
+            <Button variant="ghost" size="icon" onClick={openAddModal} className="h-12 w-12 rounded-full">
+              <Plus className="h-6 w-6" />
+            </Button>
             <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
               <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
                 <DialogTitle className="text-xl">
