@@ -193,3 +193,32 @@ body {
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
+
+.animate-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 20%,
+    hsl(var(--primary-foreground) / 0.8) 50%,
+    transparent 80%
+  );
+  animation: skeleton-loading 1.5s infinite;
+  transform: translateX(-100%);
+  mix-blend-mode: screen;
+}
+
+@keyframes skeleton-loading {
+  to {
+    transform: translateX(100%);
+  }
+}
