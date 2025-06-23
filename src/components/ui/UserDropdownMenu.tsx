@@ -15,6 +15,7 @@ interface UserDropdownMenuProps {
   buttonClassName?: string;
   showName?: boolean;
   avatarSrc?: string;
+  showFullHeader?: boolean;
 }
 
 export function UserDropdownMenu({
@@ -22,6 +23,7 @@ export function UserDropdownMenu({
   buttonClassName = "",
   showName = false,
   avatarSrc,
+  showFullHeader = false,
 }: UserDropdownMenuProps) {
   const { user, logout } = useUserStore();
 
@@ -33,23 +35,47 @@ export function UserDropdownMenu({
         <span
           className={`inline-flex items-center gap-2 cursor-pointer transition-transform duration-150 hover:scale-105 ${buttonClassName}`.trim()}
         >
-          <Avatar
-            className={[avatarSize, "border-2", "border-gray-700"].join(" ")}
-          >
-            <AvatarImage
-              src={avatarSrc || user.image || ""}
-              alt={
-                avatarSrc
-                  ? "Logo"
-                  : user.firstName || user.username || "Usuario"
-              }
-            />
-            {avatarSrc ? null : <AvatarFallbackClient user={user} />}
-          </Avatar>
-          {showName && !avatarSrc && (
-            <span className="text-xs text-muted-foreground">
-              {user.firstName || user.username || "Usuario"}
-            </span>
+          {showFullHeader ? (
+            <>
+              <Avatar
+                className={[avatarSize, "border-2", "border-gray-700"].join(" ")}
+              >
+                <AvatarImage
+                  src={avatarSrc || user.image || ""}
+                  alt={
+                    avatarSrc
+                      ? "Logo"
+                      : user.firstName || user.username || "Usuario"
+                  }
+                />
+                {avatarSrc ? null : <AvatarFallbackClient user={user} />}
+              </Avatar>
+              <div className="flex flex-col gap-0.5 leading-none">
+                <span className="font-semibold">LanguagesAI</span>
+                <span className="text-xs">v1.0.0</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <Avatar
+                className={[avatarSize, "border-2", "border-gray-700"].join(" ")}
+              >
+                <AvatarImage
+                  src={avatarSrc || user.image || ""}
+                  alt={
+                    avatarSrc
+                      ? "Logo"
+                      : user.firstName || user.username || "Usuario"
+                  }
+                />
+                {avatarSrc ? null : <AvatarFallbackClient user={user} />}
+              </Avatar>
+              {showName && !avatarSrc && (
+                <span className="text-xs text-muted-foreground">
+                  {user.firstName || user.username || "Usuario"}
+                </span>
+              )}
+            </>
           )}
         </span>
       </DropdownMenuTrigger>
