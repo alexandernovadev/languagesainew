@@ -123,10 +123,10 @@ export function LectureForm({
                         <SelectContent>
                           {lectureLevels.map((level) => (
                             <SelectItem
-                              key={String(level)}
-                              value={String(level)}
+                              key={level.value}
+                              value={level.value}
                             >
-                              {String(level)}
+                              {level.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
