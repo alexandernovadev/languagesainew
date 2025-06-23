@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 
 export default function MyWordsPage() {
@@ -85,7 +85,6 @@ export default function MyWordsPage() {
 
   const [localSearch, setLocalSearch] = useState("");
   const [generating, setGenerating] = useState(false);
-  const { toast } = useToast();
 
   const dots = useAnimatedDots(generating);
 
@@ -253,10 +252,7 @@ export default function MyWordsPage() {
     setGenerating(true);
     try {
       await generateWord(localSearch);
-      toast({
-        title: "Palabra generada",
-        description: `La palabra \"${localSearch}\" fue generada correctamente.`,
-      });
+      toast.success(`Palabra "${localSearch}" generada correctamente.`);
       await getWords();
     } finally {
       setGenerating(false);
