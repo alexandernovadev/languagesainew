@@ -1,0 +1,109 @@
+{
+  "subtitles": {
+    "task": "transcribe",
+    "language": "english",
+    "duration": 25.649999618530273,
+    "text": "Welcome to the Real Life English Podcast, where we help dedicated English learners just like you cultivate the courage, the confidence, and the skills that you need to understand real-life native English, to communicate clearly with people from all around the world, and to make your life an epic global adventure. Now are you ready to go beyond the classroom and start living your English? Can I get an aww? ",
+    "segments": [
+      {
+        "id": 0,
+        "seek": 0,
+        "start": 0,
+        "end": 4.840000152587891,
+        "text": " Welcome to the Real Life English Podcast, where we help dedicated English learners just",
+        "tokens": [
+          50364, 4027, 281, 264, 8467, 7720, 3669, 29972, 11, 689, 321, 854,
+          8374, 3669, 23655, 445, 50606
+        ],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 1,
+        "seek": 0,
+        "start": 4.840000152587891,
+        "end": 10.720000267028809,
+        "text": " like you cultivate the courage, the confidence, and the skills that you need to understand",
+        "tokens": [
+          50606, 411, 291, 33341, 264, 9892, 11, 264, 6687, 11, 293, 264, 3942,
+          300, 291, 643, 281, 1223, 50900
+        ],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 2,
+        "seek": 0,
+        "start": 10.720000267028809,
+        "end": 16.559999465942383,
+        "text": " real-life native English, to communicate clearly with people from all around the world, and",
+        "tokens": [
+          50900, 957, 12, 9073, 8470, 3669, 11, 281, 7890, 4448, 365, 561, 490,
+          439, 926, 264, 1002, 11, 293, 51192
+        ],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 3,
+        "seek": 0,
+        "start": 16.559999465942383,
+        "end": 20.399999618530273,
+        "text": " to make your life an epic global adventure.",
+        "tokens": [
+          51192, 281, 652, 428, 993, 364, 13581, 4338, 9868, 13, 51384
+        ],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 4,
+        "seek": 0,
+        "start": 20.399999618530273,
+        "end": 24.360000610351562,
+        "text": " Now are you ready to go beyond the classroom and start living your English?",
+        "tokens": [
+          51384, 823, 366, 291, 1919, 281, 352, 4399, 264, 7419, 293, 722, 2647,
+          428, 3669, 30, 51582
+        ],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 5,
+        "seek": 0,
+        "start": 24.360000610351562,
+        "end": 25.360000610351562,
+        "text": " Can I get an aww?",
+        "tokens": [51582, 1664, 286, 483, 364, 1714, 86, 30, 51632],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403
+      },
+      {
+        "id": 6,
+        "seek": 0,
+        "start": 25.360000610351562,
+        "end": 25.360000610351562,
+        "text": "",
+        "tokens": [],
+        "temperature": 0,
+        "avg_logprob": -0.2689831852912903,
+        "compression_ratio": 1.6108949184417725,
+        "no_speech_prob": 0.0012298242654651403,
+        "words": []
+      }
+    ]
+  }
+}

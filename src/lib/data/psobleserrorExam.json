@@ -1,0 +1,100 @@
+{
+  "errors": [
+    {
+      "error": "If had oportinuty to travel around the world",
+      "explanation": "Falta el sujeto 'I' y 'opportunity' está mal escrito.",
+      "correction": "If I had the opportunity to travel around the world",
+      "original_spanish": "Si tuviera la oportunidad de viajar por el mundo"
+    },
+    {
+      "error": "emblematic places of each continent",
+      "explanation": "'Iconic' es más común que 'emblematic' en este contexto, y 'on each continent' es más natural.",
+      "correction": "iconic places on each continent",
+      "original_spanish": "los lugares más emblemáticos de cada continente"
+    },
+    {
+      "error": "I would like explore Chinese big wall",
+      "explanation": "Falta 'to' después de 'like', y el término correcto es 'the Great Wall of China'.",
+      "correction": "I would like to explore the Great Wall of China",
+      "original_spanish": "Me encantaría explorar la Gran Muralla China"
+    },
+    {
+      "error": "walking betweem Paris streets",
+      "explanation": "'Betweem' está mal escrito y 'walking through' es más natural.",
+      "correction": "walk through the streets of Paris",
+      "original_spanish": "caminar por las calles de París"
+    },
+    {
+      "error": "admire Egypt pyramids",
+      "explanation": "Falta 'the' antes de 'pyramids' y el orden correcto es 'the pyramids of Egypt'.",
+      "correction": "admire the pyramids of Egypt",
+      "original_spanish": "admirar las pirámides de Egipto"
+    },
+    {
+      "error": "Futhermore, I would try to learn at leat some words in locales languages",
+      "explanation": "'Futhermore' y 'at leat' están mal escritos, y 'locales languages' no es correcto.",
+      "correction": "Furthermore, I would try to learn at least some words in the local languages",
+      "original_spanish": "trataría de aprender al menos algunas palabras en los idiomas locales"
+    },
+    {
+      "error": "Nonetheless. If could not do everything on one trip",
+      "explanation": "Falta el sujeto 'I' y 'Nonetheless.' no debe separarse.",
+      "correction": "Nonetheless, if I could not do everything on one trip",
+      "original_spanish": "Sin embargo, si no pudiera hacer todo en un solo viaje"
+    },
+    {
+      "error": "I would plan come back fordware to continue with my adeventure",
+      "explanation": "'Plan come back' debería ser 'plan to come back', 'fordware' es incorrecto, y 'adeventure' está mal escrito.",
+      "correction": "I would plan to come back later to continue with my adventure",
+      "original_spanish": "planificaría volver más adelante para continuar con mi aventura"
+    },
+    {
+      "error": "It's fundamental to demostrated not just your tecnical skill",
+      "explanation": "Errores ortográficos y gramaticales en 'demostrated', 'tecnical' y falta plural en 'skill'.",
+      "correction": "It’s fundamental to demonstrate not just your technical skills",
+      "original_spanish": "es fundamental demostrar no solo tus habilidades técnicas"
+    },
+    {
+      "error": "Also demostrared the capacity to resolve problems with creativity",
+      "explanation": "Falta paralelismo con 'not just', 'demostrared' está mal escrito, y 'resolve' no es ideal aquí.",
+      "correction": "but also demonstrate the capacity to solve problems creatively",
+      "original_spanish": "sino también tu capacidad para resolver problemas de manera creativa"
+    },
+    {
+      "error": "If they will ask you how to optmize an algorithm",
+      "explanation": "Uso incorrecto de 'will' en condicional tipo 2 y error ortográfico en 'optmize'.",
+      "correction": "If they asked you how to optimize an algorithm",
+      "original_spanish": "si te preguntaran cómo optimizar un algoritmo"
+    },
+    {
+      "error": "Futhermore, It's important to show that you can colaborate with other teammembers",
+      "explanation": "Errores ortográficos y falta de espacio en 'teammembers'.",
+      "correction": "Furthermore, it’s important to show that you can collaborate with other team members",
+      "original_spanish": "Además, es importante mostrar que puedes colaborar con otros"
+    },
+    {
+      "error": "because the most project needs workteam",
+      "explanation": "Error en el plural 'projects' y uso incorrecto de 'workteam'.",
+      "correction": "because most projects require teamwork",
+      "original_spanish": "ya que la mayoría de los proyectos implican trabajo en equipo"
+    },
+    {
+      "error": "If I were interview, I would worth a lot canidated positive actitude",
+      "explanation": "Errores gramaticales en 'interview', 'worth a lot', 'canidated' y 'actitude'.",
+      "correction": "If I were an interviewer, I would highly value a candidate’s positive attitude",
+      "original_spanish": "Si yo fuera entrevistador, valoraría mucho la actitud positiva de un candidato"
+    },
+    {
+      "error": "despite you te endrente hard questions",
+      "explanation": "Frase incorrecta; 'te endrente' no tiene sentido en inglés.",
+      "correction": "despite facing hard questions",
+      "original_spanish": "aunque te enfrentes a preguntas difíciles"
+    },
+    {
+      "error": "request aclaraciones, if something is not clear",
+      "explanation": "Uso incorrecto de 'request' y mezcla de idiomas con 'aclaraciones'.",
+      "correction": "ask for clarifications if something is not clear",
+      "original_spanish": "pedir aclaraciones si algo no está claro"
+    }
+  ]
+}
