@@ -11,6 +11,7 @@ import GeneratorExam from './app/generator/exam/page';
 import Settings from './app/settings/page';
 import Statistics from './app/statistics/page';
 import MyWords from './app/my-words/page';
+import ProfilePage from './app/profile/page';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/my-words" element={<MyWords />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </ClientLayout>
     </BrowserRouter>

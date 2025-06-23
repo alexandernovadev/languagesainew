@@ -193,8 +193,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     )}
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => { /* TODO: go to profile */ }}>
-                    Mi perfil
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Mi perfil</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout} className="text-red-600">
                     Cerrar sesión

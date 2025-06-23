@@ -17,34 +17,6 @@ export default function Settings() {
       />
 
       <div className="grid gap-6">
-        {/* Perfil de Usuario */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Perfil de Usuario</CardTitle>
-            <CardDescription>Actualiza tu información personal</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">Nombre</Label>
-                <Input id="firstName" placeholder="Tu nombre" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Apellido</Label>
-                <Input id="lastName" placeholder="Tu apellido" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="tu@email.com" />
-            </div>
-            <div className="flex items-center gap-2">
-              <Button>Guardar Cambios</Button>
-              <Button variant="destructive">Restablecer</Button>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Configuración General */}
         <Card>
           <CardHeader>
