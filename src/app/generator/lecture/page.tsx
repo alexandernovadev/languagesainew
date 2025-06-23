@@ -190,7 +190,7 @@ export default function LectureGenerator() {
         actions={
           <Dialog open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" disabled={isGenerating}>
                 <Settings className="h-4 w-4" />
                 Configuración Avanzada
               </Button>
@@ -404,37 +404,39 @@ export default function LectureGenerator() {
           <Card>
             <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="mainPrompt">Tema de la Lectura</Label>
+                <div className="flex items-center justify-between gap-4">
+                  <Label htmlFor="mainPrompt" className={isGenerating ? "shimmer-text" : undefined}>Tema de la Lectura</Label>
+                  <Button
+                    type="submit"
+                    disabled={isGenerating || !isValid}
+                    className={`gap-2`}
+                    style={{ minWidth: 140 }}
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="shimmer-text">Generando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen className="h-4 w-4" />
+                        Generar Lectura
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <Textarea
                   id="mainPrompt"
                   placeholder="Describe el tema principal de la lectura..."
                   {...register("prompt")}
                   rows={3}
+                  disabled={isGenerating}
                 />
                 <p
                   className={`text-xs text-right text-muted-foreground`}
                 >
                   {watchedValues.prompt.length} / 500 caracteres
                 </p>
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={isGenerating || !isValid}
-                  className={`gap-2 ${isGenerating ? 'animate-skeleton' : ''}`}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Generando...
-                    </>
-                  ) : (
-                    <>
-                      <BookOpen className="h-4 w-4" />
-                      Generar Lectura
-                    </>
-                  )}
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -477,9 +479,25 @@ export default function LectureGenerator() {
                 )}
               </div>
               {estimatedTime > 0 && (
-                <CardDescription>
-                  Tiempo de lectura estimado: {estimatedTime} minutos
-                </CardDescription>
+                <>
+                  <CardDescription>
+                    Tiempo de lectura estimado: {estimatedTime} minutos
+                  </CardDescription>
+                  <div className="flex flex-wrap gap-3 mt-3">
+                    <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
+                      Nivel: {lectureLevels.find(l => l.value === watchedValues.level)?.label || watchedValues.level}
+                    </span>
+                    <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 text-blue-400">
+                      Tipo: {lectureTypes.find(t => t.value === watchedValues.typeWrite)?.label || watchedValues.typeWrite}
+                    </span>
+                    <span className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${watchedValues.difficulty === 'easy' ? 'border-green-500 text-green-400' : watchedValues.difficulty === 'medium' ? 'border-yellow-500 text-yellow-400' : 'border-red-500 text-red-400'}` }>
+                      Dificultad: {watchedValues.difficulty === 'easy' ? 'Fácil' : watchedValues.difficulty === 'medium' ? 'Media' : 'Difícil'}
+                    </span>
+                    <span className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${watchedValues.addEasyWords ? 'text-purple-400' : 'text-muted-foreground'}`}>
+                      Vocabulario adicional: {watchedValues.addEasyWords ? 'Sí' : 'No'}
+                    </span>
+                  </div>
+                </>
               )}
             </CardHeader>
             <CardContent>
