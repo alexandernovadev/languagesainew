@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumb } from "@/components/layouts/dynamic-breadcrumb";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 
 export default function ClientLayout({
   children,
@@ -32,6 +34,8 @@ export default function ClientLayout({
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb />
+          <div className="flex-1" />
+          <UserDropdownMenu avatarSize="h-11 w-11" avatarSrc="/loogo.png" />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4">
           <div className="container mx-auto">{children}</div>
