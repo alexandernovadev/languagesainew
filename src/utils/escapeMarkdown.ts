@@ -4,23 +4,25 @@
 export const escapeMarkdown = (text: string): string => {
   if (!text) return text;
 
-  return text
-    // Escapar caracteres especiales de markdown
-    .replace(/\\/g, '\\\\')
-    .replace(/\*/g, '\\*')
-    .replace(/_/g, '\\_')
-    .replace(/`/g, '\\`')
-    .replace(/\[/g, '\\[')
-    .replace(/\]/g, '\\]')
-    .replace(/\(/g, '\\(')
-    .replace(/\)/g, '\\)')
-    .replace(/#/g, '\\#')
-    .replace(/\+/g, '\\+')
-    .replace(/-/g, '\\-')
-    .replace(/=/g, '\\=')
-    .replace(/\|/g, '\\|')
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}')
-    .replace(/\./g, '\\.')
-    .replace(/!/g, '\\!');
-}; 
+  return (
+    text
+      // Escapar caracteres especiales de markdown
+      .replace(/\\/g, "\\\\")
+      .replace(/\*/g, "\\*")
+      .replace(/_/g, "\\_")
+      .replace(/`/g, "\\`")
+      .replace(/\[/g, "\\[")
+      .replace(/\]/g, "\\]")
+      .replace(/\(/g, "\\(")
+      .replace(/\)/g, "\\)")
+      .replace(/#/g, "\\#")
+      .replace(/\+/g, "\\+")
+      .replace(/-/g, "\\-")
+      .replace(/=/g, "\\=")
+      .replace(/\|/g, "\\|")
+      .replace(/\{/g, "\\{")
+      .replace(/\}/g, "\\}")
+      .replace(/\./g, "\\.")
+      .replace(/!/g, "\\!")
+  );
+};

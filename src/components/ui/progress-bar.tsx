@@ -1,10 +1,14 @@
 interface ProgressBarProps {
-  progress: number
-  className?: string
-  showPercentage?: boolean
+  progress: number;
+  className?: string;
+  showPercentage?: boolean;
 }
 
-export function ProgressBar({ progress, className = "", showPercentage = false }: ProgressBarProps) {
+export function ProgressBar({
+  progress,
+  className = "",
+  showPercentage = false,
+}: ProgressBarProps) {
   return (
     <div className={`w-full bg-secondary rounded-full h-2 ${className}`}>
       <div
@@ -17,5 +21,5 @@ export function ProgressBar({ progress, className = "", showPercentage = false }
         </div>
       )}
     </div>
-  )
-} 
+  );
+}

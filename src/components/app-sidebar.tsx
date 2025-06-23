@@ -1,30 +1,12 @@
 import type * as React from "react";
-import {
-  Home,
-  Settings,
-  User,
-  FileText,
-  BookOpen,
-  Gamepad2,
-  RotateCcw,
-  BarChart3,
-  User as UserIcon,
-  Lock,
-} from "lucide-react";
+import { User, User as UserIcon } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { useUserStore } from "@/lib/store/user-store";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import {
   Sidebar,
@@ -161,9 +143,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {isAuthenticated() ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="sm" variant="ghost" className="w-full justify-start gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
                     <Avatar className="size-7">
-                      <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
+                      <AvatarImage
+                        src={user?.image || ""}
+                        alt={user?.firstName || user?.username || "Usuario"}
+                      />
                       <AvatarFallbackClient user={user} />
                     </Avatar>
                     <span className="text-xs text-muted-foreground">
@@ -175,21 +164,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <div className="px-3 py-2">
                     <div className="flex items-center gap-2">
                       <Avatar className="size-8">
-                        <AvatarImage src={user?.image || ""} alt={user?.firstName || user?.username || "Usuario"} />
+                        <AvatarImage
+                          src={user?.image || ""}
+                          alt={user?.firstName || user?.username || "Usuario"}
+                        />
                         <AvatarFallbackClient user={user} />
                       </Avatar>
                       <div>
                         <div className="font-semibold text-sm">
                           {user?.firstName || ""} {user?.lastName || ""}
                         </div>
-                        <div className="text-xs text-muted-foreground">{user?.username}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {user?.username}
+                        </div>
                       </div>
                     </div>
                     {user?.email && (
-                      <div className="text-xs text-muted-foreground mt-1">{user.email}</div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {user.email}
+                      </div>
                     )}
                     {user?.role && (
-                      <div className="text-xs text-muted-foreground mt-0.5 capitalize">{user.role}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5 capitalize">
+                        {user.role}
+                      </div>
                     )}
                   </div>
                   <DropdownMenuSeparator />

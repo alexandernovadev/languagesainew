@@ -1,11 +1,5 @@
 import { useUserStore } from "@/lib/store/user-store";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import {
   Dialog,
@@ -68,7 +62,11 @@ export default function ProfilePage() {
     },
   });
 
-  const handleSave = (data: { firstName: string; lastName: string; email: string }) => {
+  const handleSave = (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
     if (!user) return;
     setUser({
       _id: user._id,
@@ -156,16 +154,30 @@ export default function ProfilePage() {
                 </span>
                 <div className="flex gap-3 mt-3">
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/30">
-                    {user?.role === "admin" && <Shield className="h-3 w-3 mr-1 text-primary" />} {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : ""}
+                    {user?.role === "admin" && (
+                      <Shield className="h-3 w-3 mr-1 text-primary" />
+                    )}{" "}
+                    {user?.role
+                      ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+                      : ""}
                   </span>
-                  <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${user?.isActive ? 'bg-green-500/10 text-green-500 border border-green-500/30' : 'bg-red-500/10 text-red-500 border border-red-500/30'}` }>
-                    <Activity className="h-3 w-3 mr-1" /> {user?.isActive ? 'Activo' : 'Inactivo'}
+                  <span
+                    className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
+                      user?.isActive
+                        ? "bg-green-500/10 text-green-500 border border-green-500/30"
+                        : "bg-red-500/10 text-red-500 border border-red-500/30"
+                    }`}
+                  >
+                    <Activity className="h-3 w-3 mr-1" />{" "}
+                    {user?.isActive ? "Activo" : "Inactivo"}
                   </span>
                 </div>
               </div>
               {/* Columna derecha: formulario de edición */}
               <div className="flex-1 flex flex-col gap-4 items-center md:items-start justify-center">
-                <span className="font-semibold text-lg mb-2">Información Personal</span>
+                <span className="font-semibold text-lg mb-2">
+                  Información Personal
+                </span>
                 <form className="w-full" onSubmit={handleSubmit(handleSave)}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -173,18 +185,30 @@ export default function ProfilePage() {
                       <Input
                         id="firstName"
                         disabled={!editing}
-                        {...register("firstName", { required: "El nombre es obligatorio" })}
+                        {...register("firstName", {
+                          required: "El nombre es obligatorio",
+                        })}
                       />
-                      {errors.firstName && <span className="text-xs text-red-500">{errors.firstName.message as string}</span>}
+                      {errors.firstName && (
+                        <span className="text-xs text-red-500">
+                          {errors.firstName.message as string}
+                        </span>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Apellido</Label>
                       <Input
                         id="lastName"
                         disabled={!editing}
-                        {...register("lastName", { required: "El apellido es obligatorio" })}
+                        {...register("lastName", {
+                          required: "El apellido es obligatorio",
+                        })}
                       />
-                      {errors.lastName && <span className="text-xs text-red-500">{errors.lastName.message as string}</span>}
+                      {errors.lastName && (
+                        <span className="text-xs text-red-500">
+                          {errors.lastName.message as string}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-2 w-full">
@@ -201,25 +225,40 @@ export default function ProfilePage() {
                         },
                       })}
                     />
-                    {errors.email && <span className="text-xs text-red-500">{errors.email.message as string}</span>}
+                    {errors.email && (
+                      <span className="text-xs text-red-500">
+                        {errors.email.message as string}
+                      </span>
+                    )}
                   </div>
                   <div className="flex gap-2 mt-2 w-full justify-end">
                     {editing ? (
                       <>
-                        <Button size="sm" type="submit" disabled={!isDirty || !isValid}>
+                        <Button
+                          size="sm"
+                          type="submit"
+                          disabled={!isDirty || !isValid}
+                        >
                           Guardar
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           type="button"
-                          onClick={() => { setEditing(false); reset(); }}
+                          onClick={() => {
+                            setEditing(false);
+                            reset();
+                          }}
                         >
                           Cancelar
                         </Button>
                       </>
                     ) : (
-                      <Button size="sm" type="button" onClick={() => setEditing(true)}>
+                      <Button
+                        size="sm"
+                        type="button"
+                        onClick={() => setEditing(true)}
+                      >
                         Editar
                       </Button>
                     )}

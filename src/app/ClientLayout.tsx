@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
 import {
   SidebarProvider,
   SidebarTrigger,

@@ -1,9 +1,9 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
 interface PageHeaderProps {
-  title: string
-  description?: string
-  actions?: ReactNode
+  title: string;
+  description?: string;
+  actions?: ReactNode;
 }
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
@@ -15,5 +15,5 @@ export function PageHeader({ title, description, actions }: PageHeaderProps) {
       </div>
       {actions && <div className="flex gap-2">{actions}</div>}
     </div>
-  )
-} 
+  );
+}

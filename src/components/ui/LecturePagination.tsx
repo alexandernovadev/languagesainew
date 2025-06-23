@@ -14,7 +14,11 @@ interface LecturePaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function LecturePagination({ currentPage, totalPages, onPageChange }: LecturePaginationProps) {
+export function LecturePagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: LecturePaginationProps) {
   if (totalPages <= 1) return null;
 
   return (
@@ -22,12 +26,16 @@ export function LecturePagination({ currentPage, totalPages, onPageChange }: Lec
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious 
+            <PaginationPrevious
               onClick={() => onPageChange(currentPage - 1)}
-              className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              className={
+                currentPage <= 1
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
             />
           </PaginationItem>
-          
+
           {/* Mostrar páginas */}
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             let pageNum;
@@ -40,7 +48,7 @@ export function LecturePagination({ currentPage, totalPages, onPageChange }: Lec
             } else {
               pageNum = currentPage - 2 + i;
             }
-            
+
             return (
               <PaginationItem key={pageNum}>
                 <PaginationLink
@@ -53,21 +61,25 @@ export function LecturePagination({ currentPage, totalPages, onPageChange }: Lec
               </PaginationItem>
             );
           })}
-          
+
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
           )}
-          
+
           <PaginationItem>
-            <PaginationNext 
+            <PaginationNext
               onClick={() => onPageChange(currentPage + 1)}
-              className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              className={
+                currentPage >= totalPages
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
             />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
     </div>
   );
-} 
+}

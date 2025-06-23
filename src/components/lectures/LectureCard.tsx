@@ -12,8 +12,8 @@ import type { Lecture } from "@/models/Lecture";
 import { getMarkdownTitle } from "@/lib/utils";
 import { languageData } from "@/data/languageData";
 import { lectureTypes } from "@/data/lectureTypes";
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface LectureCardProps {
   lecture: Lecture;
@@ -37,10 +37,12 @@ export function LectureCard({
   const lang = languageData.find((l) => l.code === lecture.language);
 
   const formattedDate = lecture.createdAt
-    ? format(new Date(lecture.createdAt), "EEEE, d 'de' MMMM - yyyy", { locale: es })
+    ? format(new Date(lecture.createdAt), "EEEE, d 'de' MMMM - yyyy", {
+        locale: es,
+      })
     : "";
-  
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">

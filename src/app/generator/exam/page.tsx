@@ -1,11 +1,24 @@
-import type React from "react"
+import type React from "react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -13,14 +26,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Filter, FileText, Download, Eye } from "lucide-react"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLayout } from "@/components/layouts/page-layout"
-import { useGenerator } from "@/hooks/use-generator"
+} from "@/components/ui/dialog";
+import { Filter, FileText, Download, Eye } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { useGenerator } from "@/hooks/use-generator";
 
 export default function ExamGenerator() {
-  const { isFilterOpen, setIsFilterOpen, filters, updateFilter, handleFilterSubmit } = useGenerator('exam')
+  const {
+    isFilterOpen,
+    setIsFilterOpen,
+    filters,
+    updateFilter,
+    handleFilterSubmit,
+  } = useGenerator("exam");
 
   return (
     <PageLayout>
@@ -38,7 +57,9 @@ export default function ExamGenerator() {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Configurar Examen</DialogTitle>
-                <DialogDescription>Define los parámetros para generar tu examen personalizado</DialogDescription>
+                <DialogDescription>
+                  Define los parámetros para generar tu examen personalizado
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleFilterSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -47,18 +68,22 @@ export default function ExamGenerator() {
                     id="topic"
                     placeholder="Describe el tema principal del examen..."
                     value={filters.topic}
-                    onChange={(e) => updateFilter('topic', e.target.value)}
+                    onChange={(e) => updateFilter("topic", e.target.value)}
                     rows={3}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="instructions">Instrucciones Adicionales</Label>
+                  <Label htmlFor="instructions">
+                    Instrucciones Adicionales
+                  </Label>
                   <Textarea
                     id="instructions"
                     placeholder="Instrucciones específicas para el examen..."
                     value={filters.instructions}
-                    onChange={(e) => updateFilter('instructions', e.target.value)}
+                    onChange={(e) =>
+                      updateFilter("instructions", e.target.value)
+                    }
                     rows={3}
                   />
                 </div>
@@ -66,7 +91,10 @@ export default function ExamGenerator() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="level">Nivel</Label>
-                    <Select value={filters.level} onValueChange={(value) => updateFilter('level', value)}>
+                    <Select
+                      value={filters.level}
+                      onValueChange={(value) => updateFilter("level", value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Seleccionar nivel" />
                       </SelectTrigger>
@@ -85,7 +113,9 @@ export default function ExamGenerator() {
                     <Label htmlFor="difficulty">Dificultad</Label>
                     <Select
                       value={filters.difficulty}
-                      onValueChange={(value) => updateFilter('difficulty', value)}
+                      onValueChange={(value) =>
+                        updateFilter("difficulty", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Seleccionar dificultad" />
@@ -100,7 +130,11 @@ export default function ExamGenerator() {
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
-                  <Button type="button" variant="outline" onClick={() => setIsFilterOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsFilterOpen(false)}
+                  >
                     Cancelar
                   </Button>
                   <Button type="submit">Aplicar Filtros</Button>
@@ -120,7 +154,9 @@ export default function ExamGenerator() {
               <FileText className="h-5 w-5" />
               Configuración Rápida
             </CardTitle>
-            <CardDescription>Genera un examen con configuración básica</CardDescription>
+            <CardDescription>
+              Genera un examen con configuración básica
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -130,11 +166,23 @@ export default function ExamGenerator() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="quickQuestions">Número de preguntas</Label>
-                <Input id="quickQuestions" type="number" placeholder="10" min="1" max="50" />
+                <Input
+                  id="quickQuestions"
+                  type="number"
+                  placeholder="10"
+                  min="1"
+                  max="50"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="quickTime">Tiempo (minutos)</Label>
-                <Input id="quickTime" type="number" placeholder="60" min="5" max="180" />
+                <Input
+                  id="quickTime"
+                  type="number"
+                  placeholder="60"
+                  min="5"
+                  max="180"
+                />
               </div>
             </div>
             <CardFooter>
@@ -152,10 +200,17 @@ export default function ExamGenerator() {
           <CardContent>
             <div className="space-y-4">
               {[1, 2, 3].map((exam) => (
-                <div key={exam} className="flex items-center justify-between p-4 border rounded-lg">
+                <div
+                  key={exam}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
                   <div className="space-y-1">
-                    <h4 className="font-medium">Examen de Matemáticas #{exam}</h4>
-                    <p className="text-sm text-muted-foreground">Nivel: B1 • Dificultad: Medio • 15 preguntas</p>
+                    <h4 className="font-medium">
+                      Examen de Matemáticas #{exam}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Nivel: B1 • Dificultad: Medio • 15 preguntas
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       Generado hace {exam} hora{exam > 1 ? "s" : ""}
                     </p>
@@ -177,5 +232,5 @@ export default function ExamGenerator() {
         </Card>
       </div>
     </PageLayout>
-  )
+  );
 }

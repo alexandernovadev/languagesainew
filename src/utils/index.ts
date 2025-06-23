@@ -1,2 +1,2 @@
-export { calculateReadingTime } from './calculateReadingTime';
-export { escapeMarkdown } from './escapeMarkdown'; 
+export { calculateReadingTime } from "./calculateReadingTime";
+export { escapeMarkdown } from "./escapeMarkdown";

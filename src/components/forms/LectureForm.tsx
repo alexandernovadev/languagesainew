@@ -10,7 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, FileText } from "lucide-react";
 import { lectureTypes } from "@/data/lectureTypes";
@@ -62,7 +68,9 @@ export function LectureForm({
     formData.language &&
     formData.typeWrite;
 
-  const onSubmitForm = async (data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">) => {
+  const onSubmitForm = async (
+    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  ) => {
     if (isFormValid) {
       await onSubmit(data);
     }
@@ -70,7 +78,10 @@ export function LectureForm({
 
   return (
     <div className="flex flex-col h-full">
-      <form onSubmit={handleSubmit(onSubmitForm)} className="flex flex-col h-full">
+      <form
+        onSubmit={handleSubmit(onSubmitForm)}
+        className="flex flex-col h-full"
+      >
         <Tabs defaultValue="config" className="flex flex-col flex-grow min-h-0">
           <div className="px-6 py-2">
             <TabsList className="grid w-full grid-cols-2">
@@ -99,7 +110,8 @@ export function LectureForm({
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="level">
-                        Nivel de Dificultad <span className="text-red-500">*</span>
+                        Nivel de Dificultad{" "}
+                        <span className="text-red-500">*</span>
                       </Label>
                       <Select
                         value={formData.level}
@@ -110,8 +122,11 @@ export function LectureForm({
                         </SelectTrigger>
                         <SelectContent>
                           {lectureLevels.map((level) => (
-                            <SelectItem key={level} value={level}>
-                              {level}
+                            <SelectItem
+                              key={String(level)}
+                              value={String(level)}
+                            >
+                              {String(level)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -120,7 +135,8 @@ export function LectureForm({
 
                     <div className="space-y-2">
                       <Label htmlFor="typeWrite">
-                        Tipo de Contenido <span className="text-red-500">*</span>
+                        Tipo de Contenido{" "}
+                        <span className="text-red-500">*</span>
                       </Label>
                       <Select
                         value={formData.typeWrite}
@@ -201,7 +217,9 @@ export function LectureForm({
                             }}
                           />
                         ) : (
-                          <p className="text-sm text-muted-foreground">Sin Imagen</p>
+                          <p className="text-sm text-muted-foreground">
+                            Sin Imagen
+                          </p>
                         )}
                       </div>
                     </div>

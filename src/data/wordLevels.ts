@@ -1,1 +1,1 @@
-export const wordLevels = ["easy", "medium", "hard"]; 
+export const wordLevels = ["easy", "medium", "hard"];

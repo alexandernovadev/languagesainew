@@ -1,17 +1,17 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ClientLayout from './app/ClientLayout';
-import Dashboard from './app/page';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ClientLayout from "./app/ClientLayout";
+import Dashboard from "./app/page";
 // Importa todas las páginas principales
-import Lectures from './app/lectures/page';
-import LectureDetail from './app/lectures/[id]/page';
-import GamesAnki from './app/games/anki/page';
-import GamesVerbs from './app/games/verbs/page';
-import GeneratorLecture from './app/generator/lecture/page';
-import GeneratorExam from './app/generator/exam/page';
-import Settings from './app/settings/page';
-import Statistics from './app/statistics/page';
-import MyWords from './app/my-words/page';
-import ProfilePage from './app/profile/page';
+import Lectures from "./app/lectures/page";
+import LectureDetail from "./app/lectures/[id]/page";
+import GamesAnki from "./app/games/anki/page";
+import GamesVerbs from "./app/games/verbs/page";
+import GeneratorLecture from "./app/generator/lecture/page";
+import GeneratorExam from "./app/generator/exam/page";
+import Settings from "./app/settings/page";
+import Statistics from "./app/statistics/page";
+import MyWords from "./app/my-words/page";
+import ProfilePage from "./app/profile/page";
 
 export default function App() {
   return (
@@ -33,4 +33,4 @@ export default function App() {
       </ClientLayout>
     </BrowserRouter>
   );
-} 
+}

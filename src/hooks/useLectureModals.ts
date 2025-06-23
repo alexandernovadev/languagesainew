@@ -5,7 +5,9 @@ export function useLectureModals() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedLectureId, setSelectedLectureId] = useState<string | null>(null);
+  const [selectedLectureId, setSelectedLectureId] = useState<string | null>(
+    null
+  );
 
   const openAddModal = () => {
     setIsAddModalOpen(true);
@@ -41,7 +43,7 @@ export function useLectureModals() {
     isEditModalOpen,
     deleteDialogOpen,
     selectedLectureId,
-    
+
     // Acciones
     openAddModal,
     closeAddModal,
@@ -50,4 +52,4 @@ export function useLectureModals() {
     openDeleteDialog,
     closeDeleteDialog,
   };
-} 
+}

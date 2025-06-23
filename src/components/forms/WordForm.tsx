@@ -12,11 +12,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Word } from "@/models/Word";
 import { wordLevels } from "@/data/wordLevels";
 import { EditableList } from "./EditableList";
-import { Languages, Book, Type, Star, Sparkles, ListPlus } from "lucide-react";
+import { Book, Sparkles, ListPlus } from "lucide-react";
 
 interface WordFormProps {
   initialData?: Partial<Word>;
@@ -78,10 +84,7 @@ export function WordForm({
     setValue(field, value);
   };
 
-  const handleSpanishChange = (
-    field: "word" | "definition",
-    value: string
-  ) => {
+  const handleSpanishChange = (field: "word" | "definition", value: string) => {
     setValue(`spanish.${field}`, value);
   };
 
@@ -128,7 +131,9 @@ export function WordForm({
                     <Input
                       id="spanish-word"
                       value={formData.spanish?.word || ""}
-                      onChange={(e) => handleSpanishChange("word", e.target.value)}
+                      onChange={(e) =>
+                        handleSpanishChange("word", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -143,83 +148,92 @@ export function WordForm({
                 </div>
               </CardContent>
             </Card>
-             <Card className="mt-4">
-               <CardHeader>
-                 <CardTitle>Clasificación</CardTitle>
-                 <CardDescription>
-                   Ayuda a organizar y filtrar tu vocabulario.
-                 </CardDescription>
-               </CardHeader>
-               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                   <Label htmlFor="ipa">IPA (Opcional)</Label>
-                    <Input
-                      id="ipa"
-                      {...register("IPA")}
-                    />
-                 </div>
-                 <div className="space-y-2">
-                   <Label htmlFor="level">Nivel de Dificultad</Label>
-                   <Select
-                     value={formData.level}
-                     onValueChange={(value) => handleChange("level", value)}
-                   >
-                     <SelectTrigger>
-                       <SelectValue placeholder="Selecciona un nivel" />
-                     </SelectTrigger>
-                     <SelectContent>
-                       {wordLevels.map((level) => (
-                         <SelectItem key={level} value={level}>
-                           {level.charAt(0).toUpperCase() + level.slice(1)}
-                         </SelectItem>
-                       ))}
-                     </SelectContent>
-                   </Select>
-                 </div>
-               </CardContent>
-             </Card>
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle>Clasificación</CardTitle>
+                <CardDescription>
+                  Ayuda a organizar y filtrar tu vocabulario.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="ipa">IPA (Opcional)</Label>
+                  <Input id="ipa" {...register("IPA")} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="level">Nivel de Dificultad</Label>
+                  <Select
+                    value={formData.level}
+                    onValueChange={(value) => handleChange("level", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un nivel" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {wordLevels.map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {level.charAt(0).toUpperCase() + level.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="advanced" className="pt-2 space-y-4">
-             <Card>
-               <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><ListPlus className="h-5 w-5"/> Sinónimos</CardTitle>
-                 <CardDescription>Palabras con significado similar.</CardDescription>
-               </CardHeader>
-               <CardContent>
-                 <EditableList
-                   items={formData.sinonyms || []}
-                   onChange={(items) => handleChange("sinonyms", items)}
-                   placeholder="Añadir sinónimo..."
-                 />
-               </CardContent>
-             </Card>
-             <Card>
-               <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><ListPlus className="h-5 w-5"/> Ejemplos de Uso</CardTitle>
-                 <CardDescription>Palabras que se utilizan para ilustrar el uso de la palabra.</CardDescription>
-               </CardHeader>
-               <CardContent>
-                 <EditableList
-                   items={formData.examples || []}
-                   onChange={(items) => handleChange("examples", items)}
-                   placeholder="Añadir ejemplo..."
-                 />
-               </CardContent>
-             </Card>
-             <Card>
-               <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><ListPlus className="h-5 w-5"/> Code Switching</CardTitle>
-                 <CardDescription>Expresiones que combinan idiomas.</CardDescription>
-               </CardHeader>
-               <CardContent>
-                 <EditableList
-                   items={formData.codeSwitching || []}
-                   onChange={(items) => handleChange("codeSwitching", items)}
-                   placeholder="Añadir expresión..."
-                 />
-               </CardContent>
-             </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ListPlus className="h-5 w-5" /> Sinónimos
+                </CardTitle>
+                <CardDescription>
+                  Palabras con significado similar.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <EditableList
+                  items={formData.sinonyms || []}
+                  onChange={(items) => handleChange("sinonyms", items)}
+                  placeholder="Añadir sinónimo..."
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ListPlus className="h-5 w-5" /> Ejemplos de Uso
+                </CardTitle>
+                <CardDescription>
+                  Palabras que se utilizan para ilustrar el uso de la palabra.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <EditableList
+                  items={formData.examples || []}
+                  onChange={(items) => handleChange("examples", items)}
+                  placeholder="Añadir ejemplo..."
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ListPlus className="h-5 w-5" /> Code Switching
+                </CardTitle>
+                <CardDescription>
+                  Expresiones que combinan idiomas.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <EditableList
+                  items={formData.codeSwitching || []}
+                  onChange={(items) => handleChange("codeSwitching", items)}
+                  placeholder="Añadir expresión..."
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
@@ -234,4 +248,4 @@ export function WordForm({
       </div>
     </form>
   );
-} 
+}

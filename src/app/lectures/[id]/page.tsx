@@ -6,11 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import {
-  ArrowLeft,
   Volume2,
   X,
   RotateCcw,
-  PlayCircle,
   FileText,
   Clock,
   Languages,

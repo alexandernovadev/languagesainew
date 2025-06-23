@@ -39,7 +39,6 @@ export function WordDetailsModal({
   loadingCodeSwitching = false,
   loadingTypes = false,
 }: WordDetailsModalProps) {
-
   const speakWord = (rate = 0.8, language = "en-US") => {
     const utterance = new SpeechSynthesisUtterance(word.word);
     utterance.rate = rate;
@@ -88,11 +87,11 @@ export function WordDetailsModal({
     </div>
   );
 
-  const SectionHeader = ({ 
-    title, 
+  const SectionHeader = ({
+    title,
     onRefresh,
-    loading = false
-  }: { 
+    loading = false,
+  }: {
     title: string;
     onRefresh?: () => void;
     loading?: boolean;
@@ -107,10 +106,12 @@ export function WordDetailsModal({
           disabled={loading}
           className="h-8 w-8 p-0"
         >
-          <RefreshCw className={cn(
-            "h-4 w-4",
-            loading && "animate-spin text-muted-foreground"
-          )} />
+          <RefreshCw
+            className={cn(
+              "h-4 w-4",
+              loading && "animate-spin text-muted-foreground"
+            )}
+          />
         </Button>
       )}
     </div>
@@ -209,10 +210,9 @@ export function WordDetailsModal({
                     disabled={loadingImage}
                     className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 rounded-full"
                   >
-                    <RefreshCw className={cn(
-                      "h-4 w-4",
-                      loadingImage && "animate-spin"
-                    )} />
+                    <RefreshCw
+                      className={cn("h-4 w-4", loadingImage && "animate-spin")}
+                    />
                   </Button>
                 )}
                 {word.img ? (
@@ -236,7 +236,11 @@ export function WordDetailsModal({
             {/* Examples */}
             {word.examples && word.examples.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Examples" onRefresh={onRefreshExamples} loading={loadingExamples} />
+                <SectionHeader
+                  title="Examples"
+                  onRefresh={onRefreshExamples}
+                  loading={loadingExamples}
+                />
                 <div className="space-y-2">
                   {word.examples.map((example, index) => (
                     <p
@@ -253,7 +257,11 @@ export function WordDetailsModal({
             {/* Code Switching */}
             {word.codeSwitching && word.codeSwitching.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Code-Switching" onRefresh={onRefreshCodeSwitching} loading={loadingCodeSwitching} />
+                <SectionHeader
+                  title="Code-Switching"
+                  onRefresh={onRefreshCodeSwitching}
+                  loading={loadingCodeSwitching}
+                />
                 <div className="space-y-2">
                   {word.codeSwitching.map((example, index) => (
                     <p
@@ -270,7 +278,11 @@ export function WordDetailsModal({
             {/* Synonyms */}
             {word.sinonyms && word.sinonyms.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Synonyms" onRefresh={onRefreshSynonyms} loading={loadingSynonyms} />
+                <SectionHeader
+                  title="Synonyms"
+                  onRefresh={onRefreshSynonyms}
+                  loading={loadingSynonyms}
+                />
                 <div className="space-y-2">
                   {word.sinonyms.map((synonym, index) => (
                     <p
@@ -287,7 +299,11 @@ export function WordDetailsModal({
             {/* Word Types */}
             {word.type && word.type.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Word Types" onRefresh={onRefreshTypes} loading={loadingTypes} />
+                <SectionHeader
+                  title="Word Types"
+                  onRefresh={onRefreshTypes}
+                  loading={loadingTypes}
+                />
                 <div className="space-y-2">
                   {word.type.map((type, index) => (
                     <p

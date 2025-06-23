@@ -38,4 +38,4 @@ export function AvatarFallbackClient({ user }: { user: User | null }) {
       {(user?.firstName?.[0] || user?.username?.[0] || "U").toUpperCase()}
     </AvatarFallback>
   );
-} 
+}

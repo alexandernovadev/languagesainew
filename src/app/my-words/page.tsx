@@ -1,18 +1,29 @@
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,14 +33,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { useWordStore } from "@/lib/store/useWordStore"
-import { Word } from "@/models/Word"
-import { WordForm } from "@/components/forms/WordForm"
-import { WordDetailsModal } from "@/components/WordDetailsModal"
-import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen, Search, Eye } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@/components/ui/alert-dialog";
+import { useWordStore } from "@/lib/store/useWordStore";
+import { Word } from "@/models/Word";
+import { WordForm } from "@/components/forms/WordForm";
+import { WordDetailsModal } from "@/components/WordDetailsModal";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Volume2,
+  Edit,
+  Trash2,
+  Search,
+  Eye,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MyWordsPage() {
   const {
@@ -52,166 +72,175 @@ export default function MyWordsPage() {
     setPage,
     setSearchQuery,
     searchQuery,
-  } = useWordStore()
+  } = useWordStore();
 
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [selectedWord, setSelectedWord] = useState<Word | null>(null)
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const [localSearch, setLocalSearch] = useState("")
+  const [localSearch, setLocalSearch] = useState("");
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setSearchQuery(localSearch)
-    }, 500) // 500ms debounce delay
+      setSearchQuery(localSearch);
+    }, 500); // 500ms debounce delay
 
     return () => {
-      clearTimeout(handler)
-    }
-  }, [localSearch, setSearchQuery])
+      clearTimeout(handler);
+    };
+  }, [localSearch, setSearchQuery]);
 
   useEffect(() => {
-    getWords()
-  }, [searchQuery, getWords]) // Re-fetch when the debounced search query changes
+    getWords();
+  }, [searchQuery, getWords]); // Re-fetch when the debounced search query changes
 
   // Sync selectedWord with updated data from store
   useEffect(() => {
     if (selectedWord && detailsModalOpen) {
-      const updatedWord = words.find(w => w._id === selectedWord._id)
-      if (updatedWord && JSON.stringify(updatedWord) !== JSON.stringify(selectedWord)) {
-        setSelectedWord(updatedWord)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
+      if (
+        updatedWord &&
+        JSON.stringify(updatedWord) !== JSON.stringify(selectedWord)
+      ) {
+        setSelectedWord(updatedWord);
       }
     }
-  }, [words, selectedWord, detailsModalOpen])
+  }, [words, selectedWord, detailsModalOpen]);
 
   const handleFormSubmit = async (data: Partial<Word>) => {
     if (isEditing && selectedWord) {
-      await updateWord(selectedWord._id, data)
+      await updateWord(selectedWord._id, data);
     } else {
-      await createWord(data as Omit<Word, "_id">)
+      await createWord(data as Omit<Word, "_id">);
     }
-    setDialogOpen(false)
-  }
+    setDialogOpen(false);
+  };
 
   const openDialog = (word?: Word) => {
     if (word) {
-      setSelectedWord(word)
-      setIsEditing(true)
+      setSelectedWord(word);
+      setIsEditing(true);
     } else {
-      setSelectedWord(null)
-      setIsEditing(false)
+      setSelectedWord(null);
+      setIsEditing(false);
     }
-    setDialogOpen(true)
-  }
+    setDialogOpen(true);
+  };
 
   const openDeleteDialog = (word: Word) => {
-    setSelectedWord(word)
-    setDeleteDialogOpen(true)
-  }
+    setSelectedWord(word);
+    setDeleteDialogOpen(true);
+  };
 
   const handleDeleteConfirm = () => {
     if (selectedWord?._id) {
-      deleteWord(selectedWord._id)
-      setDeleteDialogOpen(false)
-      setSelectedWord(null)
+      deleteWord(selectedWord._id);
+      setDeleteDialogOpen(false);
+      setSelectedWord(null);
     }
-  }
+  };
 
   const viewWordDetails = (word: Word) => {
-    setSelectedWord(word)
-    setDetailsModalOpen(true)
-  }
+    setSelectedWord(word);
+    setDetailsModalOpen(true);
+  };
 
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
     if (selectedWord?._id) {
-      await updateWordLevel(selectedWord._id, level)
+      await updateWordLevel(selectedWord._id, level);
       // Update selectedWord level directly since we only get level data back
-      setSelectedWord(prev => prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null)
+      setSelectedWord((prev) =>
+        prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null
+      );
     }
-  }
+  };
 
   const handleRefreshImage = async () => {
     if (selectedWord?._id) {
-      await updateWordImage(selectedWord._id, selectedWord.word, selectedWord.img)
+      await updateWordImage(
+        selectedWord._id,
+        selectedWord.word,
+        selectedWord.img
+      );
       // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
       if (updatedWord) {
-        setSelectedWord(updatedWord)
+        setSelectedWord(updatedWord);
       }
     }
-  }
+  };
 
   const handleRefreshExamples = async () => {
     if (selectedWord?._id) {
       await updateWordExamples(
-        selectedWord._id, 
-        selectedWord.word, 
-        selectedWord.language, 
+        selectedWord._id,
+        selectedWord.word,
+        selectedWord.language,
         selectedWord.examples || []
-      )
+      );
       // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
       if (updatedWord) {
-        setSelectedWord(updatedWord)
+        setSelectedWord(updatedWord);
       }
     }
-  }
+  };
 
   const handleRefreshSynonyms = async () => {
     if (selectedWord?._id) {
       await updateWordSynonyms(
-        selectedWord._id, 
-        selectedWord.word, 
-        selectedWord.language, 
+        selectedWord._id,
+        selectedWord.word,
+        selectedWord.language,
         selectedWord.sinonyms || []
-      )
+      );
       // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
       if (updatedWord) {
-        setSelectedWord(updatedWord)
+        setSelectedWord(updatedWord);
       }
     }
-  }
+  };
 
   const handleRefreshCodeSwitching = async () => {
     if (selectedWord?._id) {
       await updateWordCodeSwitching(
-        selectedWord._id, 
-        selectedWord.word, 
-        selectedWord.language, 
+        selectedWord._id,
+        selectedWord.word,
+        selectedWord.language,
         selectedWord.codeSwitching || []
-      )
+      );
       // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
       if (updatedWord) {
-        setSelectedWord(updatedWord)
+        setSelectedWord(updatedWord);
       }
     }
-  }
+  };
 
   const handleRefreshTypes = async () => {
     if (selectedWord?._id) {
       await updateWordTypes(
-        selectedWord._id, 
-        selectedWord.word, 
-        selectedWord.language, 
+        selectedWord._id,
+        selectedWord.word,
+        selectedWord.language,
         selectedWord.type || []
-      )
+      );
       // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
+      const updatedWord = words.find((w) => w._id === selectedWord._id);
       if (updatedWord) {
-        setSelectedWord(updatedWord)
+        setSelectedWord(updatedWord);
       }
     }
-  }
+  };
 
   const speakWord = (word: string) => {
     // Simplified speak logic, can be enhanced later
-    const utterance = new SpeechSynthesisUtterance(word)
-    speechSynthesis.speak(utterance)
-  }
+    const utterance = new SpeechSynthesisUtterance(word);
+    speechSynthesis.speak(utterance);
+  };
 
   return (
     <div className="container mx-auto px-2 sm:px-4 md:px-8 space-y-6">
@@ -232,7 +261,12 @@ export default function MyWordsPage() {
               className="pl-10 w-full"
             />
           </div>
-          <Button variant="ghost" size="icon" onClick={() => openDialog()} className="h-12 w-12 rounded-full">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => openDialog()}
+            className="h-12 w-12 rounded-full"
+          >
             <Plus className="h-6 w-6" />
           </Button>
         </div>
@@ -286,9 +320,12 @@ export default function MyWordsPage() {
                         <Badge
                           variant="outline"
                           className={cn(
-                            word.level === "easy" && "border-green-500 text-green-500",
-                            word.level === "medium" && "border-blue-500 text-blue-500",
-                            word.level === "hard" && "border-red-600 text-red-600"
+                            word.level === "easy" &&
+                              "border-green-500 text-green-500",
+                            word.level === "medium" &&
+                              "border-blue-500 text-blue-500",
+                            word.level === "hard" &&
+                              "border-red-600 text-red-600"
                           )}
                         >
                           {word.level}
@@ -376,26 +413,28 @@ export default function MyWordsPage() {
           />
         </DialogContent>
       </Dialog>
-      
+
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-         <AlertDialogContent>
-           <AlertDialogHeader>
-             <AlertDialogTitle>¿Estás seguro de eliminar esta palabra?</AlertDialogTitle>
-             <AlertDialogDescription>
-               Esta acción no se puede deshacer.
-             </AlertDialogDescription>
-           </AlertDialogHeader>
-           <AlertDialogFooter>
-             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-             <AlertDialogAction
-               onClick={handleDeleteConfirm}
-               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-             >
-               {actionLoading.delete ? "Eliminando..." : "Eliminar"}
-             </AlertDialogAction>
-           </AlertDialogFooter>
-         </AlertDialogContent>
-       </AlertDialog>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              ¿Estás seguro de eliminar esta palabra?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {actionLoading.delete ? "Eliminando..." : "Eliminar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Modal de detalles de la palabra */}
       {detailsModalOpen && selectedWord && (
@@ -417,5 +456,5 @@ export default function MyWordsPage() {
         />
       )}
     </div>
-  )
+  );
 }

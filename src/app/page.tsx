@@ -1,25 +1,39 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { BarChart3, Users, TrendingUp, Activity } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BarChart3, Users, TrendingUp, Activity } from "lucide-react";
 
 export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-neon">Dashboard</h1>
-        <p className="text-muted-foreground">Bienvenido a tu panel de control</p>
+        <h1 className="text-3xl font-bold tracking-tight text-neon">
+          Dashboard
+        </h1>
+        <p className="text-muted-foreground">
+          Bienvenido a tu panel de control
+        </p>
       </div>
 
       {/* Tarjetas de estadísticas */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Usuarios</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total de Usuarios
+            </CardTitle>
             <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-neon">2,350</div>
-            <p className="text-xs text-muted-foreground">+20.1% desde el mes pasado</p>
+            <p className="text-xs text-muted-foreground">
+              +20.1% desde el mes pasado
+            </p>
           </CardContent>
         </Card>
 
@@ -30,7 +44,9 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-neon">$45,231</div>
-            <p className="text-xs text-muted-foreground">+15% desde el mes pasado</p>
+            <p className="text-xs text-muted-foreground">
+              +15% desde el mes pasado
+            </p>
           </CardContent>
         </Card>
 
@@ -52,7 +68,9 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-neon">12.5%</div>
-            <p className="text-xs text-muted-foreground">+2% desde el mes pasado</p>
+            <p className="text-xs text-muted-foreground">
+              +2% desde el mes pasado
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -68,7 +86,9 @@ export default function Dashboard() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Usuarios activos</span>
-                <span className="text-sm text-primary font-semibold">1,234</span>
+                <span className="text-sm text-primary font-semibold">
+                  1,234
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Sesiones hoy</span>
@@ -76,7 +96,9 @@ export default function Dashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Tiempo promedio</span>
-                <span className="text-sm text-primary font-semibold">2m 30s</span>
+                <span className="text-sm text-primary font-semibold">
+                  2m 30s
+                </span>
               </div>
             </div>
           </CardContent>
@@ -85,7 +107,9 @@ export default function Dashboard() {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle className="text-primary">Acciones Rápidas</CardTitle>
-            <CardDescription>Tareas comunes que puedes realizar</CardDescription>
+            <CardDescription>
+              Tareas comunes que puedes realizar
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <Button className="w-full justify-start">
@@ -104,5 +128,5 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

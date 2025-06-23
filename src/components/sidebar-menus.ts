@@ -1,4 +1,12 @@
-import { Home, Settings, BookOpen, BarChart3, FileText, RotateCcw, Gamepad2 } from "lucide-react"
+import {
+  Home,
+  Settings,
+  BookOpen,
+  BarChart3,
+  FileText,
+  RotateCcw,
+  Gamepad2,
+} from "lucide-react";
 
 export const menuItems = [
   {
@@ -26,7 +34,7 @@ export const menuItems = [
     url: "/statistics",
     icon: BarChart3,
   },
-]
+];
 
 export const generatorItems = [
   {
@@ -39,7 +47,7 @@ export const generatorItems = [
     url: "/generator/lecture",
     icon: BookOpen,
   },
-]
+];
 
 export const gamesItems = [
   {
@@ -52,4 +60,4 @@ export const gamesItems = [
     url: "/games/verbs",
     icon: Gamepad2,
   },
-] 
+];

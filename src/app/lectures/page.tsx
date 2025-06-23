@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -112,7 +111,12 @@ export default function LecturesPage() {
             Página {currentPage} de {totalPages} • {lectures.length} lectures
           </Badge>
           <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
-            <Button variant="ghost" size="icon" onClick={openAddModal} className="h-12 w-12 rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={openAddModal}
+              className="h-12 w-12 rounded-full"
+            >
               <Plus className="h-6 w-6" />
             </Button>
             <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">

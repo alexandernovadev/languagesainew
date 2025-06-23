@@ -1,13 +1,19 @@
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { RotateCcw, ChevronLeft, ChevronRight, Shuffle, RefreshCw, X, Check } from "lucide-react"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLayout } from "@/components/layouts/page-layout"
-import { StatsGrid } from "@/components/ui/stats-grid"
-import { ProgressBar } from "@/components/ui/progress-bar"
-import { useGameStats } from "@/hooks/use-game-stats"
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+  Shuffle,
+  RefreshCw,
+} from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { StatsGrid } from "@/components/ui/stats-grid";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { useGameStats } from "@/hooks/use-game-stats";
 
 // Datos de ejemplo para las tarjetas
 const flashcards = [
@@ -21,51 +27,51 @@ const flashcards = [
   { id: 8, front: "Book", back: "Libro", category: "Objects" },
   { id: 9, front: "Friend", back: "Amigo", category: "People" },
   { id: 10, front: "Beautiful", back: "Hermoso", category: "Adjectives" },
-]
+];
 
 export default function AnkiGame() {
-  const [isFlipped, setIsFlipped] = useState(false)
-  const gameStats = useGameStats(flashcards.length)
+  const [isFlipped, setIsFlipped] = useState(false);
+  const gameStats = useGameStats(flashcards.length);
 
   const handleFlip = () => {
-    setIsFlipped(!isFlipped)
-  }
+    setIsFlipped(!isFlipped);
+  };
 
   const handleNext = () => {
-    gameStats.next()
-    setIsFlipped(false)
-  }
+    gameStats.next();
+    setIsFlipped(false);
+  };
 
   const handlePrevious = () => {
-    gameStats.previous()
-    setIsFlipped(false)
-  }
+    gameStats.previous();
+    setIsFlipped(false);
+  };
 
   const handleKnow = () => {
-    gameStats.markAsCompleted(flashcards[gameStats.currentIndex].id)
-    handleNext()
-  }
+    gameStats.markAsCompleted(flashcards[gameStats.currentIndex].id);
+    handleNext();
+  };
 
   const handleDontKnow = () => {
-    handleNext()
-  }
+    handleNext();
+  };
 
   const handleShuffle = () => {
-    gameStats.reset()
-    setIsFlipped(false)
-  }
+    gameStats.reset();
+    setIsFlipped(false);
+  };
 
   const handleReset = () => {
-    gameStats.reset()
-    setIsFlipped(false)
-  }
+    gameStats.reset();
+    setIsFlipped(false);
+  };
 
   const stats = [
     { label: "Tarjeta actual", value: gameStats.currentIndex + 1 },
     { label: "Total de tarjetas", value: gameStats.totalItems },
     { label: "Conocidas", value: gameStats.correctAnswers },
     { label: "Progreso", value: Math.round(gameStats.progress), suffix: "%" },
-  ]
+  ];
 
   const actions = (
     <>
@@ -78,7 +84,7 @@ export default function AnkiGame() {
         Reiniciar
       </Button>
     </>
-  )
+  );
 
   return (
     <PageLayout>
@@ -95,7 +101,12 @@ export default function AnkiGame() {
       {/* Tarjeta principal */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-md">
-          <div className={`flip-card w-full h-64 cursor-pointer ${isFlipped ? "flipped" : ""}`} onClick={handleFlip}>
+          <div
+            className={`flip-card w-full h-64 cursor-pointer ${
+              isFlipped ? "flipped" : ""
+            }`}
+            onClick={handleFlip}
+          >
             <div className="flip-card-inner relative w-full h-full">
               {/* Frente de la tarjeta */}
               <Card className="flip-card-front absolute w-full h-full backface-hidden">
@@ -103,7 +114,9 @@ export default function AnkiGame() {
                   <Badge variant="secondary" className="mb-4">
                     {flashcards[gameStats.currentIndex].category}
                   </Badge>
-                  <h2 className="text-3xl font-bold mb-4">{flashcards[gameStats.currentIndex].front}</h2>
+                  <h2 className="text-3xl font-bold mb-4">
+                    {flashcards[gameStats.currentIndex].front}
+                  </h2>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <RotateCcw className="h-4 w-4 mr-1" />
                     Haz clic para voltear
@@ -117,7 +130,9 @@ export default function AnkiGame() {
                   <Badge variant="secondary" className="mb-4">
                     {flashcards[gameStats.currentIndex].category}
                   </Badge>
-                  <h2 className="text-3xl font-bold mb-4 text-primary">{flashcards[gameStats.currentIndex].back}</h2>
+                  <h2 className="text-3xl font-bold mb-4 text-primary">
+                    {flashcards[gameStats.currentIndex].back}
+                  </h2>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <RotateCcw className="h-4 w-4 mr-1" />
                     Haz clic para voltear
@@ -131,7 +146,11 @@ export default function AnkiGame() {
 
       {/* Controles */}
       <div className="flex justify-center gap-4">
-        <Button variant="outline" onClick={handlePrevious} disabled={gameStats.currentIndex === 0}>
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={gameStats.currentIndex === 0}
+        >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Anterior
         </Button>
@@ -141,17 +160,19 @@ export default function AnkiGame() {
             <Button variant="outline" onClick={handleDontKnow}>
               No la sabía
             </Button>
-            <Button onClick={handleKnow}>
-              La sabía
-            </Button>
+            <Button onClick={handleKnow}>La sabía</Button>
           </>
         )}
 
-        <Button variant="outline" onClick={handleNext} disabled={gameStats.currentIndex === flashcards.length - 1}>
+        <Button
+          variant="outline"
+          onClick={handleNext}
+          disabled={gameStats.currentIndex === flashcards.length - 1}
+        >
           Siguiente
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </PageLayout>
-  )
+  );
 }

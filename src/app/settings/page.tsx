@@ -1,12 +1,15 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLayout } from "@/components/layouts/page-layout"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export default function Settings() {
   return (
@@ -21,20 +24,30 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <CardTitle>Configuración General</CardTitle>
-            <CardDescription>Preferencias básicas de la aplicación</CardDescription>
+            <CardDescription>
+              Preferencias básicas de la aplicación
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <div className="text-sm font-medium">Notificaciones por Email</div>
-                <div className="text-sm text-muted-foreground">Recibir notificaciones por email</div>
+                <div className="text-sm font-medium">
+                  Notificaciones por Email
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Recibir notificaciones por email
+                </div>
               </div>
               <Switch />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <div className="text-sm font-medium">Actualizaciones Automáticas</div>
-                <div className="text-sm text-muted-foreground">Instalar actualizaciones automáticamente</div>
+                <div className="text-sm font-medium">
+                  Actualizaciones Automáticas
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Instalar actualizaciones automáticamente
+                </div>
               </div>
               <Switch />
             </div>
@@ -45,7 +58,9 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <CardTitle>Información del Sistema</CardTitle>
-            <CardDescription>Detalles técnicos de la aplicación</CardDescription>
+            <CardDescription>
+              Detalles técnicos de la aplicación
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -54,8 +69,12 @@ export default function Settings() {
                 <Badge variant="secondary">v1.0.0</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Última Actualización</span>
-                <span className="text-sm text-muted-foreground">Hace 2 días</span>
+                <span className="text-sm font-medium">
+                  Última Actualización
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Hace 2 días
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Estado</span>
@@ -66,5 +85,5 @@ export default function Settings() {
         </Card>
       </div>
     </PageLayout>
-  )
+  );
 }

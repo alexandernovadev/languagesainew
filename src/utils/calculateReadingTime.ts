@@ -9,13 +9,13 @@ export const calculateReadingTime = (content: string): number => {
 
   // Contar palabras (separadas por espacios)
   const words = content.trim().split(/\s+/).length;
-  
+
   // Promedio de palabras por minuto al leer
   const wordsPerMinute = 200;
-  
+
   // Calcular tiempo en minutos
   const readingTime = Math.ceil(words / wordsPerMinute);
-  
+
   // Mínimo 1 minuto
   return Math.max(1, readingTime);
-}; 
+};

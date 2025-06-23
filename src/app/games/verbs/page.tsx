@@ -1,121 +1,267 @@
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ChevronLeft, ChevronRight, Check, X, RotateCcw } from "lucide-react"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ChevronLeft, ChevronRight, Check, X, RotateCcw } from "lucide-react";
 
 // Datos de verbos irregulares
 const irregularVerbs = [
-  { id: 1, infinitive: "be", past: "was/were", participle: "been", meaning: "ser/estar" },
-  { id: 2, infinitive: "have", past: "had", participle: "had", meaning: "tener" },
-  { id: 3, infinitive: "do", past: "did", participle: "done", meaning: "hacer" },
-  { id: 4, infinitive: "say", past: "said", participle: "said", meaning: "decir" },
-  { id: 5, infinitive: "get", past: "got", participle: "gotten", meaning: "obtener" },
-  { id: 6, infinitive: "make", past: "made", participle: "made", meaning: "hacer" },
+  {
+    id: 1,
+    infinitive: "be",
+    past: "was/were",
+    participle: "been",
+    meaning: "ser/estar",
+  },
+  {
+    id: 2,
+    infinitive: "have",
+    past: "had",
+    participle: "had",
+    meaning: "tener",
+  },
+  {
+    id: 3,
+    infinitive: "do",
+    past: "did",
+    participle: "done",
+    meaning: "hacer",
+  },
+  {
+    id: 4,
+    infinitive: "say",
+    past: "said",
+    participle: "said",
+    meaning: "decir",
+  },
+  {
+    id: 5,
+    infinitive: "get",
+    past: "got",
+    participle: "gotten",
+    meaning: "obtener",
+  },
+  {
+    id: 6,
+    infinitive: "make",
+    past: "made",
+    participle: "made",
+    meaning: "hacer",
+  },
   { id: 7, infinitive: "go", past: "went", participle: "gone", meaning: "ir" },
-  { id: 8, infinitive: "know", past: "knew", participle: "known", meaning: "saber" },
-  { id: 9, infinitive: "take", past: "took", participle: "taken", meaning: "tomar" },
-  { id: 10, infinitive: "see", past: "saw", participle: "seen", meaning: "ver" },
-  { id: 11, infinitive: "come", past: "came", participle: "come", meaning: "venir" },
-  { id: 12, infinitive: "think", past: "thought", participle: "thought", meaning: "pensar" },
-  { id: 13, infinitive: "look", past: "looked", participle: "looked", meaning: "mirar" },
-  { id: 14, infinitive: "want", past: "wanted", participle: "wanted", meaning: "querer" },
-  { id: 15, infinitive: "give", past: "gave", participle: "given", meaning: "dar" },
-  { id: 16, infinitive: "use", past: "used", participle: "used", meaning: "usar" },
-  { id: 17, infinitive: "find", past: "found", participle: "found", meaning: "encontrar" },
-  { id: 18, infinitive: "tell", past: "told", participle: "told", meaning: "contar" },
-  { id: 19, infinitive: "ask", past: "asked", participle: "asked", meaning: "preguntar" },
-  { id: 20, infinitive: "work", past: "worked", participle: "worked", meaning: "trabajar" },
-]
+  {
+    id: 8,
+    infinitive: "know",
+    past: "knew",
+    participle: "known",
+    meaning: "saber",
+  },
+  {
+    id: 9,
+    infinitive: "take",
+    past: "took",
+    participle: "taken",
+    meaning: "tomar",
+  },
+  {
+    id: 10,
+    infinitive: "see",
+    past: "saw",
+    participle: "seen",
+    meaning: "ver",
+  },
+  {
+    id: 11,
+    infinitive: "come",
+    past: "came",
+    participle: "come",
+    meaning: "venir",
+  },
+  {
+    id: 12,
+    infinitive: "think",
+    past: "thought",
+    participle: "thought",
+    meaning: "pensar",
+  },
+  {
+    id: 13,
+    infinitive: "look",
+    past: "looked",
+    participle: "looked",
+    meaning: "mirar",
+  },
+  {
+    id: 14,
+    infinitive: "want",
+    past: "wanted",
+    participle: "wanted",
+    meaning: "querer",
+  },
+  {
+    id: 15,
+    infinitive: "give",
+    past: "gave",
+    participle: "given",
+    meaning: "dar",
+  },
+  {
+    id: 16,
+    infinitive: "use",
+    past: "used",
+    participle: "used",
+    meaning: "usar",
+  },
+  {
+    id: 17,
+    infinitive: "find",
+    past: "found",
+    participle: "found",
+    meaning: "encontrar",
+  },
+  {
+    id: 18,
+    infinitive: "tell",
+    past: "told",
+    participle: "told",
+    meaning: "contar",
+  },
+  {
+    id: 19,
+    infinitive: "ask",
+    past: "asked",
+    participle: "asked",
+    meaning: "preguntar",
+  },
+  {
+    id: 20,
+    infinitive: "work",
+    past: "worked",
+    participle: "worked",
+    meaning: "trabajar",
+  },
+];
 
 export default function VerbsParticipios() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [userAnswers, setUserAnswers] = useState<{ [key: number]: { past: string; participle: string } }>({})
-  const [showAnswers, setShowAnswers] = useState(false)
-  const [checkedAnswers, setCheckedAnswers] = useState<{ [key: number]: { past: boolean; participle: boolean } }>({})
+  const [currentPage, setCurrentPage] = useState(1);
+  const [userAnswers, setUserAnswers] = useState<{
+    [key: number]: { past: string; participle: string };
+  }>({});
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [checkedAnswers, setCheckedAnswers] = useState<{
+    [key: number]: { past: boolean; participle: boolean };
+  }>({});
 
-  const itemsPerPage = 10
-  const totalPages = Math.ceil(irregularVerbs.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentVerbs = irregularVerbs.slice(startIndex, endIndex)
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(irregularVerbs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentVerbs = irregularVerbs.slice(startIndex, endIndex);
 
-  const handleInputChange = (verbId: number, field: "past" | "participle", value: string) => {
+  const handleInputChange = (
+    verbId: number,
+    field: "past" | "participle",
+    value: string
+  ) => {
     setUserAnswers((prev) => ({
       ...prev,
       [verbId]: {
         ...prev[verbId],
         [field]: value,
       },
-    }))
-  }
+    }));
+  };
 
   const checkAnswers = () => {
-    const newCheckedAnswers: { [key: number]: { past: boolean; participle: boolean } } = {}
+    const newCheckedAnswers: {
+      [key: number]: { past: boolean; participle: boolean };
+    } = {};
 
     currentVerbs.forEach((verb) => {
-      const userAnswer = userAnswers[verb.id]
+      const userAnswer = userAnswers[verb.id];
       if (userAnswer) {
         newCheckedAnswers[verb.id] = {
-          past: userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase(),
-          participle: userAnswer.participle?.toLowerCase().trim() === verb.participle.toLowerCase(),
-        }
+          past:
+            userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase(),
+          participle:
+            userAnswer.participle?.toLowerCase().trim() ===
+            verb.participle.toLowerCase(),
+        };
       }
-    })
+    });
 
-    setCheckedAnswers(newCheckedAnswers)
-    setShowAnswers(true)
-  }
+    setCheckedAnswers(newCheckedAnswers);
+    setShowAnswers(true);
+  };
 
   const resetPage = () => {
-    const currentVerbIds = currentVerbs.map((verb) => verb.id)
-    const newUserAnswers = { ...userAnswers }
-    const newCheckedAnswers = { ...checkedAnswers }
+    const currentVerbIds = currentVerbs.map((verb) => verb.id);
+    const newUserAnswers = { ...userAnswers };
+    const newCheckedAnswers = { ...checkedAnswers };
 
     currentVerbIds.forEach((id) => {
-      delete newUserAnswers[id]
-      delete newCheckedAnswers[id]
-    })
+      delete newUserAnswers[id];
+      delete newCheckedAnswers[id];
+    });
 
-    setUserAnswers(newUserAnswers)
-    setCheckedAnswers(newCheckedAnswers)
-    setShowAnswers(false)
-  }
+    setUserAnswers(newUserAnswers);
+    setCheckedAnswers(newCheckedAnswers);
+    setShowAnswers(false);
+  };
 
   const nextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
-      setShowAnswers(false)
+      setCurrentPage(currentPage + 1);
+      setShowAnswers(false);
     }
-  }
+  };
 
   const prevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
-      setShowAnswers(false)
+      setCurrentPage(currentPage - 1);
+      setShowAnswers(false);
     }
-  }
+  };
 
   const getInputClassName = (verbId: number, field: "past" | "participle") => {
-    if (!showAnswers) return ""
-    const isCorrect = checkedAnswers[verbId]?.[field]
-    return isCorrect ? "border-green-500 bg-green-50 dark:bg-green-950" : "border-red-500 bg-red-50 dark:bg-red-950"
-  }
+    if (!showAnswers) return "";
+    const isCorrect = checkedAnswers[verbId]?.[field];
+    return isCorrect
+      ? "border-green-500 bg-green-50 dark:bg-green-950"
+      : "border-red-500 bg-red-50 dark:bg-red-950";
+  };
 
   const correctAnswers = Object.values(checkedAnswers).reduce((acc, answer) => {
-    return acc + (answer.past ? 1 : 0) + (answer.participle ? 1 : 0)
-  }, 0)
+    return acc + (answer.past ? 1 : 0) + (answer.participle ? 1 : 0);
+  }, 0);
 
-  const totalAnswers = Object.keys(checkedAnswers).length * 2
+  const totalAnswers = Object.keys(checkedAnswers).length * 2;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Verbs Participios</h1>
-          <p className="text-muted-foreground">Practica verbos irregulares en inglés</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Verbs Participios
+          </h1>
+          <p className="text-muted-foreground">
+            Practica verbos irregulares en inglés
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={resetPage}>
@@ -138,7 +284,12 @@ export default function VerbsParticipios() {
                 <Badge variant="default" className="text-sm">
                   Página {currentPage} de {totalPages}
                 </Badge>
-                <Badge variant={correctAnswers === totalAnswers ? "default" : "secondary"} className="text-sm">
+                <Badge
+                  variant={
+                    correctAnswers === totalAnswers ? "default" : "secondary"
+                  }
+                  className="text-sm"
+                >
                   {correctAnswers}/{totalAnswers} correctas
                 </Badge>
               </div>
@@ -154,7 +305,9 @@ export default function VerbsParticipios() {
       <Card>
         <CardHeader>
           <CardTitle>Verbos Irregulares - Página {currentPage}</CardTitle>
-          <CardDescription>Completa las formas del pasado y participio de cada verbo</CardDescription>
+          <CardDescription>
+            Completa las formas del pasado y participio de cada verbo
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -170,13 +323,17 @@ export default function VerbsParticipios() {
               <TableBody>
                 {currentVerbs.map((verb) => (
                   <TableRow key={verb.id}>
-                    <TableCell className="font-medium">{verb.infinitive}</TableCell>
+                    <TableCell className="font-medium">
+                      {verb.infinitive}
+                    </TableCell>
                     <TableCell>
                       <div className="relative">
                         <Input
                           placeholder="..."
                           value={userAnswers[verb.id]?.past || ""}
-                          onChange={(e) => handleInputChange(verb.id, "past", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(verb.id, "past", e.target.value)
+                          }
                           className={getInputClassName(verb.id, "past")}
                           disabled={showAnswers}
                         />
@@ -190,7 +347,9 @@ export default function VerbsParticipios() {
                           </div>
                         )}
                         {showAnswers && !checkedAnswers[verb.id]?.past && (
-                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">Respuesta: {verb.past}</div>
+                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                            Respuesta: {verb.past}
+                          </div>
                         )}
                       </div>
                     </TableCell>
@@ -199,7 +358,13 @@ export default function VerbsParticipios() {
                         <Input
                           placeholder="..."
                           value={userAnswers[verb.id]?.participle || ""}
-                          onChange={(e) => handleInputChange(verb.id, "participle", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(
+                              verb.id,
+                              "participle",
+                              e.target.value
+                            )
+                          }
                           className={getInputClassName(verb.id, "participle")}
                           disabled={showAnswers}
                         />
@@ -212,14 +377,17 @@ export default function VerbsParticipios() {
                             )}
                           </div>
                         )}
-                        {showAnswers && !checkedAnswers[verb.id]?.participle && (
-                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                            Respuesta: {verb.participle}
-                          </div>
-                        )}
+                        {showAnswers &&
+                          !checkedAnswers[verb.id]?.participle && (
+                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              Respuesta: {verb.participle}
+                            </div>
+                          )}
                       </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{verb.meaning}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {verb.meaning}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -230,7 +398,11 @@ export default function VerbsParticipios() {
 
       {/* Navegación */}
       <div className="flex items-center justify-between">
-        <Button variant="outline" onClick={prevPage} disabled={currentPage === 1}>
+        <Button
+          variant="outline"
+          onClick={prevPage}
+          disabled={currentPage === 1}
+        >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Anterior
         </Button>
@@ -242,8 +414,8 @@ export default function VerbsParticipios() {
               variant={currentPage === page ? "default" : "outline"}
               size="sm"
               onClick={() => {
-                setCurrentPage(page)
-                setShowAnswers(false)
+                setCurrentPage(page);
+                setShowAnswers(false);
               }}
             >
               {page}
@@ -251,11 +423,15 @@ export default function VerbsParticipios() {
           ))}
         </div>
 
-        <Button variant="outline" onClick={nextPage} disabled={currentPage === totalPages}>
+        <Button
+          variant="outline"
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+        >
           Siguiente
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </div>
-  )
+  );
 }

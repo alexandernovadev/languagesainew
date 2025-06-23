@@ -24,7 +24,9 @@ const routeNameMapping: { [key: string]: string } = {
 
 export function DynamicBreadcrumb() {
   const location = useLocation();
-  const pathSegments = location.pathname.split("/").filter((segment) => segment);
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment);
 
   return (
     <Breadcrumb>
@@ -57,4 +59,4 @@ export function DynamicBreadcrumb() {
       </BreadcrumbList>
     </Breadcrumb>
   );
-} 
+}
