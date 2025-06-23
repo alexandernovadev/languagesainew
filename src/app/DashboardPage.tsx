@@ -20,6 +20,82 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from "@/components/ui/table";
+import { Sidebar } from "@/components/ui/sidebar";
+import { Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandShortcut, CommandSeparator } from "@/components/ui/command";
+import { Separator } from "@/components/ui/separator";
+import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarSeparator, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel } from "@/components/ui/menubar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
+import { Toggle } from "@/components/ui/toggle";
+import { ToastProvider, Toast, ToastTitle, ToastDescription, ToastAction, ToastClose, ToastViewport } from "@/components/ui/toast";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectLabel, SelectSeparator, SelectGroup, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useForm, FormProvider } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { StatsGrid } from "@/components/ui/stats-grid";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { PageHeader } from "@/components/ui/page-header";
+import { LecturePagination } from "@/components/ui/LecturePagination";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useIsMobile } from "@/components/ui/use-mobile";
+
+function ToastDemoButtons() {
+  const { toast } = useToast();
+  return (
+    <div className="flex flex-wrap gap-4 items-center">
+      <Button
+        onClick={() =>
+          toast({
+            title: "Toast por defecto",
+            description: "Este es un toast informativo.",
+          })
+        }
+      >
+        Mostrar Toast Default
+      </Button>
+      <Button
+        onClick={() =>
+          toast({
+            title: "Error",
+            description: "Este es un toast destructivo.",
+            variant: "destructive",
+          })
+        }
+        variant="destructive"
+      >
+        Mostrar Toast Destructivo
+      </Button>
+      <Button
+        onClick={() =>
+          toast({
+            title: "Con acción",
+            description: "Toast con botón de acción.",
+            action: (
+              <ToastAction altText="Deshacer" onClick={() => alert("Deshecho!")}>
+                Deshacer
+              </ToastAction>
+            ),
+          })
+        }
+        variant="secondary"
+      >
+        Mostrar Toast con Acción
+      </Button>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   return (
@@ -134,20 +210,20 @@ export default function DashboardPage() {
       <section>
         <h2 className="text-xl font-semibold mb-4">Card - Todas las variantes</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card>
+        <Card>
             <CardHeader>
               <CardTitle>Card básica</CardTitle>
               <CardDescription>Descripción de la tarjeta</CardDescription>
-            </CardHeader>
-            <CardContent>
+          </CardHeader>
+          <CardContent>
               <p>Contenido principal de la tarjeta.</p>
-            </CardContent>
+          </CardContent>
             <CardFooter>
               <span>Pie de tarjeta</span>
             </CardFooter>
-          </Card>
+        </Card>
 
-          <Card>
+        <Card>
             <CardHeader>
               <CardTitle>Card con badge</CardTitle>
               <CardDescription>Tarjeta con elementos adicionales</CardDescription>
@@ -179,32 +255,32 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle>Card con fondo</CardTitle>
               <CardDescription>Fondo alternativo</CardDescription>
-            </CardHeader>
-            <CardContent>
+          </CardHeader>
+          <CardContent>
               <p>Tarjeta con fondo personalizado.</p>
-            </CardContent>
-          </Card>
+          </CardContent>
+        </Card>
 
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle>Card con sombra</CardTitle>
               <CardDescription>Sombra pronunciada</CardDescription>
-            </CardHeader>
-            <CardContent>
+          </CardHeader>
+          <CardContent>
               <p>Tarjeta con sombra más pronunciada.</p>
-            </CardContent>
-          </Card>
+          </CardContent>
+        </Card>
 
           <Card className="border-primary">
             <CardHeader>
               <CardTitle>Card destacada</CardTitle>
               <CardDescription>Borde de color primario</CardDescription>
-            </CardHeader>
-            <CardContent>
+          </CardHeader>
+          <CardContent>
               <p>Tarjeta con borde de color primario.</p>
-            </CardContent>
-          </Card>
-        </div>
+          </CardContent>
+        </Card>
+      </div>
       </section>
 
       {/* 4. Slider - Múltiples variantes */}
@@ -832,6 +908,612 @@ export default function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {/* 20. RadioGroup - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">RadioGroup - Todas las variantes</h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-medium mb-2">RadioGroup simple</h3>
+            <RadioGroup defaultValue="option1">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option1" id="r1" />
+                <label htmlFor="r1">Opción 1</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option2" id="r2" />
+                <label htmlFor="r2">Opción 2</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option3" id="r3" />
+                <label htmlFor="r3">Opción 3</label>
+              </div>
+            </RadioGroup>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium mb-2">RadioGroup deshabilitado</h3>
+            <RadioGroup defaultValue="option1" disabled>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option1" id="r4" disabled />
+                <label htmlFor="r4">Opción 1</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option2" id="r5" disabled />
+                <label htmlFor="r5">Opción 2</label>
+              </div>
+            </RadioGroup>
+          </div>
+        </div>
+      </section>
+
+      {/* 21. Switch - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Switch - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-8 items-center">
+          <div className="flex flex-col items-center gap-2">
+            <span>Switch ON</span>
+            <Switch checked />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span>Switch OFF</span>
+            <Switch />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span>Switch deshabilitado</span>
+            <Switch disabled />
+          </div>
+        </div>
+      </section>
+
+      {/* 22. Button - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Button - Todas las variantes</h2>
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="default">Default</Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="link">Link</Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm">Small</Button>
+            <Button size="default">Default</Button>
+            <Button size="lg">Large</Button>
+            <Button size="icon"><span>🔔</span></Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button disabled>Disabled</Button>
+            <Button variant="destructive" disabled>Destructive</Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 23. Table - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Table - Todas las variantes</h2>
+        <div className="space-y-8">
+          <div>
+            <h3 className="text-sm font-medium mb-2">Tabla básica</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Rol</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Juan</TableCell>
+                  <TableCell>juan@email.com</TableCell>
+                  <TableCell>Admin</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Maria</TableCell>
+                  <TableCell>maria@email.com</TableCell>
+                  <TableCell>Usuario</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium mb-2">Tabla con caption y footer</h3>
+            <Table>
+              <TableCaption>Usuarios registrados</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Rol</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Pedro</TableCell>
+                  <TableCell>pedro@email.com</TableCell>
+                  <TableCell>Editor</TableCell>
+                </TableRow>
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={3}>Total: 1</TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
+        </div>
+      </section>
+
+      {/* 24. Sidebar - Variante básica (aislada, solo visual) */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Sidebar (solo ejemplo visual, no funcional)</h2>
+        <div className="border rounded w-64 bg-sidebar text-sidebar-foreground p-4 flex flex-col gap-2">
+          <div className="font-bold text-lg">Sidebar</div>
+          <div className="text-sm">Este es solo un ejemplo visual de Sidebar.<br/>No afecta la Sidebar real de la app.</div>
+          <ul className="mt-2 space-y-1">
+            <li className="hover:bg-muted rounded px-2 py-1 cursor-pointer">Dashboard</li>
+            <li className="hover:bg-muted rounded px-2 py-1 cursor-pointer">Usuarios</li>
+            <li className="hover:bg-muted rounded px-2 py-1 cursor-pointer">Ajustes</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* 25. Command - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Command - Todas las variantes</h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-medium mb-2">Command básico</h3>
+            <Command className="w-full max-w-md">
+              <CommandInput placeholder="Buscar..." />
+              <CommandList>
+                <CommandEmpty>No se encontraron resultados.</CommandEmpty>
+                <CommandGroup heading="Opciones">
+                  <CommandItem>Perfil <CommandShortcut>⌘P</CommandShortcut></CommandItem>
+                  <CommandItem>Configuración <CommandShortcut>⌘S</CommandShortcut></CommandItem>
+                </CommandGroup>
+                <CommandSeparator />
+                <CommandGroup heading="Acciones">
+                  <CommandItem>Salir <CommandShortcut>⌘Q</CommandShortcut></CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </div>
+        </div>
+      </section>
+
+      {/* 26. Separator - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Separator - Todas las variantes</h2>
+        <div className="space-y-4">
+          <Separator />
+          <div className="flex h-8 items-center space-x-4">
+            <span>Texto</span>
+            <Separator orientation="vertical" />
+            <span>Más texto</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 27. Badge - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Badge - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="default">Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="outline">Outline</Badge>
+        </div>
+      </section>
+
+      {/* 28. Menubar - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Menubar - Todas las variantes</h2>
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>Archivo</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>Nuevo</MenubarItem>
+              <MenubarItem>Abrir...</MenubarItem>
+              <MenubarSeparator />
+              <MenubarSub>
+                <MenubarSubTrigger>Más</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem>Opción 1</MenubarItem>
+                  <MenubarItem>Opción 2</MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Editar</MenubarTrigger>
+            <MenubarContent>
+              <MenubarCheckboxItem checked>Cortar</MenubarCheckboxItem>
+              <MenubarCheckboxItem>Pegar</MenubarCheckboxItem>
+              <MenubarRadioGroup value="a">
+                <MenubarLabel>Modo</MenubarLabel>
+                <MenubarRadioItem value="a">A</MenubarRadioItem>
+                <MenubarRadioItem value="b">B</MenubarRadioItem>
+              </MenubarRadioGroup>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </section>
+
+      {/* 29. Avatar - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Avatar - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4 items-center">
+          <div className="flex flex-col items-center gap-2">
+            <span>Con imagen</span>
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span>Solo iniciales</span>
+            <Avatar>
+              <AvatarFallback>AB</AvatarFallback>
+            </Avatar>
+          </div>
+      </div>
+      </section>
+
+      {/* 30. Dialog - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Dialog - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Abrir Dialog</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Dialog básico</DialogTitle>
+                <DialogDescription>Este es un diálogo simple.</DialogDescription>
+              </DialogHeader>
+              <div className="py-4">Contenido del diálogo</div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="secondary">Cerrar</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </section>
+
+      {/* 31. Checkbox - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Checkbox - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-8 items-center">
+          <div className="flex items-center gap-2">
+            <Checkbox id="cb1" checked />
+            <label htmlFor="cb1">Checked</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="cb2" />
+            <label htmlFor="cb2">Unchecked</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="cb3" disabled />
+            <label htmlFor="cb3">Disabled</label>
+          </div>
+        </div>
+      </section>
+
+      {/* 32. DropdownMenu - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">DropdownMenu - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">Dropdown básico</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Opción 1</DropdownMenuItem>
+              <DropdownMenuItem>Opción 2</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Opción 3</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">Dropdown con submenú</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>Más opciones</DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem>Subopción 1</DropdownMenuItem>
+                  <DropdownMenuItem>Subopción 2</DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Opción final</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost">Dropdown con radio y checkbox</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuCheckboxItem checked>Check 1</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem>Check 2</DropdownMenuCheckboxItem>
+              <DropdownMenuRadioGroup value="a">
+                <DropdownMenuLabel>Modo</DropdownMenuLabel>
+                <DropdownMenuRadioItem value="a">A</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="b">B</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </section>
+
+      {/* 33. Toggle - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Toggle - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4 items-center">
+          <Toggle>Default</Toggle>
+          <Toggle variant="outline">Outline</Toggle>
+          <Toggle size="sm">Small</Toggle>
+          <Toggle size="lg">Large</Toggle>
+          <Toggle pressed>On</Toggle>
+          <Toggle>Off</Toggle>
+        </div>
+      </section>
+
+      {/* 34. Toast - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Toast - Todas las variantes</h2>
+        <ToastDemoButtons />
+      </section>
+
+      {/* 35. Select - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Select - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4 items-center">
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Selecciona una opción" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="a">Opción A</SelectItem>
+              <SelectItem value="b">Opción B</SelectItem>
+              <SelectItem value="c">Opción C</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select disabled>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Deshabilitado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="a">Opción A</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Con grupos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Grupo 1</SelectLabel>
+                <SelectItem value="g1a">G1 - A</SelectItem>
+                <SelectItem value="g1b">G1 - B</SelectItem>
+                <SelectSeparator />
+                <SelectLabel>Grupo 2</SelectLabel>
+                <SelectItem value="g2a">G2 - A</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </section>
+
+      {/* 36. Textarea - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Textarea - Todas las variantes</h2>
+        <div className="space-y-4">
+          <Textarea placeholder="Escribe algo..." />
+          <Textarea disabled placeholder="Deshabilitado" />
+        </div>
+      </section>
+
+      {/* 37. Input - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Input - Todas las variantes</h2>
+        <div className="space-y-4">
+          <Input placeholder="Texto" />
+          <Input type="password" placeholder="Contraseña" />
+          <Input disabled placeholder="Deshabilitado" />
+        </div>
+      </section>
+
+      {/* 38. Form - Ejemplo simple */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Form - Ejemplo simple</h2>
+        <div className="max-w-sm">
+          {(() => {
+            const methods = useForm();
+            return (
+              <FormProvider {...methods}>
+                <FormItem>
+                  <FormLabel>Nombre</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Tu nombre" />
+                  </FormControl>
+                  <FormDescription>Este es tu nombre completo.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="tu@email.com" />
+                  </FormControl>
+                  <FormDescription>Tu correo electrónico.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              </FormProvider>
+            );
+          })()}
+        </div>
+      </section>
+
+      {/* 39. Skeleton - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Skeleton - Todas las variantes</h2>
+        <div className="flex flex-wrap gap-4 items-end">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-6 w-16 rounded-full" />
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+      </section>
+
+      {/* 41. Sonner - Ejemplo de integración */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Sonner (Toaster alternativo)</h2>
+        <div className="text-sm text-muted-foreground mb-2">Este es un ejemplo de cómo se integraría el Toaster de Sonner. No interfiere con el Toaster principal.</div>
+        <div className="border rounded p-4 bg-background">
+          <SonnerToaster position="top-right" />
+          <span className="text-xs">(No funcional aquí, solo visual)</span>
+        </div>
+      </section>
+
+      {/* 42. StatsGrid - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">StatsGrid - Todas las variantes</h2>
+        <StatsGrid
+          stats={[
+            { label: "Usuarios", value: 120 },
+            { label: "Ventas", value: 45, suffix: "USD" },
+            { label: "Visitas", value: 3200 },
+            { label: "Conversiones", value: 12, suffix: "%" },
+          ]}
+        />
+      </section>
+
+      {/* 43. ProgressBar - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">ProgressBar - Todas las variantes</h2>
+        <div className="space-y-4">
+          <ProgressBar progress={20} />
+          <ProgressBar progress={50} showPercentage />
+          <ProgressBar progress={80} className="bg-muted" showPercentage />
+        </div>
+      </section>
+
+      {/* 44. PageHeader - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">PageHeader - Todas las variantes</h2>
+        <PageHeader
+          title="Dashboard"
+          description="Resumen de tu actividad"
+          actions={<Button>Acción</Button>}
+        />
+        <div className="mt-4" />
+        <PageHeader title="Solo título" />
+      </section>
+
+      {/* 45. LecturePagination - Ejemplo funcional */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">LecturePagination - Ejemplo funcional</h2>
+        <LecturePaginationDemo />
+      </section>
+
+      {/* 46. Collapsible - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Collapsible - Todas las variantes</h2>
+        <CollapsibleDemo />
+      </section>
+
+      {/* 47. AvatarFallbackClient - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">AvatarFallbackClient - Todas las variantes</h2>
+        <div className="flex gap-4 items-center">
+          <Avatar>
+            <AvatarFallbackClient user={{
+              _id: "1",
+              email: "alex@email.com",
+              role: "admin",
+              isActive: true,
+              firstName: "Alex",
+              lastName: "Dev",
+              username: "alexdev",
+              image: "",
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            }} />
+          </Avatar>
+          <Avatar>
+            <AvatarFallbackClient user={null} />
+          </Avatar>
+        </div>
+      </section>
+
+      {/* 48. AspectRatio - Variantes */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">AspectRatio - Todas las variantes</h2>
+        <div className="flex gap-4">
+          <AspectRatio ratio={16 / 9} className="bg-muted w-48">
+            <img
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+              alt="Demo"
+              className="object-cover w-full h-full rounded"
+            />
+          </AspectRatio>
+          <AspectRatio ratio={1} className="bg-muted w-24">
+            <div className="flex items-center justify-center h-full">1:1</div>
+          </AspectRatio>
+        </div>
+      </section>
+
+      {/* 49. useIsMobile - Ejemplo visual */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">useIsMobile - Ejemplo visual</h2>
+        <IsMobileDemo />
+      </section>
+
+      {/* 50. Toaster - Mensaje de integración */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Toaster (Radix) - Integración</h2>
+        <div className="text-sm text-muted-foreground">El Toaster de Radix ya está integrado al final del DashboardPage y es funcional para los Toasts.</div>
+      </section>
+
+      <Toaster />
+    </div>
+  );
+}
+
+// Componentes auxiliares para los ejemplos funcionales:
+function LecturePaginationDemo() {
+  const [page, setPage] = React.useState(1);
+  return (
+    <LecturePagination currentPage={page} totalPages={7} onPageChange={setPage} />
+  );
+}
+
+function CollapsibleDemo() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger asChild>
+        <Button variant="outline">{open ? "Cerrar" : "Abrir"} contenido</Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="p-4 border rounded mt-2">Este es el contenido colapsable.</div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+function IsMobileDemo() {
+  const isMobile = useIsMobile();
+  return (
+    <div className="p-2 border rounded w-fit">
+      <span className="font-mono">{isMobile ? "Móvil" : "Desktop"}</span>
     </div>
   );
 }
