@@ -2,11 +2,7 @@ import type * as React from "react";
 import { User, User as UserIcon } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { useUserStore } from "@/lib/store/user-store";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
 
 import {
   Sidebar,

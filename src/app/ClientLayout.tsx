@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumb } from "@/components/layouts/dynamic-breadcrumb";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 
 export default function ClientLayout({
