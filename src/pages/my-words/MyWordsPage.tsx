@@ -273,111 +273,107 @@ export default function MyWordsPage() {
       </div>
 
       {/* Tabla de palabras */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Vocabulario</CardTitle>
-          <CardDescription>
-            {total} palabras en tu vocabulario. Página {currentPage} de{" "}
-            {totalPages}.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Palabra</TableHead>
-                  <TableHead>Traducción</TableHead>
-                  <TableHead>Nivel</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading && words.length === 0 ? (
-                  Array.from({ length: 7 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={4}>
-                        <Skeleton className="h-8 w-full" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : words.length > 0 ? (
-                  words.map((word) => (
-                    <TableRow key={word._id}>
-                      <TableCell className="font-medium flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => speakWord(word.word)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Volume2 className="h-4 w-4" />
-                        </Button>
-                        {word.word}
-                      </TableCell>
-                      <TableCell>{word.spanish?.word || "N/A"}</TableCell>
-                      <TableCell>
-                        <WordLevelBadge level={word.level} />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => viewWordDetails(word)}
-                            className="p-1 hover:bg-accent rounded-sm transition-colors"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => openDialog(word)}
-                            className="p-1 hover:bg-accent rounded-sm transition-colors"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => openDeleteDialog(word)}
-                            className="p-1 hover:bg-accent rounded-sm transition-colors text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center h-24 text-muted-foreground"
-                    >
-                      No se encontraron palabras.
+      <Card className="!p-0 !m-0 shadow-none border-none">
+        <div className="w-full overflow-x-auto p-0 m-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Palabra</TableHead>
+                <TableHead>IPA</TableHead>
+                <TableHead>Traducción</TableHead>
+                <TableHead>Nivel</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading && words.length === 0 ? (
+                Array.from({ length: 7 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell colSpan={4}>
+                      <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
+                ))
+              ) : words.length > 0 ? (
+                words.map((word) => (
+                  <TableRow key={word._id}>
+                    <TableCell className="font-medium flex items-center gap-2 capitalize text-lg">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => speakWord(word.word)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Volume2 className="h-4 w-4" />
+                      </Button>
+                      {word.word}
+                    </TableCell>
+                    <TableCell>{word.IPA || <span className="text-muted-foreground">N/A</span>}</TableCell>
+                    <TableCell className="capitalize">{word.spanish?.word || "N/A"}</TableCell>
+                    <TableCell>
+                      <WordLevelBadge level={word.level} />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => viewWordDetails(word)}
+                          className="p-1 hover:bg-accent rounded-sm transition-colors"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => openDialog(word)}
+                          className="p-1 hover:bg-accent rounded-sm transition-colors"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => openDeleteDialog(word)}
+                          className="p-1 hover:bg-accent rounded-sm transition-colors text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center h-24 text-muted-foreground"
+                  >
+                    No se encontraron palabras.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       {/* Paginación */}
-      <div className="flex items-center justify-end space-x-2">
+      <div className="flex items-center justify-end space-x-2 mt-2 w-full">
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
           onClick={() => setPage(currentPage - 1)}
           disabled={currentPage <= 1}
+          aria-label="Página anterior"
         >
-          <ChevronLeft className="h-4 w-4" />
-          Anterior
+          <ChevronLeft className="h-5 w-5" />
         </Button>
+        <span className="text-sm text-muted-foreground">
+          Página {currentPage} de {totalPages} &mdash; {total} palabras
+        </span>
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
           onClick={() => setPage(currentPage + 1)}
           disabled={currentPage >= totalPages}
+          aria-label="Página siguiente"
         >
-          Siguiente
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-5 w-5" />
         </Button>
       </div>
 

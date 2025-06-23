@@ -49,7 +49,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   getWords: async (
     page = get().currentPage,
-    limit = 7,
+    limit = 6,
     wordUser = get().searchQuery
   ) => {
     set({
@@ -79,7 +79,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   setSearchQuery: (query: string) => {
     set({ searchQuery: query, currentPage: 1 });
-    get().getWords(1, 7, query);
+    get().getWords(1, 6, query);
   },
 
   retry: () => {
