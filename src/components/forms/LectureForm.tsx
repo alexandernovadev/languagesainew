@@ -62,17 +62,19 @@ export function LectureForm({
 
   return (
     <div className="flex flex-col h-full">
-      <Tabs defaultValue="config" className="flex flex-col flex-grow">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="config">
-            <Settings className="h-4 w-4 mr-2" />
-            Configuración
-          </TabsTrigger>
-          <TabsTrigger value="content">
-            <FileText className="h-4 w-4 mr-2" />
-            Contenido
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="config" className="flex flex-col flex-grow min-h-0">
+        <div className="px-6 py-2">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="config">
+              <Settings className="h-4 w-4 mr-2" />
+              Configuración
+            </TabsTrigger>
+            <TabsTrigger value="content">
+              <FileText className="h-4 w-4 mr-2" />
+              Contenido
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <div className="flex-grow overflow-y-auto">
           <TabsContent value="config" className="p-4 space-y-6">
@@ -228,7 +230,7 @@ export function LectureForm({
                     setFormData({ ...formData, content: value || "" })
                   }
                   height="100%"
-                  preview="edit"
+                  preview="live"
                 />
               </div>
             </div>

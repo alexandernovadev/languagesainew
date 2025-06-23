@@ -82,18 +82,20 @@ export function WordForm({
       onSubmit={handleSubmit}
       className="flex flex-col flex-grow min-h-0"
     >
-      <div className="flex-grow overflow-y-auto px-1">
+      <div className="flex-grow overflow-y-auto px-1 min-h-0">
         <Tabs defaultValue="basic" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2 sticky top-0 bg-background z-10">
-            <TabsTrigger value="basic">
-              <Book className="h-4 w-4 mr-2" />
-              Información Básica
-            </TabsTrigger>
-            <TabsTrigger value="advanced">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Campos Avanzados
-            </TabsTrigger>
-          </TabsList>
+          <div className="px-4 pt-4">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="basic">
+                <Book className="h-4 w-4 mr-2" />
+                Información Básica
+              </TabsTrigger>
+              <TabsTrigger value="advanced">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Campos Avanzados
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="basic" className="pt-2">
             <Card>
