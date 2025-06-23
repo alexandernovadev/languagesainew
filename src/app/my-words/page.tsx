@@ -127,11 +127,8 @@ export default function MyWordsPage() {
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
     if (selectedWord?._id) {
       await updateWordLevel(selectedWord._id, level)
-      // Update selectedWord with the latest data
-      const updatedWord = words.find(w => w._id === selectedWord._id)
-      if (updatedWord) {
-        setSelectedWord(updatedWord)
-      }
+      // Update selectedWord level directly since we only get level data back
+      setSelectedWord(prev => prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null)
     }
   }
 

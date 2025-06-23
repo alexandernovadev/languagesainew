@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,6 @@ export function WordDetailsModal({
   loadingCodeSwitching = false,
   loadingTypes = false,
 }: WordDetailsModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
 
   const speakWord = (rate = 0.8, language = "en-US") => {
     const utterance = new SpeechSynthesisUtterance(word.word);

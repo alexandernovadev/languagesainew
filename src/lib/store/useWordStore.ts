@@ -164,8 +164,12 @@ export const useWordStore = create<WordStore>((set, get) => ({
     try {
       const { data } = await wordService.updateWordLevel(id, level);
       set((state) => ({
-        words: state.words.map((word) => (word._id === id ? data : word)),
-        activeWord: data,
+        words: state.words.map((word) => 
+          word._id === id ? { ...word, level: data.level, updatedAt: data.updatedAt } : word
+        ),
+        activeWord: state.activeWord && state.activeWord._id === id
+          ? { ...state.activeWord, level: data.level, updatedAt: data.updatedAt }
+          : state.activeWord,
         actionLoading: { ...state.actionLoading, updateLevel: false },
       }));
     } catch (error: any) {
