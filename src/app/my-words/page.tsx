@@ -26,7 +26,7 @@ import {
 import { useWordStore } from "@/lib/store/useWordStore"
 import { Word } from "@/models/Word"
 import { WordForm } from "@/components/forms/WordForm"
-import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen, Search } from "lucide-react"
+import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen, Search, Eye } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -99,6 +99,11 @@ export default function MyWordsPage() {
       setDeleteDialogOpen(false)
       setSelectedWord(null)
     }
+  }
+
+  const viewWordDetails = (word: Word) => {
+    // TODO: Implement word details view
+    console.log("Viewing word details:", word)
   }
 
   const speakWord = (word: string) => {
@@ -189,21 +194,26 @@ export default function MyWordsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openDialog(word)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openDeleteDialog(word)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => viewWordDetails(word)}
+                            className="p-1 hover:bg-accent rounded-sm transition-colors"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => openDialog(word)}
+                            className="p-1 hover:bg-accent rounded-sm transition-colors"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => openDeleteDialog(word)}
+                            className="p-1 hover:bg-accent rounded-sm transition-colors text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
