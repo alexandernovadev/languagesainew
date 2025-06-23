@@ -115,6 +115,41 @@ export default function MyWordsPage() {
     }
   }
 
+  const handleRefreshImage = async () => {
+    if (selectedWord?._id) {
+      // TODO: Implement image refresh functionality
+      console.log("Refreshing image for:", selectedWord.word)
+    }
+  }
+
+  const handleRefreshExamples = async () => {
+    if (selectedWord?._id) {
+      // TODO: Implement examples refresh functionality
+      console.log("Refreshing examples for:", selectedWord.word)
+    }
+  }
+
+  const handleRefreshSynonyms = async () => {
+    if (selectedWord?._id) {
+      // TODO: Implement synonyms refresh functionality
+      console.log("Refreshing synonyms for:", selectedWord.word)
+    }
+  }
+
+  const handleRefreshCodeSwitching = async () => {
+    if (selectedWord?._id) {
+      // TODO: Implement code-switching refresh functionality
+      console.log("Refreshing code-switching for:", selectedWord.word)
+    }
+  }
+
+  const handleRefreshTypes = async () => {
+    if (selectedWord?._id) {
+      // TODO: Implement word types refresh functionality
+      console.log("Refreshing word types for:", selectedWord.word)
+    }
+  }
+
   const speakWord = (word: string) => {
     // Simplified speak logic, can be enhanced later
     const utterance = new SpeechSynthesisUtterance(word)
@@ -311,6 +346,11 @@ export default function MyWordsPage() {
           word={selectedWord}
           onClose={() => setDetailsModalOpen(false)}
           onUpdateLevel={handleUpdateLevel}
+          onRefreshImage={handleRefreshImage}
+          onRefreshExamples={handleRefreshExamples}
+          onRefreshSynonyms={handleRefreshSynonyms}
+          onRefreshCodeSwitching={handleRefreshCodeSwitching}
+          onRefreshTypes={handleRefreshTypes}
           loading={actionLoading.updateLevel}
         />
       )}

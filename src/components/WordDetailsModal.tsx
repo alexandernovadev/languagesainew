@@ -1,119 +1,154 @@
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Volume2, RefreshCw, Eye } from "lucide-react"
-import { Word } from "@/models/Word"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RefreshCw } from "lucide-react";
+import { Word } from "@/models/Word";
+import { cn } from "@/lib/utils";
 
 interface WordDetailsModalProps {
-  word: Word
-  onClose: () => void
-  onUpdateLevel?: (level: "easy" | "medium" | "hard") => void
-  loading?: boolean
+  word: Word;
+  onClose: () => void;
+  onUpdateLevel?: (level: "easy" | "medium" | "hard") => void;
+  onRefreshImage?: () => void;
+  onRefreshExamples?: () => void;
+  onRefreshSynonyms?: () => void;
+  onRefreshCodeSwitching?: () => void;
+  onRefreshTypes?: () => void;
+  loading?: boolean;
 }
 
 export function WordDetailsModal({
   word,
   onClose,
   onUpdateLevel,
+  onRefreshImage,
+  onRefreshExamples,
+  onRefreshSynonyms,
+  onRefreshCodeSwitching,
+  onRefreshTypes,
   loading = false,
 }: WordDetailsModalProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const speakWord = (rate = 0.8, language = "en-US") => {
-    const utterance = new SpeechSynthesisUtterance(word.word)
-    utterance.rate = rate
-    utterance.lang = language
-    speechSynthesis.speak(utterance)
-  }
+    const utterance = new SpeechSynthesisUtterance(word.word);
+    utterance.rate = rate;
+    utterance.lang = language;
+    speechSynthesis.speak(utterance);
+  };
 
   const getLevelColor = (level: string) => {
     switch (level) {
       case "easy":
-        return "text-green-600 border-green-600"
+        return "text-green-600 border-green-600";
       case "medium":
-        return "text-blue-600 border-blue-600"
+        return "text-blue-600 border-blue-600";
       case "hard":
-        return "text-red-600 border-red-600"
+        return "text-red-600 border-red-600";
       default:
-        return "text-gray-600 border-gray-600"
+        return "text-gray-600 border-gray-600";
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
-  const SectionContainer = ({ 
-    children, 
-    hasBox = false, 
-    className = "" 
-  }: { 
-    children: React.ReactNode
-    hasBox?: boolean
-    className?: string
+  const SectionContainer = ({
+    children,
+    hasBox = false,
+    className = "",
+  }: {
+    children: React.ReactNode;
+    hasBox?: boolean;
+    className?: string;
   }) => (
-    <div className={cn(
-      "my-2",
-      hasBox && "border border-border rounded-lg p-4 relative",
-      className
-    )}>
+    <div
+      className={cn(
+        "my-4",
+        hasBox && "border border-border rounded-lg p-5 relative",
+        className
+      )}
+    >
       {children}
     </div>
-  )
+  );
 
   const SectionHeader = ({ 
-    title
+    title, 
+    onRefresh 
   }: { 
-    title: string
+    title: string;
+    onRefresh?: () => void;
   }) => (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-4">
       <h3 className="text-lg font-semibold text-muted-foreground">{title}</h3>
+      {onRefresh && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onRefresh}
+          disabled={loading}
+          className="h-8 w-8 p-0"
+        >
+          <RefreshCw className={cn(
+            "h-4 w-4",
+            loading && "animate-spin text-muted-foreground"
+          )} />
+        </Button>
+      )}
     </div>
-  )
+  );
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-xl h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
+        <div className="flex items-center justify-between p-5 border-b flex-shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🇺🇸</span>
-            <Badge 
-              variant="outline" 
-              className={cn("text-sm font-semibold", getLevelColor(word.level || "easy"))}
+            <Badge
+              variant="outline"
+              className={cn(
+                "text-sm font-semibold px-3 py-1",
+                getLevelColor(word.level || "easy")
+              )}
             >
               {word.level}
             </Badge>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="h-8 w-8 p-0"
+          >
             ✕
           </Button>
         </div>
 
         <ScrollArea className="flex-1">
-          <div className="p-6 space-y-6">
+          <div className="p-5 space-y-6">
             {/* Word Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-primary capitalize">
+                <h1 className="text-2xl font-bold text-primary capitalize mb-1">
                   {word.word}
                 </h1>
-                <p className="text-yellow-600 font-semibold">
-                  👀 {word.seen || 0}
+                <p className="text-yellow-600 font-semibold text-sm">
+                  👀 {word.seen || 0} vistas
                 </p>
               </div>
             </div>
 
             {/* Pronunciation */}
             <div className="flex items-center justify-between">
-              <p className="text-xl text-purple-600 font-semibold">
+              <p className="text-lg text-purple-600 font-semibold">
                 {word.IPA || "/ˈwɜːd/"}
               </p>
               <div className="flex items-center gap-2">
@@ -121,7 +156,7 @@ export function WordDetailsModal({
                   variant="ghost"
                   size="sm"
                   onClick={() => speakWord()}
-                  className="h-10 w-10 p-0 rounded-full border-2"
+                  className="h-9 w-9 p-0 rounded-full border-2"
                 >
                   🔊
                 </Button>
@@ -129,7 +164,7 @@ export function WordDetailsModal({
                   variant="ghost"
                   size="sm"
                   onClick={() => speakWord(0.5)}
-                  className="h-10 w-10 p-0 rounded-full border-2"
+                  className="h-9 w-9 p-0 rounded-full border-2"
                 >
                   🐢
                 </Button>
@@ -138,17 +173,17 @@ export function WordDetailsModal({
 
             {/* Definition */}
             <div>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base text-muted-foreground leading-relaxed">
                 {word.definition}
               </p>
             </div>
 
             {/* Spanish Translation */}
             <SectionContainer>
-              <h3 className="text-2xl font-bold text-blue-600 capitalize mb-2">
+              <h3 className="text-xl font-bold text-blue-600 capitalize mb-2">
                 {word.spanish?.word}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {word.spanish?.definition}
               </p>
             </SectionContainer>
@@ -156,18 +191,32 @@ export function WordDetailsModal({
             {/* Image */}
             <SectionContainer hasBox>
               <div className="relative flex justify-center">
+                {onRefreshImage && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onRefreshImage}
+                    disabled={loading}
+                    className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 rounded-full"
+                  >
+                    <RefreshCw className={cn(
+                      "h-4 w-4",
+                      loading && "animate-spin"
+                    )} />
+                  </Button>
+                )}
                 {word.img ? (
                   <img
                     src={word.img}
                     alt={word.word}
-                    className="w-1/2 rounded-lg h-80 object-cover"
+                    className="w-2/3 rounded-lg h-64 object-cover"
                   />
                 ) : (
-                  <div className="w-1/2 h-80 rounded-lg bg-muted flex items-center justify-center">
+                  <div className="w-2/3 h-64 rounded-lg bg-muted flex items-center justify-center">
                     <img
                       src="/placeholder.svg"
                       alt="No image available"
-                      className="w-32 h-32 opacity-50"
+                      className="w-20 h-20 opacity-50"
                     />
                   </div>
                 )}
@@ -177,10 +226,13 @@ export function WordDetailsModal({
             {/* Examples */}
             {word.examples && word.examples.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Examples" />
+                <SectionHeader title="Examples" onRefresh={onRefreshExamples} />
                 <div className="space-y-2">
                   {word.examples.map((example, index) => (
-                    <p key={index} className="text-muted-foreground">
+                    <p
+                      key={index}
+                      className="text-sm text-muted-foreground leading-relaxed"
+                    >
                       • {example}
                     </p>
                   ))}
@@ -191,10 +243,13 @@ export function WordDetailsModal({
             {/* Code Switching */}
             {word.codeSwitching && word.codeSwitching.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Code-Switching" />
+                <SectionHeader title="Code-Switching" onRefresh={onRefreshCodeSwitching} />
                 <div className="space-y-2">
                   {word.codeSwitching.map((example, index) => (
-                    <p key={index} className="text-muted-foreground">
+                    <p
+                      key={index}
+                      className="text-sm text-muted-foreground leading-relaxed"
+                    >
                       • {example}
                     </p>
                   ))}
@@ -205,10 +260,13 @@ export function WordDetailsModal({
             {/* Synonyms */}
             {word.sinonyms && word.sinonyms.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Synonyms" />
+                <SectionHeader title="Synonyms" onRefresh={onRefreshSynonyms} />
                 <div className="space-y-2">
                   {word.sinonyms.map((synonym, index) => (
-                    <p key={index} className="text-foreground capitalize">
+                    <p
+                      key={index}
+                      className="text-sm text-foreground capitalize leading-relaxed"
+                    >
                       🔹 {synonym}
                     </p>
                   ))}
@@ -219,10 +277,13 @@ export function WordDetailsModal({
             {/* Word Types */}
             {word.type && word.type.length > 0 && (
               <SectionContainer hasBox>
-                <SectionHeader title="Word Types" />
+                <SectionHeader title="Word Types" onRefresh={onRefreshTypes} />
                 <div className="space-y-2">
                   {word.type.map((type, index) => (
-                    <p key={index} className="text-foreground capitalize">
+                    <p
+                      key={index}
+                      className="text-sm text-foreground capitalize leading-relaxed"
+                    >
                       🪹 {type}
                     </p>
                   ))}
@@ -234,14 +295,18 @@ export function WordDetailsModal({
             <SectionContainer hasBox className="border-orange-500">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-muted-foreground mb-1">Updated</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <h4 className="font-semibold text-muted-foreground mb-1 text-sm">
+                    Updated
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
                     {word.updatedAt ? formatDate(word.updatedAt) : "N/A"}
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-muted-foreground mb-1">Created</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <h4 className="font-semibold text-muted-foreground mb-1 text-sm">
+                    Created
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
                     {word.createdAt ? formatDate(word.createdAt) : "N/A"}
                   </p>
                 </div>
@@ -252,19 +317,23 @@ export function WordDetailsModal({
 
         {/* Level Buttons */}
         {onUpdateLevel && (
-          <div className="p-6 border-t flex-shrink-0">
-            <div className="flex justify-center gap-4">
+          <div className="p-5 border-t flex-shrink-0">
+            <div className="flex justify-center gap-3">
               {(["easy", "medium", "hard"] as const).map((level) => (
                 <Button
                   key={level}
                   onClick={() => onUpdateLevel(level)}
                   disabled={loading}
                   variant="outline"
+                  size="sm"
                   className={cn(
-                    "capitalize",
-                    level === "easy" && "border-green-600 text-green-600 hover:bg-green-600 hover:text-white",
-                    level === "medium" && "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
-                    level === "hard" && "border-red-600 text-red-600 hover:bg-red-600 hover:text-white",
+                    "capitalize px-4 py-2",
+                    level === "easy" &&
+                      "border-green-600 text-green-600 hover:bg-green-600 hover:text-white",
+                    level === "medium" &&
+                      "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
+                    level === "hard" &&
+                      "border-red-600 text-red-600 hover:bg-red-600 hover:text-white",
                     loading && "opacity-50"
                   )}
                 >
@@ -276,5 +345,5 @@ export function WordDetailsModal({
         )}
       </Card>
     </div>
-  )
-} 
+  );
+}
