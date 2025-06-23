@@ -3,7 +3,6 @@ import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -11,6 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Settings, FileText } from "lucide-react";
 import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
 import { languageData } from "@/data/languageData";
@@ -60,212 +62,185 @@ export function LectureForm({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-grow overflow-y-auto px-4 space-y-6">
-        {/* Información básica */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-primary border-b pb-2">
-            Información Básica
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="level" className="text-sm font-medium">
-                Nivel de Dificultad <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.level}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, level: value })
-                }
-              >
-                <SelectTrigger
-                  className={`h-10 ${
-                    !formData.level ? "border-red-300 focus:border-red-500" : ""
-                  }`}
-                >
-                  <SelectValue placeholder="Selecciona un nivel" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lectureLevels.map((level) => (
-                    <SelectItem key={level} value={level}>
-                      {level}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Define el nivel de dificultad de la lectura
-              </p>
-            </div>
+      <Tabs defaultValue="config" className="flex flex-col flex-grow">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="config">
+            <Settings className="h-4 w-4 mr-2" />
+            Configuración
+          </TabsTrigger>
+          <TabsTrigger value="content">
+            <FileText className="h-4 w-4 mr-2" />
+            Contenido
+          </TabsTrigger>
+        </TabsList>
 
-            <div className="space-y-2">
-              <Label htmlFor="typeWrite" className="text-sm font-medium">
-                Tipo de Contenido <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.typeWrite}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, typeWrite: value })
-                }
-              >
-                <SelectTrigger
-                  className={`h-10 ${
-                    !formData.typeWrite
-                      ? "border-red-300 focus:border-red-500"
-                      : ""
-                  }`}
-                >
-                  <SelectValue placeholder="Selecciona un tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lectureTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Especifica el tipo de contenido
-              </p>
-            </div>
+        <div className="flex-grow overflow-y-auto">
+          <TabsContent value="config" className="p-4 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Información Básica</CardTitle>
+                <CardDescription>
+                  Clasifica la lectura por nivel, tipo, idioma y duración
+                  estimada.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="level">
+                      Nivel de Dificultad <span className="text-red-500">*</span>
+                    </Label>
+                    <Select
+                      value={formData.level}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, level: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un nivel" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {lectureLevels.map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="language" className="text-sm font-medium">
-                Idioma <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.language}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, language: value })
-                }
-              >
-                <SelectTrigger
-                  className={`h-10 ${
-                    !formData.language
-                      ? "border-red-300 focus:border-red-500"
-                      : ""
-                  }`}
-                >
-                  <SelectValue placeholder="Selecciona un idioma" />
-                </SelectTrigger>
-                <SelectContent>
-                  {languageData.map((lang) => (
-                    <SelectItem key={lang.code} value={lang.code}>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{lang.flag}</span>
-                        <span>
-                          {lang.name} ({lang.code})
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Idioma principal del contenido
-              </p>
-            </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="typeWrite">
+                      Tipo de Contenido <span className="text-red-500">*</span>
+                    </Label>
+                    <Select
+                      value={formData.typeWrite}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, typeWrite: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {lectureTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="time" className="text-sm font-medium">
-                Duración Estimada (minutos)
-              </Label>
-              <Input
-                id="time"
-                type="number"
-                value={formData.time}
-                onChange={(e) =>
-                  setFormData({ ...formData, time: Number(e.target.value) })
-                }
-                placeholder="Ej: 15, 30, 45..."
-                className="h-10"
-                min="1"
-                max="180"
-              />
-              <p className="text-xs text-muted-foreground">
-                Tiempo estimado para completar la lectura
-              </p>
-            </div>
-          </div>
-        </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="language">
+                      Idioma <span className="text-red-500">*</span>
+                    </Label>
+                    <Select
+                      value={formData.language}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, language: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un idioma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languageData.map((lang) => (
+                          <SelectItem key={lang.code} value={lang.code}>
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{lang.flag}</span>
+                              <span>
+                                {lang.name} ({lang.code})
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-        {/* Multimedia */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-primary border-b pb-2">
-            Multimedia
-          </h3>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="img" className="text-sm font-medium">
-                Imagen de Portada (URL)
-              </Label>
-              <Input
-                id="img"
-                value={formData.img}
-                onChange={(e) =>
-                  setFormData({ ...formData, img: e.target.value })
-                }
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="h-10"
-              />
-              <p className="text-xs text-muted-foreground">
-                URL de la imagen que representará la lectura
-              </p>
-              {formData.img && (
-                <div className="mt-2">
-                  <img
-                    src={formData.img}
-                    alt="Preview"
-                    className="w-32 h-20 object-cover rounded border"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="time">Duración (min)</Label>
+                    <Input
+                      id="time"
+                      type="number"
+                      value={formData.time}
+                      onChange={(e) =>
+                        setFormData({ ...formData, time: Number(e.target.value) })
+                      }
+                      placeholder="Ej: 15"
+                      min="1"
+                    />
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
+              </CardContent>
+            </Card>
 
-        {/* Contenido */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-primary border-b pb-2">
-            Contenido de la Lectura
-          </h3>
-          <div className="space-y-2">
-            <Label htmlFor="content" className="text-sm font-medium">
-              Contenido Completo <span className="text-red-500">*</span>
-            </Label>
-            <div data-color-mode="dark">
-              <MDEditor
-                value={formData.content}
-                onChange={(value) =>
-                  setFormData({ ...formData, content: value || "" })
-                }
-                height={400}
-                preview="edit"
-              />
+            <Card>
+              <CardHeader>
+                <CardTitle>Multimedia</CardTitle>
+                <CardDescription>
+                  Añade una imagen de portada para la lectura (URL).
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                  <div className="md:col-span-1">
+                    <Label>Vista Previa</Label>
+                    <div className="mt-2 w-full aspect-video rounded-md border flex items-center justify-center bg-muted">
+                      {formData.img ? (
+                        <img
+                          src={formData.img}
+                          alt="Preview"
+                          className="w-full h-full object-cover rounded-md"
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/noImage.png";
+                          }}
+                        />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">Sin Imagen</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <Label htmlFor="img">URL de la Imagen</Label>
+                    <Input
+                      id="img"
+                      value={formData.img}
+                      onChange={(e) =>
+                        setFormData({ ...formData, img: e.target.value })
+                      }
+                      placeholder="https://ejemplo.com/imagen.jpg"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="content" className="h-full">
+            <div className="p-4 h-full">
+              <div data-color-mode="dark" className="h-full">
+                <MDEditor
+                  value={formData.content}
+                  onChange={(value) =>
+                    setFormData({ ...formData, content: value || "" })
+                  }
+                  height="100%"
+                  preview="edit"
+                />
+              </div>
             </div>
-            <div className="flex justify-between items-center text-xs text-muted-foreground">
-              <span>{formData.content.length} caracteres</span>
-              <span>
-                Aproximadamente {Math.ceil(formData.content.length / 200)}{" "}
-                minutos de lectura
-              </span>
-            </div>
-          </div>
+          </TabsContent>
         </div>
-      </div>
-      {/* Footer con botones */}
-      <div className="flex-shrink-0 flex justify-end gap-3 pt-4 border-t mt-6">
-        <Button variant="outline" onClick={onCancel} className="px-6">
+      </Tabs>
+
+      <div className="flex justify-end gap-2 pt-4 pb-4 border-t shrink-0 bg-background px-6">
+        <Button variant="ghost" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={loading || !isFormValid}
-          className="px-6"
-        >
+        <Button onClick={handleSubmit} disabled={!isFormValid || loading}>
           {loading ? "Guardando..." : submitText}
         </Button>
       </div>
