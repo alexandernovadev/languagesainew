@@ -521,53 +521,53 @@ export default function LectureGenerator() {
                   </div>
                 )}
               </div>
-              {estimatedTime > 0 && (
-                <>
+
+              <>
+                <div className="flex flex-wrap gap-3 mt-3">
+                  <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
+                    Nivel:{" "}
+                    {lectureLevels.find((l) => l.value === watchedValues.level)
+                      ?.label || watchedValues.level}
+                  </span>
+                  <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 text-blue-400">
+                    Tipo:{" "}
+                    {lectureTypes.find(
+                      (t) => t.value === watchedValues.typeWrite
+                    )?.label || watchedValues.typeWrite}
+                  </span>
+                  <span
+                    className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${
+                      watchedValues.difficulty === "easy"
+                        ? "border-green-500 text-green-400"
+                        : watchedValues.difficulty === "medium"
+                        ? "border-yellow-500 text-yellow-400"
+                        : "border-red-500 text-red-400"
+                    }`}
+                  >
+                    Dificultad:{" "}
+                    {watchedValues.difficulty === "easy"
+                      ? "Fácil"
+                      : watchedValues.difficulty === "medium"
+                      ? "Media"
+                      : "Difícil"}
+                  </span>
+                  <span
+                    className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${
+                      watchedValues.addEasyWords
+                        ? "text-purple-400"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    Vocabulario adicional:{" "}
+                    {watchedValues.addEasyWords ? "Sí" : "No"}
+                  </span>
+                </div>
+                {estimatedTime > 0 && (
                   <CardDescription>
                     Tiempo de lectura estimado: {estimatedTime} minutos
                   </CardDescription>
-                  <div className="flex flex-wrap gap-3 mt-3">
-                    <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
-                      Nivel:{" "}
-                      {lectureLevels.find(
-                        (l) => l.value === watchedValues.level
-                      )?.label || watchedValues.level}
-                    </span>
-                    <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 text-blue-400">
-                      Tipo:{" "}
-                      {lectureTypes.find(
-                        (t) => t.value === watchedValues.typeWrite
-                      )?.label || watchedValues.typeWrite}
-                    </span>
-                    <span
-                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${
-                        watchedValues.difficulty === "easy"
-                          ? "border-green-500 text-green-400"
-                          : watchedValues.difficulty === "medium"
-                          ? "border-yellow-500 text-yellow-400"
-                          : "border-red-500 text-red-400"
-                      }`}
-                    >
-                      Dificultad:{" "}
-                      {watchedValues.difficulty === "easy"
-                        ? "Fácil"
-                        : watchedValues.difficulty === "medium"
-                        ? "Media"
-                        : "Difícil"}
-                    </span>
-                    <span
-                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${
-                        watchedValues.addEasyWords
-                          ? "text-purple-400"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      Vocabulario adicional:{" "}
-                      {watchedValues.addEasyWords ? "Sí" : "No"}
-                    </span>
-                  </div>
-                </>
-              )}
+                )}
+              </>
             </CardHeader>
             <CardContent>
               <div
