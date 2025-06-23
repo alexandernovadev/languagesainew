@@ -190,7 +190,11 @@ export default function LectureGenerator() {
         actions={
           <Dialog open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2" disabled={isGenerating}>
+              <Button
+                variant="outline"
+                className="gap-2"
+                disabled={isGenerating}
+              >
                 <Settings className="h-4 w-4" />
                 Configuración Avanzada
               </Button>
@@ -205,21 +209,26 @@ export default function LectureGenerator() {
                   Personaliza los parámetros para crear la lectura perfecta
                 </DialogDescription>
               </DialogHeader>
-              
+
               <div className="flex-1 overflow-y-auto space-y-8 px-1">
                 {/* Sección: Tipo y Nivel */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-border/50">
-                    <h3 className="font-semibold text-lg">Configuración Básica</h3>
+                    <h3 className="font-semibold text-lg">
+                      Configuración Básica
+                    </h3>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Label htmlFor="advancedType" className="text-sm font-medium">
+                      <Label
+                        htmlFor="advancedType"
+                        className="text-sm font-medium"
+                      >
                         Tipo de Contenido
                       </Label>
-                      <Select 
-                        value={watchedValues.typeWrite} 
+                      <Select
+                        value={watchedValues.typeWrite}
                         onValueChange={(value) => setValue("typeWrite", value)}
                       >
                         <SelectTrigger className="h-11">
@@ -227,7 +236,11 @@ export default function LectureGenerator() {
                         </SelectTrigger>
                         <SelectContent>
                           {lectureTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value} className="py-3">
+                            <SelectItem
+                              key={type.value}
+                              value={type.value}
+                              className="py-3"
+                            >
                               {type.label}
                             </SelectItem>
                           ))}
@@ -239,11 +252,14 @@ export default function LectureGenerator() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="advancedLevel" className="text-sm font-medium">
+                      <Label
+                        htmlFor="advancedLevel"
+                        className="text-sm font-medium"
+                      >
                         Nivel de Dificultad
                       </Label>
-                      <Select 
-                        value={watchedValues.level} 
+                      <Select
+                        value={watchedValues.level}
                         onValueChange={(value) => setValue("level", value)}
                       >
                         <SelectTrigger className="h-11">
@@ -251,7 +267,11 @@ export default function LectureGenerator() {
                         </SelectTrigger>
                         <SelectContent>
                           {lectureLevels.map((level) => (
-                            <SelectItem key={level.value} value={level.value} className="py-3">
+                            <SelectItem
+                              key={level.value}
+                              value={level.value}
+                              className="py-3"
+                            >
                               {level.label}
                             </SelectItem>
                           ))}
@@ -267,16 +287,21 @@ export default function LectureGenerator() {
                 {/* Sección: Dificultad y Palabras Fáciles */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-border/50">
-                    <h3 className="font-semibold text-lg">Opciones Adicionales</h3>
+                    <h3 className="font-semibold text-lg">
+                      Opciones Adicionales
+                    </h3>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Label htmlFor="difficulty" className="text-sm font-medium">
+                      <Label
+                        htmlFor="difficulty"
+                        className="text-sm font-medium"
+                      >
                         Nivel de Complejidad
                       </Label>
-                      <Select 
-                        value={watchedValues.difficulty} 
+                      <Select
+                        value={watchedValues.difficulty}
                         onValueChange={(value) => setValue("difficulty", value)}
                       >
                         <SelectTrigger className="h-11">
@@ -286,19 +311,25 @@ export default function LectureGenerator() {
                           <SelectItem value="easy" className="py-3">
                             <div className="flex items-center gap-2">
                               <span>Fácil</span>
-                              <span className="text-xs text-muted-foreground">- Conceptos básicos</span>
+                              <span className="text-xs text-muted-foreground">
+                                - Conceptos básicos
+                              </span>
                             </div>
                           </SelectItem>
                           <SelectItem value="medium" className="py-3">
                             <div className="flex items-center gap-2">
                               <span>Medio</span>
-                              <span className="text-xs text-muted-foreground">- Conceptos intermedios</span>
+                              <span className="text-xs text-muted-foreground">
+                                - Conceptos intermedios
+                              </span>
                             </div>
                           </SelectItem>
                           <SelectItem value="hard" className="py-3">
                             <div className="flex items-center gap-2">
                               <span>Difícil</span>
-                              <span className="text-xs text-muted-foreground">- Conceptos avanzados</span>
+                              <span className="text-xs text-muted-foreground">
+                                - Conceptos avanzados
+                              </span>
                             </div>
                           </SelectItem>
                         </SelectContent>
@@ -309,7 +340,10 @@ export default function LectureGenerator() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="addEasyWords" className="text-sm font-medium">
+                      <Label
+                        htmlFor="addEasyWords"
+                        className="text-sm font-medium"
+                      >
                         Vocabulario Adicional
                       </Label>
                       <div className="border rounded-lg p-4 bg-muted/30">
@@ -323,11 +357,15 @@ export default function LectureGenerator() {
                             className="mt-1"
                           />
                           <div className="space-y-1">
-                            <Label htmlFor="addEasyWords" className="text-sm font-medium cursor-pointer">
+                            <Label
+                              htmlFor="addEasyWords"
+                              className="text-sm font-medium cursor-pointer"
+                            >
                               Incluir palabras fáciles
                             </Label>
                             <p className="text-xs text-muted-foreground">
-                              Agrega las últimas 30 palabras que has descubierto en tu camino de aprendizaje
+                              Agrega las últimas 30 palabras que has descubierto
+                              en tu camino de aprendizaje
                             </p>
                           </div>
                         </div>
@@ -345,25 +383,31 @@ export default function LectureGenerator() {
                     <div>
                       <span className="text-muted-foreground">Tipo:</span>
                       <span className="ml-2 font-medium">
-                        {lectureTypes.find(t => t.value === watchedValues.typeWrite)?.label || 'No seleccionado'}
+                        {lectureTypes.find(
+                          (t) => t.value === watchedValues.typeWrite
+                        )?.label || "No seleccionado"}
                       </span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Nivel:</span>
                       <span className="ml-2 font-medium">
-                        {lectureLevels.find(l => l.value === watchedValues.level)?.label || 'No seleccionado'}
+                        {lectureLevels.find(
+                          (l) => l.value === watchedValues.level
+                        )?.label || "No seleccionado"}
                       </span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Dificultad:</span>
                       <span className="ml-2 font-medium capitalize">
-                        {watchedValues.difficulty || 'No seleccionado'}
+                        {watchedValues.difficulty || "No seleccionado"}
                       </span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Palabras fáciles:</span>
+                      <span className="text-muted-foreground">
+                        Palabras fáciles:
+                      </span>
                       <span className="ml-2 font-medium">
-                        {watchedValues.addEasyWords ? 'Sí' : 'No'}
+                        {watchedValues.addEasyWords ? "Sí" : "No"}
                       </span>
                     </div>
                   </div>
@@ -405,7 +449,12 @@ export default function LectureGenerator() {
             <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
-                  <Label htmlFor="mainPrompt" className={isGenerating ? "shimmer-text" : undefined}>Tema de la Lectura</Label>
+                  <Label
+                    htmlFor="mainPrompt"
+                    className={isGenerating ? "shimmer-text" : undefined}
+                  >
+                    Tema de la Lectura
+                  </Label>
                   <Button
                     type="submit"
                     disabled={isGenerating || !isValid}
@@ -432,9 +481,7 @@ export default function LectureGenerator() {
                   rows={3}
                   disabled={isGenerating}
                 />
-                <p
-                  className={`text-xs text-right text-muted-foreground`}
-                >
+                <p className={`text-xs text-right text-muted-foreground`}>
                   {watchedValues.prompt.length} / 500 caracteres
                 </p>
               </div>
@@ -447,10 +494,6 @@ export default function LectureGenerator() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5" />
-                  Lectura Generada
-                </CardTitle>
                 {estimatedTime > 0 && (
                   <div className="flex gap-2">
                     <Button
@@ -485,16 +528,42 @@ export default function LectureGenerator() {
                   </CardDescription>
                   <div className="flex flex-wrap gap-3 mt-3">
                     <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
-                      Nivel: {lectureLevels.find(l => l.value === watchedValues.level)?.label || watchedValues.level}
+                      Nivel:{" "}
+                      {lectureLevels.find(
+                        (l) => l.value === watchedValues.level
+                      )?.label || watchedValues.level}
                     </span>
                     <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 text-blue-400">
-                      Tipo: {lectureTypes.find(t => t.value === watchedValues.typeWrite)?.label || watchedValues.typeWrite}
+                      Tipo:{" "}
+                      {lectureTypes.find(
+                        (t) => t.value === watchedValues.typeWrite
+                      )?.label || watchedValues.typeWrite}
                     </span>
-                    <span className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${watchedValues.difficulty === 'easy' ? 'border-green-500 text-green-400' : watchedValues.difficulty === 'medium' ? 'border-yellow-500 text-yellow-400' : 'border-red-500 text-red-400'}` }>
-                      Dificultad: {watchedValues.difficulty === 'easy' ? 'Fácil' : watchedValues.difficulty === 'medium' ? 'Media' : 'Difícil'}
+                    <span
+                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${
+                        watchedValues.difficulty === "easy"
+                          ? "border-green-500 text-green-400"
+                          : watchedValues.difficulty === "medium"
+                          ? "border-yellow-500 text-yellow-400"
+                          : "border-red-500 text-red-400"
+                      }`}
+                    >
+                      Dificultad:{" "}
+                      {watchedValues.difficulty === "easy"
+                        ? "Fácil"
+                        : watchedValues.difficulty === "medium"
+                        ? "Media"
+                        : "Difícil"}
                     </span>
-                    <span className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${watchedValues.addEasyWords ? 'text-purple-400' : 'text-muted-foreground'}`}>
-                      Vocabulario adicional: {watchedValues.addEasyWords ? 'Sí' : 'No'}
+                    <span
+                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${
+                        watchedValues.addEasyWords
+                          ? "text-purple-400"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      Vocabulario adicional:{" "}
+                      {watchedValues.addEasyWords ? "Sí" : "No"}
                     </span>
                   </div>
                 </>
