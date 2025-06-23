@@ -26,7 +26,7 @@ import {
 import { useWordStore } from "@/lib/store/useWordStore"
 import { Word } from "@/models/Word"
 import { WordForm } from "@/components/forms/WordForm"
-import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen } from "lucide-react"
+import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -117,12 +117,15 @@ export default function MyWordsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Input
-            placeholder="Buscar palabra..."
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full sm:w-auto"
-          />
+          <div className="relative flex-1 max-w-2xl">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar palabra..."
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              className="pl-10 w-full"
+            />
+          </div>
           <Button onClick={() => openDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             Agregar Palabra
