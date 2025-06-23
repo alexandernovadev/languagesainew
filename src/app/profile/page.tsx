@@ -33,6 +33,7 @@ import {
   TrendingUp,
   Activity,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 // Simulación de estadísticas y logros
 const fakeStats = {
@@ -47,23 +48,35 @@ const fakeStats = {
 
 export default function ProfilePage() {
   const { user, setUser, logout } = useUserStore();
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
-  const [email, setEmail] = useState(user?.email || "");
   const [editing, setEditing] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
   const [newImage, setNewImage] = useState(user?.image || "");
 
-  const handleSave = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
+    reset,
+    watch,
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+    },
+  });
+
+  const handleSave = (data: { firstName: string; lastName: string; email: string }) => {
     if (!user) return;
     setUser({
       _id: user._id,
       username: user.username,
-      email,
+      email: data.email,
       role: user.role,
-      firstName,
-      lastName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       image: newImage,
       isActive: user.isActive,
       createdAt: user.createdAt,
@@ -72,6 +85,7 @@ export default function ProfilePage() {
     setSaved(true);
     setEditing(false);
     setTimeout(() => setSaved(false), 2000);
+    reset(data);
   };
 
   return (
@@ -151,64 +165,71 @@ export default function ProfilePage() {
               </div>
               {/* Columna derecha: formulario de edición */}
               <div className="flex-1 flex flex-col gap-4 items-center md:items-start justify-center">
-                <span className="font-semibold text-lg mb-2">
-                  Información Personal
-                </span>
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">Nombre</Label>
-                    <Input
-                      id="firstName"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      disabled={!editing}
-                    />
+                <span className="font-semibold text-lg mb-2">Información Personal</span>
+                <form className="w-full" onSubmit={handleSubmit(handleSave)}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">Nombre</Label>
+                      <Input
+                        id="firstName"
+                        disabled={!editing}
+                        {...register("firstName", { required: "El nombre es obligatorio" })}
+                      />
+                      {errors.firstName && <span className="text-xs text-red-500">{errors.firstName.message as string}</span>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Apellido</Label>
+                      <Input
+                        id="lastName"
+                        disabled={!editing}
+                        {...register("lastName", { required: "El apellido es obligatorio" })}
+                      />
+                      {errors.lastName && <span className="text-xs text-red-500">{errors.lastName.message as string}</span>}
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Apellido</Label>
+                  <div className="space-y-2 w-full">
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="lastName"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      id="email"
+                      type="email"
                       disabled={!editing}
+                      {...register("email", {
+                        required: "El email es obligatorio",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Email no válido",
+                        },
+                      })}
                     />
+                    {errors.email && <span className="text-xs text-red-500">{errors.email.message as string}</span>}
                   </div>
-                </div>
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={!editing}
-                  />
-                </div>
-                <div className="flex gap-2 mt-2 w-full justify-end">
-                  {editing ? (
-                    <>
-                      <Button size="sm" onClick={handleSave}>
-                        Guardar
+                  <div className="flex gap-2 mt-2 w-full justify-end">
+                    {editing ? (
+                      <>
+                        <Button size="sm" type="submit" disabled={!isDirty || !isValid}>
+                          Guardar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          type="button"
+                          onClick={() => { setEditing(false); reset(); }}
+                        >
+                          Cancelar
+                        </Button>
+                      </>
+                    ) : (
+                      <Button size="sm" type="button" onClick={() => setEditing(true)}>
+                        Editar
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setEditing(false)}
-                      >
-                        Cancelar
-                      </Button>
-                    </>
-                  ) : (
-                    <Button size="sm" onClick={() => setEditing(true)}>
-                      Editar
-                    </Button>
-                  )}
-                  {saved && (
-                    <span className="text-green-600 text-sm ml-2">
-                      ¡Guardado!
-                    </span>
-                  )}
-                </div>
+                    )}
+                    {saved && (
+                      <span className="text-green-600 text-sm ml-2">
+                        ¡Guardado!
+                      </span>
+                    )}
+                  </div>
+                </form>
               </div>
             </div>
             {/* Estadísticas (full width) */}
