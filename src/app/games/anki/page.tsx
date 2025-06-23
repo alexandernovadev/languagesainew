@@ -130,10 +130,48 @@ export default function AnkiGame() {
                 <div className="absolute inset-0 bg-black/60 z-10" />
                 {/* Contenido centrado */}
                 <div className="relative z-20 flex flex-col justify-center items-center h-full w-full">
-                  <h2 className="text-4xl font-extrabold text-white mb-2 drop-shadow text-center">{currentCard?.word}</h2>
+                  <h2 className="text-4xl font-extrabold text-white mb-2 drop-shadow text-center">
+                    {currentCard?.word}
+                  </h2>
                   {currentCard?.IPA && (
-                    <div className="text-lg text-blue-200 mb-1 font-mono text-center drop-shadow">/{currentCard.IPA}/</div>
+                    <div className="text-lg text-blue-200 mb-1 font-mono text-center drop-shadow">
+                      /{currentCard.IPA}/
+                    </div>
                   )}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition"
+                      onClick={e => {
+                        e.stopPropagation();
+                        if (currentCard?.word) {
+                          const utterance = new window.SpeechSynthesisUtterance(currentCard.word);
+                          utterance.lang = "en-US";
+                          utterance.rate = 1;
+                          window.speechSynthesis.speak(utterance);
+                        }
+                      }}
+                      title="Escuchar pronunciación normal"
+                      type="button"
+                    >
+                      🔊
+                    </button>
+                    <button
+                      className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition"
+                      onClick={e => {
+                        e.stopPropagation();
+                        if (currentCard?.word) {
+                          const utterance = new window.SpeechSynthesisUtterance(currentCard.word);
+                          utterance.lang = "en-US";
+                          utterance.rate = 0.1;
+                          window.speechSynthesis.speak(utterance);
+                        }
+                      }}
+                      title="Escuchar pronunciación lenta"
+                      type="button"
+                    >
+                      🐢
+                    </button>
+                  </div>
                 </div>
                 <div className="relative z-20 flex items-center text-xs text-muted-foreground mt-2 opacity-70 justify-center">
                   <RotateCcw className="h-4 w-4 mr-1" />
