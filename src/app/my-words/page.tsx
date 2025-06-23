@@ -26,6 +26,7 @@ import {
 import { useWordStore } from "@/lib/store/useWordStore"
 import { Word } from "@/models/Word"
 import { WordForm } from "@/components/forms/WordForm"
+import { WordDetailsModal } from "@/components/WordDetailsModal"
 import { ChevronLeft, ChevronRight, Plus, Volume2, Edit, Trash2, BookOpen, Search, Eye } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -37,6 +38,7 @@ export default function MyWordsPage() {
     deleteWord,
     createWord,
     updateWord,
+    updateWordLevel,
     loading,
     actionLoading,
     currentPage,
@@ -51,6 +53,7 @@ export default function MyWordsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedWord, setSelectedWord] = useState<Word | null>(null)
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false)
 
   const [localSearch, setLocalSearch] = useState("")
 
@@ -102,8 +105,14 @@ export default function MyWordsPage() {
   }
 
   const viewWordDetails = (word: Word) => {
-    // TODO: Implement word details view
-    console.log("Viewing word details:", word)
+    setSelectedWord(word)
+    setDetailsModalOpen(true)
+  }
+
+  const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
+    if (selectedWord?._id) {
+      await updateWordLevel(selectedWord._id, level)
+    }
   }
 
   const speakWord = (word: string) => {
@@ -295,6 +304,16 @@ export default function MyWordsPage() {
            </AlertDialogFooter>
          </AlertDialogContent>
        </AlertDialog>
+
+      {/* Modal de detalles de la palabra */}
+      {detailsModalOpen && selectedWord && (
+        <WordDetailsModal
+          word={selectedWord}
+          onClose={() => setDetailsModalOpen(false)}
+          onUpdateLevel={handleUpdateLevel}
+          loading={actionLoading.updateLevel}
+        />
+      )}
     </div>
   )
 }
