@@ -40,7 +40,6 @@ import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage } 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useForm, FormProvider } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { StatsGrid } from "@/components/ui/stats-grid";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -1481,8 +1480,6 @@ export default function DashboardPage() {
         <h2 className="text-xl font-semibold mb-4">Toaster (Radix) - Integración</h2>
         <div className="text-sm text-muted-foreground">El Toaster de Radix ya está integrado al final del DashboardPage y es funcional para los Toasts.</div>
       </section>
-
-      <Toaster />
     </div>
   );
 }
