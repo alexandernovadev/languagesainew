@@ -1,6 +1,6 @@
 import { api } from "./api";
 import { Lecture } from "../models/Lecture";
-import { getAuthHeaders } from "./utils/headers";
+import { getAuthHeaders } from "@/utils/services";
 
 export const lectureService = {
   async getLectures(page = 1, limit = 10) {

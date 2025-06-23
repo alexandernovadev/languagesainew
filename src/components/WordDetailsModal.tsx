@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RefreshCw } from "lucide-react";
 import { Word } from "@/models/Word";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
 
 interface WordDetailsModalProps {

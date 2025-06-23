@@ -39,8 +39,8 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import { Lecture } from "@/models/Lecture";
-import { calculateReadingTime } from "@/utils";
-import { getAuthHeaders } from "@/services/utils/headers";
+import { calculateReadingTime } from "@/utils/common/time";
+import { getAuthHeaders } from "@/utils/services";
 
 const generatorFormSchema = z.object({
   prompt: z

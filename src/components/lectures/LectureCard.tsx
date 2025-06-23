@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Edit, Trash2, BookOpen, Calendar } from "lucide-react";
 import type { Lecture } from "@/models/Lecture";
-import { getMarkdownTitle } from "@/lib/utils";
+import { getMarkdownTitle } from "@/utils/common/string";
 import { languageData } from "@/data/languageData";
 import { lectureTypes } from "@/data/lectureTypes";
 import { format } from "date-fns";

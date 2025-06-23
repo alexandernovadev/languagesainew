@@ -1,5 +1,5 @@
 import { Word } from "../models/Word";
-import { getAuthHeaders } from "./utils/headers";
+import { getAuthHeaders } from "@/utils/services";
 import { api } from "./api";
 
 export const wordService = {

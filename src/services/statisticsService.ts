@@ -1,5 +1,5 @@
 import { api } from "./api";
-import { getAuthHeaders } from "./utils/headers";
+import { getAuthHeaders } from "@/utils/services";
 
 export const statisticsService = {
   async getStatistics() {

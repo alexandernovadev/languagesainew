@@ -17,7 +17,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/common/classnames";
 import { gamesItems, generatorItems, menuItems } from "./sidebar-menus";
 import { LoginModal } from "./auth/LoginModal";
 

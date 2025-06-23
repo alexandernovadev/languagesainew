@@ -15,9 +15,9 @@ import {
   Star,
   User,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/common/classnames";
 import type { Lecture } from "@/models/Lecture";
-import { getMarkdownTitle, convertMarkdownToHtml } from "@/lib/utils";
+import { getMarkdownTitle, convertMarkdownToHtml } from "@/utils/common/string";
 import { lectureTypes } from "@/data/lectureTypes";
 
 export default function LectureDetailPage() {

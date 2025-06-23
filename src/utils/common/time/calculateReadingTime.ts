@@ -18,4 +18,4 @@ export const calculateReadingTime = (content: string): number => {
 
   // Mínimo 1 minuto
   return Math.max(1, readingTime);
-};
+}; 

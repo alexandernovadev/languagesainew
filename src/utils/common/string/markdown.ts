@@ -1,10 +1,3 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
 export const getMarkdownTitle = (content: string): string | null => {
   if (!content) return null;
 
@@ -48,3 +41,29 @@ export function convertMarkdownToHtml(text: string): string {
       .replace(/<p class="mb-4"><\/p>/g, "")
   );
 }
+
+export const escapeMarkdown = (text: string): string => {
+  if (!text) return text;
+
+  return (
+    text
+      // Escapar caracteres especiales de markdown
+      .replace(/\\/g, "\\\\")
+      .replace(/\*/g, "\\*")
+      .replace(/_/g, "\\_")
+      .replace(/`/g, "\\`")
+      .replace(/\[/g, "\\[")
+      .replace(/\]/g, "\\]")
+      .replace(/\(/g, "\\(")
+      .replace(/\)/g, "\\)")
+      .replace(/#/g, "\\#")
+      .replace(/\+/g, "\\+")
+      .replace(/-/g, "\\-")
+      .replace(/=/g, "\\=")
+      .replace(/\|/g, "\\|")
+      .replace(/\{/g, "\\{")
+      .replace(/\}/g, "\\}")
+      .replace(/\./g, "\\.")
+      .replace(/!/g, "\\!")
+  );
+}; 

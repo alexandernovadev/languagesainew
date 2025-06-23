@@ -48,7 +48,7 @@ import {
   Search,
   Eye,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MyWordsPage() {
