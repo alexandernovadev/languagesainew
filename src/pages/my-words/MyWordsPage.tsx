@@ -48,6 +48,7 @@ import {
   Search,
   Eye,
   X as XIcon,
+  Lightbulb,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -368,7 +369,7 @@ export default function MyWordsPage() {
                           onClick={() => viewWordDetails(word)}
                           className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-green-600 hover:text-green-700"
                         >
-                          <Eye className="h-4 w-4" />
+                          <Lightbulb className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => openDialog(word)}
