@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumb } from "@/components/layouts/dynamic-breadcrumb";
 import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 
-export default function ClientLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -1,11 +1,11 @@
-import ClientLayout from "./ClientLayout"
+import DashboardLayout from "./DashboardLayout"
 
 export default function RootLayout({
   children,
 }: {
   children: any
 }) {
-  return <ClientLayout>{children}</ClientLayout>
+  return <DashboardLayout>{children}</DashboardLayout>
 }
 
 import './globals.css'

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ClientLayout from "./app/ClientLayout";
+import DashboardLayout from "./app/DashboardLayout";
 import DashboardPage from "./app/DashboardPage";
 // Importa todas las páginas principales
 import LecturesPage from "./app/lectures/LecturesPage";
@@ -16,7 +16,7 @@ import ProfilePage from "./app/profile/ProfilePage";
 export default function App() {
   return (
     <BrowserRouter>
-      <ClientLayout>
+      <DashboardLayout>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/lectures" element={<LecturesPage />} />
@@ -30,7 +30,7 @@ export default function App() {
           <Route path="/my-words" element={<MyWordsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
-      </ClientLayout>
+      </DashboardLayout>
     </BrowserRouter>
   );
 }
