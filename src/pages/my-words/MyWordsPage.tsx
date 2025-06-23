@@ -47,6 +47,7 @@ import {
   Trash2,
   Search,
   Eye,
+  X as XIcon,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -276,8 +277,18 @@ export default function MyWordsPage() {
               placeholder="Buscar palabra..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="pl-10 w-full"
+              className="pl-10 w-full pr-10"
             />
+            {localSearch && (
+              <button
+                type="button"
+                onClick={() => setLocalSearch("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-foreground focus:outline-none"
+                aria-label="Limpiar búsqueda"
+              >
+                <XIcon className="h-5 w-5" />
+              </button>
+            )}
           </div>
           <Button
             variant="ghost"
@@ -300,6 +311,7 @@ export default function MyWordsPage() {
                 <TableHead>IPA</TableHead>
                 <TableHead>Traducción</TableHead>
                 <TableHead>Nivel</TableHead>
+                <TableHead>Vistas</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -335,9 +347,11 @@ export default function MyWordsPage() {
                       {word.word}
                     </TableCell>
                     <TableCell>
-                      {word.IPA || (
-                        <span className="text-muted-foreground">N/A</span>
-                      )}
+                      <span className="text-yellow-600 font-mono font-semibold">
+                        {word.IPA || (
+                          <span className="text-muted-foreground">N/A</span>
+                        )}
+                      </span>
                     </TableCell>
                     <TableCell className="capitalize">
                       {word.spanish?.word || "N/A"}
@@ -345,23 +359,26 @@ export default function MyWordsPage() {
                     <TableCell>
                       <WordLevelBadge level={word.level} />
                     </TableCell>
+                    <TableCell>
+                      <span className="flex items-center gap-1"><Eye className="h-4 w-4 inline" /> {word.seen || 0}</span>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => viewWordDetails(word)}
-                          className="p-1 hover:bg-accent rounded-sm transition-colors"
+                          className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-green-600 hover:text-green-700"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => openDialog(word)}
-                          className="p-1 hover:bg-accent rounded-sm transition-colors"
+                          className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-yellow-600 hover:text-yellow-700"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => openDeleteDialog(word)}
-                          className="p-1 hover:bg-accent rounded-sm transition-colors text-destructive hover:text-destructive"
+                          className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-red-600 hover:text-red-700"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
