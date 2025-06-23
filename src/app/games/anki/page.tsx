@@ -100,10 +100,17 @@ export default function AnkiGame() {
         actions={actions}
       />
 
+      {/* Indicador de progreso debajo de los botones de acción */}
+      <div className="flex justify-center mt-2 mb-2">
+        <span className="text-xs text-muted-foreground bg-background/80 rounded px-3 py-1 shadow">
+          ({gameStats.currentIndex + 1}/{words.length})
+        </span>
+      </div>
+
       <div className="flex justify-center py-2">
         <div className="relative w-full max-w-lg">
           <div
-            className={`flip-card group w-full h-[25rem] cursor-pointer ${
+            className={`flip-card group w-full h-[23rem] cursor-pointer ${
               isFlipped ? "flipped" : ""
             }`}
             onClick={handleFlip}
@@ -141,10 +148,12 @@ export default function AnkiGame() {
                   <div className="flex gap-2 mt-2">
                     <button
                       className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         if (currentCard?.word) {
-                          const utterance = new window.SpeechSynthesisUtterance(currentCard.word);
+                          const utterance = new window.SpeechSynthesisUtterance(
+                            currentCard.word
+                          );
                           utterance.lang = "en-US";
                           utterance.rate = 1;
                           window.speechSynthesis.speak(utterance);
@@ -157,10 +166,12 @@ export default function AnkiGame() {
                     </button>
                     <button
                       className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         if (currentCard?.word) {
-                          const utterance = new window.SpeechSynthesisUtterance(currentCard.word);
+                          const utterance = new window.SpeechSynthesisUtterance(
+                            currentCard.word
+                          );
                           utterance.lang = "en-US";
                           utterance.rate = 0.1;
                           window.speechSynthesis.speak(utterance);
@@ -350,59 +361,3 @@ export default function AnkiGame() {
     </PageLayout>
   );
 }
-
-/*
-Agrega este CSS a tu global.css o módulo para el efecto flip y glassmorphism:
-
-.flip-card {
-  perspective: 1200px;
-}
-.flip-card-inner {
-  transition: transform 0.7s cubic-bezier(.4,2,.6,1);
-  transform-style: preserve-3d;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-.flipped .flip-card-inner {
-  transform: rotateY(180deg);
-}
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  will-change: transform;
-}
-.flip-card-back {
-  transform: rotateY(180deg);
-}
-
-/* Glassmorphism extra (opcional):
-.bg-glass {
-  background: rgba(255,255,255,0.15);
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.18);
-}
-*/
-
-/*
-Agrega este CSS a tu global.css o tailwind config para la scrollbar personalizada:
-
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #6366f1 #18181b;
-}
-.custom-scroll::-webkit-scrollbar {
-  width: 8px;
-  background: #18181b;
-  border-radius: 8px;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: #6366f1;
-  border-radius: 8px;
-}
-*/

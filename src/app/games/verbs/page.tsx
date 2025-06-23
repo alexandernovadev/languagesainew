@@ -303,12 +303,6 @@ export default function VerbsParticipios() {
 
       {/* Tabla de verbos */}
       <Card>
-        <CardHeader>
-          <CardTitle>Verbos Irregulares - Página {currentPage}</CardTitle>
-          <CardDescription>
-            Completa las formas del pasado y participio de cada verbo
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
