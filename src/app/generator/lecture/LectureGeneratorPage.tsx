@@ -68,7 +68,6 @@ export default function LectureGeneratorPage() {
 
   const {
     handleSubmit,
-    control,
     getValues,
     setValue,
     watch,
@@ -170,14 +169,6 @@ export default function LectureGeneratorPage() {
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleAdvancedGenerate = (data: GeneratorFormData) => {
-    if (!data.prompt.trim()) {
-      toast.error("Por favor ingresa un tema para la lectura");
-      return;
-    }
-    handleGenerateText(data);
   };
 
   return (

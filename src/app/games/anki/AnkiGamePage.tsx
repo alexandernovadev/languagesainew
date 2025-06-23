@@ -44,17 +44,6 @@ export default function AnkiGamePage() {
     setIsFlipped(false);
   };
 
-  const handleKnow = useCallback(() => {
-    if (words[gameStats.currentIndex]) {
-      gameStats.markAsCompleted(gameStats.currentIndex);
-      gameStats.next();
-    }
-  }, [words, gameStats]);
-
-  const handleDontKnow = useCallback(() => {
-    gameStats.next();
-  }, [gameStats]);
-
   const handleShuffle = () => {
     gameStats.reset();
     setIsFlipped(false);

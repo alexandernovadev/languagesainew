@@ -28,17 +28,7 @@ import {
   Activity,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
-
-// Simulación de estadísticas y logros
-const fakeStats = {
-  palabras: 123,
-  racha: 7,
-  logros: [
-    { icon: "🏆", label: "Maestro del Vocabulario" },
-    { icon: "🔥", label: "Racha de 7 días" },
-    { icon: "📚", label: "100 Palabras Aprendidas" },
-  ],
-};
+import { fakeStats } from "@/data/fakeStats";
 
 export default function ProfilePage() {
   const { user, setUser, logout } = useUserStore();
@@ -52,7 +42,6 @@ export default function ProfilePage() {
     handleSubmit,
     formState: { errors, isDirty, isValid },
     reset,
-    watch,
   } = useForm({
     mode: "onChange",
     defaultValues: {

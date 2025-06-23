@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,11 +17,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Lecture } from "@/models/Lecture";
-import { getMarkdownTitle } from "@/lib/utils";
+import { getMarkdownTitle, convertMarkdownToHtml } from "@/lib/utils";
 import { lectureTypes } from "@/data/lectureTypes";
 
 export default function LectureDetailPage() {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { lectures, getLectureById, loading } = useLectureStore();
 
@@ -78,38 +77,6 @@ export default function LectureDetailPage() {
 
   const clearSelectedWords = () => {
     setSelectedWords([]);
-  };
-
-  // Función para convertir Markdown básico a HTML
-  const convertMarkdownToHtml = (text: string) => {
-    return (
-      text
-        // Títulos
-        .replace(
-          /^### (.*$)/gim,
-          '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>'
-        )
-        .replace(
-          /^## (.*$)/gim,
-          '<h2 class="text-xl font-semibold mt-6 mb-3">$1</h2>'
-        )
-        .replace(
-          /^# (.*$)/gim,
-          '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>'
-        )
-        // Negritas
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
-        // Cursivas
-        .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-        // Listas
-        .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
-        // Párrafos
-        .replace(/\n\n/g, '</p><p class="mb-4">')
-        .replace(/^(?!<[h|li])(.*$)/gim, '<p class="mb-4">$1</p>')
-        // Limpiar párrafos vacíos
-        .replace(/<p class="mb-4"><\/p>/g, "")
-        .replace(/<p class="mb-4"><\/p>/g, "")
-    );
   };
 
   const renderInteractiveText = (text: string) => {

@@ -1,13 +1,5 @@
 import { useState } from "react";
 
-interface GameStats {
-  currentIndex: number;
-  totalItems: number;
-  completedItems: number[];
-  progress: number;
-  correctAnswers: number;
-}
-
 export function useGameStats(totalItems: number) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completedItems, setCompletedItems] = useState<number[]>([]);

@@ -28,17 +28,12 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-    setError,
     clearErrors,
     reset,
   } = useForm<LoginForm>({
     defaultValues: { username: "", password: "" },
     mode: "onChange",
   });
-
-  const username = watch("username");
-  const password = watch("password");
 
   // Close modal and reset form when login is successful
   useEffect(() => {
