@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { WordLevelBadge } from "@/components/WordLevelBadge";
 import {
   Table,
   TableBody,
@@ -317,19 +317,7 @@ export default function MyWordsPage() {
                       </TableCell>
                       <TableCell>{word.spanish?.word || "N/A"}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            word.level === "easy" &&
-                              "border-green-500 text-green-500",
-                            word.level === "medium" &&
-                              "border-blue-500 text-blue-500",
-                            word.level === "hard" &&
-                              "border-red-600 text-red-600"
-                          )}
-                        >
-                          {word.level}
-                        </Badge>
+                        <WordLevelBadge level={word.level} />
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">

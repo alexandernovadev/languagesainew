@@ -1,10 +1,10 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RefreshCw } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/lib/utils";
+import { WordLevelBadge } from "@/components/WordLevelBadge";
 
 interface WordDetailsModalProps {
   word: Word;
@@ -123,15 +123,7 @@ export function WordDetailsModal({
         <div className="flex items-center justify-between p-5 border-b flex-shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🇺🇸</span>
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-sm font-semibold px-3 py-1",
-                getLevelColor(word.level || "easy")
-              )}
-            >
-              {word.level}
-            </Badge>
+            <WordLevelBadge level={word.level} className="text-sm" />
           </div>
           <Button
             variant="ghost"
