@@ -3,7 +3,7 @@ import ClientLayout from "./app/ClientLayout";
 import DashboardPage from "./app/DashboardPage";
 // Importa todas las páginas principales
 import LecturesPage from "./app/lectures/LecturesPage";
-import LectureDetailPage from "./app/lectures/[id]/LectureDetailPage";
+import LectureDetailPage from "./app/lectures/LectureDetailPage";
 import AnkiGamePage from "./app/games/anki/AnkiGamePage";
 import VerbsGamePage from "./app/games/verbs/VerbsGamePage";
 import LectureGeneratorPage from "./app/generator/lecture/LectureGeneratorPage";
