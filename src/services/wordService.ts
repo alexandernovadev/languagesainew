@@ -83,4 +83,60 @@ export const wordService = {
     );
     return res.data;
   },
+
+  // AI Methods for updating word content
+  async updateWordExamples(wordId: string, word: string, language: string, oldExamples: string[]) {
+    const res = await api.put(
+      `/api/ai/generate-word-examples/${wordId}`,
+      { word, language, oldExamples },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
+  },
+
+  async updateWordCodeSwitching(wordId: string, word: string, language: string, oldExamples: string[]) {
+    const res = await api.put(
+      `/api/ai/generate-code-switching/${wordId}`,
+      { word, language, oldExamples },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
+  },
+
+  async updateWordSynonyms(wordId: string, word: string, language: string, oldExamples: string[]) {
+    const res = await api.put(
+      `/api/ai/generate-code-synonyms/${wordId}`,
+      { word, language, oldExamples },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
+  },
+
+  async updateWordTypes(wordId: string, word: string, language: string, oldExamples: string[]) {
+    const res = await api.put(
+      `/api/ai/generate-word-wordtypes/${wordId}`,
+      { word, language, oldExamples },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
+  },
+
+  async updateWordImage(wordId: string, word: string, imgOld: string = "") {
+    const res = await api.post(
+      `/api/ai/generate-image/${wordId}`,
+      { word, imgOld },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return res.data;
+  },
 };

@@ -27,6 +27,13 @@ interface WordStore {
   getRecentHardOrMediumWords: () => Promise<void>;
   clearErrors: () => void;
   setActiveWord: (word: Word | null) => void;
+  
+  // AI Methods for updating word content
+  updateWordExamples: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
+  updateWordCodeSwitching: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
+  updateWordSynonyms: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
+  updateWordTypes: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
+  updateWordImage: (wordId: string, word: string, imgOld?: string) => Promise<void>;
 }
 
 export const useWordStore = create<WordStore>((set, get) => ({
@@ -225,4 +232,130 @@ export const useWordStore = create<WordStore>((set, get) => ({
   },
 
   clearErrors: () => set({ errors: null }),
+
+  // AI Methods for updating word content
+  updateWordExamples: async (wordId: string, word: string, language: string, oldExamples: string[]) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateExamples: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordExamples(wordId, word, language, oldExamples);
+      set((state) => ({
+        words: state.words.map((w) =>
+          w._id === wordId ? { ...w, examples: data.examples, updatedAt: data.updatedAt } : w
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, examples: data.examples, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateExamples: false },
+      }));
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateExamples: false },
+      });
+    }
+  },
+
+  updateWordCodeSwitching: async (wordId: string, word: string, language: string, oldExamples: string[]) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateCodeSwitching: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordCodeSwitching(wordId, word, language, oldExamples);
+      set((state) => ({
+        words: state.words.map((w) =>
+          w._id === wordId ? { ...w, codeSwitching: data.codeSwitching, updatedAt: data.updatedAt } : w
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, codeSwitching: data.codeSwitching, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateCodeSwitching: false },
+      }));
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateCodeSwitching: false },
+      });
+    }
+  },
+
+  updateWordSynonyms: async (wordId: string, word: string, language: string, oldExamples: string[]) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateSynonyms: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordSynonyms(wordId, word, language, oldExamples);
+      set((state) => ({
+        words: state.words.map((w) =>
+          w._id === wordId ? { ...w, sinonyms: data.sinonyms, updatedAt: data.updatedAt } : w
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, sinonyms: data.sinonyms, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateSynonyms: false },
+      }));
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateSynonyms: false },
+      });
+    }
+  },
+
+  updateWordTypes: async (wordId: string, word: string, language: string, oldExamples: string[]) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateTypes: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordTypes(wordId, word, language, oldExamples);
+      set((state) => ({
+        words: state.words.map((w) =>
+          w._id === wordId ? { ...w, type: data.type, updatedAt: data.updatedAt } : w
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, type: data.type, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateTypes: false },
+      }));
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateTypes: false },
+      });
+    }
+  },
+
+  updateWordImage: async (wordId: string, word: string, imgOld?: string) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateImage: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordImage(wordId, word, imgOld);
+      set((state) => ({
+        words: state.words.map((w) =>
+          w._id === wordId ? { ...w, img: data.img, updatedAt: data.updatedAt } : w
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, img: data.img, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateImage: false },
+      }));
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateImage: false },
+      });
+    }
+  },
 }));

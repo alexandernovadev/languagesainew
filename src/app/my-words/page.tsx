@@ -39,6 +39,11 @@ export default function MyWordsPage() {
     createWord,
     updateWord,
     updateWordLevel,
+    updateWordExamples,
+    updateWordCodeSwitching,
+    updateWordSynonyms,
+    updateWordTypes,
+    updateWordImage,
     loading,
     actionLoading,
     currentPage,
@@ -117,36 +122,51 @@ export default function MyWordsPage() {
 
   const handleRefreshImage = async () => {
     if (selectedWord?._id) {
-      // TODO: Implement image refresh functionality
-      console.log("Refreshing image for:", selectedWord.word)
+      await updateWordImage(selectedWord._id, selectedWord.word, selectedWord.img)
     }
   }
 
   const handleRefreshExamples = async () => {
     if (selectedWord?._id) {
-      // TODO: Implement examples refresh functionality
-      console.log("Refreshing examples for:", selectedWord.word)
+      await updateWordExamples(
+        selectedWord._id, 
+        selectedWord.word, 
+        selectedWord.language, 
+        selectedWord.examples || []
+      )
     }
   }
 
   const handleRefreshSynonyms = async () => {
     if (selectedWord?._id) {
-      // TODO: Implement synonyms refresh functionality
-      console.log("Refreshing synonyms for:", selectedWord.word)
+      await updateWordSynonyms(
+        selectedWord._id, 
+        selectedWord.word, 
+        selectedWord.language, 
+        selectedWord.sinonyms || []
+      )
     }
   }
 
   const handleRefreshCodeSwitching = async () => {
     if (selectedWord?._id) {
-      // TODO: Implement code-switching refresh functionality
-      console.log("Refreshing code-switching for:", selectedWord.word)
+      await updateWordCodeSwitching(
+        selectedWord._id, 
+        selectedWord.word, 
+        selectedWord.language, 
+        selectedWord.codeSwitching || []
+      )
     }
   }
 
   const handleRefreshTypes = async () => {
     if (selectedWord?._id) {
-      // TODO: Implement word types refresh functionality
-      console.log("Refreshing word types for:", selectedWord.word)
+      await updateWordTypes(
+        selectedWord._id, 
+        selectedWord.word, 
+        selectedWord.language, 
+        selectedWord.type || []
+      )
     }
   }
 
@@ -351,7 +371,14 @@ export default function MyWordsPage() {
           onRefreshSynonyms={handleRefreshSynonyms}
           onRefreshCodeSwitching={handleRefreshCodeSwitching}
           onRefreshTypes={handleRefreshTypes}
-          loading={actionLoading.updateLevel}
+          loading={
+            actionLoading.updateLevel ||
+            actionLoading.updateImage ||
+            actionLoading.updateExamples ||
+            actionLoading.updateSynonyms ||
+            actionLoading.updateCodeSwitching ||
+            actionLoading.updateTypes
+          }
         />
       )}
     </div>
