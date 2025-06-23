@@ -32,7 +32,6 @@ export default function LecturesPage() {
   const {
     lectures,
     loading,
-    errors,
     totalPages,
     currentPage,
     getLectures,

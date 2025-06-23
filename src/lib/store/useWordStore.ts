@@ -34,6 +34,7 @@ interface WordStore {
   updateWordSynonyms: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
   updateWordTypes: (wordId: string, word: string, language: string, oldExamples: string[]) => Promise<void>;
   updateWordImage: (wordId: string, word: string, imgOld?: string) => Promise<void>;
+  generateWord: (prompt: string) => Promise<void>;
 }
 
 export const useWordStore = create<WordStore>((set, get) => ({
@@ -370,6 +371,16 @@ export const useWordStore = create<WordStore>((set, get) => ({
         errors: error.message,
         actionLoading: { ...get().actionLoading, updateImage: false },
       });
+    }
+  },
+
+  generateWord: async (prompt: string) => {
+    try {
+      const { data } = await wordService.generateWordJSON(prompt);
+      await get().createWord(data);
+    } catch (error) {
+      // Manejo de error opcional
+      throw error;
     }
   },
 }));

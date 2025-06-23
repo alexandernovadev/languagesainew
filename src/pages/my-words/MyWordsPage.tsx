@@ -50,6 +50,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 
 export default function MyWordsPage() {
   const {
@@ -72,6 +74,7 @@ export default function MyWordsPage() {
     setPage,
     setSearchQuery,
     searchQuery,
+    generateWord,
   } = useWordStore();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,6 +84,10 @@ export default function MyWordsPage() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const [localSearch, setLocalSearch] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const dots = useAnimatedDots(generating);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -118,12 +125,12 @@ export default function MyWordsPage() {
     setDialogOpen(false);
   };
 
-  const openDialog = (word?: Word) => {
+  const openDialog = (word?: Word, prefillWord?: string) => {
     if (word) {
       setSelectedWord(word);
       setIsEditing(true);
     } else {
-      setSelectedWord(null);
+      setSelectedWord(prefillWord ? ({ word: prefillWord } as Word) : null);
       setIsEditing(false);
     }
     setDialogOpen(true);
@@ -242,6 +249,20 @@ export default function MyWordsPage() {
     speechSynthesis.speak(utterance);
   };
 
+  const handleGenerateWord = async () => {
+    setGenerating(true);
+    try {
+      await generateWord(localSearch);
+      toast({
+        title: "Palabra generada",
+        description: `La palabra \"${localSearch}\" fue generada correctamente.`,
+      });
+      await getWords();
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-2 sm:px-4 md:px-8 space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -308,8 +329,14 @@ export default function MyWordsPage() {
                       </Button>
                       {word.word}
                     </TableCell>
-                    <TableCell>{word.IPA || <span className="text-muted-foreground">N/A</span>}</TableCell>
-                    <TableCell className="capitalize">{word.spanish?.word || "N/A"}</TableCell>
+                    <TableCell>
+                      {word.IPA || (
+                        <span className="text-muted-foreground">N/A</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="capitalize">
+                      {word.spanish?.word || "N/A"}
+                    </TableCell>
                     <TableCell>
                       <WordLevelBadge level={word.level} />
                     </TableCell>
@@ -343,7 +370,37 @@ export default function MyWordsPage() {
                     colSpan={5}
                     className="text-center h-24 text-muted-foreground"
                   >
-                    No se encontraron palabras.
+                    <div>No se encontraron palabras.</div>
+                    {localSearch && (
+                      <div className="flex flex-col items-center gap-2 mt-4">
+                        <Button
+                          className={generating ? "shimmer-text" : undefined}
+                          variant="outline"
+                          disabled={generating}
+                          onClick={handleGenerateWord}
+                        >
+                          Agregar palabra
+                          <span className="font-bold text-base ml-2">
+                            "{localSearch}"
+                          </span>
+                        </Button>
+                        {generating && (
+                          <div className="shimmer-text mt-2 text-base font-medium">
+                            Generando palabra
+                            <span
+                              className="shimmer-text"
+                              style={{
+                                display: "inline-block",
+                                width: "1.5em",
+                                textAlign: "left",
+                              }}
+                            >
+                              {dots || "\u00A0"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
               )}
