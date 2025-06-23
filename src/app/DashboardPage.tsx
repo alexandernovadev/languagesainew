@@ -49,7 +49,7 @@ import { LecturePagination } from "@/components/ui/LecturePagination";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { useIsMobile } from "@/components/ui/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 function ToastDemoButtons() {
   const { toast } = useToast();
