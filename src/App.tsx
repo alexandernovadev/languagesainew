@@ -1,17 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./app/DashboardLayout";
-import DashboardPage from "./app/DashboardPage";
+import DashboardPage from "./pages/DashboardPage";
 // Importa todas las páginas principales
-import LecturesPage from "./app/lectures/LecturesPage";
-import LectureDetailPage from "./app/lectures/LectureDetailPage";
-import AnkiGamePage from "./app/games/anki/AnkiGamePage";
-import VerbsGamePage from "./app/games/verbs/VerbsGamePage";
-import LectureGeneratorPage from "./app/generator/lecture/LectureGeneratorPage";
-import ExamGeneratorPage from "./app/generator/exam/ExamGeneratorPage";
-import SettingsPage from "./app/settings/SettingsPage";
-import StatisticsPage from "./app/statistics/StatisticsPage";
-import MyWordsPage from "./app/my-words/MyWordsPage";
-import ProfilePage from "./app/profile/ProfilePage";
+import LecturesPage from "./pages/lectures/LecturesPage";
+import LectureDetailPage from "./pages/lectures/LectureDetailPage";
+import AnkiGamePage from "./pages/games/anki/AnkiGamePage";
+import VerbsGamePage from "./pages/games/verbs/VerbsGamePage";
+import LectureGeneratorPage from "./pages/generator/lecture/LectureGeneratorPage";
+import ExamGeneratorPage from "./pages/generator/exam/ExamGeneratorPage";
+import SettingsPage from "./pages/settings/SettingsPage";
+import StatisticsPage from "./pages/statistics/StatisticsPage";
+import MyWordsPage from "./pages/my-words/MyWordsPage";
+import ProfilePage from "./pages/profile/ProfilePage";
 
 export default function App() {
   return (
