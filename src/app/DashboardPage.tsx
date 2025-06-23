@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BarChart3, Users, TrendingUp, Activity } from "lucide-react";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>

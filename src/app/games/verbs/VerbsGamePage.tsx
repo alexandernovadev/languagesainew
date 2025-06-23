@@ -157,7 +157,7 @@ const irregularVerbs = [
   },
 ];
 
-export default function VerbsParticipios() {
+export default function VerbsGamePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [userAnswers, setUserAnswers] = useState<{
     [key: number]: { past: string; participle: string };

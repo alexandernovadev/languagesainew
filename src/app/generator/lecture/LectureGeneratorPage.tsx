@@ -55,7 +55,7 @@ const generatorFormSchema = z.object({
 
 type GeneratorFormData = z.infer<typeof generatorFormSchema>;
 
-export default function LectureGenerator() {
+export default function LectureGeneratorPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [generatedText, setGeneratedText] = useState("");

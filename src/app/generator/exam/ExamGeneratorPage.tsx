@@ -32,7 +32,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useGenerator } from "@/hooks/use-generator";
 
-export default function ExamGenerator() {
+export default function ExamGeneratorPage() {
   const {
     isFilterOpen,
     setIsFilterOpen,

@@ -14,7 +14,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
 
-export default function AnkiGame() {
+export default function AnkiGamePage() {
   const {
     words,
     getRecentHardOrMediumWords,

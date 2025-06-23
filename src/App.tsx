@@ -1,33 +1,33 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ClientLayout from "./app/ClientLayout";
-import Dashboard from "./app/page";
+import DashboardPage from "./app/DashboardPage";
 // Importa todas las páginas principales
-import Lectures from "./app/lectures/page";
-import LectureDetail from "./app/lectures/[id]/page";
-import GamesAnki from "./app/games/anki/page";
-import GamesVerbs from "./app/games/verbs/page";
-import GeneratorLecture from "./app/generator/lecture/page";
-import GeneratorExam from "./app/generator/exam/page";
-import Settings from "./app/settings/page";
-import Statistics from "./app/statistics/page";
-import MyWords from "./app/my-words/page";
-import ProfilePage from "./app/profile/page";
+import LecturesPage from "./app/lectures/LecturesPage";
+import LectureDetailPage from "./app/lectures/[id]/LectureDetailPage";
+import AnkiGamePage from "./app/games/anki/AnkiGamePage";
+import VerbsGamePage from "./app/games/verbs/VerbsGamePage";
+import LectureGeneratorPage from "./app/generator/lecture/LectureGeneratorPage";
+import ExamGeneratorPage from "./app/generator/exam/ExamGeneratorPage";
+import SettingsPage from "./app/settings/SettingsPage";
+import StatisticsPage from "./app/statistics/StatisticsPage";
+import MyWordsPage from "./app/my-words/MyWordsPage";
+import ProfilePage from "./app/profile/ProfilePage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <ClientLayout>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/lectures" element={<Lectures />} />
-          <Route path="/lectures/:id" element={<LectureDetail />} />
-          <Route path="/games/anki" element={<GamesAnki />} />
-          <Route path="/games/verbs" element={<GamesVerbs />} />
-          <Route path="/generator/lecture" element={<GeneratorLecture />} />
-          <Route path="/generator/exam" element={<GeneratorExam />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/my-words" element={<MyWords />} />
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/lectures" element={<LecturesPage />} />
+          <Route path="/lectures/:id" element={<LectureDetailPage />} />
+          <Route path="/games/anki" element={<AnkiGamePage />} />
+          <Route path="/games/verbs" element={<VerbsGamePage />} />
+          <Route path="/generator/lecture" element={<LectureGeneratorPage />} />
+          <Route path="/generator/exam" element={<ExamGeneratorPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/statistics" element={<StatisticsPage />} />
+          <Route path="/my-words" element={<MyWordsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </ClientLayout>
