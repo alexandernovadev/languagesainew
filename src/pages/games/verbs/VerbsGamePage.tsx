@@ -1,152 +1,168 @@
-import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, Check, X, RotateCcw } from "lucide-react";
+import { Check, RotateCcw, Settings } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
-import verbsData from "@/lib/data/verbsPaticiple.json";
-
-// Datos de verbos irregulares
-const irregularVerbs = verbsData.map((verb, idx) => ({
-  id: idx + 1,
-  infinitive: verb["Verb"],
-  past: verb["Past"],
-  participle: verb["Past Participle (PP)"],
-  meaning: verb["Spanish"],
-}));
-
-// Nueva función para generar para cada verbo una columna aleatoria para el input
-function getRandomField(): "infinitive" | "past" | "participle" {
-  const fields = ["infinitive", "past", "participle"] as const;
-  return fields[Math.floor(Math.random() * fields.length)];
-}
+import { VerbField, GameConfig } from "./types";
+import {
+  StatisticsCard,
+  VerbsTable,
+  Navigation,
+  GameConfigModal,
+} from "./components";
+import { useVerbsGameStore } from "@/lib/store/useVerbsGameStore";
 
 export default function VerbsGamePage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [userAnswers, setUserAnswers] = useState<{
-    [key: number]: { infinitive?: string; past?: string; participle?: string };
-  }>({});
-  const [showAnswers, setShowAnswers] = useState(false);
-  const [checkedAnswers, setCheckedAnswers] = useState<{
-    [key: number]: boolean;
-  }>({});
+  // Zustand store
+  const {
+    session,
+    verbs,
+    startGame,
+    updateAnswers,
+    updateCheckedAnswers,
+    updateInputFields,
+    setShowAnswers,
+    setCurrentPage,
+    finishGame,
+    resetSession,
+    clearSession,
+  } = useVerbsGameStore();
 
-  // Para cada página, generamos una asignación aleatoria de campo a preguntar por fila
-  const [inputFields, setInputFields] = useState<{ [key: number]: "infinitive" | "past" | "participle" }>({});
+  // Show config if no session
+  const showConfig = !session;
 
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(irregularVerbs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentVerbs = irregularVerbs.slice(startIndex, endIndex);
+  // Handlers
+  const handleStartGame = (config: GameConfig) => {
+    startGame(config);
+  };
 
-  // Cuando cambia la página, generamos nuevos campos aleatorios
-  useEffect(() => {
-    const newFields: { [key: number]: "infinitive" | "past" | "participle" } = {};
-    currentVerbs.forEach((verb) => {
-      newFields[verb.id] = getRandomField();
-    });
-    setInputFields(newFields);
-    // Limpiar respuestas y checks solo de la página actual
-    // (opcional, si quieres que se reinicie al cambiar de página)
-    // setUserAnswers({});
-    // setCheckedAnswers({});
-    setShowAnswers(false);
-  }, [currentPage]);
+  const handleResumeGame = () => {};
+
+  const handleNewGame = () => {
+    clearSession();
+  };
 
   const handleInputChange = (
     verbId: number,
-    field: "infinitive" | "past" | "participle",
+    field: VerbField,
     value: string
   ) => {
-    setUserAnswers((prev) => ({
-      ...prev,
+    if (!session) return;
+    const newUserAnswers = {
+      ...session.userAnswers,
       [verbId]: {
-        ...prev[verbId],
+        ...session.userAnswers[verbId],
         [field]: value,
       },
-    }));
+    };
+    updateAnswers(newUserAnswers);
   };
 
-  const checkAnswers = () => {
-    const newCheckedAnswers: {
-      [key: number]: boolean;
-    } = {};
-
-    currentVerbs.forEach((verb) => {
-      const userAnswer = userAnswers[verb.id];
-      const field = inputFields[verb.id];
+  const handleCheckAnswers = () => {
+    if (!session) return;
+    const pageVerbs = getPageVerbs();
+    const newCheckedAnswers = { ...session.checkedAnswers };
+    pageVerbs.forEach((verb) => {
+      const userAnswer = session.userAnswers[verb.id];
+      const field = session.inputFields[verb.id];
       if (userAnswer && field) {
         let correct = false;
         if (field === "infinitive") {
-          correct = userAnswer.infinitive?.toLowerCase().trim() === verb.infinitive.toLowerCase();
+          correct =
+            userAnswer.infinitive?.toLowerCase().trim() ===
+            verb.infinitive.toLowerCase();
         } else if (field === "past") {
-          correct = userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase();
+          correct =
+            userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase();
         } else if (field === "participle") {
-          correct = userAnswer.participle?.toLowerCase().trim() === verb.participle.toLowerCase();
+          correct =
+            userAnswer.participle?.toLowerCase().trim() ===
+            verb.participle.toLowerCase();
         }
         newCheckedAnswers[verb.id] = correct;
       }
     });
-    setCheckedAnswers(newCheckedAnswers);
+    updateCheckedAnswers(newCheckedAnswers);
     setShowAnswers(true);
   };
 
-  const resetPage = () => {
-    const currentVerbIds = currentVerbs.map((verb) => verb.id);
-    const newUserAnswers = { ...userAnswers };
-    const newCheckedAnswers = { ...checkedAnswers };
-
+  const handleResetPage = () => {
+    if (!session) return;
+    const pageVerbs = getPageVerbs();
+    const currentVerbIds = pageVerbs.map((verb) => verb.id);
+    const newUserAnswers = { ...session.userAnswers };
+    const newCheckedAnswers = { ...session.checkedAnswers };
     currentVerbIds.forEach((id) => {
       delete newUserAnswers[id];
       delete newCheckedAnswers[id];
     });
-
-    setUserAnswers(newUserAnswers);
-    setCheckedAnswers(newCheckedAnswers);
+    updateAnswers(newUserAnswers);
+    updateCheckedAnswers(newCheckedAnswers);
     setShowAnswers(false);
   };
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  const handleNextPage = () => {
+    if (!session) return;
+    const totalPages = Math.ceil(verbs.length / session.config.itemsPerPage);
+    if (session.currentPage < totalPages) {
+      setCurrentPage(session.currentPage + 1);
       setShowAnswers(false);
     }
   };
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  const handlePrevPage = () => {
+    if (!session) return;
+    if (session.currentPage > 1) {
+      setCurrentPage(session.currentPage - 1);
       setShowAnswers(false);
     }
   };
 
-  const getInputClassName = (verbId: number) => {
-    if (!showAnswers) return "";
-    const isCorrect = checkedAnswers[verbId];
-    return isCorrect
-      ? "border-green-500 bg-green-50 dark:bg-green-950"
-      : "border-red-500 bg-red-50 dark:bg-red-950";
+  // Helpers
+  const getPageVerbs = () => {
+    if (!session) return [];
+    const startIndex = (session.currentPage - 1) * session.config.itemsPerPage;
+    const endIndex = startIndex + session.config.itemsPerPage;
+    return verbs.slice(startIndex, endIndex);
   };
 
-  const correctAnswers = Object.values(checkedAnswers).reduce((acc, answer) => {
-    return acc + (answer ? 1 : 0);
-  }, 0);
+  // Check if all required inputs are filled for the current page
+  const allInputsFilled =
+    session &&
+    getPageVerbs().every((verb) => {
+      const field = session.inputFields[verb.id];
+      const answer = session.userAnswers[verb.id]?.[field];
+      return answer && answer.trim() !== "";
+    });
 
-  const totalAnswers = Object.keys(checkedAnswers).length;
+  // Computed values
+  const pageVerbs = getPageVerbs();
+  const totalPages = session
+    ? Math.ceil(verbs.length / session.config.itemsPerPage)
+    : 1;
+  const correctAnswers = session
+    ? Object.values(session.checkedAnswers).reduce(
+        (acc, answer) => acc + (answer ? 1 : 0),
+        0
+      )
+    : 0;
+  const totalAnswers = session ? Object.keys(session.checkedAnswers).length : 0;
+
+  // Render
+  if (showConfig) {
+    return (
+      <PageLayout>
+        <PageHeader
+          title="Verbs Participios"
+          description="Practica los verbos irregulares y sus participios."
+        />
+        <GameConfigModal
+          onStartGame={handleStartGame}
+          onResumeGame={undefined}
+          hasActiveSession={false}
+        />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -156,223 +172,89 @@ export default function VerbsGamePage() {
         actions={
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              <Button variant="outline" onClick={resetPage}>
+              <Button variant="outline" onClick={handleNewGame}>
+                <Settings className="h-4 w-4 mr-2" />
+                Nueva Partida
+              </Button>
+              <Button variant="outline" onClick={handleResetPage}>
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Limpiar
-              </Button>
-              <Button onClick={checkAnswers} disabled={showAnswers}>
-                <Check className="h-4 w-4 mr-2" />
-                Verificar
               </Button>
             </div>
           </div>
         }
       />
       <div className="space-y-6">
-        {/* Estadísticas */}
-        {showAnswers && (
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Badge variant="default" className="text-sm">
-                    Página {currentPage} de {totalPages}
-                  </Badge>
-                  <Badge
-                    variant={
-                      correctAnswers === totalAnswers ? "default" : "secondary"
-                    }
-                    className="text-sm"
-                  >
-                    {correctAnswers}/{totalAnswers} correctas
-                  </Badge>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {Math.round((correctAnswers / totalAnswers) * 100)}% de
-                  acierto
-                </div>
+        {/* Statistics/header bar above the table */}
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-2 py-2 mb-2">
+          <span className="text-sm text-muted-foreground">
+            Página {session.currentPage} de {totalPages} de {verbs.length}{" "}
+            Verbos
+          </span>
+          {(() => {
+            // Show current page stats if verified, else show total so far
+            let correct = 0,
+              total = 0,
+              percent = 0;
+            if (session.showAnswers) {
+              total = pageVerbs.length;
+              correct = pageVerbs.filter(
+                (v) => session.checkedAnswers[v.id]
+              ).length;
+              percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+            } else {
+              total = verbs.length;
+              correct = Object.values(session.checkedAnswers).filter(
+                Boolean
+              ).length;
+              percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+            }
+            let color = "text-green-600";
+            let icon = "✅";
+            if (percent < 100 && percent >= 60) {
+              color = "text-yellow-600";
+              icon = "⭐";
+            } else if (percent < 60) {
+              color = "text-red-600";
+              icon = "❌";
+            }
+            return (
+              <div
+                className={`flex items-center gap-2 px-3 py-1 rounded-lg bg-muted shadow-sm`}
+              >
+                <span className={`text-xl font-bold ${color}`}>{icon}</span>
+                <span className={`font-semibold text-lg ${color}`}>
+                  {correct}/{total}
+                </span>
+                <span className="text-muted-foreground">correctas —</span>
+                <span className={`font-bold ${color}`}>{percent}%</span>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            );
+          })()}
+        </div>
 
-        {/* Tabla de verbos */}
-        <Card>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Infinitivo</TableHead>
-                    <TableHead className="w-[150px]">Pasado</TableHead>
-                    <TableHead className="w-[150px]">Participio</TableHead>
-                    <TableHead>Significado</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {currentVerbs.map((verb) => {
-                    const field = inputFields[verb.id];
-                    return (
-                      <TableRow key={verb.id}>
-                        <TableCell className="font-medium">
-                          {field === "infinitive" ? (
-                            <Input
-                              placeholder="..."
-                              value={userAnswers[verb.id]?.infinitive || ""}
-                              onChange={(e) =>
-                                handleInputChange(verb.id, "infinitive", e.target.value)
-                              }
-                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
-                              disabled={showAnswers}
-                            />
-                          ) : (
-                            verb.infinitive
-                          )}
-                          {showAnswers && field === "infinitive" && !checkedAnswers[verb.id] && (
-                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                              Respuesta: {verb.infinitive}
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {field === "past" ? (
-                            <Input
-                              placeholder="..."
-                              value={userAnswers[verb.id]?.past || ""}
-                              onChange={(e) =>
-                                handleInputChange(verb.id, "past", e.target.value)
-                              }
-                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
-                              disabled={showAnswers}
-                            />
-                          ) : (
-                            verb.past
-                          )}
-                          {showAnswers && field === "past" && !checkedAnswers[verb.id] && (
-                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                              Respuesta: {verb.past}
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {field === "participle" ? (
-                            <Input
-                              placeholder="..."
-                              value={userAnswers[verb.id]?.participle || ""}
-                              onChange={(e) =>
-                                handleInputChange(verb.id, "participle", e.target.value)
-                              }
-                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
-                              disabled={showAnswers}
-                            />
-                          ) : (
-                            verb.participle
-                          )}
-                          {showAnswers && field === "participle" && !checkedAnswers[verb.id] && (
-                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                              Respuesta: {verb.participle}
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground capitalize font-bold text-base md:text-lg">
-                          {verb.meaning}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Table and navigation in a centered, max-width container */}
+        <div className="max-w-4xl mx-auto">
+          <VerbsTable
+            verbs={pageVerbs}
+            inputFields={session.inputFields}
+            userAnswers={session.userAnswers}
+            showAnswers={session.showAnswers}
+            checkedAnswers={session.checkedAnswers}
+            onInputChange={handleInputChange}
+          />
 
-        {/* Navegación */}
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={prevPage}
-            disabled={currentPage === 1}
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          <div className="flex items-center gap-2">
-            {(() => {
-              const pages = [];
-              const pageWindow = 2; // Cuántos a la izquierda/derecha
-              let start = Math.max(1, currentPage - pageWindow);
-              let end = Math.min(totalPages, currentPage + pageWindow);
-
-              if (start > 1) {
-                pages.push(
-                  <Button
-                    key={1}
-                    variant={currentPage === 1 ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      setCurrentPage(1);
-                      setShowAnswers(false);
-                    }}
-                  >
-                    1
-                  </Button>
-                );
-                if (start > 2) {
-                  pages.push(
-                    <span key="start-ellipsis" className="px-1 text-muted-foreground">...</span>
-                  );
-                }
-              }
-
-              for (let i = start; i <= end; i++) {
-                pages.push(
-                  <Button
-                    key={i}
-                    variant={currentPage === i ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      setCurrentPage(i);
-                      setShowAnswers(false);
-                    }}
-                  >
-                    {i}
-                  </Button>
-                );
-              }
-
-              if (end < totalPages) {
-                if (end < totalPages - 1) {
-                  pages.push(
-                    <span key="end-ellipsis" className="px-1 text-muted-foreground">...</span>
-                  );
-                }
-                pages.push(
-                  <Button
-                    key={totalPages}
-                    variant={currentPage === totalPages ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      setCurrentPage(totalPages);
-                      setShowAnswers(false);
-                    }}
-                  >
-                    {totalPages}
-                  </Button>
-                );
-              }
-              return pages;
-            })()}
-          </div>
-
-          <Button
-            variant="outline"
-            onClick={nextPage}
-            disabled={currentPage === totalPages}
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <Navigation
+            currentPage={session.currentPage}
+            totalPages={totalPages}
+            totalVerbs={verbs.length}
+            onPrevPage={handlePrevPage}
+            onVerify={handleCheckAnswers}
+            onNextPage={handleNextPage}
+            isVerifying={!session.showAnswers}
+            canVerify={!!allInputsFilled}
+            isLastPage={session.currentPage === totalPages}
+          />
         </div>
       </div>
     </PageLayout>
