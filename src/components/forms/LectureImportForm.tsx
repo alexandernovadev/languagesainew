@@ -117,17 +117,26 @@ export default function LectureImportForm() {
       {/* File input */}
       <div>
         <Label htmlFor="lecture-file">JSON File</Label>
-        <Input
-          id="lecture-file"
-          type="file"
-          accept=".json"
-          onChange={handleFileChange}
-        />
-        {file && (
-          <div className="text-xs text-muted-foreground mt-1">
-            Selected: {file.name}
-          </div>
-        )}
+        <div className="flex items-center space-x-3 mt-1">
+          <input
+            id="lecture-file"
+            type="file"
+            accept=".json"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => document.getElementById('lecture-file')?.click()}
+            className="px-4 py-2"
+          >
+            📄 Seleccionar archivo
+          </Button>
+          <span className={`text-sm ${file ? "text-foreground" : "text-muted-foreground"}`}>
+            {file ? file.name : "Ningún archivo seleccionado"}
+          </span>
+        </div>
         {fileError && (
           <div className="text-xs text-red-500 mt-1">{fileError}</div>
         )}
@@ -137,7 +146,10 @@ export default function LectureImportForm() {
       <div>
         <Label>Duplicate Strategy</Label>
         <Select value={duplicateStrategy} onValueChange={setDuplicateStrategy}>
-          <SelectTrigger className="w-full" />
+          <SelectTrigger className="w-full">
+            {duplicateStrategies.find((opt) => opt.value === duplicateStrategy)
+              ?.label || "Select..."}
+          </SelectTrigger>
           <SelectContent>
             {duplicateStrategies.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
