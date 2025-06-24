@@ -17,6 +17,7 @@ import { lectureService } from "@/services/lectureService";
 import { downloadJSON } from "@/utils/common";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import LectureImportForm from "@/components/forms/LectureImportForm";
 
 export default function Settings() {
   const { toast } = useToast();
@@ -26,44 +27,44 @@ export default function Settings() {
   }>({ words: false, lectures: false });
 
   const handleExportWords = async () => {
-    setExportLoading(prev => ({ ...prev, words: true }));
+    setExportLoading((prev) => ({ ...prev, words: true }));
     try {
       const data = await wordService.exportWords();
-      downloadJSON(data, 'words-export');
+      downloadJSON(data, "words-export");
       toast({
         title: "Exportación exitosa",
         description: "Las palabras se han exportado correctamente",
       });
     } catch (error: any) {
-      console.error('Error al exportar palabras:', error.message);
+      console.error("Error al exportar palabras:", error.message);
       toast({
         title: "Error al exportar",
         description: error.message || "No se pudieron exportar las palabras",
         variant: "destructive",
       });
     } finally {
-      setExportLoading(prev => ({ ...prev, words: false }));
+      setExportLoading((prev) => ({ ...prev, words: false }));
     }
   };
 
   const handleExportLectures = async () => {
-    setExportLoading(prev => ({ ...prev, lectures: true }));
+    setExportLoading((prev) => ({ ...prev, lectures: true }));
     try {
       const data = await lectureService.exportLectures();
-      downloadJSON(data, 'lectures-export');
+      downloadJSON(data, "lectures-export");
       toast({
         title: "Exportación exitosa",
         description: "Las lecturas se han exportado correctamente",
       });
     } catch (error: any) {
-      console.error('Error al exportar lecturas:', error.message);
+      console.error("Error al exportar lecturas:", error.message);
       toast({
         title: "Error al exportar",
         description: error.message || "No se pudieron exportar las lecturas",
         variant: "destructive",
       });
     } finally {
-      setExportLoading(prev => ({ ...prev, lectures: false }));
+      setExportLoading((prev) => ({ ...prev, lectures: false }));
     }
   };
 
@@ -129,8 +130,8 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleExportWords}
                 disabled={exportLoading.words}
                 className="justify-start"
@@ -138,8 +139,8 @@ export default function Settings() {
                 <FileText className="mr-2 h-4 w-4" />
                 {exportLoading.words ? "Exportando..." : "Exportar Palabras"}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleExportLectures}
                 disabled={exportLoading.lectures}
                 className="justify-start"
@@ -163,24 +164,7 @@ export default function Settings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-3">
-              <Button 
-                variant="outline" 
-                onClick={handleImportWords}
-                className="justify-start"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Importar Palabras
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={handleImportLectures}
-                className="justify-start"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Importar Lecturas
-              </Button>
-            </div>
+            <LectureImportForm />
             <div className="text-xs text-muted-foreground mt-2">
               Selecciona archivos JSON para importar tus datos
             </div>
