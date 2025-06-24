@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import LectureImportResult from "./LectureImportResult";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
+import { FileInputButton } from "@/components/ui/FileInputButton";
 
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
@@ -117,29 +118,29 @@ export default function LectureImportForm() {
       {/* File input */}
       <div>
         <Label htmlFor="lecture-file">JSON File</Label>
-        <div className="flex items-center space-x-3 mt-1">
-          <input
-            id="lecture-file"
-            type="file"
-            accept=".json"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => document.getElementById('lecture-file')?.click()}
-            className="px-4 py-2"
-          >
-            📄 Seleccionar archivo
-          </Button>
-          <span className={`text-sm ${file ? "text-foreground" : "text-muted-foreground"}`}>
-            {file ? file.name : "Ningún archivo seleccionado"}
-          </span>
-        </div>
-        {fileError && (
-          <div className="text-xs text-red-500 mt-1">{fileError}</div>
-        )}
+        <FileInputButton
+          accept=".json"
+          onFileChange={(selected: File | null) => {
+            if (selected) {
+              if (!selected.name.endsWith(".json")) {
+                setFile(null);
+                setFileError("Only .json files are allowed");
+              } else {
+                setFile(selected);
+                setFileError(null);
+              }
+            } else {
+              setFile(null);
+              setFileError(null);
+            }
+          }}
+          label="Seleccionar archivo"
+          icon="📄"
+          file={file}
+          error={fileError}
+          inputId="lecture-file"
+          disabled={loading}
+        />
       </div>
 
       {/* Duplicate strategy */}
