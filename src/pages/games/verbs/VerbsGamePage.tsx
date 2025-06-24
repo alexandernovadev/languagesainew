@@ -17,144 +17,16 @@ import {
 import { ChevronLeft, ChevronRight, Check, X, RotateCcw } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import verbsData from "@/lib/data/verbsPaticiple.json";
 
 // Datos de verbos irregulares
-const irregularVerbs = [
-  {
-    id: 1,
-    infinitive: "be",
-    past: "was/were",
-    participle: "been",
-    meaning: "ser/estar",
-  },
-  {
-    id: 2,
-    infinitive: "have",
-    past: "had",
-    participle: "had",
-    meaning: "tener",
-  },
-  {
-    id: 3,
-    infinitive: "do",
-    past: "did",
-    participle: "done",
-    meaning: "hacer",
-  },
-  {
-    id: 4,
-    infinitive: "say",
-    past: "said",
-    participle: "said",
-    meaning: "decir",
-  },
-  {
-    id: 5,
-    infinitive: "get",
-    past: "got",
-    participle: "gotten",
-    meaning: "obtener",
-  },
-  {
-    id: 6,
-    infinitive: "make",
-    past: "made",
-    participle: "made",
-    meaning: "hacer",
-  },
-  { id: 7, infinitive: "go", past: "went", participle: "gone", meaning: "ir" },
-  {
-    id: 8,
-    infinitive: "know",
-    past: "knew",
-    participle: "known",
-    meaning: "saber",
-  },
-  {
-    id: 9,
-    infinitive: "take",
-    past: "took",
-    participle: "taken",
-    meaning: "tomar",
-  },
-  {
-    id: 10,
-    infinitive: "see",
-    past: "saw",
-    participle: "seen",
-    meaning: "ver",
-  },
-  {
-    id: 11,
-    infinitive: "come",
-    past: "came",
-    participle: "come",
-    meaning: "venir",
-  },
-  {
-    id: 12,
-    infinitive: "think",
-    past: "thought",
-    participle: "thought",
-    meaning: "pensar",
-  },
-  {
-    id: 13,
-    infinitive: "look",
-    past: "looked",
-    participle: "looked",
-    meaning: "mirar",
-  },
-  {
-    id: 14,
-    infinitive: "want",
-    past: "wanted",
-    participle: "wanted",
-    meaning: "querer",
-  },
-  {
-    id: 15,
-    infinitive: "give",
-    past: "gave",
-    participle: "given",
-    meaning: "dar",
-  },
-  {
-    id: 16,
-    infinitive: "use",
-    past: "used",
-    participle: "used",
-    meaning: "usar",
-  },
-  {
-    id: 17,
-    infinitive: "find",
-    past: "found",
-    participle: "found",
-    meaning: "encontrar",
-  },
-  {
-    id: 18,
-    infinitive: "tell",
-    past: "told",
-    participle: "told",
-    meaning: "contar",
-  },
-  {
-    id: 19,
-    infinitive: "ask",
-    past: "asked",
-    participle: "asked",
-    meaning: "preguntar",
-  },
-  {
-    id: 20,
-    infinitive: "work",
-    past: "worked",
-    participle: "worked",
-    meaning: "trabajar",
-  },
-];
+const irregularVerbs = verbsData.map((verb, idx) => ({
+  id: idx + 1,
+  infinitive: verb["Verb"],
+  past: verb["Past"],
+  participle: verb["Past Participle (PP)"],
+  meaning: verb["Spanish"],
+}));
 
 export default function VerbsGamePage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -394,34 +266,86 @@ export default function VerbsGamePage() {
             variant="outline"
             onClick={prevPage}
             disabled={currentPage === 1}
+            aria-label="Anterior"
           >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Anterior
+            <ChevronLeft className="h-4 w-4" />
           </Button>
 
           <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                size="sm"
-                onClick={() => {
-                  setCurrentPage(page);
-                  setShowAnswers(false);
-                }}
-              >
-                {page}
-              </Button>
-            ))}
+            {(() => {
+              const pages = [];
+              const pageWindow = 2; // Cuántos a la izquierda/derecha
+              let start = Math.max(1, currentPage - pageWindow);
+              let end = Math.min(totalPages, currentPage + pageWindow);
+
+              if (start > 1) {
+                pages.push(
+                  <Button
+                    key={1}
+                    variant={currentPage === 1 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setCurrentPage(1);
+                      setShowAnswers(false);
+                    }}
+                  >
+                    1
+                  </Button>
+                );
+                if (start > 2) {
+                  pages.push(
+                    <span key="start-ellipsis" className="px-1 text-muted-foreground">...</span>
+                  );
+                }
+              }
+
+              for (let i = start; i <= end; i++) {
+                pages.push(
+                  <Button
+                    key={i}
+                    variant={currentPage === i ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setCurrentPage(i);
+                      setShowAnswers(false);
+                    }}
+                  >
+                    {i}
+                  </Button>
+                );
+              }
+
+              if (end < totalPages) {
+                if (end < totalPages - 1) {
+                  pages.push(
+                    <span key="end-ellipsis" className="px-1 text-muted-foreground">...</span>
+                  );
+                }
+                pages.push(
+                  <Button
+                    key={totalPages}
+                    variant={currentPage === totalPages ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setCurrentPage(totalPages);
+                      setShowAnswers(false);
+                    }}
+                  >
+                    {totalPages}
+                  </Button>
+                );
+              }
+              return pages;
+            })()}
           </div>
 
           <Button
             variant="outline"
             onClick={nextPage}
             disabled={currentPage === totalPages}
+            aria-label="Siguiente"
           >
-            Siguiente
-            <ChevronRight className="h-4 w-4 ml-1" />
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
