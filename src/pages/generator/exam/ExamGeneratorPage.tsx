@@ -45,7 +45,7 @@ export default function ExamGeneratorPage() {
     <PageLayout>
       <PageHeader
         title="Exam Generator"
-        description="Genera exámenes personalizados con IA"
+        description="Genera exámenes personalizados con IA."
         actions={
           <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
             <DialogTrigger asChild>

@@ -78,18 +78,8 @@ export default function ProfilePage() {
   return (
     <PageLayout>
       <PageHeader
-        title="Mi Perfil"
-        description="Gestiona tu información personal y visualiza tu progreso"
-        actions={
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm">
-              Cambiar contraseña
-            </Button>
-            <Button variant="destructive" onClick={logout} size="sm">
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
-        }
+        title="Perfil"
+        description="Gestiona tu información personal y preferencias de cuenta."
       />
       <div className="w-full mx-auto mt-6 flex flex-col gap-8">
         <Card className="w-full">

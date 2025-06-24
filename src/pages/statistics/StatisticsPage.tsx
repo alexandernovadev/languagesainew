@@ -43,19 +43,16 @@ import {
   learningProgressData,
   timeDistributionData,
 } from "@/data/statisticsData";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export default function StatisticsPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-neon">
-          Estadísticas
-        </h1>
-        <p className="text-muted-foreground">
-          Análisis completo del rendimiento y uso de la aplicación
-        </p>
-      </div>
-
+    <PageLayout>
+      <PageHeader
+        title="Estadísticas"
+        description="Visualiza tu progreso y rendimiento en la plataforma."
+      />
       {/* Métricas principales */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -445,6 +442,6 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -18,6 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, Check, X, RotateCcw } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 // Datos de verbos irregulares
 const irregularVerbs = [
@@ -253,179 +255,178 @@ export default function VerbsGamePage() {
   const totalAnswers = Object.keys(checkedAnswers).length * 2;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Verbs Participios
-          </h1>
-          <p className="text-muted-foreground">
-            Practica verbos irregulares en inglés
-          </p>
+    <PageLayout>
+      <PageHeader
+        title="Verbs Participios"
+        description="Practica los verbos irregulares y sus participios."
+      />
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={resetPage}>
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Limpiar
+            </Button>
+            <Button onClick={checkAnswers} disabled={showAnswers}>
+              <Check className="h-4 w-4 mr-2" />
+              Verificar
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={resetPage}>
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Limpiar
-          </Button>
-          <Button onClick={checkAnswers} disabled={showAnswers}>
-            <Check className="h-4 w-4 mr-2" />
-            Verificar
-          </Button>
-        </div>
-      </div>
 
-      {/* Estadísticas */}
-      {showAnswers && (
+        {/* Estadísticas */}
+        {showAnswers && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Badge variant="default" className="text-sm">
+                    Página {currentPage} de {totalPages}
+                  </Badge>
+                  <Badge
+                    variant={
+                      correctAnswers === totalAnswers ? "default" : "secondary"
+                    }
+                    className="text-sm"
+                  >
+                    {correctAnswers}/{totalAnswers} correctas
+                  </Badge>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {Math.round((correctAnswers / totalAnswers) * 100)}% de
+                  acierto
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Tabla de verbos */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Badge variant="default" className="text-sm">
-                  Página {currentPage} de {totalPages}
-                </Badge>
-                <Badge
-                  variant={
-                    correctAnswers === totalAnswers ? "default" : "secondary"
-                  }
-                  className="text-sm"
-                >
-                  {correctAnswers}/{totalAnswers} correctas
-                </Badge>
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {Math.round((correctAnswers / totalAnswers) * 100)}% de acierto
-              </div>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Infinitivo</TableHead>
+                    <TableHead className="w-[150px]">Pasado</TableHead>
+                    <TableHead className="w-[150px]">Participio</TableHead>
+                    <TableHead>Significado</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentVerbs.map((verb) => (
+                    <TableRow key={verb.id}>
+                      <TableCell className="font-medium">
+                        {verb.infinitive}
+                      </TableCell>
+                      <TableCell>
+                        <div className="relative">
+                          <Input
+                            placeholder="..."
+                            value={userAnswers[verb.id]?.past || ""}
+                            onChange={(e) =>
+                              handleInputChange(verb.id, "past", e.target.value)
+                            }
+                            className={getInputClassName(verb.id, "past")}
+                            disabled={showAnswers}
+                          />
+                          {showAnswers && (
+                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                              {checkedAnswers[verb.id]?.past ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <X className="h-4 w-4 text-red-500" />
+                              )}
+                            </div>
+                          )}
+                          {showAnswers && !checkedAnswers[verb.id]?.past && (
+                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              Respuesta: {verb.past}
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="relative">
+                          <Input
+                            placeholder="..."
+                            value={userAnswers[verb.id]?.participle || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                verb.id,
+                                "participle",
+                                e.target.value
+                              )
+                            }
+                            className={getInputClassName(verb.id, "participle")}
+                            disabled={showAnswers}
+                          />
+                          {showAnswers && (
+                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                              {checkedAnswers[verb.id]?.participle ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <X className="h-4 w-4 text-red-500" />
+                              )}
+                            </div>
+                          )}
+                          {showAnswers &&
+                            !checkedAnswers[verb.id]?.participle && (
+                              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                Respuesta: {verb.participle}
+                              </div>
+                            )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {verb.meaning}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
-      )}
 
-      {/* Tabla de verbos */}
-      <Card>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Infinitivo</TableHead>
-                  <TableHead className="w-[150px]">Pasado</TableHead>
-                  <TableHead className="w-[150px]">Participio</TableHead>
-                  <TableHead>Significado</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentVerbs.map((verb) => (
-                  <TableRow key={verb.id}>
-                    <TableCell className="font-medium">
-                      {verb.infinitive}
-                    </TableCell>
-                    <TableCell>
-                      <div className="relative">
-                        <Input
-                          placeholder="..."
-                          value={userAnswers[verb.id]?.past || ""}
-                          onChange={(e) =>
-                            handleInputChange(verb.id, "past", e.target.value)
-                          }
-                          className={getInputClassName(verb.id, "past")}
-                          disabled={showAnswers}
-                        />
-                        {showAnswers && (
-                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                            {checkedAnswers[verb.id]?.past ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <X className="h-4 w-4 text-red-500" />
-                            )}
-                          </div>
-                        )}
-                        {showAnswers && !checkedAnswers[verb.id]?.past && (
-                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                            Respuesta: {verb.past}
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="relative">
-                        <Input
-                          placeholder="..."
-                          value={userAnswers[verb.id]?.participle || ""}
-                          onChange={(e) =>
-                            handleInputChange(
-                              verb.id,
-                              "participle",
-                              e.target.value
-                            )
-                          }
-                          className={getInputClassName(verb.id, "participle")}
-                          disabled={showAnswers}
-                        />
-                        {showAnswers && (
-                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                            {checkedAnswers[verb.id]?.participle ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <X className="h-4 w-4 text-red-500" />
-                            )}
-                          </div>
-                        )}
-                        {showAnswers &&
-                          !checkedAnswers[verb.id]?.participle && (
-                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                              Respuesta: {verb.participle}
-                            </div>
-                          )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {verb.meaning}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        {/* Navegación */}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="outline"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Anterior
+          </Button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setCurrentPage(page);
+                  setShowAnswers(false);
+                }}
+              >
+                {page}
+              </Button>
+            ))}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Navegación */}
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={prevPage}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Anterior
-        </Button>
-
-        <div className="flex items-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <Button
-              key={page}
-              variant={currentPage === page ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setCurrentPage(page);
-                setShowAnswers(false);
-              }}
-            >
-              {page}
-            </Button>
-          ))}
+          <Button
+            variant="outline"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
         </div>
-
-        <Button
-          variant="outline"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-        >
-          Siguiente
-          <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
       </div>
-    </div>
+    </PageLayout>
   );
 }
