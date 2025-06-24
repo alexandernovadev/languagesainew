@@ -177,9 +177,6 @@ pnpm preview      # Preview production build
 - Write meaningful commit messages
 - Test your changes thoroughly
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -187,14 +184,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Radix UI** for accessible component primitives
 - **Tailwind CSS** for the utility-first styling approach
 - **Vite** for the lightning-fast development experience
-
-## 📞 Support
-
-If you have any questions or need support:
-- Open an issue on GitHub
-- Check the documentation
-- Join our community discussions
-
----
 
 **Made with ❤️ for language learners worldwide** 
