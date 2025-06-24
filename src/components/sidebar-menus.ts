@@ -15,11 +15,6 @@ export const menuItems = [
     icon: Home,
   },
   {
-    title: "Configuración",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
     title: "Lectures",
     url: "/lectures",
     icon: BookOpen,
@@ -59,5 +54,28 @@ export const gamesItems = [
     title: "Verbs Participios",
     url: "/games/verbs",
     icon: Gamepad2,
+  },
+];
+
+export const configSettingsItems = [
+  {
+    title: "General",
+    url: "/settings/general",
+    icon: Settings,
+  },
+  {
+    title: "Importar",
+    url: "/settings/import",
+    icon: FileText,
+  },
+  {
+    title: "Exportar",
+    url: "/settings/export",
+    icon: RotateCcw,
+  },
+  {
+    title: "Información del Sistema",
+    url: "/settings/system",
+    icon: BarChart3,
   },
 ];

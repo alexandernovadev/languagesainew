@@ -19,7 +19,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { cn } from "@/utils/common/classnames";
-import { gamesItems, generatorItems, menuItems } from "./sidebar-menus";
+import { gamesItems, generatorItems, menuItems, configSettingsItems } from "./sidebar-menus";
 import { LoginModal } from "./auth/LoginModal";
 
 export function AppSidebar() {
@@ -114,6 +114,31 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {gamesItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={cn(
+                        "transition-all duration-300",
+                        pathname === item.url && "sidebar-neon-active"
+                      )}
+                      onClick={handleMenuClick}
+                    >
+                      <Link to={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Configuraciones</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {configSettingsItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
