@@ -389,12 +389,12 @@ export default function MyWordsPage() {
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
+                <TableRow className="hover:bg-transparent cursor-default">
                   <TableCell
-                    colSpan={5}
+                    colSpan={8}
                     className="text-center h-24 text-muted-foreground"
                   >
-                    <div className="space-y-4">
+                    <div className="space-y-">
                       <div>No se encontraron palabras.</div>
                       <Button
                         variant="outline"
