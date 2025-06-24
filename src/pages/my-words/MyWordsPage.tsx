@@ -49,6 +49,7 @@ import {
   Eye,
   X as XIcon,
   Lightbulb,
+  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -393,37 +394,47 @@ export default function MyWordsPage() {
                     colSpan={5}
                     className="text-center h-24 text-muted-foreground"
                   >
-                    <div>No se encontraron palabras.</div>
-                    {localSearch && (
-                      <div className="flex flex-col items-center gap-2 mt-4">
-                        <Button
-                          className={generating ? "shimmer-text" : undefined}
-                          variant="outline"
-                          disabled={generating}
-                          onClick={handleGenerateWord}
-                        >
-                          Agregar palabra
-                          <span className="font-bold text-base ml-2">
-                            "{localSearch}"
-                          </span>
-                        </Button>
-                        {generating && (
-                          <div className="shimmer-text mt-2 text-base font-medium">
-                            Generando palabra
-                            <span
-                              className="shimmer-text"
-                              style={{
-                                display: "inline-block",
-                                width: "1.5em",
-                                textAlign: "left",
-                              }}
-                            >
-                              {dots || "\u00A0"}
+                    <div className="space-y-4">
+                      <div>No se encontraron palabras.</div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => getWords()}
+                        className="rounded-full"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                      {localSearch && (
+                        <div className="flex flex-col items-center gap-2 mt-4">
+                          <Button
+                            className={generating ? "shimmer-text" : undefined}
+                            variant="outline"
+                            disabled={generating}
+                            onClick={handleGenerateWord}
+                          >
+                            Agregar palabra
+                            <span className="font-bold text-base ml-2">
+                              "{localSearch}"
                             </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                          </Button>
+                          {generating && (
+                            <div className="shimmer-text mt-2 text-base font-medium">
+                              Generando palabra
+                              <span
+                                className="shimmer-text"
+                                style={{
+                                  display: "inline-block",
+                                  width: "1.5em",
+                                  textAlign: "left",
+                                }}
+                              >
+                                {dots || "\u00A0"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

@@ -21,14 +21,12 @@ import {
 import { cn } from "@/utils/common/classnames";
 import { gamesItems, generatorItems, menuItems } from "./sidebar-menus";
 import { LoginModal } from "./auth/LoginModal";
-import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 
 export function AppSidebar() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   const { setOpenMobile } = useSidebar();
-  const { user, isAuthenticated } = useUserStore();
 
   // Handler para cerrar sidebar en móvil
   const handleMenuClick = () => {
@@ -42,28 +40,19 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            {isAuthenticated() ? (
-              <UserDropdownMenu 
-                avatarSize="size-8" 
-                avatarSrc="/loogo.png"
-                buttonClassName="w-full justify-start"
-                showFullHeader={true}
-              />
-            ) : (
-              <SidebarMenuButton size="lg" onClick={() => setOpen(true)}>
-                <div className="flex items-center gap-2">
-                  <img
-                    src="/loogo.png"
-                    alt="Logo"
-                    className="size-8 rounded-lg bg-sidebar-accent object-cover"
-                  />
-                  <div className="flex flex-col gap-0.5 leading-none">
-                    <span className="font-semibold">LanguagesAI</span>
-                    <span className="text-xs">v1.6.0</span>
-                  </div>
+            <SidebarMenuButton size="lg" asChild>
+              <div className="flex items-center gap-2">
+                <img
+                  src="/loogo.png"
+                  alt="Logo"
+                  className="size-8 rounded-lg bg-sidebar-accent object-cover"
+                />
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-semibold">LanguagesAI</span>
+                  <span className="text-xs">v1.6.0</span>
                 </div>
-              </SidebarMenuButton>
-            )}
+              </div>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

@@ -10,6 +10,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { DynamicBreadcrumb } from "@/components/layouts/dynamic-breadcrumb";
 import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
+import { useUserStore } from "@/lib/store/user-store";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
+import { useState } from "react";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 export default function DashboardLayout({
   children,
@@ -19,6 +24,8 @@ export default function DashboardLayout({
   const location = useLocation();
   const noSidebarRoutes = ["/login", "/register"];
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
+  const { isAuthenticated } = useUserStore();
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   return (
     <SidebarProvider>
@@ -34,12 +41,24 @@ export default function DashboardLayout({
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb />
           <div className="flex-1" />
-          <UserDropdownMenu avatarSize="h-11 w-11" avatarSrc="/loogo.png" />
+          {isAuthenticated() ? (
+            <UserDropdownMenu avatarSize="h-11 w-11" avatarSrc="/loogo.png" />
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLoginModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <LogIn className="h-4 w-4" />
+            </Button>
+          )}
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4">
           <div className="container mx-auto">{children}</div>
         </main>
       </SidebarInset>
+      <LoginModal open={loginModalOpen} setOpen={setLoginModalOpen} />
     </SidebarProvider>
   );
 }

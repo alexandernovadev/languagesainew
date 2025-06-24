@@ -25,7 +25,7 @@ import { LectureCard } from "@/components/lectures/LectureCard";
 import { LecturePagination } from "@/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
 import type { Lecture } from "@/models/Lecture";
-import { Plus } from "lucide-react";
+import { Plus, RotateCcw } from "lucide-react";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -147,7 +147,17 @@ export default function LecturesPage() {
           <div className="col-span-full text-center py-10">Cargando...</div>
         ) : lectures.length === 0 ? (
           <div className="col-span-full text-center py-10 text-muted-foreground">
-            No hay lecturas disponibles.
+            <div className="space-y-4">
+              <p>No hay lecturas disponibles.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => getLectures(1, 10)}
+                className="rounded-full"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ) : (
           lectures.map((lecture) => (
