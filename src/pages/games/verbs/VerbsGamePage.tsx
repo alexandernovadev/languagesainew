@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent
@@ -28,15 +28,24 @@ const irregularVerbs = verbsData.map((verb, idx) => ({
   meaning: verb["Spanish"],
 }));
 
+// Nueva función para generar para cada verbo una columna aleatoria para el input
+function getRandomField(): "infinitive" | "past" | "participle" {
+  const fields = ["infinitive", "past", "participle"] as const;
+  return fields[Math.floor(Math.random() * fields.length)];
+}
+
 export default function VerbsGamePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [userAnswers, setUserAnswers] = useState<{
-    [key: number]: { past: string; participle: string };
+    [key: number]: { infinitive?: string; past?: string; participle?: string };
   }>({});
   const [showAnswers, setShowAnswers] = useState(false);
   const [checkedAnswers, setCheckedAnswers] = useState<{
-    [key: number]: { past: boolean; participle: boolean };
+    [key: number]: boolean;
   }>({});
+
+  // Para cada página, generamos una asignación aleatoria de campo a preguntar por fila
+  const [inputFields, setInputFields] = useState<{ [key: number]: "infinitive" | "past" | "participle" }>({});
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(irregularVerbs.length / itemsPerPage);
@@ -44,9 +53,23 @@ export default function VerbsGamePage() {
   const endIndex = startIndex + itemsPerPage;
   const currentVerbs = irregularVerbs.slice(startIndex, endIndex);
 
+  // Cuando cambia la página, generamos nuevos campos aleatorios
+  useEffect(() => {
+    const newFields: { [key: number]: "infinitive" | "past" | "participle" } = {};
+    currentVerbs.forEach((verb) => {
+      newFields[verb.id] = getRandomField();
+    });
+    setInputFields(newFields);
+    // Limpiar respuestas y checks solo de la página actual
+    // (opcional, si quieres que se reinicie al cambiar de página)
+    // setUserAnswers({});
+    // setCheckedAnswers({});
+    setShowAnswers(false);
+  }, [currentPage]);
+
   const handleInputChange = (
     verbId: number,
-    field: "past" | "participle",
+    field: "infinitive" | "past" | "participle",
     value: string
   ) => {
     setUserAnswers((prev) => ({
@@ -60,22 +83,24 @@ export default function VerbsGamePage() {
 
   const checkAnswers = () => {
     const newCheckedAnswers: {
-      [key: number]: { past: boolean; participle: boolean };
+      [key: number]: boolean;
     } = {};
 
     currentVerbs.forEach((verb) => {
       const userAnswer = userAnswers[verb.id];
-      if (userAnswer) {
-        newCheckedAnswers[verb.id] = {
-          past:
-            userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase(),
-          participle:
-            userAnswer.participle?.toLowerCase().trim() ===
-            verb.participle.toLowerCase(),
-        };
+      const field = inputFields[verb.id];
+      if (userAnswer && field) {
+        let correct = false;
+        if (field === "infinitive") {
+          correct = userAnswer.infinitive?.toLowerCase().trim() === verb.infinitive.toLowerCase();
+        } else if (field === "past") {
+          correct = userAnswer.past?.toLowerCase().trim() === verb.past.toLowerCase();
+        } else if (field === "participle") {
+          correct = userAnswer.participle?.toLowerCase().trim() === verb.participle.toLowerCase();
+        }
+        newCheckedAnswers[verb.id] = correct;
       }
     });
-
     setCheckedAnswers(newCheckedAnswers);
     setShowAnswers(true);
   };
@@ -109,19 +134,19 @@ export default function VerbsGamePage() {
     }
   };
 
-  const getInputClassName = (verbId: number, field: "past" | "participle") => {
+  const getInputClassName = (verbId: number) => {
     if (!showAnswers) return "";
-    const isCorrect = checkedAnswers[verbId]?.[field];
+    const isCorrect = checkedAnswers[verbId];
     return isCorrect
       ? "border-green-500 bg-green-50 dark:bg-green-950"
       : "border-red-500 bg-red-50 dark:bg-red-950";
   };
 
   const correctAnswers = Object.values(checkedAnswers).reduce((acc, answer) => {
-    return acc + (answer.past ? 1 : 0) + (answer.participle ? 1 : 0);
+    return acc + (answer ? 1 : 0);
   }, 0);
 
-  const totalAnswers = Object.keys(checkedAnswers).length * 2;
+  const totalAnswers = Object.keys(checkedAnswers).length;
 
   return (
     <PageLayout>
@@ -185,75 +210,76 @@ export default function VerbsGamePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentVerbs.map((verb) => (
-                    <TableRow key={verb.id}>
-                      <TableCell className="font-medium">
-                        {verb.infinitive}
-                      </TableCell>
-                      <TableCell>
-                        <div className="relative">
-                          <Input
-                            placeholder="..."
-                            value={userAnswers[verb.id]?.past || ""}
-                            onChange={(e) =>
-                              handleInputChange(verb.id, "past", e.target.value)
-                            }
-                            className={getInputClassName(verb.id, "past")}
-                            disabled={showAnswers}
-                          />
-                          {showAnswers && (
-                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                              {checkedAnswers[verb.id]?.past ? (
-                                <Check className="h-4 w-4 text-green-500" />
-                              ) : (
-                                <X className="h-4 w-4 text-red-500" />
-                              )}
+                  {currentVerbs.map((verb) => {
+                    const field = inputFields[verb.id];
+                    return (
+                      <TableRow key={verb.id}>
+                        <TableCell className="font-medium">
+                          {field === "infinitive" ? (
+                            <Input
+                              placeholder="..."
+                              value={userAnswers[verb.id]?.infinitive || ""}
+                              onChange={(e) =>
+                                handleInputChange(verb.id, "infinitive", e.target.value)
+                              }
+                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
+                              disabled={showAnswers}
+                            />
+                          ) : (
+                            verb.infinitive
+                          )}
+                          {showAnswers && field === "infinitive" && !checkedAnswers[verb.id] && (
+                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              Respuesta: {verb.infinitive}
                             </div>
                           )}
-                          {showAnswers && !checkedAnswers[verb.id]?.past && (
+                        </TableCell>
+                        <TableCell>
+                          {field === "past" ? (
+                            <Input
+                              placeholder="..."
+                              value={userAnswers[verb.id]?.past || ""}
+                              onChange={(e) =>
+                                handleInputChange(verb.id, "past", e.target.value)
+                              }
+                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
+                              disabled={showAnswers}
+                            />
+                          ) : (
+                            verb.past
+                          )}
+                          {showAnswers && field === "past" && !checkedAnswers[verb.id] && (
                             <div className="text-xs text-green-600 dark:text-green-400 mt-1">
                               Respuesta: {verb.past}
                             </div>
                           )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="relative">
-                          <Input
-                            placeholder="..."
-                            value={userAnswers[verb.id]?.participle || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                verb.id,
-                                "participle",
-                                e.target.value
-                              )
-                            }
-                            className={getInputClassName(verb.id, "participle")}
-                            disabled={showAnswers}
-                          />
-                          {showAnswers && (
-                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                              {checkedAnswers[verb.id]?.participle ? (
-                                <Check className="h-4 w-4 text-green-500" />
-                              ) : (
-                                <X className="h-4 w-4 text-red-500" />
-                              )}
+                        </TableCell>
+                        <TableCell>
+                          {field === "participle" ? (
+                            <Input
+                              placeholder="..."
+                              value={userAnswers[verb.id]?.participle || ""}
+                              onChange={(e) =>
+                                handleInputChange(verb.id, "participle", e.target.value)
+                              }
+                              className={`min-w-[120px] md:min-w-[180px] ${getInputClassName(verb.id)}`}
+                              disabled={showAnswers}
+                            />
+                          ) : (
+                            verb.participle
+                          )}
+                          {showAnswers && field === "participle" && !checkedAnswers[verb.id] && (
+                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              Respuesta: {verb.participle}
                             </div>
                           )}
-                          {showAnswers &&
-                            !checkedAnswers[verb.id]?.participle && (
-                              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                Respuesta: {verb.participle}
-                              </div>
-                            )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {verb.meaning}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground capitalize font-bold text-base md:text-lg">
+                          {verb.meaning}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
