@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  Card
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +47,6 @@ import {
   Lightbulb,
   RotateCcw,
 } from "lucide-react";
-import { cn } from "@/utils/common/classnames";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";

@@ -21,7 +21,6 @@ import {
   User,
   Mail,
   Shield,
-  LogOut,
   Camera,
   Award,
   TrendingUp,
@@ -31,7 +30,7 @@ import { useForm } from "react-hook-form";
 import { fakeStats } from "@/data/fakeStats";
 
 export default function ProfilePage() {
-  const { user, setUser, logout } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [editing, setEditing] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
