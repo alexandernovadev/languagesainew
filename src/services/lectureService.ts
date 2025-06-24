@@ -126,4 +126,21 @@ export const lectureService = {
       }
     }
   },
+
+  async exportLectures() {
+    try {
+      const res = await api.get(`/api/lectures/export-json`, {
+        headers: getAuthHeaders(),
+      });
+      return res.data;
+    } catch (error: any) {
+      if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("Error de conexión");
+      }
+    }
+  },
 };
