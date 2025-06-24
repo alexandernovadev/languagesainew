@@ -259,21 +259,22 @@ export default function VerbsGamePage() {
       <PageHeader
         title="Verbs Participios"
         description="Practica los verbos irregulares y sus participios."
+        actions={
+          <div className="flex items-center justify-between">
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={resetPage}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Limpiar
+              </Button>
+              <Button onClick={checkAnswers} disabled={showAnswers}>
+                <Check className="h-4 w-4 mr-2" />
+                Verificar
+              </Button>
+            </div>
+          </div>
+        }
       />
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={resetPage}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Limpiar
-            </Button>
-            <Button onClick={checkAnswers} disabled={showAnswers}>
-              <Check className="h-4 w-4 mr-2" />
-              Verificar
-            </Button>
-          </div>
-        </div>
-
         {/* Estadísticas */}
         {showAnswers && (
           <Card>

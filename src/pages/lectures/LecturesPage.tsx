@@ -101,46 +101,47 @@ export default function LecturesPage() {
       <PageHeader
         title="Lecturas"
         description="Gestiona y explora todas tus lecturas."
+        actions={
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Badge variant="outline">
+                Página {currentPage} de {totalPages} • {lectures.length}{" "}
+                lectures
+              </Badge>
+              <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={openAddModal}
+                  className="h-12 w-12 rounded-full"
+                >
+                  <Plus className="h-6 w-6" />
+                </Button>
+                <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
+                  <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
+                    <DialogTitle className="text-xl">
+                      Crear Nueva Lectura
+                    </DialogTitle>
+                    <DialogDescription>
+                      Crea una nueva lectura para tu biblioteca. Completa todos
+                      los campos para una mejor experiencia.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex-grow overflow-y-auto px-6 pb-6">
+                    <LectureForm
+                      onSubmit={handleAddLecture}
+                      onCancel={closeAddModal}
+                      loading={actionLoading.post}
+                      submitText="Crear Lectura"
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        }
       />
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Badge variant="outline">
-              Página {currentPage} de {totalPages} • {lectures.length} lectures
-            </Badge>
-            <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={openAddModal}
-                className="h-12 w-12 rounded-full"
-              >
-                <Plus className="h-6 w-6" />
-              </Button>
-              <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0">
-                <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
-                  <DialogTitle className="text-xl">
-                    Crear Nueva Lectura
-                  </DialogTitle>
-                  <DialogDescription>
-                    Crea una nueva lectura para tu biblioteca. Completa todos
-                    los campos para una mejor experiencia.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex-grow overflow-y-auto px-6 pb-6">
-                  <LectureForm
-                    onSubmit={handleAddLecture}
-                    onCancel={closeAddModal}
-                    loading={actionLoading.post}
-                    submitText="Crear Lectura"
-                  />
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-
         {/* Grid de lecturas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {loading ? (
