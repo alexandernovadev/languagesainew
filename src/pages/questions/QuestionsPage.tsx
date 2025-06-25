@@ -20,10 +20,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useQuestionStore } from "@/lib/store/useQuestionStore";
-import { Question } from "@/models/Question";
+import { Question, QuestionInput } from "@/models/Question";
 import { QuestionFilters } from "@/components/forms/question-filters/QuestionFilters";
 import { QuestionTable } from "@/components/questions/QuestionTable";
 import { QuestionPagination } from "@/components/questions/QuestionPagination";
+import { QuestionForm } from "@/components/forms/QuestionForm";
+import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
 import {
   Plus,
   Search,
@@ -54,6 +56,7 @@ export default function QuestionsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [localSearch, setLocalSearch] = useState("");
 
@@ -85,15 +88,22 @@ export default function QuestionsPage() {
     }
   }, [errors, clearErrors]);
 
-  const handleFormSubmit = async (data: Partial<Question>) => {
-    if (isEditing && selectedQuestion) {
-      await updateQuestion(selectedQuestion._id, data);
-      toast.success("Pregunta actualizada correctamente");
-    } else {
-      await createQuestion(data as any);
-      toast.success("Pregunta creada correctamente");
+  const handleFormSubmit = async (data: QuestionInput) => {
+    try {
+      if (isEditing && selectedQuestion) {
+        await updateQuestion(selectedQuestion._id, data);
+        toast.success("Pregunta actualizada correctamente");
+      } else {
+        await createQuestion(data);
+        toast.success("Pregunta creada correctamente");
+      }
+      setDialogOpen(false);
+      // Recargar las preguntas después de crear/actualizar
+      getQuestions();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error al guardar la pregunta");
     }
-    setDialogOpen(false);
   };
 
   const openDialog = (question?: Question) => {
@@ -112,19 +122,24 @@ export default function QuestionsPage() {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedQuestion?._id) {
-      deleteQuestion(selectedQuestion._id);
-      setDeleteDialogOpen(false);
-      setSelectedQuestion(null);
-      toast.success("Pregunta eliminada correctamente");
+      try {
+        await deleteQuestion(selectedQuestion._id);
+        setDeleteDialogOpen(false);
+        setSelectedQuestion(null);
+        toast.success("Pregunta eliminada correctamente");
+        // Recargar las preguntas después de eliminar
+        getQuestions();
+      } catch (error) {
+        toast.error("Error al eliminar la pregunta");
+      }
     }
   };
 
   const viewQuestionDetails = (question: Question) => {
     setSelectedQuestion(question);
-    // TODO: Implementar modal de detalles
-    toast.info("Funcionalidad de detalles próximamente");
+    setDetailsModalOpen(true);
   };
 
   // Usar useCallback para evitar re-renders innecesarios
@@ -206,7 +221,7 @@ export default function QuestionsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {isEditing ? "Editar Pregunta" : "Nueva Pregunta"}
@@ -218,13 +233,21 @@ export default function QuestionsPage() {
               }
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-muted-foreground">
-              Formulario de pregunta próximamente...
-            </p>
-          </div>
+          <QuestionForm
+            initialData={isEditing && selectedQuestion ? selectedQuestion : undefined}
+            onSubmit={handleFormSubmit}
+            onCancel={() => setDialogOpen(false)}
+            loading={actionLoading.create || actionLoading.update}
+          />
         </DialogContent>
       </Dialog>
+
+      {/* Question Details Modal */}
+      <QuestionDetailsModal
+        question={selectedQuestion}
+        open={detailsModalOpen}
+        onOpenChange={setDetailsModalOpen}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
