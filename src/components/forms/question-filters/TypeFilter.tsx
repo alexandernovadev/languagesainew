@@ -1,28 +1,49 @@
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { questionTypes } from "@/data/questionTypes";
 
 interface TypeFilterProps {
   value?: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | undefined) => void;
 }
 
 export function TypeFilter({ value, onChange }: TypeFilterProps) {
+  const selectedTypes = value ? value.split(',') : [];
+
+  const handleTypeClick = (typeValue: string) => {
+    if (selectedTypes.includes(typeValue)) {
+      // Remover tipo
+      const newTypes = selectedTypes.filter(t => t !== typeValue);
+      onChange(newTypes.length > 0 ? newTypes.join(',') : undefined);
+    } else {
+      // Agregar tipo
+      const newTypes = [...selectedTypes, typeValue];
+      onChange(newTypes.join(','));
+    }
+  };
+
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium">Tipo de Pregunta</Label>
-      <RadioGroup value={value} onValueChange={onChange}>
-        <div className="grid grid-cols-1 gap-2">
-          {questionTypes.map((type) => (
-            <div key={type.value} className="flex items-center space-x-2">
-              <RadioGroupItem value={type.value} id={`type-${type.value}`} />
-              <Label htmlFor={`type-${type.value}`} className="text-sm">
-                {type.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </RadioGroup>
+      <div className="flex flex-wrap gap-2">
+        {questionTypes.map((type) => {
+          const isSelected = selectedTypes.includes(type.value);
+          return (
+            <Badge
+              key={type.value}
+              variant={isSelected ? "default" : "outline"}
+              className={`cursor-pointer transition-all duration-200 ${
+                isSelected 
+                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105" 
+                  : "hover:bg-primary/10"
+              }`}
+              onClick={() => handleTypeClick(type.value)}
+            >
+              {type.label}
+            </Badge>
+          );
+        })}
+      </div>
     </div>
   );
 } 
