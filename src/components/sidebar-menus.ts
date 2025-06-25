@@ -6,6 +6,7 @@ import {
   FileText,
   RotateCcw,
   Gamepad2,
+  HelpCircle,
 } from "lucide-react";
 
 export const menuItems = [
@@ -23,6 +24,11 @@ export const menuItems = [
     title: "My Words",
     url: "/my-words",
     icon: BookOpen,
+  },
+  {
+    title: "Questions",
+    url: "/questions",
+    icon: HelpCircle,
   },
   {
     title: "Estadísticas",

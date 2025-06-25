@@ -16,6 +16,7 @@ import SystemInfoPage from "./pages/settings/SystemInfoPage";
 import SettingsIndexRedirect from "./pages/settings/index";
 import StatisticsPage from "./pages/statistics/StatisticsPage";
 import MyWordsPage from "./pages/my-words/MyWordsPage";
+import QuestionsPage from "./pages/questions/QuestionsPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import LogsSettingsPage from "./pages/settings/LogsSettingsPage";
 
@@ -41,6 +42,7 @@ export default function App() {
           </Route>
           <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="/my-words" element={<MyWordsPage />} />
+          <Route path="/questions" element={<QuestionsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </DashboardLayout>
