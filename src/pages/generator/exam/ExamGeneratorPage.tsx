@@ -1,235 +1,194 @@
-import type React from "react";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Filter, FileText, Download, Eye } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, FileText, Sparkles, Eye, Download } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
-import { useGenerator } from "@/hooks/use-generator";
+import { useExamGenerator } from "@/hooks/useExamGenerator";
+import { ExamConfigForm } from "@/components/exam/ExamConfigForm";
+import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress";
+import { ExamSummary } from "@/components/exam/ExamSummary";
+import { ExamQuestionDisplay } from "@/components/exam/ExamQuestionDisplay";
 
 export default function ExamGeneratorPage() {
   const {
-    isFilterOpen,
-    setIsFilterOpen,
+    state,
     filters,
     updateFilter,
-    handleFilterSubmit,
-  } = useGenerator("exam");
+    generateExam,
+    resetExam,
+    resetFilters,
+    getQuestionTypeLabel,
+    getLevelLabel,
+    getDifficultyLabel
+  } = useExamGenerator();
+
+  const [activeTab, setActiveTab] = useState("config");
+
+  const handleGenerate = async () => {
+    await generateExam();
+    setActiveTab("progress");
+  };
+
+  const handleRegenerate = async () => {
+    resetExam();
+    setActiveTab("config");
+  };
+
+  const handleViewQuestions = () => {
+    setActiveTab("questions");
+  };
+
+  const handleDownload = () => {
+    // TODO: Implement PDF download functionality
+    console.log("Downloading exam as PDF...");
+  };
+
+  const handleBackToConfig = () => {
+    setActiveTab("config");
+  };
 
   return (
     <PageLayout>
       <PageHeader
-        title="Exam Generator"
-        description="Genera exámenes personalizados con IA."
+        title="Generador de Exámenes"
+        description="Crea exámenes personalizados con IA para diferentes niveles y temas."
         actions={
-          <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2">
-                <Filter className="h-4 w-4" />
-                Filtros
+          <div className="flex gap-2">
+            {state.generatedExam && (
+              <Button variant="outline" onClick={handleBackToConfig}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Nueva Generación
               </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Configurar Examen</DialogTitle>
-                <DialogDescription>
-                  Define los parámetros para generar tu examen personalizado
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleFilterSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="topic">Tema del Examen</Label>
-                  <Textarea
-                    id="topic"
-                    placeholder="Describe el tema principal del examen..."
-                    value={filters.topic}
-                    onChange={(e) => updateFilter("topic", e.target.value)}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="instructions">
-                    Instrucciones Adicionales
-                  </Label>
-                  <Textarea
-                    id="instructions"
-                    placeholder="Instrucciones específicas para el examen..."
-                    value={filters.instructions}
-                    onChange={(e) =>
-                      updateFilter("instructions", e.target.value)
-                    }
-                    rows={3}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="level">Nivel</Label>
-                    <Select
-                      value={filters.level}
-                      onValueChange={(value) => updateFilter("level", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar nivel" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="A1">A1 - Principiante</SelectItem>
-                        <SelectItem value="A2">A2 - Elemental</SelectItem>
-                        <SelectItem value="B1">B1 - Intermedio</SelectItem>
-                        <SelectItem value="B2">B2 - Intermedio Alto</SelectItem>
-                        <SelectItem value="C1">C1 - Avanzado</SelectItem>
-                        <SelectItem value="C2">C2 - Maestría</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="difficulty">Dificultad</Label>
-                    <Select
-                      value={filters.difficulty}
-                      onValueChange={(value) =>
-                        updateFilter("difficulty", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar dificultad" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="easy">Fácil</SelectItem>
-                        <SelectItem value="medium">Medio</SelectItem>
-                        <SelectItem value="hard">Difícil</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsFilterOpen(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button type="submit">Aplicar Filtros</Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+            )}
+          </div>
         }
       />
 
-      {/* Contenido principal */}
-      <div className="grid gap-6">
-        {/* Configuración rápida */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Configuración Rápida
-            </CardTitle>
-            <CardDescription>
-              Genera un examen con configuración básica
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="quickTopic">Tema</Label>
-                <Input id="quickTopic" placeholder="Ej: Matemáticas básicas" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="quickQuestions">Número de preguntas</Label>
-                <Input
-                  id="quickQuestions"
-                  type="number"
-                  placeholder="10"
-                  min="1"
-                  max="50"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="quickTime">Tiempo (minutos)</Label>
-                <Input
-                  id="quickTime"
-                  type="number"
-                  placeholder="60"
-                  min="5"
-                  max="180"
-                />
-              </div>
-            </div>
-            <CardFooter>
-              <Button className="w-full">Generar Examen Rápido</Button>
-            </CardFooter>
-          </CardContent>
-        </Card>
+      <div className="space-y-6">
+        {/* Progress indicator */}
+        {state.isGenerating && (
+          <ExamGenerationProgress 
+            progress={state.progress} 
+            isGenerating={state.isGenerating} 
+          />
+        )}
 
-        {/* Exámenes generados */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Exámenes Recientes</CardTitle>
-            <CardDescription>Tus últimos exámenes generados</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3].map((exam) => (
-                <div
-                  key={exam}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div className="space-y-1">
-                    <h4 className="font-medium">
-                      Examen de Matemáticas #{exam}
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      Nivel: B1 • Dificultad: Medio • 15 preguntas
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Generado hace {exam} hora{exam > 1 ? "s" : ""}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-1" />
-                      Ver
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4 mr-1" />
-                      Descargar
-                    </Button>
-                  </div>
+        {/* Main content */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="config" disabled={state.isGenerating}>
+              <FileText className="h-4 w-4 mr-2" />
+              Configuración
+            </TabsTrigger>
+            <TabsTrigger value="progress" disabled={!state.isGenerating && !state.generatedExam}>
+              <Sparkles className="h-4 w-4 mr-2" />
+              Progreso
+            </TabsTrigger>
+            <TabsTrigger value="questions" disabled={!state.generatedExam}>
+              <Eye className="h-4 w-4 mr-2" />
+              Preguntas
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="config" className="space-y-6">
+            <ExamConfigForm
+              filters={filters}
+              updateFilter={updateFilter}
+              onGenerate={handleGenerate}
+              isGenerating={state.isGenerating}
+              error={state.error}
+            />
+          </TabsContent>
+
+          <TabsContent value="progress" className="space-y-6">
+            {state.generatedExam ? (
+              <ExamSummary
+                exam={state.generatedExam}
+                filters={filters}
+                onRegenerate={handleRegenerate}
+                onDownload={handleDownload}
+                onView={handleViewQuestions}
+              />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Generando Examen</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground shimmer-text">
+                    El examen se está generando. Por favor espera...
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="questions" className="space-y-6">
+            {state.generatedExam ? (
+              <div className="space-y-6">
+                {/* Exam header */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-xl">Examen: {filters.topic}</CardTitle>
+                        <p className="text-muted-foreground mt-1">
+                          {state.generatedExam.questions.length} preguntas • 
+                          Nivel {getLevelLabel(filters.level)} • 
+                          Dificultad {getDifficultyLabel(filters.difficulty)}
+                        </p>
+                      </div>
+                      <Button onClick={handleDownload} variant="outline">
+                        <Download className="h-4 w-4 mr-2" />
+                        Descargar PDF
+                      </Button>
+                    </div>
+                  </CardHeader>
+                </Card>
+
+                {/* Questions */}
+                <div className="space-y-6">
+                  {state.generatedExam.questions.map((question, index) => (
+                    <ExamQuestionDisplay
+                      key={index}
+                      question={question}
+                      questionNumber={index + 1}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+
+                {/* Footer actions */}
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button onClick={handleRegenerate} className="flex-1" variant="outline">
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Generar Nuevo Examen
+                      </Button>
+                      <Button onClick={handleDownload} className="flex-1">
+                        <Download className="h-4 w-4 mr-2" />
+                        Descargar PDF
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>No hay examen generado</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Genera un examen primero para ver las preguntas.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </PageLayout>
   );
