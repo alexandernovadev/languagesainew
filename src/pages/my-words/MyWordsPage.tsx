@@ -34,6 +34,7 @@ import { useWordStore } from "@/lib/store/useWordStore";
 import { Word } from "@/models/Word";
 import { WordForm } from "@/components/forms/WordForm";
 import { WordDetailsModal } from "@/components/WordDetailsModal";
+import { WordFilters } from "@/components/forms/word-filters/WordFilters";
 import {
   ChevronLeft,
   ChevronRight,
@@ -72,6 +73,7 @@ export default function MyWordsPage() {
     total,
     setPage,
     setSearchQuery,
+    setFilters,
     searchQuery,
     generateWord,
   } = useWordStore();
@@ -99,7 +101,7 @@ export default function MyWordsPage() {
 
   useEffect(() => {
     getWords();
-  }, [searchQuery, getWords]); // Re-fetch when the debounced search query changes
+  }, [getWords]); // Re-fetch when the store changes
 
   // Sync selectedWord with updated data from store
   useEffect(() => {
@@ -199,7 +201,7 @@ export default function MyWordsPage() {
         selectedWord._id,
         selectedWord.word,
         selectedWord.language,
-        selectedWord.sinonyms || []
+        selectedWord.examples || []
       );
       // Update selectedWord with the latest data
       const updatedWord = words.find((w) => w._id === selectedWord._id);
@@ -215,7 +217,7 @@ export default function MyWordsPage() {
         selectedWord._id,
         selectedWord.word,
         selectedWord.language,
-        selectedWord.codeSwitching || []
+        selectedWord.examples || []
       );
       // Update selectedWord with the latest data
       const updatedWord = words.find((w) => w._id === selectedWord._id);
@@ -231,7 +233,7 @@ export default function MyWordsPage() {
         selectedWord._id,
         selectedWord.word,
         selectedWord.language,
-        selectedWord.type || []
+        selectedWord.examples || []
       );
       // Update selectedWord with the latest data
       const updatedWord = words.find((w) => w._id === selectedWord._id);
@@ -256,6 +258,10 @@ export default function MyWordsPage() {
     } finally {
       setGenerating(false);
     }
+  };
+
+  const handleFiltersChange = (filters: any) => {
+    setFilters(filters);
   };
 
   return (
@@ -297,6 +303,9 @@ export default function MyWordsPage() {
           </Button>
         </div>
       </div>
+
+      {/* Filtros Avanzados */}
+      <WordFilters onFiltersChange={handleFiltersChange} />
 
       {/* Tabla de palabras */}
       <Card className="!p-0 !m-0 shadow-none border-none">

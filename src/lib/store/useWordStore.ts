@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { wordService } from "../../services/wordService";
 import { Word } from "../../models/Word";
+import { WordFilters } from "@/components/forms/word-filters/types";
 
 interface WordStore {
   words: Word[];
@@ -12,10 +13,12 @@ interface WordStore {
   currentPage: number;
   searchQuery: string;
   total: number;
+  currentFilters: Partial<WordFilters>;
 
-  getWords: (page?: number, limit?: number, wordUser?: string) => Promise<void>;
+  getWords: (page?: number, limit?: number, filters?: Partial<WordFilters>) => Promise<void>;
   setPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
+  setFilters: (filters: Partial<WordFilters>) => void;
   retry: () => void;
   getWordById: (id: string) => Promise<void>;
   getWordByName: (word: string) => Promise<void>;
@@ -47,11 +50,12 @@ export const useWordStore = create<WordStore>((set, get) => ({
   currentPage: 1,
   searchQuery: "",
   total: 0,
+  currentFilters: {},
 
   getWords: async (
     page = get().currentPage,
     limit = 6,
-    wordUser = get().searchQuery
+    filters = get().currentFilters
   ) => {
     set({
       loading: true,
@@ -60,7 +64,13 @@ export const useWordStore = create<WordStore>((set, get) => ({
       ...(page === 1 ? { words: [] } : {}),
     });
     try {
-      const { data } = await wordService.getWords(page, limit, wordUser);
+      // Combinar filtros con búsqueda de texto
+      const combinedFilters = {
+        ...filters,
+        ...(get().searchQuery ? { wordUser: get().searchQuery } : {}),
+      };
+
+      const { data } = await wordService.getWords(page, limit, combinedFilters);
 
       set({
         words: data.data,
@@ -80,7 +90,12 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   setSearchQuery: (query: string) => {
     set({ searchQuery: query, currentPage: 1 });
-    get().getWords(1, 6, query);
+    get().getWords(1, 6, get().currentFilters);
+  },
+
+  setFilters: (filters: Partial<WordFilters>) => {
+    set({ currentFilters: filters, currentPage: 1 });
+    get().getWords(1, 6, filters);
   },
 
   retry: () => {

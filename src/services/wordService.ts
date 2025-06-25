@@ -1,13 +1,28 @@
 import { Word } from "../models/Word";
 import { getAuthHeaders } from "@/utils/services";
 import { api } from "./api";
+import { WordFilters } from "@/components/forms/word-filters/types";
 
 export const wordService = {
-  async getWords(page: number, limit: number, wordUser?: string) {
+  async getWords(page: number, limit: number, filters?: Partial<WordFilters>) {
     try {
-      const url = `/api/words?page=${page}&limit=${limit}${
-        wordUser ? `&wordUser=${wordUser}` : ""
-      }`;
+      // Construir query params
+      const params = new URLSearchParams();
+      
+      // Parámetros básicos
+      params.append('page', page.toString());
+      params.append('limit', limit.toString());
+      
+      // Agregar filtros si existen
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            params.append(key, value.toString());
+          }
+        });
+      }
+      
+      const url = `/api/words?${params.toString()}`;
       const res = await api.get(url, { headers: getAuthHeaders() });
       return res.data;
     } catch (error: any) {
