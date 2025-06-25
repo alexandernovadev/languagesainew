@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSidebar } from "@/components/ui/sidebar";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import packageJson from "../../package.json";
 
 import {
   Sidebar,
@@ -49,7 +50,7 @@ export function AppSidebar() {
                 />
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">LanguagesAI</span>
-                  <span className="text-xs">v2.0.11</span>
+                  <span className="text-xs">v{packageJson.version}</span>
                 </div>
               </div>
             </SidebarMenuButton>
