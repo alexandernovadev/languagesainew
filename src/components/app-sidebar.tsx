@@ -49,7 +49,7 @@ export function AppSidebar() {
                 />
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">LanguagesAI</span>
-                  <span className="text-xs">v1.6.0</span>
+                  <span className="text-xs">v2.0.11</span>
                 </div>
               </div>
             </SidebarMenuButton>
