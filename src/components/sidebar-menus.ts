@@ -78,4 +78,9 @@ export const configSettingsItems = [
     url: "/settings/system",
     icon: BarChart3,
   },
+  {
+    title: "Logs",
+    url: "/settings/logs",
+    icon: FileText,
+  },
 ];
