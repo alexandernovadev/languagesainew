@@ -10,6 +10,8 @@ import {
   GameConfigModal,
 } from "./components";
 import { useVerbsGameStore } from "@/lib/store/useVerbsGameStore";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 export default function VerbsGamePage() {
   // Zustand store
@@ -25,7 +27,23 @@ export default function VerbsGamePage() {
     finishGame,
     resetSession,
     clearSession,
+    saveGameToHistory,
+    history,
+    selectHistory,
+    selectedHistory,
+    clearHistory,
   } = useVerbsGameStore();
+
+  const [showStatsModal, setShowStatsModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+
+  // Save to history and show modal when game is completed
+  useEffect(() => {
+    if (session && session.completed) {
+      saveGameToHistory();
+      setShowStatsModal(true);
+    }
+  }, [session?.completed]);
 
   // Show config if no session
   const showConfig = !session;
@@ -83,6 +101,10 @@ export default function VerbsGamePage() {
     });
     updateCheckedAnswers(newCheckedAnswers);
     setShowAnswers(true);
+    // If last page, finish game
+    if (session.currentPage === totalPages) {
+      finishGame();
+    }
   };
 
   const handleResetPage = () => {
@@ -154,12 +176,76 @@ export default function VerbsGamePage() {
         <PageHeader
           title="Verbs Participios"
           description="Practica los verbos irregulares y sus participios."
+          actions={
+            <div className="flex items-center justify-between">
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setShowHistoryModal(true)}>
+                  Historial
+                </Button>
+              </div>
+            </div>
+          }
         />
         <GameConfigModal
           onStartGame={handleStartGame}
           onResumeGame={undefined}
           hasActiveSession={false}
         />
+
+        {/* History Modal */}
+        <Dialog open={showHistoryModal} onOpenChange={setShowHistoryModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Historial de Partidas</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {history.length === 0 && <div className="text-muted-foreground">No hay partidas guardadas.</div>}
+              {history.map((item, idx) => (
+                <div
+                  key={item.id + item.finishedAt}
+                  className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer"
+                  onClick={() => selectHistory(item)}
+                >
+                  <div>
+                    <div className="font-semibold text-sm">{new Date(item.finishedAt).toLocaleString()}</div>
+                    <div className="text-xs text-muted-foreground">Dificultad: {item.config.difficulty}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-green-600">{item.score ?? 0}%</span>
+                    <Button size="sm" variant="outline" onClick={e => { e.stopPropagation(); selectHistory(item); }}>
+                      Ver
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button variant="destructive" onClick={clearHistory}>Borrar Historial</Button>
+              <Button onClick={() => setShowHistoryModal(false)}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* History Details Modal */}
+        <Dialog open={!!selectedHistory} onOpenChange={() => selectHistory(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Detalle de Partida</DialogTitle>
+            </DialogHeader>
+            {selectedHistory && (
+              <div className="space-y-2">
+                <div><b>Fecha:</b> {new Date(selectedHistory.finishedAt).toLocaleString()}</div>
+                <div><b>Dificultad:</b> {selectedHistory.config.difficulty}</div>
+                <div><b>Verbos:</b> {selectedHistory.config.totalVerbs}</div>
+                <div><b>Correctas:</b> {Object.values(selectedHistory.checkedAnswers).filter(Boolean).length} / {selectedHistory.config.totalVerbs}</div>
+                <div><b>Porcentaje:</b> {selectedHistory.score ?? 0}%</div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button onClick={() => selectHistory(null)}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </PageLayout>
     );
   }
@@ -192,6 +278,9 @@ export default function VerbsGamePage() {
             Verbos
           </span>
           {(() => {
+            // Only show stats if at least one answer has been checked
+            const checkedCount = Object.keys(session.checkedAnswers).length;
+            if (checkedCount === 0) return null;
             // Show current page stats if verified, else show total so far
             let correct = 0,
               total = 0,
@@ -254,9 +343,33 @@ export default function VerbsGamePage() {
             isVerifying={!session.showAnswers}
             canVerify={!!allInputsFilled}
             isLastPage={session.currentPage === totalPages}
+            onShowStats={() => setShowStatsModal(true)}
           />
         </div>
       </div>
+
+      {/* Statistics Modal */}
+      <Dialog open={showStatsModal} onOpenChange={setShowStatsModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Estadísticas de la Partida</DialogTitle>
+          </DialogHeader>
+          {session && (
+            <div className="space-y-2">
+              <div><b>Fecha:</b> {new Date().toLocaleString()}</div>
+              <div><b>Dificultad:</b> {session.config.difficulty}</div>
+              <div><b>Verbos:</b> {verbs.length}</div>
+              <div><b>Correctas:</b> {Object.values(session.checkedAnswers).filter(Boolean).length} / {verbs.length}</div>
+              <div><b>Porcentaje:</b> {Math.round((Object.values(session.checkedAnswers).filter(Boolean).length / verbs.length) * 100)}%</div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => { setShowStatsModal(false); resetSession(); }}>
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }

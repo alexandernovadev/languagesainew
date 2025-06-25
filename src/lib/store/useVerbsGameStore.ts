@@ -4,10 +4,16 @@ import type { GameSession, GameConfig, UserAnswers, CheckedAnswers, InputFields 
 import { createGameSession, getVerbsForGame, generateInputFieldsByDifficulty, calculateScore } from "@/pages/games/verbs/utils";
 import { DEFAULT_GAME_CONFIG } from "@/pages/games/verbs/data";
 
+interface VerbsGameHistoryItem extends GameSession {
+  finishedAt: string;
+}
+
 interface VerbsGameState {
   config: GameConfig;
   session: GameSession | null;
   verbs: any[];
+  history: VerbsGameHistoryItem[];
+  selectedHistory: VerbsGameHistoryItem | null;
   setConfig: (config: GameConfig) => void;
   updateConfig: (partial: Partial<GameConfig>) => void;
   resetConfig: () => void;
@@ -18,8 +24,11 @@ interface VerbsGameState {
   setShowAnswers: (show: boolean) => void;
   setCurrentPage: (page: number) => void;
   finishGame: () => void;
+  saveGameToHistory: () => void;
+  selectHistory: (item: VerbsGameHistoryItem | null) => void;
   resetSession: () => void;
   clearSession: () => void;
+  clearHistory: () => void;
 }
 
 export const useVerbsGameStore = create<VerbsGameState>()(
@@ -28,6 +37,8 @@ export const useVerbsGameStore = create<VerbsGameState>()(
       config: DEFAULT_GAME_CONFIG,
       session: null,
       verbs: [],
+      history: [],
+      selectedHistory: null,
       setConfig: (config) => set({ config }),
       updateConfig: (partial) => set((state) => ({ config: { ...state.config, ...partial } })),
       resetConfig: () => set({ config: DEFAULT_GAME_CONFIG }),
@@ -61,12 +72,22 @@ export const useVerbsGameStore = create<VerbsGameState>()(
           return { session: { ...state.session, completed: true, score } };
         });
       },
+      saveGameToHistory: () => {
+        const state = get();
+        if (state.session && state.session.completed) {
+          const finishedAt = new Date().toISOString();
+          const item: VerbsGameHistoryItem = { ...state.session, finishedAt };
+          set((s) => ({ history: [item, ...s.history] }));
+        }
+      },
+      selectHistory: (item) => set({ selectedHistory: item }),
       resetSession: () => set({ session: null, verbs: [] }),
       clearSession: () => set({ session: null, verbs: [], config: DEFAULT_GAME_CONFIG }),
+      clearHistory: () => set({ history: [] }),
     }),
     {
       name: "verbs-game-session",
-      partialize: (state) => ({ config: state.config, session: state.session, verbs: state.verbs }),
+      partialize: (state) => ({ config: state.config, session: state.session, verbs: state.verbs, history: state.history }),
     }
   )
 ); 
