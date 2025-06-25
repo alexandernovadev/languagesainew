@@ -5,11 +5,20 @@ import { X, GripVertical, Plus } from "lucide-react";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { v4 as uuidv4 } from 'uuid';
+import { useToast } from "@/components/ui/use-toast";
 
 interface EditableListProps {
   items: string[];
   onChange: (items: string[]) => void;
   placeholder?: string;
+}
+
+// Comentario: Asegúrate de que el contenedor padre NO tenga overflow:hidden para que el drag & drop funcione correctamente.
+
+// Utilidad para mapear items a objetos con id único
+function withIds(items: string[], ids: string[]) {
+  return items.map((item, idx) => ({ id: ids[idx], value: item }));
 }
 
 // Componente para cada item arrastrable
@@ -47,6 +56,21 @@ export function EditableList({
   placeholder = "Añadir item...",
 }: EditableListProps) {
   const [newItem, setNewItem] = useState("");
+  const [ids, setIds] = useState<string[]>(() => items.map(() => uuidv4()));
+  const { toast } = useToast();
+
+  // Sincronizar ids si cambia la longitud de items
+  if (items.length !== ids.length) {
+    setIds((prev) => {
+      if (items.length > prev.length) {
+        // Se agregó un item
+        return [...prev, ...Array(items.length - prev.length).fill(0).map(() => uuidv4())];
+      } else {
+        // Se eliminó un item
+        return prev.slice(0, items.length);
+      }
+    });
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -59,12 +83,14 @@ export function EditableList({
   const handleAddItem = () => {
     if (newItem.trim()) {
       onChange([...items, newItem.trim()]);
+      setIds((prev) => [...prev, uuidv4()]);
       setNewItem("");
     }
   };
 
   const handleRemoveItem = (index: number) => {
     onChange(items.filter((_, i) => i !== index));
+    setIds((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleItemChange = (index: number, value: string) => {
@@ -76,15 +102,25 @@ export function EditableList({
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = items.findIndex((item, index) => `${index}-${item}` === active.id);
-      const newIndex = items.findIndex((item, index) => `${index}-${item}` === over.id);
+      const oldIndex = ids.findIndex((id) => id === active.id);
+      const newIndex = ids.findIndex((id) => id === over.id);
       const newItems = arrayMove(items, oldIndex, newIndex);
+      const newIds = arrayMove(ids, oldIndex, newIndex);
       onChange(newItems);
+      setIds(newIds);
+      toast({
+        title: "¡Orden cambiado!",
+        description: `Nuevo orden: ${newItems.join(", ")}`,
+        duration: 1500,
+      });
     }
   };
 
+  const itemsWithIds = withIds(items, ids);
+
   return (
     <div className="space-y-2">
+      {/* Asegúrate de que el padre de este componente NO tenga overflow:hidden */}
       <div className="flex gap-2">
         <Input
           value={newItem}
@@ -104,22 +140,22 @@ export function EditableList({
       <div className="space-y-2 rounded-md border p-2 min-h-[80px]">
         {items.length > 0 ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={items.map((item, index) => `${index}-${item}`)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={ids} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
-                {items.map((item, index) => {
+                {itemsWithIds.map((itemObj, index) => {
                   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
-                    id: `${index}-${item}` 
+                    id: itemObj.id 
                   });
                   const style = {
                     transform: CSS.Transform.toString(transform),
                     transition,
                   };
                   return (
-                    <div ref={setNodeRef} style={style} key={`${index}-${item}`}>
+                    <div ref={setNodeRef} style={style} key={itemObj.id}>
                       <DraggableItem
-                        id={`${index}-${item}`}
+                        id={itemObj.id}
                         index={index}
-                        item={item}
+                        item={itemObj.value}
                         onChange={handleItemChange}
                         onRemove={handleRemoveItem}
                         listeners={listeners}
