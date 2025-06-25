@@ -90,7 +90,7 @@ export const useQuestionStore = create<QuestionStore>((set, get) => ({
 
   setFilters: (filters: Partial<QuestionFilters>) => {
     set({ currentFilters: filters, currentPage: 1 });
-    get().getQuestions(1, 10, filters);
+    // No llamar getQuestions aquí, se llamará desde el componente
   },
 
   retry: () => {

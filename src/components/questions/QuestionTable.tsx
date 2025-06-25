@@ -1,0 +1,218 @@
+import { Question } from "@/models/Question";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Edit, Trash2, Eye, RotateCcw } from "lucide-react";
+import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
+
+interface QuestionTableProps {
+  questions: Question[];
+  onEdit: (question: Question) => void;
+  onDelete: (question: Question) => void;
+  onView: (question: Question) => void;
+  onRetry: () => void;
+  loading?: boolean;
+  searchQuery?: string;
+}
+
+export function QuestionTable({ 
+  questions, 
+  onEdit, 
+  onDelete, 
+  onView, 
+  onRetry,
+  loading = false,
+  searchQuery = ""
+}: QuestionTableProps) {
+  const getTypeLabel = (type: string) => {
+    const typeData = questionTypes.find(t => t.value === type);
+    return typeData?.label || type;
+  };
+
+  const getLevelLabel = (level: string) => {
+    const levelData = questionLevels.find(l => l.value === level);
+    return levelData?.label || level;
+  };
+
+  const getDifficultyLabel = (difficulty: number) => {
+    const difficultyData = questionDifficulties.find(d => d.value === difficulty);
+    return difficultyData?.label || difficulty.toString();
+  };
+
+  const getDifficultyColor = (difficulty: number) => {
+    switch (difficulty) {
+      case 1: return "bg-green-100 text-green-800";
+      case 2: return "bg-blue-100 text-blue-800";
+      case 3: return "bg-yellow-100 text-yellow-800";
+      case 4: return "bg-orange-100 text-orange-800";
+      case 5: return "bg-red-100 text-red-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const truncateText = (text: string, maxLength: number = 100) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  if (loading && questions.length === 0) {
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Pregunta</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Nivel</TableHead>
+            <TableHead>Dificultad</TableHead>
+            <TableHead>Tema</TableHead>
+            <TableHead>Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell colSpan={6}>
+                <div className="flex items-center space-x-4 p-4">
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-6 bg-gray-200 rounded w-16"></div>
+                    <div className="h-6 bg-gray-200 rounded w-20"></div>
+                  </div>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Pregunta</TableHead>
+          <TableHead>Tipo</TableHead>
+          <TableHead>Nivel</TableHead>
+          <TableHead>Dificultad</TableHead>
+          <TableHead>Tema</TableHead>
+          <TableHead>Acciones</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {questions.length > 0 ? (
+          questions.map((question) => (
+            <TableRow key={question._id}>
+              <TableCell className="max-w-md">
+                <div className="space-y-1">
+                  <p className="font-medium text-sm">
+                    {truncateText(question.text, 80)}
+                  </p>
+                  {question.tags && question.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {question.tags.slice(0, 3).map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                      {question.tags.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{question.tags.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline" className="text-xs">
+                  {getTypeLabel(question.type)}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <Badge variant="secondary" className="text-xs">
+                  {getLevelLabel(question.level)}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <Badge className={`text-xs ${getDifficultyColor(question.difficulty)}`}>
+                  {getDifficultyLabel(question.difficulty)}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <span className="text-sm text-muted-foreground">
+                  {question.topic || "Sin tema"}
+                </span>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onView(question)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onEdit(question)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(question)}
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow className="hover:bg-transparent cursor-default">
+            <TableCell
+              colSpan={6}
+              className="text-center h-24 text-muted-foreground"
+            >
+              <div className="space-y-4">
+                <div>No se encontraron preguntas.</div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onRetry}
+                  className="rounded-full"
+                >
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Recargar
+                </Button>
+                {searchQuery && (
+                  <div className="flex flex-col items-center gap-2 mt-4">
+                    <p className="text-sm text-muted-foreground">
+                      No hay preguntas que coincidan con "{searchQuery}"
+                    </p>
+                  </div>
+                )}
+              </div>
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+} 
