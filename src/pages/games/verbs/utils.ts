@@ -1,17 +1,11 @@
 import { Verb, VerbField, InputFields, GameConfig, GameSession } from "./types";
 import { irregularVerbs } from "./data";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 export function getRandomField(): VerbField {
   const fields: VerbField[] = ["infinitive", "past", "participle"];
   return fields[Math.floor(Math.random() * fields.length)];
-}
-
-export function generateInputFields(verbs: Verb[]): InputFields {
-  const fields: InputFields = {};
-  verbs.forEach((verb) => {
-    fields[verb.id] = getRandomField();
-  });
-  return fields;
 }
 
 export function checkAnswer(
@@ -98,54 +92,41 @@ export function calculateScore(
   return Math.round((correctAnswers / totalAnswers) * 100);
 }
 
-// Local storage utilities
-export function saveGameSession(session: GameSession): void {
-  try {
-    localStorage.setItem(`verbs_game_session_${session.id}`, JSON.stringify(session));
-  } catch (error) {
-    console.error("Error saving game session:", error);
-  }
+// Date formatting utilities
+export function formatDateToSpanish(date: Date): string {
+  const formattedDate = format(date, "EEEE, d 'de' MMMM 'de' yyyy", {
+    locale: es,
+  });
+  return capitalizeFirstLetter(formattedDate);
 }
 
-export function loadGameSession(sessionId: string): GameSession | null {
-  try {
-    const saved = localStorage.getItem(`verbs_game_session_${sessionId}`);
-    if (saved) {
-      const session = JSON.parse(saved);
-      // Convert string dates back to Date objects
-      session.startTime = new Date(session.startTime);
-      if (session.lastPlayed) {
-        session.lastPlayed = new Date(session.lastPlayed);
-      }
-      return session;
-    }
-  } catch (error) {
-    console.error("Error loading game session:", error);
-  }
-  return null;
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function getActiveGameSession(): GameSession | null {
-  try {
-    const keys = Object.keys(localStorage);
-    const sessionKeys = keys.filter(key => key.startsWith('verbs_game_session_'));
-    
-    for (const key of sessionKeys) {
-      const session = loadGameSession(key.replace('verbs_game_session_', ''));
-      if (session && !session.completed) {
-        return session;
-      }
-    }
-  } catch (error) {
-    console.error("Error getting active game session:", error);
-  }
-  return null;
+// Game statistics utilities
+export function calculateGameDuration(startTime: Date | string): number {
+  const startDate = typeof startTime === 'string' ? new Date(startTime) : startTime;
+  return Math.round((new Date().getTime() - startDate.getTime()) / 1000 / 60);
 }
 
-export function clearGameSession(sessionId: string): void {
-  try {
-    localStorage.removeItem(`verbs_game_session_${sessionId}`);
-  } catch (error) {
-    console.error("Error clearing game session:", error);
-  }
+export function getScoreColor(score: number): string {
+  if (score >= 90) return "text-green-600 bg-green-50 dark:bg-green-950";
+  if (score >= 70) return "text-yellow-600 bg-yellow-50 dark:bg-yellow-950";
+  if (score >= 50) return "text-orange-600 bg-orange-50 dark:bg-orange-950";
+  return "text-red-600 bg-red-50 dark:bg-red-950";
+}
+
+export function getScoreIcon(score: number): string {
+  if (score >= 90) return "🏆";
+  if (score >= 70) return "⭐";
+  if (score >= 50) return "📈";
+  return "📚";
+}
+
+export function getScoreMessage(score: number): string {
+  if (score >= 90) return "¡Excelente! Eres un maestro de los verbos";
+  if (score >= 70) return "¡Muy bien! Sigues mejorando";
+  if (score >= 50) return "¡Buen trabajo! Sigue practicando";
+  return "¡No te rindas! La práctica hace al maestro";
 }

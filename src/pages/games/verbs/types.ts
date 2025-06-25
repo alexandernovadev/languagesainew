@@ -41,11 +41,3 @@ export interface GameSession {
   completed: boolean;
   score?: number;
 }
-
-export interface GameStats {
-  totalAttempts: number;
-  averageScore: number;
-  bestScore: number;
-  totalTimePlayed: number; // in minutes
-  lastPlayed?: Date;
-}

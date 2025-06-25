@@ -11,11 +11,9 @@ import { useVerbsGameStore } from "@/lib/store/useVerbsGameStore";
 
 interface GameConfigModalProps {
   onStartGame: (config: GameConfig) => void;
-  onResumeGame?: () => void;
-  hasActiveSession?: boolean;
 }
 
-export function GameConfigModal({ onStartGame, onResumeGame, hasActiveSession }: GameConfigModalProps) {
+export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
   const config = useVerbsGameStore((state) => state.config);
   const updateConfig = useVerbsGameStore((state) => state.updateConfig);
 
@@ -43,25 +41,6 @@ export function GameConfigModal({ onStartGame, onResumeGame, hasActiveSession }:
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Resume active session */}
-          {hasActiveSession && onResumeGame && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-                    Sesión activa encontrada
-                  </h3>
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Tienes una partida en progreso. ¿Quieres continuar?
-                  </p>
-                </div>
-                <Button onClick={onResumeGame} variant="outline" size="sm">
-                  Continuar
-                </Button>
-              </div>
-            </div>
-          )}
-
           {/* Configuration Grid - 3 columns */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Columna 1 */}
