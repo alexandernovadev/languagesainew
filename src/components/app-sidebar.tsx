@@ -37,7 +37,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -68,6 +68,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
+                      tooltip={item.title}
                       className={cn(
                         "transition-all duration-300",
                         pathname === item.url && "sidebar-neon-active"
@@ -93,6 +94,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
+                      tooltip={item.title}
                       className={cn(
                         "transition-all duration-300",
                         pathname === item.url && "sidebar-neon-active"
@@ -118,6 +120,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
+                      tooltip={item.title}
                       className={cn(
                         "transition-all duration-300",
                         pathname === item.url && "sidebar-neon-active"
@@ -143,6 +146,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
+                      tooltip={item.title}
                       className={cn(
                         "transition-all duration-300",
                         pathname === item.url && "sidebar-neon-active"
