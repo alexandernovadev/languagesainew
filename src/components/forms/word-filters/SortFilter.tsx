@@ -36,12 +36,11 @@ export function SortFilter({
         </SelectContent>
       </Select>
       
-      <Select value={sortOrder || "asc"} onValueChange={(val) => onSortOrderChange(val === "asc" ? undefined : val)}>
+      <Select value={sortOrder || ""} onValueChange={(val) => onSortOrderChange(val === "" ? undefined : val)}>
         <SelectTrigger className="w-32">
-          <SelectValue placeholder="Orden" />
+          <SelectValue placeholder="Seleccionar orden" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="asc">Ascendente</SelectItem>
           {SORT_ORDERS.map((order) => (
             <SelectItem key={order.value} value={order.value}>
               {order.label}

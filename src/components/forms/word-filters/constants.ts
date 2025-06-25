@@ -1,18 +1,18 @@
 import { FilterGroup } from "./types";
 
 export const WORD_LEVELS = [
-  { value: "easy", label: "Fácil", icon: "🟢" },
-  { value: "medium", label: "Medio", icon: "🟡" },
-  { value: "hard", label: "Difícil", icon: "🔴" },
+  { value: "easy", label: "Fácil" },
+  { value: "medium", label: "Medio" },
+  { value: "hard", label: "Difícil" },
 ];
 
 export const LANGUAGES = [
-  { value: "english", label: "Inglés", icon: "🇺🇸" },
-  { value: "spanish", label: "Español", icon: "🇪🇸" },
-  { value: "french", label: "Francés", icon: "🇫🇷" },
-  { value: "german", label: "Alemán", icon: "🇩🇪" },
-  { value: "italian", label: "Italiano", icon: "🇮🇹" },
-  { value: "portuguese", label: "Portugués", icon: "🇵🇹" },
+  { value: "en", label: "Inglés", icon: "🇺🇸" },
+  { value: "es", label: "Español", icon: "🇪🇸" },
+  { value: "fr", label: "Francés", icon: "🇫🇷" },
+  { value: "de", label: "Alemán", icon: "🇩🇪" },
+  { value: "it", label: "Italiano", icon: "🇮🇹" },
+  { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 
 export const WORD_TYPES = [

@@ -36,7 +36,6 @@ export function LevelFilter({ value, onChange }: LevelFilterProps) {
             }`}
             onClick={() => handleLevelClick(level.value)}
           >
-            <span className="mr-1">{level.icon}</span>
             {level.label}
           </Badge>
         );
