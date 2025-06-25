@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import LectureImportForm from "@/components/forms/LectureImportForm";
+import WordImportForm from "@/components/forms/WordImportForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -26,7 +27,7 @@ export default function ImportSettingsPage() {
             </TabsContent>
             <TabsContent value="words">
               <div className="mb-3 text-lg font-semibold">Importar Words</div>
-              <LectureImportForm />
+              <WordImportForm />
             </TabsContent>
             <TabsContent value="questions">
               <div className="mb-3 text-lg font-semibold">Importar Questions</div>
