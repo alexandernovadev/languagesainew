@@ -64,12 +64,12 @@ export default function ExamsPage() {
       console.log('API Response:', response);
       
       if (response && response.success && response.data) {
-        setExams(response.data.exams || []);
+        setExams(response.data.data || []);
         
         setPagination({
-          currentPage: response.data.pagination?.page || 1,
-          totalPages: response.data.pagination?.pages || 1,
-          totalItems: response.data.pagination?.total || 0,
+          currentPage: response.data.page || 1,
+          totalPages: response.data.pages || 1,
+          totalItems: response.data.total || 0,
           itemsPerPage: pagination.itemsPerPage
         });
       } else {
@@ -154,8 +154,64 @@ export default function ExamsPage() {
   if (loading) {
     return (
       <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-lg">Cargando exámenes...</div>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">Exámenes</h1>
+            <p className="text-muted-foreground">
+              Gestiona y revisa todos tus exámenes
+            </p>
+          </div>
+          <Button disabled>
+            <Plus className="w-4 h-4 mr-2" />
+            Crear Examen
+          </Button>
+        </div>
+
+        {/* Skeleton Filters */}
+        <Card className="mb-6">
+          <CardHeader>
+            <div className="h-6 bg-muted rounded w-32 animate-pulse"></div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i}>
+                  <div className="h-4 bg-muted rounded w-16 mb-2 animate-pulse"></div>
+                  <div className="h-10 bg-muted rounded animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Skeleton Search */}
+        <div className="flex gap-2 mb-6">
+          <div className="h-10 bg-muted rounded flex-1 animate-pulse"></div>
+          <div className="h-10 bg-muted rounded w-10 animate-pulse"></div>
+        </div>
+
+        {/* Skeleton Exam Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-5 bg-muted rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-muted rounded w-1/2"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="h-4 bg-muted rounded w-full"></div>
+                  <div className="h-4 bg-muted rounded w-2/3"></div>
+                  <div className="h-4 bg-muted rounded w-1/2"></div>
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <div className="h-8 bg-muted rounded w-16"></div>
+                  <div className="h-8 bg-muted rounded w-16"></div>
+                  <div className="h-8 bg-muted rounded w-16"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     );

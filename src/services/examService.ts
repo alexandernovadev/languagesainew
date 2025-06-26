@@ -100,8 +100,10 @@ export interface ExamListResponse {
   success: boolean;
   message: string;
   data: {
-    exams: Exam[];
-    pagination: Pagination;
+    data: Exam[];
+    page: number;
+    pages: number;
+    total: number;
   };
 }
 
