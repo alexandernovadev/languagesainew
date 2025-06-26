@@ -41,7 +41,27 @@ export interface Exam {
   adaptive: boolean;
   version: number;
   questions: Array<{
-    question: string;
+    _id: string;
+    question: {
+      _id: string;
+      text: string;
+      type: 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
+      isSingleAnswer: boolean;
+      level: string;
+      topic: string;
+      difficulty: number;
+      options?: Array<{
+        _id: string;
+        value: string;
+        label: string;
+        isCorrect: boolean;
+      }>;
+      correctAnswers: string[];
+      explanation: string;
+      tags: string[];
+      createdAt: string;
+      updatedAt: string;
+    };
     weight: number;
     order: number;
   }>;

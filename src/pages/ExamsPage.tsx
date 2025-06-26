@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Filter, BookOpen, Clock, Users } from 'lucide-react';
+import { Search, Plus, Filter, BookOpen } from 'lucide-react';
 import { examService, Exam } from '@/services/examService';
 import { useNavigate } from 'react-router-dom';
+import ExamCard from '@/components/exam/ExamCard';
+import ExamViewModal from '@/components/exam/ExamViewModal';
 
 interface ExamFilters {
   level: string;
@@ -37,6 +39,8 @@ export default function ExamsPage() {
     totalItems: 0,
     itemsPerPage: 10
   });
+  const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchExams = async () => {
@@ -112,24 +116,21 @@ export default function ExamsPage() {
     fetchExams();
   };
 
-  const getLevelColor = (level: string) => {
-    const colors = {
-      A1: 'bg-green-100 text-green-800',
-      A2: 'bg-blue-100 text-blue-800',
-      B1: 'bg-yellow-100 text-yellow-800',
-      B2: 'bg-orange-100 text-orange-800',
-      C1: 'bg-red-100 text-red-800',
-      C2: 'bg-purple-100 text-purple-800'
-    };
-    return colors[level as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+  const handleViewExam = (exam: Exam) => {
+    setSelectedExam(exam);
+    setIsViewModalOpen(true);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  const handleTakeExam = (exam: Exam) => {
+    // TODO: Implement exam taking functionality
+    console.log('Taking exam:', exam.title);
+    // For now, just show an alert
+    alert(`Función de contestar examen "${exam.title}" será implementada próximamente`);
+  };
+
+  const handleCloseViewModal = () => {
+    setIsViewModalOpen(false);
+    setSelectedExam(null);
   };
 
   if (loading) {
@@ -248,50 +249,12 @@ export default function ExamsPage() {
       {/* Exams Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {exams.map((exam) => (
-          <Card key={exam._id} className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">{exam.title}</CardTitle>
-                <Badge className={getLevelColor(exam.level)}>
-                  {exam.level}
-                </Badge>
-              </div>
-              <p className="text-sm text-muted-foreground">{exam.description}</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <BookOpen className="w-4 h-4" />
-                  <span>{exam.questions.length} preguntas</span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4" />
-                  <span>{exam.timeLimit} min</span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm">
-                  <Users className="w-4 h-4" />
-                  <span>{exam.attemptsAllowed} intentos</span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <Badge variant={exam.source === 'ai' ? 'default' : 'secondary'}>
-                    {exam.source === 'ai' ? 'IA' : 'Manual'}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDate(exam.createdAt)}
-                  </span>
-                </div>
-
-                {exam.topic && (
-                  <Badge variant="outline" className="text-xs">
-                    {exam.topic}
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <ExamCard
+            key={exam._id}
+            exam={exam}
+            onViewExam={handleViewExam}
+            onTakeExam={handleTakeExam}
+          />
         ))}
       </div>
 
@@ -335,6 +298,13 @@ export default function ExamsPage() {
           </Button>
         </div>
       )}
+
+      {/* Exam View Modal */}
+      <ExamViewModal
+        exam={selectedExam}
+        isOpen={isViewModalOpen}
+        onClose={handleCloseViewModal}
+      />
     </div>
   );
 } 

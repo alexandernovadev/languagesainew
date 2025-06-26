@@ -13,6 +13,7 @@ import { ExamSummary } from "@/components/exam/ExamSummary";
 import { ExamQuestionDisplay } from "@/components/exam/ExamQuestionDisplay";
 import { ExamEditModal } from "@/components/exam/ExamEditModal";
 import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
+import { ExamHeader } from "@/components/exam/ExamHeader";
 
 export default function ExamGeneratorPage() {
   const {
@@ -41,6 +42,7 @@ export default function ExamGeneratorPage() {
   } = useExamStore();
 
   const [activeTab, setActiveTab] = useState("config");
+  const [showTitleModal, setShowTitleModal] = useState(false);
 
   // Sync exam data with store when exam is generated
   useEffect(() => {
@@ -98,10 +100,58 @@ export default function ExamGeneratorPage() {
 
   const handleEditTitle = () => {
     startEditing(null, 'title');
+    setShowTitleModal(true);
   };
 
   const handleBackToConfig = () => {
     setActiveTab("config");
+  };
+
+  // Create a mock exam object for the ExamHeader component
+  const createMockExamForHeader = () => {
+    const currentExam = exam || state.generatedExam;
+    const examTitle = exam?.title || `Examen: ${filters.topic}`;
+    return {
+      _id: 'temp',
+      title: examTitle,
+      description: `Examen generado sobre ${filters.topic}`,
+      language: 'es',
+      level: filters.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      topic: filters.topic,
+      source: 'ai' as const,
+      attemptsAllowed: 3,
+      timeLimit: 60,
+      adaptive: false,
+      version: 1,
+      questions: (currentExam?.questions || []).map((q, index) => ({
+        _id: `temp-q-${index}`,
+        question: {
+          _id: `temp-q-${index}`,
+          text: q.text,
+          type: q.type,
+          isSingleAnswer: q.isSingleAnswer,
+          level: filters.level,
+          topic: filters.topic,
+          difficulty: filters.difficulty,
+          options: q.options?.map((opt, optIndex) => ({
+            _id: `temp-opt-${index}-${optIndex}`,
+            value: opt.value,
+            label: opt.label,
+            isCorrect: opt.isCorrect
+          })),
+          correctAnswers: q.correctAnswers,
+          explanation: q.explanation,
+          tags: q.tags,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        weight: 1,
+        order: index
+      })),
+      createdBy: 'user',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
   };
 
   return (
@@ -201,52 +251,19 @@ export default function ExamGeneratorPage() {
           <TabsContent value="questions" className="space-y-6">
             {state.generatedExam ? (
               <div className="space-y-6">
-                {/* Exam header */}
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <CardTitle className="text-xl">
-                            {exam?.title || `Examen: ${filters.topic}`}
-                          </CardTitle>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleEditTitle}
-                            className="text-muted-foreground hover:text-foreground"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <p className="text-muted-foreground mt-1">
-                          {(exam?.questions || state.generatedExam.questions).length} preguntas • 
-                          Nivel {getLevelLabel(filters.level)} • 
-                          Dificultad {getDifficultyLabel(filters.difficulty)}
-                        </p>
-                      </div>
-                      <Button 
-                        onClick={handleSaveExam} 
-                        className="flex-1"
-                        disabled={isSaving}
-                      >
-                        {isSaving ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Guardando...
-                          </>
-                        ) : (
-                          <>
-                            <Save className="h-4 w-4 mr-2" />
-                            Guardar Examen
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                </Card>
-
-                {/* Questions */}
+                {/* Exam header with edit button */}
+                <ExamHeader
+                  exam={createMockExamForHeader()}
+                  showStats={true}
+                  showEditButton={true}
+                  onEditTitle={handleEditTitle}
+                />
+                {/* Modal for editing title */}
+                <ExamTitleEditModal
+                  isOpen={showTitleModal}
+                  onClose={() => setShowTitleModal(false)}
+                />
+                {/* Questions using ExamQuestionDisplay for editing functionality */}
                 <div className="space-y-6">
                   {(exam?.questions || state.generatedExam.questions).map((question, index) => (
                     <ExamQuestionDisplay
@@ -256,7 +273,6 @@ export default function ExamGeneratorPage() {
                     />
                   ))}
                 </div>
-
                 {/* Footer actions */}
                 <Card>
                   <CardContent className="pt-6">
@@ -292,10 +308,6 @@ export default function ExamGeneratorPage() {
       {/* Edit Modals */}
       <ExamEditModal 
         isOpen={isEditing && editingField !== 'title'} 
-        onClose={() => {}} 
-      />
-      <ExamTitleEditModal 
-        isOpen={isEditing && editingField === 'title'} 
         onClose={() => {}} 
       />
     </PageLayout>
