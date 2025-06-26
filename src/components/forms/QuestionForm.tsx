@@ -132,7 +132,7 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
       await onSubmit(processedData);
       reset();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // TODO: Show error toast
     }
   };
 

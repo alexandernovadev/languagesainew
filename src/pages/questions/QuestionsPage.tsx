@@ -101,8 +101,7 @@ export default function QuestionsPage() {
       // Recargar las preguntas después de crear/actualizar
       getQuestions();
     } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("Error al guardar la pregunta");
+      // TODO: Show error toast
     }
   };
 

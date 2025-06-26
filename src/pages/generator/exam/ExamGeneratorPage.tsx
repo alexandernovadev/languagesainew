@@ -52,10 +52,25 @@ export default function ExamGeneratorPage() {
     }
   }, [state.generatedExam, filters, exam, setExam]);
 
+  // Auto-navigate to progress tab when generation completes
+  useEffect(() => {
+    if (state.generatedExam && !state.isGenerating && activeTab === "config") {
+      setActiveTab("progress");
+    }
+  }, [state.generatedExam, state.isGenerating, activeTab]);
+
   const handleGenerate = async () => {
     resetExamStore();
-    await generateExam();
+    
+    // Cambiar inmediatamente a la pestaña progress
     setActiveTab("progress");
+    
+    try {
+      await generateExam();
+    } catch (error) {
+      // Si hay error, volver a la pestaña de configuración
+      setActiveTab("config");
+    }
   };
 
   const handleRegenerate = async () => {
@@ -72,10 +87,8 @@ export default function ExamGeneratorPage() {
     try {
       await saveExam();
       // TODO: Show success toast
-      console.log("Examen guardado exitosamente");
     } catch (error) {
       // TODO: Show error toast
-      console.error("Error al guardar el examen:", error);
     }
   };
 

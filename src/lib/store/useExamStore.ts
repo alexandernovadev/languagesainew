@@ -83,10 +83,8 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     
     try {
       // TODO: Implement API call to save exam
-      console.log('Saving exam:', exam);
       // await examService.saveExam(exam);
     } catch (error) {
-      console.error('Error saving exam:', error);
       throw error;
     }
   },

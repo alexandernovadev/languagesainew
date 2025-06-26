@@ -119,8 +119,7 @@ export default function LectureGeneratorPage() {
       setEstimatedTime(calculateReadingTime(currentText));
       toast.success("¡Lectura generada exitosamente!");
     } catch (error) {
-      console.error("Error generating text:", error);
-      toast.error("Error al generar la lectura");
+      // TODO: Show error toast
     } finally {
       setIsGenerating(false);
     }
@@ -149,8 +148,7 @@ export default function LectureGeneratorPage() {
       toast.success("¡Lectura guardada exitosamente!");
       navigate("/lectures");
     } catch (error) {
-      console.error("Error saving lecture:", error);
-      toast.error("Error al guardar la lectura");
+      // TODO: Show error toast
     } finally {
       setIsSaving(false);
     }
