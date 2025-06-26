@@ -2,16 +2,17 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Users, Eye, Play } from 'lucide-react';
+import { BookOpen, Clock, Users, Eye, Play, Edit } from 'lucide-react';
 import { Exam } from '@/services/examService';
 
 interface ExamCardProps {
   exam: Exam;
   onViewExam: (exam: Exam) => void;
   onTakeExam: (exam: Exam) => void;
+  onEditExam: (exam: Exam) => void;
 }
 
-export default function ExamCard({ exam, onViewExam, onTakeExam }: ExamCardProps) {
+export default function ExamCard({ exam, onViewExam, onTakeExam, onEditExam }: ExamCardProps) {
   const getLevelColor = (level: string) => {
     const colors = {
       A1: 'bg-green-100 text-green-800',
@@ -84,7 +85,16 @@ export default function ExamCard({ exam, onViewExam, onTakeExam }: ExamCardProps
               className="flex-1"
             >
               <Eye className="w-4 h-4 mr-2" />
-              Ver Examen
+              Ver
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onEditExam(exam)}
+              className="flex-1"
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Editar
             </Button>
             <Button 
               size="sm" 

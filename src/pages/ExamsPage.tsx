@@ -133,6 +133,11 @@ export default function ExamsPage() {
     setSelectedExam(null);
   };
 
+  const handleEditExam = (exam: Exam) => {
+    // Navigate to exam generator with exam data
+    navigate(`/generator/exam?edit=${exam._id}`);
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto p-6">
@@ -254,6 +259,7 @@ export default function ExamsPage() {
             exam={exam}
             onViewExam={handleViewExam}
             onTakeExam={handleTakeExam}
+            onEditExam={handleEditExam}
           />
         ))}
       </div>
@@ -304,6 +310,7 @@ export default function ExamsPage() {
         exam={selectedExam}
         isOpen={isViewModalOpen}
         onClose={handleCloseViewModal}
+        onEditExam={handleEditExam}
       />
     </div>
   );

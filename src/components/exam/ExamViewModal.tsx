@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { X } from 'lucide-react';
+import { X, Edit } from 'lucide-react';
 import { Exam } from '@/services/examService';
 import { ExamHeader } from './ExamHeader';
 import { ExamQuestionView } from './ExamQuestionView';
@@ -11,9 +11,10 @@ interface ExamViewModalProps {
   exam: Exam | null;
   isOpen: boolean;
   onClose: () => void;
+  onEditExam: (exam: Exam) => void;
 }
 
-export default function ExamViewModal({ exam, isOpen, onClose }: ExamViewModalProps) {
+export default function ExamViewModal({ exam, isOpen, onClose, onEditExam }: ExamViewModalProps) {
   if (!exam) return null;
 
   return (
@@ -26,9 +27,19 @@ export default function ExamViewModal({ exam, isOpen, onClose }: ExamViewModalPr
                 Vista del Examen
               </DialogTitle>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onEditExam(exam)}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Editar
+              </Button>
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </DialogHeader>
 

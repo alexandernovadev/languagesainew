@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useExamGenerator } from "@/hooks/useExamGenerator";
 import { useExamStore } from "@/lib/store/useExamStore";
 import { useToast } from "@/hooks/use-toast";
+import { examService } from "@/services/examService";
 import { ExamConfigForm } from "@/components/exam/ExamConfigForm";
 import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress";
 import { ExamSummary } from "@/components/exam/ExamSummary";
@@ -20,6 +21,8 @@ import { ExamHeader } from "@/components/exam/ExamHeader";
 export default function ExamGeneratorPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const editExamId = searchParams.get('edit');
 
   const {
     state,
@@ -28,6 +31,7 @@ export default function ExamGeneratorPage() {
     generateExam,
     resetExam,
     resetFilters,
+    loadExistingExam,
     getQuestionTypeLabel,
     getLevelLabel,
     getDifficultyLabel
@@ -68,6 +72,64 @@ export default function ExamGeneratorPage() {
       setActiveTab("progress");
     }
   }, [state.generatedExam, state.isGenerating, activeTab]);
+
+  // Load existing exam for editing
+  useEffect(() => {
+    const loadExamForEditing = async () => {
+      if (editExamId) {
+        try {
+          const response = await examService.getExam(editExamId);
+          if (response.success && response.data) {
+            const examData = response.data;
+            
+            // Convert exam data to store format
+            const examForStore = {
+              title: examData.title,
+              topic: examData.topic,
+              level: examData.level,
+              difficulty: '3', // Default difficulty
+              questions: examData.questions.map(q => ({
+                text: q.question.text,
+                type: q.question.type,
+                isSingleAnswer: q.question.isSingleAnswer,
+                options: q.question.options,
+                correctAnswers: q.question.correctAnswers,
+                explanation: q.question.explanation,
+                tags: q.question.tags
+              }))
+            };
+            
+            setExam(examForStore);
+            
+            // Load the exam into the generator state
+            const mockGeneratedExam = {
+              questions: examForStore.questions
+            };
+            
+            loadExistingExam(mockGeneratedExam, examData.topic, examData.level);
+            
+            // Navigate to questions tab
+            setActiveTab("questions");
+            
+            toast({
+              title: "Examen cargado",
+              description: "El examen ha sido cargado para edición",
+              variant: "default",
+            });
+          }
+        } catch (error) {
+          console.error('Error loading exam for editing:', error);
+          toast({
+            title: "Error",
+            description: "No se pudo cargar el examen para edición",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    loadExamForEditing();
+  }, [editExamId, loadExistingExam, setExam, setActiveTab, toast]);
 
   const handleGenerate = async () => {
     resetExamStore();

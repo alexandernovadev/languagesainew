@@ -102,6 +102,21 @@ export function useExamGenerator() {
     });
   }, []);
 
+  const loadExistingExam = useCallback((examData: ExamGenerationResponse, topic: string, level: string) => {
+    setState({
+      isGenerating: false,
+      generatedExam: examData,
+      error: null,
+      progress: 100
+    });
+    
+    setFilters(prev => ({
+      ...prev,
+      topic,
+      level
+    }));
+  }, []);
+
   const getQuestionTypeLabel = useCallback((type: string) => {
     const questionType = questionTypes.find(qt => qt.value === type);
     return questionType?.label || type;
@@ -124,6 +139,7 @@ export function useExamGenerator() {
     generateExam,
     resetExam,
     resetFilters,
+    loadExistingExam,
     getQuestionTypeLabel,
     getLevelLabel,
     getDifficultyLabel,
