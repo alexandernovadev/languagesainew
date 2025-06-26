@@ -18,6 +18,25 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
       </div>
     );
 
+    // Helper para clases de hover según tipo
+    const getHoverClass = () => {
+      switch (question.type) {
+        case 'multiple_choice':
+          return 'hover:ring-2 hover:ring-blue-400/50 hover:bg-blue-500/10';
+        case 'fill_blank':
+          return 'hover:ring-2 hover:ring-green-400/50 hover:bg-green-500/10';
+        case 'translate':
+          return 'hover:ring-2 hover:ring-purple-400/50 hover:bg-purple-500/10';
+        case 'writing':
+          return 'hover:ring-2 hover:ring-orange-400/50 hover:bg-orange-500/10';
+        case 'true_false':
+          return 'hover:ring-2 hover:ring-fuchsia-400/50 hover:bg-fuchsia-500/10';
+        default:
+          return 'hover:ring-2 hover:ring-gray-400/50 hover:bg-muted/40';
+      }
+    };
+    const hoverClass = getHoverClass();
+
     // Si hay options, mostrar igual que multiple_choice
     if (question.options && question.options.length > 0) {
       return (
@@ -26,11 +45,11 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
             {question.options.map((option, index) => (
               <div
                 key={option.value}
-                className={`flex items-center p-3 rounded-lg border ${
+                className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
                   option.isCorrect
                     ? 'bg-green-500/10 border-green-500/20'
                     : 'bg-muted/50 border-border'
-                }`}
+                } ${hoverClass}`}
               >
                 {renderCircle(option.value, option.isCorrect ? 'bg-green-500' : 'bg-muted')}
                 <span className={option.isCorrect ? 'font-medium' : ''}>
@@ -59,7 +78,7 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
               {question.correctAnswers.map((answer, index) => (
                 <div
                   key={index}
-                  className="flex items-center p-3 rounded-lg border bg-green-500/10 border-green-500/20"
+                  className={`flex items-center p-3 rounded-lg border bg-green-500/10 border-green-500/20 transition-all duration-150 ${hoverClass}`}
                 >
                   {renderCircle(String.fromCharCode(65 + index), 'bg-green-500')}
                   <span className="font-medium">
@@ -80,11 +99,11 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
               {['true', 'false'].map((val, idx) => (
                 <div
                   key={val}
-                  className={`flex items-center p-3 rounded-lg border ${
+                  className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
                     question.correctAnswers.includes(val)
                       ? 'bg-green-500/10 border-green-500/20'
                       : 'bg-muted/50 border-border'
-                  }`}
+                  } ${hoverClass}`}
                 >
                   {renderCircle(val === 'true' ? 'V' : 'F', question.correctAnswers.includes(val) ? 'bg-green-500' : 'bg-muted')}
                   <span className={question.correctAnswers.includes(val) ? 'font-medium' : ''}>
@@ -108,17 +127,17 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
   const getQuestionTypeColor = (type: string) => {
     switch (type) {
       case 'multiple_choice':
-        return 'bg-blue-500/20 text-blue-600 dark:text-blue-400';
+        return 'bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:ring-2 hover:ring-blue-400/50 hover:bg-blue-500/30';
       case 'fill_blank':
-        return 'bg-green-500/20 text-green-600 dark:text-green-400';
+        return 'bg-green-500/20 text-green-600 dark:text-green-400 hover:ring-2 hover:ring-green-400/50 hover:bg-green-500/30';
       case 'true_false':
-        return 'bg-purple-500/20 text-purple-600 dark:text-purple-400';
+        return 'bg-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400 hover:ring-2 hover:ring-fuchsia-400/50 hover:bg-fuchsia-500/30';
       case 'translate':
-        return 'bg-orange-500/20 text-orange-600 dark:text-orange-400';
+        return 'bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:ring-2 hover:ring-purple-400/50 hover:bg-purple-500/30';
       case 'writing':
-        return 'bg-red-500/20 text-red-600 dark:text-red-400';
+        return 'bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:ring-2 hover:ring-orange-400/50 hover:bg-orange-500/30';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-muted text-muted-foreground hover:ring-2 hover:ring-gray-400/50 hover:bg-muted/40';
     }
   };
 
