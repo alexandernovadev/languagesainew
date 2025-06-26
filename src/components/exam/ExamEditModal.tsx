@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { X, Save, Trash2 } from 'lucide-react';
-import { useExamStore } from '@/lib/store/useExamStore';
-import { ExamQuestion } from '@/services/examService';
-import { Badge } from '@/components/ui/badge';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { X, Save, Trash2 } from "lucide-react";
+import { useExamStore } from "@/lib/store/useExamStore";
+import { ExamQuestion } from "@/services/examService";
+import { Badge } from "@/components/ui/badge";
 
 interface ExamEditModalProps {
   isOpen: boolean;
@@ -27,14 +32,16 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
     updateQuestion,
     updateExplanation,
     updateTags,
-    stopEditing
+    stopEditing,
   } = useExamStore();
 
-  const [editedQuestion, setEditedQuestion] = useState<ExamQuestion | null>(null);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedExplanation, setEditedExplanation] = useState('');
+  const [editedQuestion, setEditedQuestion] = useState<ExamQuestion | null>(
+    null
+  );
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedExplanation, setEditedExplanation] = useState("");
   const [editedTags, setEditedTags] = useState<string[]>([]);
-  const [newTag, setNewTag] = useState('');
+  const [newTag, setNewTag] = useState("");
 
   useEffect(() => {
     if (exam && editingQuestionIndex !== null) {
@@ -42,26 +49,26 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
       setEditedExplanation(exam.questions[editingQuestionIndex].explanation);
       setEditedTags([...exam.questions[editingQuestionIndex].tags]);
     }
-    if (exam && editingField === 'title') {
+    if (exam && editingField === "title") {
       setEditedTitle(exam.title);
     }
   }, [exam, editingQuestionIndex, editingField]);
 
   const handleSave = () => {
-    if (editingField === 'title' && exam) {
+    if (editingField === "title" && exam) {
       updateExamTitle(editedTitle);
     } else if (editedQuestion && editingQuestionIndex !== null) {
-      if (editingField === 'question') {
+      if (editingField === "question") {
         updateQuestion(editingQuestionIndex, editedQuestion);
-      } else if (editingField === 'answers') {
+      } else if (editingField === "answers") {
         updateQuestion(editingQuestionIndex, editedQuestion);
-      } else if (editingField === 'explanation') {
+      } else if (editingField === "explanation") {
         updateExplanation(editingQuestionIndex, editedExplanation);
-      } else if (editingField === 'tags') {
+      } else if (editingField === "tags") {
         updateTags(editingQuestionIndex, editedTags);
       }
     }
-    
+
     stopEditing();
     onClose();
   };
@@ -93,7 +100,9 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
 
   const removeAnswer = (index: number) => {
     if (editedQuestion && editedQuestion.options) {
-      const updatedOptions = editedQuestion.options.filter((_, i) => i !== index);
+      const updatedOptions = editedQuestion.options.filter(
+        (_, i) => i !== index
+      );
       setEditedQuestion({ ...editedQuestion, options: updatedOptions });
     }
   };
@@ -102,12 +111,12 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
     if (editedQuestion && editedQuestion.options) {
       const newOption = {
         value: `option_${editedQuestion.options.length + 1}`,
-        label: '',
-        isCorrect: false
+        label: "",
+        isCorrect: false,
       };
       setEditedQuestion({
         ...editedQuestion,
-        options: [...editedQuestion.options, newOption]
+        options: [...editedQuestion.options, newOption],
       });
     }
   };
@@ -115,7 +124,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   const addTag = () => {
     if (newTag.trim() && !editedTags.includes(newTag.trim())) {
       setEditedTags([...editedTags, newTag.trim()]);
-      setNewTag('');
+      setNewTag("");
     }
   };
 
@@ -124,45 +133,50 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   };
 
   const getModalTitle = () => {
-    if (editingField === 'title') return 'Editar Título del Examen';
+    if (editingField === "title") return "Editar Título del Examen";
     if (editingQuestionIndex !== null) {
       switch (editingField) {
-        case 'question': return `Editar Pregunta ${editingQuestionIndex + 1}`;
-        case 'answers': return `Editar Respuestas - Pregunta ${editingQuestionIndex + 1}`;
-        case 'explanation': return `Editar Explicación - Pregunta ${editingQuestionIndex + 1}`;
-        case 'tags': return `Editar Etiquetas - Pregunta ${editingQuestionIndex + 1}`;
-        default: return `Editar Pregunta ${editingQuestionIndex + 1}`;
+        case "question":
+          return `Editar Pregunta ${editingQuestionIndex + 1}`;
+        case "answers":
+          return `Editar Respuestas - Pregunta ${editingQuestionIndex + 1}`;
+        case "explanation":
+          return `Editar Explicación - Pregunta ${editingQuestionIndex + 1}`;
+        case "tags":
+          return `Editar Etiquetas - Pregunta ${editingQuestionIndex + 1}`;
+        default:
+          return `Editar Pregunta ${editingQuestionIndex + 1}`;
       }
     }
-    return 'Editar';
+    return "Editar";
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) {
-        stopEditing();
-      }
-    }}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          stopEditing();
+        }
+      }}
+    >
       <DialogContent className="max-w-2xl w-full h-[95vh] max-h-[95vh] flex flex-col">
         {/* Header fijo */}
-        <div className="sticky top-0 z-10 bg-background px-6 pt-6 pb-4 border-b flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-background px-6 pt-6 pb-4 border-b flex items-center justify-between w-[calc(100%-24px)]">
           <DialogTitle className="text-lg font-semibold flex items-center">
             {getModalTitle()}
           </DialogTitle>
-          <Button variant="ghost" size="sm" onClick={handleCancel}>
-            <X className="h-5 w-5" />
-          </Button>
         </div>
 
         {/* Contenido scrollable y flexible */}
         <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6">
           {/* Edit All (when editingField is 'question') */}
-          {editingField === 'question' && editedQuestion && (
+          {editingField === "question" && editedQuestion && (
             <div className="space-y-6">
               {/* Título */}
               <div>
                 <Label htmlFor="question-title">Título de la Pregunta</Label>
-                <Input
+                <Textarea
                   id="question-title"
                   value={editedQuestion.text}
                   onChange={(e) => handleQuestionTextChange(e.target.value)}
@@ -181,15 +195,23 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                         onValueChange={handleCorrectAnswerChange}
                       >
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value={option.value} id={`option-${index}`} />
-                          <Label htmlFor={`option-${index}`} className="sr-only">
+                          <RadioGroupItem
+                            value={option.value}
+                            id={`option-${index}`}
+                          />
+                          <Label
+                            htmlFor={`option-${index}`}
+                            className="sr-only"
+                          >
                             Opción {index + 1}
                           </Label>
                         </div>
                       </RadioGroup>
                       <Input
                         value={option.label}
-                        onChange={(e) => handleAnswerChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleAnswerChange(index, e.target.value)
+                        }
                         placeholder={`Opción ${index + 1}`}
                         className="flex-1"
                       />
@@ -253,7 +275,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                       onChange={(e) => setNewTag(e.target.value)}
                       placeholder="Nueva etiqueta"
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           e.preventDefault();
                           addTag();
                         }
@@ -274,7 +296,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
           )}
 
           {/* Edit Answers */}
-          {editingField === 'answers' && editedQuestion && (
+          {editingField === "answers" && editedQuestion && (
             <div className="space-y-4">
               <div>
                 <Label>Respuestas</Label>
@@ -286,15 +308,23 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                         onValueChange={handleCorrectAnswerChange}
                       >
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value={option.value} id={`option-${index}`} />
-                          <Label htmlFor={`option-${index}`} className="sr-only">
+                          <RadioGroupItem
+                            value={option.value}
+                            id={`option-${index}`}
+                          />
+                          <Label
+                            htmlFor={`option-${index}`}
+                            className="sr-only"
+                          >
                             Opción {index + 1}
                           </Label>
                         </div>
                       </RadioGroup>
                       <Input
                         value={option.label}
-                        onChange={(e) => handleAnswerChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleAnswerChange(index, e.target.value)
+                        }
                         placeholder={`Opción ${index + 1}`}
                         className="flex-1"
                       />
@@ -322,7 +352,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
           )}
 
           {/* Edit Explanation */}
-          {editingField === 'explanation' && (
+          {editingField === "explanation" && (
             <div className="space-y-4">
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
@@ -338,7 +368,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
           )}
 
           {/* Edit Tags */}
-          {editingField === 'tags' && (
+          {editingField === "tags" && (
             <div className="space-y-4">
               <div>
                 <Label>Etiquetas</Label>
@@ -359,7 +389,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                       </Badge>
                     ))}
                   </div>
-                  
+
                   {/* Add new tag */}
                   <div className="flex gap-2">
                     <Input
@@ -367,7 +397,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                       onChange={(e) => setNewTag(e.target.value)}
                       placeholder="Nueva etiqueta"
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           e.preventDefault();
                           addTag();
                         }
@@ -390,9 +420,6 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
 
         {/* Footer fijo */}
         <div className="z-10 bg-background px-6 border-t flex justify-end gap-3">
-          <Button variant="outline" onClick={handleCancel}>
-            Cancelar
-          </Button>
           <Button onClick={handleSave}>
             <Save className="h-4 w-4 mr-2" />
             Guardar
@@ -401,4 +428,4 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}
