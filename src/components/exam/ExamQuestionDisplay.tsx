@@ -11,31 +11,86 @@ interface ExamQuestionDisplayProps {
 
 export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDisplayProps) {
   const renderQuestionContent = () => {
+    // Helper para el círculo
+    const renderCircle = (content: string, colorClass: string) => (
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}>
+        {content}
+      </div>
+    );
+
+    // Si hay options, mostrar igual que multiple_choice
+    if (question.options && question.options.length > 0) {
+      return (
+        <div className="space-y-3">
+          <div className="grid gap-2">
+            {question.options.map((option, index) => (
+              <div
+                key={option.value}
+                className={`flex items-center p-3 rounded-lg border ${
+                  option.isCorrect
+                    ? 'bg-green-500/10 border-green-500/20'
+                    : 'bg-muted/50 border-border'
+                }`}
+              >
+                {renderCircle(option.value, option.isCorrect ? 'bg-green-500' : 'bg-muted')}
+                <span className={option.isCorrect ? 'font-medium' : ''}>
+                  {option.label}
+                </span>
+                {option.isCorrect && (
+                  <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
+                    Correcta
+                  </Badge>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Si no hay options, fallback por tipo
     switch (question.type) {
-      case 'multiple_choice':
+      case 'fill_blank':
+      case 'translate':
+      case 'writing':
         return (
           <div className="space-y-3">
             <div className="grid gap-2">
-              {question.options?.map((option, index) => (
+              {question.correctAnswers.map((answer, index) => (
                 <div
-                  key={option.value}
+                  key={index}
+                  className="flex items-center p-3 rounded-lg border bg-green-500/10 border-green-500/20"
+                >
+                  {renderCircle(String.fromCharCode(65 + index), 'bg-green-500')}
+                  <span className="font-medium">
+                    {answer}
+                  </span>
+                  <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
+                    Correcta
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 'true_false':
+        return (
+          <div className="space-y-3">
+            <div className="grid gap-2">
+              {['true', 'false'].map((val, idx) => (
+                <div
+                  key={val}
                   className={`flex items-center p-3 rounded-lg border ${
-                    option.isCorrect
+                    question.correctAnswers.includes(val)
                       ? 'bg-green-500/10 border-green-500/20'
                       : 'bg-muted/50 border-border'
                   }`}
                 >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
-                    option.isCorrect
-                      ? 'bg-green-500 text-white'
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {option.value}
-                  </div>
-                  <span className={option.isCorrect ? 'font-medium' : ''}>
-                    {option.label}
+                  {renderCircle(val === 'true' ? 'V' : 'F', question.correctAnswers.includes(val) ? 'bg-green-500' : 'bg-muted')}
+                  <span className={question.correctAnswers.includes(val) ? 'font-medium' : ''}>
+                    {val === 'true' ? 'Verdadero' : 'Falso'}
                   </span>
-                  {option.isCorrect && (
+                  {question.correctAnswers.includes(val) && (
                     <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
                       Correcta
                     </Badge>
@@ -45,88 +100,6 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
             </div>
           </div>
         );
-
-      case 'fill_blank':
-        return (
-          <div className="space-y-3">
-            <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <p className="text-blue-600 dark:text-blue-400 font-medium">
-                Respuesta correcta: <span className="bg-blue-500/20 px-2 py-1 rounded">
-                  {question.correctAnswers.join(', ')}
-                </span>
-              </p>
-            </div>
-          </div>
-        );
-
-      case 'true_false':
-        return (
-          <div className="space-y-3">
-            <div className="flex gap-4">
-              <div className={`flex-1 p-3 rounded-lg border ${
-                question.correctAnswers.includes('true')
-                  ? 'bg-green-500/10 border-green-500/20'
-                  : 'bg-muted/50 border-border'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Verdadero</span>
-                  {question.correctAnswers.includes('true') && (
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-600 dark:text-green-400">
-                      Correcto
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              <div className={`flex-1 p-3 rounded-lg border ${
-                question.correctAnswers.includes('false')
-                  ? 'bg-green-500/10 border-green-500/20'
-                  : 'bg-muted/50 border-border'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Falso</span>
-                  {question.correctAnswers.includes('false') && (
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-600 dark:text-green-400">
-                      Correcto
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'translate':
-        return (
-          <div className="space-y-3">
-            <div className="p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
-              <p className="text-purple-600 dark:text-purple-400 font-medium">
-                Traducción correcta: <span className="bg-purple-500/20 px-2 py-1 rounded">
-                  {question.correctAnswers.join(', ')}
-                </span>
-              </p>
-            </div>
-          </div>
-        );
-
-      case 'writing':
-        return (
-          <div className="space-y-3">
-            <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-              <p className="text-orange-600 dark:text-orange-400 font-medium">
-                Puntos clave a considerar en la respuesta
-              </p>
-              <ul className="mt-2 space-y-1 text-orange-600 dark:text-orange-400">
-                {question.correctAnswers.map((point, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-2">•</span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        );
-
       default:
         return <div>Tipo de pregunta no soportado</div>;
     }
