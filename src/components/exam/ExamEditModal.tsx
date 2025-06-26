@@ -15,6 +15,7 @@ import { ExamQuestion } from "@/services/examService";
 import { Badge } from "@/components/ui/badge";
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { quillModules } from "../quillModules";
 
 interface ExamEditModalProps {
   isOpen: boolean;
@@ -40,17 +41,6 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   const [editedExplanation, setEditedExplanation] = useState("");
   const [editedTags, setEditedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['link', 'image'],
-      ['clean']
-    ]
-  };
 
   useEffect(() => {
     if (exam && editingQuestionIndex !== null) {
