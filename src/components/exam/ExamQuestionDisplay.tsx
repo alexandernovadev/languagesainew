@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ExamQuestion } from '@/services/examService';
+import { ExamOptionCard } from './ExamOptionCard';
 
 interface ExamQuestionDisplayProps {
   question: ExamQuestion;
@@ -18,49 +19,26 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
       </div>
     );
 
-    // Helper para clases de hover según tipo
-    const getHoverClass = () => {
-      switch (question.type) {
-        case 'multiple_choice':
-          return 'hover:ring-2 hover:ring-blue-400/50 hover:bg-blue-500/10';
-        case 'fill_blank':
-          return 'hover:ring-2 hover:ring-green-400/50 hover:bg-green-500/10';
-        case 'translate':
-          return 'hover:ring-2 hover:ring-purple-400/50 hover:bg-purple-500/10';
-        case 'writing':
-          return 'hover:ring-2 hover:ring-orange-400/50 hover:bg-orange-500/10';
-        case 'true_false':
-          return 'hover:ring-2 hover:ring-fuchsia-400/50 hover:bg-fuchsia-500/10';
-        default:
-          return 'hover:ring-2 hover:ring-gray-400/50 hover:bg-muted/40';
-      }
-    };
-    const hoverClass = getHoverClass();
+    // Helper para clases de hover (siempre verde)
+    const hoverClass = 'hover:ring-2 hover:ring-green-400/50';
+    // Helper para color del círculo (siempre verde)
+    const circleColor = 'bg-green-500';
 
-    // Si hay options, mostrar igual que multiple_choice
+    // Si hay options, mostrar con ExamOptionCard
     if (question.options && question.options.length > 0) {
       return (
         <div className="space-y-3">
           <div className="grid gap-2">
             {question.options.map((option, index) => (
-              <div
+              <ExamOptionCard
                 key={option.value}
-                className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
-                  option.isCorrect
-                    ? 'bg-green-500/10 border-green-500/20'
-                    : 'bg-muted/50 border-border'
-                } ${hoverClass}`}
-              >
-                {renderCircle(option.value, option.isCorrect ? 'bg-green-500' : 'bg-muted')}
-                <span className={option.isCorrect ? 'font-medium' : ''}>
-                  {option.label}
-                </span>
-                {option.isCorrect && (
-                  <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
-                    Correcta
-                  </Badge>
-                )}
-              </div>
+                value={option.value}
+                label={option.label}
+                isCorrect={option.isCorrect}
+                hoverClass={hoverClass}
+                circleColor={circleColor}
+                badgeText="Correcta"
+              />
             ))}
           </div>
         </div>

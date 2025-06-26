@@ -1,0 +1,38 @@
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
+
+interface ExamOptionCardProps {
+  value: string;
+  label: string;
+  isCorrect: boolean;
+  hoverClass: string;
+  circleColor: string;
+  badgeText?: string;
+}
+
+export const ExamOptionCard: React.FC<ExamOptionCardProps> = ({
+  value,
+  label,
+  isCorrect,
+  hoverClass,
+  circleColor,
+  badgeText = 'Correcta',
+}) => (
+  <div
+    className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
+      isCorrect ? 'bg-green-500/10 border-green-500/20' : 'bg-muted/50 border-border'
+    } ${hoverClass}`}
+  >
+    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
+      isCorrect ? 'bg-green-500' : circleColor
+    } text-white`}>
+      {value}
+    </div>
+    <span className={isCorrect ? 'font-medium' : ''}>{label}</span>
+    {isCorrect && (
+      <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
+        {badgeText}
+      </Badge>
+    )}
+  </div>
+); 
