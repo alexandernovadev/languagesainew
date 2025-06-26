@@ -9,6 +9,8 @@ import VerbsGamePage from "./pages/games/verbs/VerbsGamePage";
 import LectureGeneratorPage from "./pages/generator/lecture/LectureGeneratorPage";
 import ExamGeneratorPage from "./pages/generator/exam/ExamGeneratorPage";
 import ExamsPage from "./pages/ExamsPage";
+import ExamTakingPage from "./pages/exams/ExamTakingPage";
+import ExamResultsPage from "./pages/exams/ExamResultsPage";
 import SettingsPage from "./pages/settings/SettingsPage";
 import GeneralSettingsPage from "./pages/settings/GeneralSettingsPage";
 import ImportSettingsPage from "./pages/settings/ImportSettingsPage";
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/lectures" element={<LecturesPage />} />
           <Route path="/lectures/:id" element={<LectureDetailPage />} />
           <Route path="/exams" element={<ExamsPage />} />
+          <Route path="/exams/:examId/take" element={<ExamTakingPage />} />
+          <Route path="/exams/:examId/results/:attemptId" element={<ExamResultsPage />} />
           <Route path="/games/anki" element={<AnkiGamePage />} />
           <Route path="/games/verbs" element={<VerbsGamePage />} />
           <Route path="/generator/lecture" element={<LectureGeneratorPage />} />

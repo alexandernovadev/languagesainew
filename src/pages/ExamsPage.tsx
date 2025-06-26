@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Filter, BookOpen } from 'lucide-react';
 import { examService, Exam } from '@/services/examService';
 import { useNavigate } from 'react-router-dom';
@@ -122,10 +121,8 @@ export default function ExamsPage() {
   };
 
   const handleTakeExam = (exam: Exam) => {
-    // TODO: Implement exam taking functionality
-    console.log('Taking exam:', exam.title);
-    // For now, just show an alert
-    alert(`Función de contestar examen "${exam.title}" será implementada próximamente`);
+    // Navigate to exam taking page
+    navigate(`/exams/${exam._id}/take`);
   };
 
   const handleCloseViewModal = () => {
