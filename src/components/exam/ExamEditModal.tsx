@@ -54,7 +54,22 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
     }
   }, [exam, editingQuestionIndex, editingField]);
 
+  // Helper para obtener la siguiente letra disponible
+  const getNextOptionLetter = (options: { value: string }[]) => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return letters[options.length] || `option_${options.length + 1}`;
+  };
+
   const handleSave = () => {
+    // Validar que no haya opciones con label vacío
+    if (
+      editedQuestion &&
+      editedQuestion.options &&
+      editedQuestion.options.some((opt) => !opt.label.trim())
+    ) {
+      alert("Todas las respuestas deben tener texto.");
+      return;
+    }
     if (editingField === "title" && exam) {
       updateExamTitle(editedTitle);
     } else if (editedQuestion && editingQuestionIndex !== null) {
@@ -110,7 +125,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   const addAnswer = () => {
     if (editedQuestion && editedQuestion.options) {
       const newOption = {
-        value: `option_${editedQuestion.options.length + 1}`,
+        value: getNextOptionLetter(editedQuestion.options),
         label: "",
         isCorrect: false,
       };
