@@ -27,6 +27,7 @@ export default function SystemInfoPage() {
 
         if (data.success) {
           setBackendInfo(data.data);
+          toast.success("Información del sistema cargada exitosamente");
         } else {
           setError("Error al obtener información del backend");
           toast.error("Error al obtener información del backend");

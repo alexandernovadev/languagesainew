@@ -71,7 +71,17 @@ export default function QuestionsPage() {
   }, [localSearch, setSearchQuery]);
 
   useEffect(() => {
-    getQuestions();
+    const loadQuestions = async () => {
+      try {
+        await getQuestions();
+        toast.success("Preguntas cargadas exitosamente");
+      } catch (error: any) {
+        toast.error("Error al cargar las preguntas", {
+          description: error.message || "No se pudieron cargar las preguntas",
+        });
+      }
+    };
+    loadQuestions();
   }, [getQuestions]);
 
   // Mostrar errores como toasts

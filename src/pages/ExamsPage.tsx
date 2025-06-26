@@ -72,6 +72,8 @@ export default function ExamsPage() {
           totalItems: response.data.total || 0,
           itemsPerPage: pagination.itemsPerPage
         });
+        
+        toast.success("Exámenes cargados exitosamente");
       } else {
         console.warn('Unexpected response structure:', response);
         setExams([]);

@@ -29,6 +29,7 @@ export default function AnkiGamePage() {
     const fetchWords = async () => {
       try {
         await getRecentHardOrMediumWords();
+        toast.success("Tarjetas de Anki cargadas exitosamente");
       } catch (error: any) {
         toast.error(error.message || "Error al cargar tarjetas");
       }

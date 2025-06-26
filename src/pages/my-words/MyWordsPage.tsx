@@ -100,11 +100,17 @@ export default function MyWordsPage() {
   }, [localSearch, setSearchQuery]);
 
   useEffect(() => {
-    getWords().catch((error) => {
-      toast.error("Error al cargar palabras", {
-        description: error.message || "No se pudieron cargar las palabras",
-      });
-    });
+    const loadWords = async () => {
+      try {
+        await getWords();
+        toast.success("Palabras cargadas exitosamente");
+      } catch (error: any) {
+        toast.error("Error al cargar palabras", {
+          description: error.message || "No se pudieron cargar las palabras",
+        });
+      }
+    };
+    loadWords();
   }, [getWords]); // Re-fetch when the store changes
 
   // Sync selectedWord with updated data from store

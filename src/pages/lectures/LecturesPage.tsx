@@ -62,6 +62,7 @@ export default function LecturesPage() {
     const loadLectures = async () => {
       try {
         await getLectures(1, 10);
+        toast.success("Lecturas cargadas exitosamente");
       } catch (error: any) {
         toast.error(error.message || "Error al cargar las lecturas");
       }
