@@ -50,11 +50,6 @@ export function ExamFormField(props: ExamFormFieldProps) {
               step={props.step}
               className="w-24"
             />
-            {props.description && (
-              <span className="text-sm text-muted-foreground">
-                {props.description}
-              </span>
-            )}
           </div>
         );
 
