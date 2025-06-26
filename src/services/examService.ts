@@ -56,6 +56,57 @@ export const examService = {
     }
   },
 
+  async saveExamWithQuestions(examData: {
+    title: string;
+    topic: string;
+    level: string;
+    difficulty: string;
+    questions: ExamQuestion[];
+  }): Promise<any> {
+    try {
+      // Transformar las preguntas al formato esperado por la API
+      const questions = examData.questions.map(question => ({
+        text: question.text,
+        type: question.type,
+        isSingleAnswer: question.isSingleAnswer,
+        level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+        difficulty: parseInt(examData.difficulty),
+        topic: examData.topic,
+        options: question.options,
+        correctAnswers: question.correctAnswers,
+        explanation: question.explanation,
+        tags: question.tags
+      }));
+
+      const response = await api.post('/api/exams/with-questions', {
+        title: examData.title,
+        language: 'es', // Por defecto español
+        level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+        topic: examData.topic,
+        description: `Examen sobre ${examData.topic}`,
+        source: 'ai',
+        attemptsAllowed: 3,
+        timeLimit: 60, // 60 minutos por defecto
+        adaptive: false,
+        questions: questions
+      }, {
+        headers: getAuthHeaders()
+      });
+
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      } else if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("Error al guardar el examen");
+      }
+    }
+  },
+
   async generateExamStream(
     params: ExamGenerationParams,
     onProgress?: (data: any) => void

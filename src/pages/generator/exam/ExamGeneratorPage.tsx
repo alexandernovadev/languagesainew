@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, FileText, Sparkles, Eye, Save, Edit } from "lucide-react";
+import { ArrowLeft, FileText, Sparkles, Eye, Save, Edit, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExamGenerator } from "@/hooks/useExamGenerator";
@@ -31,10 +31,13 @@ export default function ExamGeneratorPage() {
     exam,
     isEditing,
     editingField,
+    isSaving,
+    saveError,
     setExam,
     saveExam,
     resetExam: resetExamStore,
-    startEditing
+    startEditing,
+    clearSaveError
   } = useExamStore();
 
   const [activeTab, setActiveTab] = useState("config");
@@ -86,9 +89,10 @@ export default function ExamGeneratorPage() {
   const handleSaveExam = async () => {
     try {
       await saveExam();
-      // TODO: Show success toast
+      // Mostrar notificación de éxito
+      alert("¡Examen guardado exitosamente!");
     } catch (error) {
-      // TODO: Show error toast
+      // El error ya se maneja en el store
     }
   };
 
@@ -118,6 +122,23 @@ export default function ExamGeneratorPage() {
       />
 
       <div className="space-y-6">
+        {/* Error notification */}
+        {saveError && (
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-destructive">{saveError}</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearSaveError}
+                className="text-destructive hover:text-destructive/80"
+              >
+                ×
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Progress indicator */}
         {state.isGenerating && (
           <ExamGenerationProgress 
@@ -161,6 +182,7 @@ export default function ExamGeneratorPage() {
                 onRegenerate={handleRegenerate}
                 onDownload={handleSaveExam}
                 onView={handleViewQuestions}
+                isSaving={isSaving}
               />
             ) : (
               <Card>
@@ -203,9 +225,22 @@ export default function ExamGeneratorPage() {
                           Dificultad {getDifficultyLabel(filters.difficulty)}
                         </p>
                       </div>
-                      <Button onClick={handleSaveExam} variant="outline">
-                        <Save className="h-4 w-4 mr-2" />
-                        Guardar Examen
+                      <Button 
+                        onClick={handleSaveExam} 
+                        className="flex-1"
+                        disabled={isSaving}
+                      >
+                        {isSaving ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Guardando...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4 mr-2" />
+                            Guardar Examen
+                          </>
+                        )}
                       </Button>
                     </div>
                   </CardHeader>

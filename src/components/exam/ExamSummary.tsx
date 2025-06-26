@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Save, Eye, RefreshCw, FileText } from 'lucide-react';
+import { Save, Eye, RefreshCw, FileText, Loader2 } from 'lucide-react';
 import { ExamGenerationResponse } from '@/services/examService';
 import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
 import { ExamStats } from './ExamStats';
@@ -20,6 +20,7 @@ interface ExamSummaryProps {
   onRegenerate: () => void;
   onDownload: () => void;
   onView: () => void;
+  isSaving?: boolean;
 }
 
 export function ExamSummary({ 
@@ -27,7 +28,8 @@ export function ExamSummary({
   filters, 
   onRegenerate, 
   onDownload, 
-  onView 
+  onView,
+  isSaving = false
 }: ExamSummaryProps) {
   const totalQuestions = exam.questions.length;
 
@@ -78,9 +80,23 @@ export function ExamSummary({
               Ver Preguntas
             </Button>
             
-            <Button onClick={onDownload} className="flex-1" variant="outline">
-              <Save className="h-4 w-4 mr-2" />
-              Guardar Examen
+            <Button 
+              onClick={onDownload} 
+              className="flex-1" 
+              variant="outline"
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar Examen
+                </>
+              )}
             </Button>
             
             <Button onClick={onRegenerate} className="flex-1" variant="outline">

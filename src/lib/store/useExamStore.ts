@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ExamQuestion, ExamGenerationResponse } from '@/services/examService';
+import { ExamQuestion, ExamGenerationResponse, examService } from '@/services/examService';
 
 interface ExamStore {
   // Exam data
@@ -16,6 +16,10 @@ interface ExamStore {
   editingQuestionIndex: number | null;
   editingField: 'title' | 'question' | 'answers' | 'explanation' | 'tags' | null;
   
+  // Saving state
+  isSaving: boolean;
+  saveError: string | null;
+  
   // Actions
   setExam: (exam: ExamStore['exam']) => void;
   updateExamTitle: (title: string) => void;
@@ -26,6 +30,7 @@ interface ExamStore {
   stopEditing: () => void;
   saveExam: () => Promise<void>;
   resetExam: () => void;
+  clearSaveError: () => void;
 }
 
 export const useExamStore = create<ExamStore>((set, get) => ({
@@ -33,6 +38,8 @@ export const useExamStore = create<ExamStore>((set, get) => ({
   isEditing: false,
   editingQuestionIndex: null,
   editingField: null,
+  isSaving: false,
+  saveError: null,
 
   setExam: (exam) => set({ exam }),
   
@@ -81,10 +88,18 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     const { exam } = get();
     if (!exam) return;
     
+    set({ isSaving: true, saveError: null });
+    
     try {
-      // TODO: Implement API call to save exam
-      // await examService.saveExam(exam);
+      console.log('Guardando examen:', exam);
+      const result = await examService.saveExamWithQuestions(exam);
+      console.log('Examen guardado exitosamente:', result);
+      set({ isSaving: false, saveError: null });
+      return result;
     } catch (error) {
+      console.error('Error al guardar el examen:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error al guardar el examen';
+      set({ isSaving: false, saveError: errorMessage });
       throw error;
     }
   },
@@ -93,6 +108,10 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     exam: null,
     isEditing: false,
     editingQuestionIndex: null,
-    editingField: null
-  })
+    editingField: null,
+    isSaving: false,
+    saveError: null
+  }),
+
+  clearSaveError: () => set({ saveError: null })
 })); 
