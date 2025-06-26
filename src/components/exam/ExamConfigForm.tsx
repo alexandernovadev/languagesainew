@@ -1,24 +1,22 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, Sparkles, Settings } from 'lucide-react';
 import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
-import { questionTypes, questionLevels, questionDifficulties } from '@/data/questionTypes';
+import { questionTypes, questionLevels } from '@/data/questionTypes';
 import { SuggestedTopics } from './SuggestedTopics';
+import { ExamFormField } from './components/ExamFormField';
+import { 
+  getDifficultyLabel, 
+  getLevelDescription, 
+  validateExamFilters 
+} from './helpers/examUtils';
+import { 
+  LANGUAGE_OPTIONS, 
+  EXAM_GENERATION_TIPS, 
+  EXAM_VALIDATION_LIMITS 
+} from './constants/examConstants';
 
 interface ExamConfigFormProps {
   filters: ExamGeneratorFilters;
@@ -35,32 +33,12 @@ export function ExamConfigForm({
   isGenerating,
   error
 }: ExamConfigFormProps) {
-  const handleQuestionTypeToggle = (type: string) => {
-    const currentTypes = [...filters.types];
-    const index = currentTypes.indexOf(type);
-    
-    if (index > -1) {
-      currentTypes.splice(index, 1);
-    } else {
-      currentTypes.push(type);
-    }
-    
-    updateFilter('types', currentTypes);
-  };
-
   const handleTopicSelect = (topic: string) => {
     updateFilter('topic', topic);
   };
 
-  const getDifficultyLabel = (value: number) => {
-    const difficulty = questionDifficulties.find(d => d.value === value);
-    return difficulty?.label || `Nivel ${value}`;
-  };
-
-  const getLevelDescription = (level: string) => {
-    const levelData = questionLevels.find(l => l.value === level);
-    return levelData?.description || '';
-  };
+  const validation = validateExamFilters(filters);
+  const isFormValid = validation.isValid && !isGenerating;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -76,163 +54,80 @@ export function ExamConfigForm({
           
           <CardContent className="space-y-6">
             {/* Tema del examen */}
-            <div className="space-y-2">
-              <Label htmlFor="topic" className="text-base font-medium">
-                Tema del Examen *
-              </Label>
-              <Textarea
-                id="topic"
-                placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
-                value={filters.topic}
-                onChange={(e) => updateFilter('topic', e.target.value)}
-                rows={3}
-                className="resize-none"
-              />
-              <p className="text-sm text-muted-foreground">
-                Sé específico para obtener mejores resultados
-              </p>
-            </div>
+            <ExamFormField
+              type="textarea"
+              label="Tema del Examen"
+              required
+              value={filters.topic}
+              onChange={(value) => updateFilter('topic', value)}
+              placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
+              description="Sé específico para obtener mejores resultados"
+              error={validation.errors.find(e => e.includes('tema'))}
+            />
 
             <Separator />
 
             {/* Nivel y dificultad */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="level" className="text-base font-medium">
-                  Nivel CEFR
-                </Label>
-                <Select
-                  value={filters.level}
-                  onValueChange={(value) => updateFilter('level', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nivel" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {questionLevels.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{level.label}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {level.description}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {filters.level && (
-                  <p className="text-sm text-muted-foreground">
-                    {getLevelDescription(filters.level)}
-                  </p>
-                )}
-              </div>
+              <ExamFormField
+                type="select"
+                label="Nivel CEFR"
+                value={filters.level}
+                onChange={(value) => updateFilter('level', value)}
+                options={questionLevels}
+                placeholder="Seleccionar nivel"
+                description={filters.level ? getLevelDescription(filters.level) : undefined}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="difficulty" className="text-base font-medium">
-                  Dificultad
-                </Label>
-                <div className="space-y-3">
-                  <Slider
-                    value={[filters.difficulty]}
-                    onValueChange={(value) => updateFilter('difficulty', value[0])}
-                    max={5}
-                    min={1}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Muy Fácil</span>
-                    <span className="font-medium">
-                      {getDifficultyLabel(filters.difficulty)}
-                    </span>
-                    <span>Muy Difícil</span>
-                  </div>
-                </div>
-              </div>
+              <ExamFormField
+                type="slider"
+                label="Dificultad"
+                value={filters.difficulty}
+                onChange={(value) => updateFilter('difficulty', value)}
+                min={EXAM_VALIDATION_LIMITS.minDifficulty}
+                max={EXAM_VALIDATION_LIMITS.maxDifficulty}
+                step={1}
+                showLabels
+                getLabel={getDifficultyLabel}
+              />
             </div>
 
             <Separator />
 
             {/* Número de preguntas */}
-            <div className="space-y-2">
-              <Label htmlFor="numberOfQuestions" className="text-base font-medium">
-                Número de Preguntas
-              </Label>
-              <div className="flex items-center gap-4">
-                <Input
-                  id="numberOfQuestions"
-                  type="number"
-                  value={filters.numberOfQuestions}
-                  onChange={(e) => updateFilter('numberOfQuestions', parseInt(e.target.value))}
-                  min={1}
-                  max={50}
-                  className="w-24"
-                />
-                <span className="text-sm text-muted-foreground">
-                  (1-50 preguntas)
-                </span>
-              </div>
-            </div>
+            <ExamFormField
+              type="number"
+              label="Número de Preguntas"
+              value={filters.numberOfQuestions}
+              onChange={(value) => updateFilter('numberOfQuestions', value)}
+              min={EXAM_VALIDATION_LIMITS.minQuestions}
+              max={EXAM_VALIDATION_LIMITS.maxQuestions}
+              description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
+            />
 
             <Separator />
 
             {/* Tipos de preguntas */}
-            <div className="space-y-3">
-              <Label className="text-base font-medium">
-                Tipos de Preguntas
-              </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {questionTypes.map((type) => (
-                  <div key={type.value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={type.value}
-                      checked={filters.types.includes(type.value)}
-                      onCheckedChange={() => handleQuestionTypeToggle(type.value)}
-                    />
-                    <Label
-                      htmlFor={type.value}
-                      className="flex flex-col cursor-pointer"
-                    >
-                      <span className="font-medium">{type.label}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {type.description}
-                      </span>
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              {filters.types.length === 0 && (
-                <p className="text-sm text-destructive">
-                  Selecciona al menos un tipo de pregunta
-                </p>
-              )}
-            </div>
+            <ExamFormField
+              type="checkbox-group"
+              label="Tipos de Preguntas"
+              value={filters.types}
+              onChange={(value) => updateFilter('types', value)}
+              options={questionTypes}
+              error={validation.errors.find(e => e.includes('tipo'))}
+            />
 
             <Separator />
 
             {/* Idioma */}
-            <div className="space-y-2">
-              <Label htmlFor="userLang" className="text-base font-medium">
-                Idioma de las Explicaciones
-              </Label>
-              <Select
-                value={filters.userLang}
-                onValueChange={(value) => updateFilter('userLang', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar idioma" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="fr">Français</SelectItem>
-                  <SelectItem value="de">Deutsch</SelectItem>
-                  <SelectItem value="it">Italiano</SelectItem>
-                  <SelectItem value="pt">Português</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <ExamFormField
+              type="select"
+              label="Idioma de las Explicaciones"
+              value={filters.userLang}
+              onChange={(value) => updateFilter('userLang', value)}
+              options={LANGUAGE_OPTIONS}
+              placeholder="Seleccionar idioma"
+            />
 
             {/* Error display */}
             {error && (
@@ -245,7 +140,7 @@ export function ExamConfigForm({
             <div className="pt-4">
               <Button
                 onClick={onGenerate}
-                disabled={isGenerating || !filters.topic.trim() || filters.types.length === 0}
+                disabled={!isFormValid}
                 className="w-full h-12 text-lg"
                 size="lg"
               >
@@ -267,10 +162,9 @@ export function ExamConfigForm({
             <div className="p-4 bg-muted/50 border border-border rounded-lg">
               <h4 className="font-medium mb-2">💡 Consejos para mejores resultados:</h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Sé específico con el tema (ej: "verbos irregulares en presente" en lugar de "gramática")</li>
-                <li>• Combina diferentes tipos de preguntas para variedad</li>
-                <li>• Ajusta la dificultad según el nivel CEFR seleccionado</li>
-                <li>• Usa entre 10-20 preguntas para un examen equilibrado</li>
+                {EXAM_GENERATION_TIPS.map((tip, index) => (
+                  <li key={index}>• {tip}</li>
+                ))}
               </ul>
             </div>
           </CardContent>

@@ -1,14 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-
-interface ExamOptionCardProps {
-  value: string;
-  label: string;
-  isCorrect: boolean;
-  hoverClass: string;
-  circleColor: string;
-  badgeText?: string;
-}
+import { ExamOptionCardProps } from './types/examTypes';
 
 export const ExamOptionCard: React.FC<ExamOptionCardProps> = ({
   value,

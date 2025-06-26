@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { BarChart3, Target, Clock, Award } from 'lucide-react';
 import { ExamGenerationResponse } from '@/services/examService';
+import { 
+  calculateQuestionTypeStats, 
+  calculateEstimatedTime 
+} from './helpers/examUtils';
 
 interface ExamStatsProps {
   exam: ExamGenerationResponse;
@@ -11,47 +13,8 @@ interface ExamStatsProps {
 
 export function ExamStats({ exam }: ExamStatsProps) {
   const totalQuestions = exam.questions.length;
-  
-  // Calculate statistics
-  const questionTypeStats = exam.questions.reduce((acc, question) => {
-    acc[question.type] = (acc[question.type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const tagStats = exam.questions.reduce((acc, question) => {
-    question.tags.forEach(tag => {
-      acc[tag] = (acc[tag] || 0) + 1;
-    });
-    return acc;
-  }, {} as Record<string, number>);
-
-  const topTags = Object.entries(tagStats)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 5);
-
-  const estimatedTime = totalQuestions * 2; // 2 minutes per question average
-
-  const getQuestionTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      multiple_choice: 'Opción Múltiple',
-      fill_blank: 'Completar Espacios',
-      true_false: 'Verdadero/Falso',
-      translate: 'Traducción',
-      writing: 'Escritura'
-    };
-    return labels[type] || type;
-  };
-
-  const getQuestionTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      multiple_choice: 'bg-blue-500',
-      fill_blank: 'bg-green-500',
-      true_false: 'bg-purple-500',
-      translate: 'bg-orange-500',
-      writing: 'bg-red-500'
-    };
-    return colors[type] || 'bg-gray-500';
-  };
+  const questionTypeStats = calculateQuestionTypeStats(exam.questions);
+  const estimatedTime = calculateEstimatedTime(exam.questions);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

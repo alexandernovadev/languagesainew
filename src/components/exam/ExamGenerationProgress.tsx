@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Loader2, Sparkles, CheckCircle } from 'lucide-react';
+import { getProgressMessage, getProgressColor } from './helpers/examUtils';
 
 interface ExamGenerationProgressProps {
   progress: number;
@@ -9,21 +10,6 @@ interface ExamGenerationProgressProps {
 }
 
 export function ExamGenerationProgress({ progress, isGenerating }: ExamGenerationProgressProps) {
-  const getProgressMessage = () => {
-    if (progress === 0) return 'Iniciando generación...';
-    if (progress < 25) return 'Analizando tema y configurando preguntas...';
-    if (progress < 50) return 'Generando preguntas con IA...';
-    if (progress < 75) return 'Creando opciones y explicaciones...';
-    if (progress < 100) return 'Finalizando y optimizando...';
-    return '¡Examen generado exitosamente!';
-  };
-
-  const getProgressColor = () => {
-    if (progress === 100) return 'bg-green-500';
-    if (progress > 50) return 'bg-blue-500';
-    return 'bg-orange-500';
-  };
-
   if (!isGenerating && progress === 0) {
     return null;
   }
@@ -56,7 +42,7 @@ export function ExamGenerationProgress({ progress, isGenerating }: ExamGeneratio
         <div className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
           <Sparkles className="h-4 w-4 text-blue-500" />
           <p className="text-sm text-blue-600 dark:text-blue-400">
-            {getProgressMessage()}
+            {getProgressMessage(progress)}
           </p>
         </div>
         

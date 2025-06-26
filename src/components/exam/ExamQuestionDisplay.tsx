@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ExamQuestion } from '@/services/examService';
 import { ExamOptionCard } from './ExamOptionCard';
+import { getQuestionTypeColor, getQuestionTypeLabel } from './helpers/examUtils';
 
 interface ExamQuestionDisplayProps {
   question: ExamQuestion;
@@ -11,19 +12,19 @@ interface ExamQuestionDisplayProps {
 }
 
 export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDisplayProps) {
+  // Helper para el círculo
+  const renderCircle = (content: string, colorClass: string) => (
+    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}>
+      {content}
+    </div>
+  );
+
+  // Helper para clases de hover (siempre verde)
+  const hoverClass = 'hover:ring-2 hover:ring-green-400/50';
+  // Helper para color del círculo (siempre verde)
+  const circleColor = 'bg-green-500';
+
   const renderQuestionContent = () => {
-    // Helper para el círculo
-    const renderCircle = (content: string, colorClass: string) => (
-      <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}>
-        {content}
-      </div>
-    );
-
-    // Helper para clases de hover (siempre verde)
-    const hoverClass = 'hover:ring-2 hover:ring-green-400/50';
-    // Helper para color del círculo (siempre verde)
-    const circleColor = 'bg-green-500';
-
     // Si hay options, mostrar con ExamOptionCard
     if (question.options && question.options.length > 0) {
       return (
@@ -102,23 +103,6 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
     }
   };
 
-  const getQuestionTypeColor = (type: string) => {
-    switch (type) {
-      case 'multiple_choice':
-        return 'bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:ring-2 hover:ring-blue-400/50 hover:bg-blue-500/30';
-      case 'fill_blank':
-        return 'bg-green-500/20 text-green-600 dark:text-green-400 hover:ring-2 hover:ring-green-400/50 hover:bg-green-500/30';
-      case 'true_false':
-        return 'bg-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400 hover:ring-2 hover:ring-fuchsia-400/50 hover:bg-fuchsia-500/30';
-      case 'translate':
-        return 'bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:ring-2 hover:ring-purple-400/50 hover:bg-purple-500/30';
-      case 'writing':
-        return 'bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:ring-2 hover:ring-orange-400/50 hover:bg-orange-500/30';
-      default:
-        return 'bg-muted text-muted-foreground hover:ring-2 hover:ring-gray-400/50 hover:bg-muted/40';
-    }
-  };
-
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -129,11 +113,7 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
                 Pregunta {questionNumber}
               </span>
               <Badge className={getQuestionTypeColor(question.type)}>
-                {question.type === 'multiple_choice' && 'Opción Múltiple'}
-                {question.type === 'fill_blank' && 'Completar Espacios'}
-                {question.type === 'true_false' && 'Verdadero/Falso'}
-                {question.type === 'translate' && 'Traducción'}
-                {question.type === 'writing' && 'Escritura'}
+                {getQuestionTypeLabel(question.type)}
               </Badge>
             </div>
             <CardTitle className="text-lg leading-relaxed">
