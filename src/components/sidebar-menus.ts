@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Gamepad2,
   HelpCircle,
+  ClipboardList,
 } from "lucide-react";
 
 export const menuItems = [
@@ -29,6 +30,11 @@ export const menuItems = [
     title: "Questions",
     url: "/questions",
     icon: HelpCircle,
+  },
+  {
+    title: "Exámenes",
+    url: "/exams",
+    icon: ClipboardList,
   },
   {
     title: "Estadísticas",
