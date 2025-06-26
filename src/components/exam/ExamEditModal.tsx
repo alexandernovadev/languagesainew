@@ -38,15 +38,11 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
     null
   );
   const [editedTitle, setEditedTitle] = useState("");
-  const [editedExplanation, setEditedExplanation] = useState("");
-  const [editedTags, setEditedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
 
   useEffect(() => {
     if (exam && editingQuestionIndex !== null) {
       setEditedQuestion(exam.questions[editingQuestionIndex]);
-      setEditedExplanation(exam.questions[editingQuestionIndex].explanation);
-      setEditedTags([...exam.questions[editingQuestionIndex].tags]);
     }
     if (exam && editingField === "title") {
       setEditedTitle(exam.title);
@@ -77,9 +73,9 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
       } else if (editingField === "answers") {
         updateQuestion(editingQuestionIndex, editedQuestion);
       } else if (editingField === "explanation") {
-        updateExplanation(editingQuestionIndex, editedExplanation);
+        updateExplanation(editingQuestionIndex, editedQuestion.explanation);
       } else if (editingField === "tags") {
-        updateTags(editingQuestionIndex, editedTags);
+        updateTags(editingQuestionIndex, editedQuestion.tags);
       }
     }
 
@@ -131,14 +127,22 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   };
 
   const addTag = () => {
-    if (newTag.trim() && !editedTags.includes(newTag.trim())) {
-      setEditedTags([...editedTags, newTag.trim()]);
+    if (newTag.trim() && editedQuestion && !editedQuestion.tags.includes(newTag.trim())) {
+      setEditedQuestion({ 
+        ...editedQuestion, 
+        tags: [...editedQuestion.tags, newTag.trim()] 
+      });
       setNewTag("");
     }
   };
 
   const removeTag = (index: number) => {
-    setEditedTags(editedTags.filter((_, i) => i !== index));
+    if (editedQuestion) {
+      setEditedQuestion({ 
+        ...editedQuestion, 
+        tags: editedQuestion.tags.filter((_, i) => i !== index) 
+      });
+    }
   };
 
   const getModalTitle = () => {
@@ -249,8 +253,8 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
                 <ReactQuill
-                  value={editedExplanation}
-                  onChange={setEditedExplanation}
+                  value={editedQuestion?.explanation || ''}
+                  onChange={(value) => editedQuestion && setEditedQuestion({ ...editedQuestion, explanation: value })}
                   theme="snow"
                   modules={quillModules}
                   style={{ background: 'white' }}
@@ -263,7 +267,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                 <div className="space-y-3">
                   {/* Existing tags */}
                   <div className="flex flex-wrap gap-2">
-                    {editedTags.map((tag, index) => (
+                    {editedQuestion.tags.map((tag, index) => (
                       <Badge key={index} variant="outline" className="text-sm">
                         {tag}
                         <Button
@@ -366,8 +370,8 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
                 <ReactQuill
-                  value={editedExplanation}
-                  onChange={setEditedExplanation}
+                  value={editedQuestion?.explanation || ''}
+                  onChange={(value) => editedQuestion && setEditedQuestion({ ...editedQuestion, explanation: value })}
                   theme="snow"
                   modules={quillModules}
                   style={{ background: 'white' }}
@@ -384,7 +388,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
                 <div className="space-y-3">
                   {/* Existing tags */}
                   <div className="flex flex-wrap gap-2">
-                    {editedTags.map((tag, index) => (
+                    {editedQuestion?.tags.map((tag, index) => (
                       <Badge key={index} variant="outline" className="text-sm">
                         {tag}
                         <Button
