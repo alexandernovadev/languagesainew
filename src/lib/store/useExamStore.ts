@@ -20,9 +20,6 @@ interface ExamStore {
   setExam: (exam: ExamStore['exam']) => void;
   updateExamTitle: (title: string) => void;
   updateQuestion: (index: number, question: ExamQuestion) => void;
-  updateQuestionText: (index: number, text: string) => void;
-  updateAnswer: (questionIndex: number, answerIndex: number, text: string) => void;
-  updateCorrectAnswer: (questionIndex: number, correctAnswerIndex: number) => void;
   updateExplanation: (questionIndex: number, explanation: string) => void;
   updateTags: (questionIndex: number, tags: string[]) => void;
   startEditing: (questionIndex: number | null, field: ExamStore['editingField']) => void;
@@ -47,39 +44,6 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     exam: state.exam ? {
       ...state.exam,
       questions: state.exam.questions.map((q, i) => i === index ? question : q)
-    } : null
-  })),
-  
-  updateQuestionText: (index, text) => set((state) => ({
-    exam: state.exam ? {
-      ...state.exam,
-      questions: state.exam.questions.map((q, i) => 
-        i === index ? { ...q, text } : q
-      )
-    } : null
-  })),
-  
-  updateAnswer: (questionIndex, answerIndex, text) => set((state) => ({
-    exam: state.exam ? {
-      ...state.exam,
-      questions: state.exam.questions.map((q, i) => 
-        i === questionIndex ? {
-          ...q,
-          options: q.options?.map((a: any, j: number) => j === answerIndex ? { ...a, label: text } : a)
-        } : q
-      )
-    } : null
-  })),
-  
-  updateCorrectAnswer: (questionIndex, correctAnswerIndex) => set((state) => ({
-    exam: state.exam ? {
-      ...state.exam,
-      questions: state.exam.questions.map((q, i) => 
-        i === questionIndex ? {
-          ...q,
-          correctAnswers: [q.options?.[correctAnswerIndex]?.value || '']
-        } : q
-      )
     } : null
   })),
   
