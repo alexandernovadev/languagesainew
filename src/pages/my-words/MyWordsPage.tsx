@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Card
 } from "@/components/ui/card";
@@ -89,16 +89,26 @@ export default function MyWordsPage() {
 
   const dots = useAnimatedDots(generating);
 
+  // Evitar fetch duplicado por filtros al montar
+  const filtersFirstRender = useRef(true);
+  // Evitar fetch duplicado por búsqueda local al montar
+  const searchFirstRender = useRef(true);
+
   useEffect(() => {
+    if (searchFirstRender.current) {
+      searchFirstRender.current = false;
+      return;
+    }
+    if (localSearch === "") return;
     const handler = setTimeout(() => {
       setSearchQuery(localSearch);
     }, 500); // 500ms debounce delay
-
     return () => {
       clearTimeout(handler);
     };
   }, [localSearch, setSearchQuery]);
 
+  // Efecto de carga inicial
   useEffect(() => {
     const loadWords = async () => {
       try {
@@ -111,7 +121,7 @@ export default function MyWordsPage() {
       }
     };
     loadWords();
-  }, [getWords]); // Re-fetch when the store changes
+  }, []);
 
   // Sync selectedWord with updated data from store
   useEffect(() => {
@@ -351,7 +361,12 @@ export default function MyWordsPage() {
     }
   };
 
+  // Handler para filtros que ignora el primer render
   const handleFiltersChange = (filters: any) => {
+    if (filtersFirstRender.current) {
+      filtersFirstRender.current = false;
+      return;
+    }
     setFilters(filters);
   };
 
