@@ -1,22 +1,22 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Loader2, Sparkles, Settings } from 'lucide-react';
-import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
-import { questionTypes, questionLevels } from '@/data/questionTypes';
-import { SuggestedTopics } from './SuggestedTopics';
-import { ExamFormField } from './components/ExamFormField';
-import { 
-  getDifficultyLabel, 
-  getLevelDescription, 
-  validateExamFilters 
-} from './helpers/examUtils';
-import { 
-  LANGUAGE_OPTIONS, 
-  EXAM_GENERATION_TIPS, 
-  EXAM_VALIDATION_LIMITS 
-} from './constants/examConstants';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Loader2, Sparkles, Settings } from "lucide-react";
+import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
+import { questionTypes, questionLevels } from "@/data/questionTypes";
+import { SuggestedTopics } from "./SuggestedTopics";
+import { ExamFormField } from "./components/ExamFormField";
+import {
+  getDifficultyLabel,
+  getLevelDescription,
+  validateExamFilters,
+} from "./helpers/examUtils";
+import {
+  LANGUAGE_OPTIONS,
+  EXAM_GENERATION_TIPS,
+  EXAM_VALIDATION_LIMITS,
+} from "./constants/examConstants";
 
 interface ExamConfigFormProps {
   filters: ExamGeneratorFilters;
@@ -31,10 +31,10 @@ export function ExamConfigForm({
   updateFilter,
   onGenerate,
   isGenerating,
-  error
+  error,
 }: ExamConfigFormProps) {
   const handleTopicSelect = (topic: string) => {
-    updateFilter('topic', topic);
+    updateFilter("topic", topic);
   };
 
   const validation = validateExamFilters(filters);
@@ -51,7 +51,7 @@ export function ExamConfigForm({
               Configuración del Examen
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {/* Tema del examen */}
             <ExamFormField
@@ -59,10 +59,10 @@ export function ExamConfigForm({
               label="Tema del Examen"
               required
               value={filters.topic}
-              onChange={(value) => updateFilter('topic', value)}
+              onChange={(value) => updateFilter("topic", value)}
               placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
               description="Sé específico para obtener mejores resultados"
-              error={validation.errors.find(e => e.includes('tema'))}
+              error={validation.errors.find((e) => e.includes("tema"))}
             />
 
             <Separator />
@@ -73,17 +73,19 @@ export function ExamConfigForm({
                 type="select"
                 label="Nivel CEFR"
                 value={filters.level}
-                onChange={(value) => updateFilter('level', value)}
+                onChange={(value) => updateFilter("level", value)}
                 options={questionLevels}
                 placeholder="Seleccionar nivel"
-                description={filters.level ? getLevelDescription(filters.level) : undefined}
+                description={
+                  filters.level ? getLevelDescription(filters.level) : undefined
+                }
               />
 
               <ExamFormField
                 type="slider"
                 label="Dificultad"
                 value={filters.difficulty}
-                onChange={(value) => updateFilter('difficulty', value)}
+                onChange={(value) => updateFilter("difficulty", value)}
                 min={EXAM_VALIDATION_LIMITS.minDifficulty}
                 max={EXAM_VALIDATION_LIMITS.maxDifficulty}
                 step={1}
@@ -99,7 +101,7 @@ export function ExamConfigForm({
               type="number"
               label="Número de Preguntas"
               value={filters.numberOfQuestions}
-              onChange={(value) => updateFilter('numberOfQuestions', value)}
+              onChange={(value) => updateFilter("numberOfQuestions", value)}
               min={EXAM_VALIDATION_LIMITS.minQuestions}
               max={EXAM_VALIDATION_LIMITS.maxQuestions}
               description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
@@ -112,9 +114,9 @@ export function ExamConfigForm({
               type="checkbox-group"
               label="Tipos de Preguntas"
               value={filters.types}
-              onChange={(value) => updateFilter('types', value)}
+              onChange={(value) => updateFilter("types", value)}
               options={questionTypes}
-              error={validation.errors.find(e => e.includes('tipo'))}
+              error={validation.errors.find((e) => e.includes("tipo"))}
             />
 
             <Separator />
@@ -124,7 +126,7 @@ export function ExamConfigForm({
               type="select"
               label="Idioma de las Explicaciones"
               value={filters.userLang}
-              onChange={(value) => updateFilter('userLang', value)}
+              onChange={(value) => updateFilter("userLang", value)}
               options={LANGUAGE_OPTIONS}
               placeholder="Seleccionar idioma"
             />
@@ -160,7 +162,9 @@ export function ExamConfigForm({
 
             {/* Tips */}
             <div className="p-4 bg-muted/50 border border-border rounded-lg">
-              <h4 className="font-medium mb-2">💡 Consejos para mejores resultados:</h4>
+              <h4 className="font-medium mb-2">
+                💡 Consejos para mejores resultados:
+              </h4>
               <ul className="text-sm text-muted-foreground space-y-1">
                 {EXAM_GENERATION_TIPS.map((tip, index) => (
                   <li key={index}>• {tip}</li>
@@ -173,11 +177,11 @@ export function ExamConfigForm({
 
       {/* Suggested topics sidebar */}
       <div className="lg:col-span-1">
-        <SuggestedTopics 
+        <SuggestedTopics
           onTopicSelect={handleTopicSelect}
           selectedTopic={filters.topic}
         />
       </div>
     </div>
   );
-} 
+}

@@ -8,4 +8,4 @@ export { ViewsRangeFilter } from "./ViewsRangeFilter";
 export { DateRangeFilter } from "./DateRangeFilter";
 export { TextFilters } from "./TextFilters";
 export * from "./types";
-export * from "./constants"; 
+export * from "./constants";

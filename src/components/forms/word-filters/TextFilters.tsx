@@ -68,9 +68,11 @@ export function TextFilters({
           id="spanishDefinition"
           placeholder="Buscar en definición en español..."
           value={spanishDefinition || ""}
-          onChange={(e) => onSpanishDefinitionChange(e.target.value || undefined)}
+          onChange={(e) =>
+            onSpanishDefinitionChange(e.target.value || undefined)
+          }
         />
       </div>
     </div>
   );
-} 
+}

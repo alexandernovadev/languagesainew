@@ -8,11 +8,11 @@ interface DateRangeFilterProps {
   onCreatedBeforeChange: (value: string) => void;
 }
 
-export function DateRangeFilter({ 
-  createdAfter, 
-  createdBefore, 
-  onCreatedAfterChange, 
-  onCreatedBeforeChange 
+export function DateRangeFilter({
+  createdAfter,
+  createdBefore,
+  onCreatedAfterChange,
+  onCreatedBeforeChange,
 }: DateRangeFilterProps) {
   return (
     <div className="space-y-4">
@@ -41,4 +41,4 @@ export function DateRangeFilter({
       </div>
     </div>
   );
-} 
+}

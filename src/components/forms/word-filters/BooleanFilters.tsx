@@ -15,15 +15,18 @@ export function BooleanFilters({ values, onChange }: BooleanFiltersProps) {
           <Checkbox
             id={filter.value}
             checked={values[filter.value] || false}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked) =>
               onChange(filter.value, checked as boolean)
             }
           />
-          <Label htmlFor={filter.value} className="text-sm font-normal cursor-pointer">
+          <Label
+            htmlFor={filter.value}
+            className="text-sm font-normal cursor-pointer"
+          >
             {filter.label}
           </Label>
         </div>
       ))}
     </div>
   );
-} 
+}

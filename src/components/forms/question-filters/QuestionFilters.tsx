@@ -16,12 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Filter,
   X,
@@ -41,7 +36,10 @@ import { DateRangeFilter } from "./DateRangeFilter";
 import { TextFilters } from "./TextFilters";
 import { QuestionFiltersProps } from "./types";
 
-export function QuestionFilters({ onFiltersChange, className }: QuestionFiltersProps) {
+export function QuestionFilters({
+  onFiltersChange,
+  className,
+}: QuestionFiltersProps) {
   const {
     filters,
     booleanFilters,
@@ -80,9 +78,9 @@ export function QuestionFilters({ onFiltersChange, className }: QuestionFiltersP
     updateBooleanFilter(key as any, value);
     // Crear un nuevo objeto con el filtro booleano actualizado
     const newCombined = { ...filters };
-    if (key === 'hasMedia' && value) {
+    if (key === "hasMedia" && value) {
       newCombined.hasMedia = "true";
-    } else if (key === 'hasMedia' && !value) {
+    } else if (key === "hasMedia" && !value) {
       delete newCombined.hasMedia;
     }
     onFiltersChange(newCombined);
@@ -134,9 +132,7 @@ export function QuestionFilters({ onFiltersChange, className }: QuestionFiltersP
                     <Filter className="h-5 w-5" />
                     Filtros Avanzados
                     {hasActiveFilters && (
-                      <Badge variant="secondary">
-                        {activeFiltersCount}
-                      </Badge>
+                      <Badge variant="secondary">{activeFiltersCount}</Badge>
                     )}
                   </CardTitle>
                   {isOpen ? (
@@ -250,7 +246,9 @@ function FiltersContent({
           createdAfter={filters.createdAfter}
           createdBefore={filters.createdBefore}
           onCreatedAfterChange={(value) => updateFilter("createdAfter", value)}
-          onCreatedBeforeChange={(value) => updateFilter("createdBefore", value)}
+          onCreatedBeforeChange={(value) =>
+            updateFilter("createdBefore", value)
+          }
         />
       </TabsContent>
 
@@ -264,4 +262,4 @@ function FiltersContent({
       </TabsContent>
     </Tabs>
   );
-} 
+}

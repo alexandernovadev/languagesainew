@@ -8,17 +8,17 @@ interface TypeFilterProps {
 }
 
 export function TypeFilter({ value, onChange }: TypeFilterProps) {
-  const selectedTypes = value ? value.split(',') : [];
+  const selectedTypes = value ? value.split(",") : [];
 
   const handleTypeClick = (typeValue: string) => {
     if (selectedTypes.includes(typeValue)) {
       // Remover tipo
-      const newTypes = selectedTypes.filter(t => t !== typeValue);
-      onChange(newTypes.length > 0 ? newTypes.join(',') : undefined);
+      const newTypes = selectedTypes.filter((t) => t !== typeValue);
+      onChange(newTypes.length > 0 ? newTypes.join(",") : undefined);
     } else {
       // Agregar tipo
       const newTypes = [...selectedTypes, typeValue];
-      onChange(newTypes.join(','));
+      onChange(newTypes.join(","));
     }
   };
 
@@ -33,8 +33,8 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
               key={type.value}
               variant={isSelected ? "default" : "outline"}
               className={`cursor-pointer transition-all duration-200 ${
-                isSelected 
-                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105" 
+                isSelected
+                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                   : "hover:bg-primary/10"
               }`}
               onClick={() => handleTypeClick(type.value)}
@@ -46,4 +46,4 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
       </div>
     </div>
   );
-} 
+}

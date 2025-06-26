@@ -16,17 +16,17 @@ interface TypeFilterProps {
 }
 
 export function TypeFilter({ value, onChange }: TypeFilterProps) {
-  const selectedTypes = value ? value.split(',') : [];
+  const selectedTypes = value ? value.split(",") : [];
 
   const handleTypeToggle = (typeValue: string, checked: boolean) => {
     if (checked) {
       // Agregar tipo
       const newTypes = [...selectedTypes, typeValue];
-      onChange(newTypes.join(','));
+      onChange(newTypes.join(","));
     } else {
       // Remover tipo
-      const newTypes = selectedTypes.filter(t => t !== typeValue);
-      onChange(newTypes.length > 0 ? newTypes.join(',') : undefined);
+      const newTypes = selectedTypes.filter((t) => t !== typeValue);
+      onChange(newTypes.length > 0 ? newTypes.join(",") : undefined);
     }
   };
 
@@ -37,7 +37,7 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
   const getDisplayText = () => {
     if (selectedTypes.length === 0) return "Seleccionar tipo gramatical";
     if (selectedTypes.length === 1) {
-      const type = WORD_TYPES.find(t => t.value === selectedTypes[0]);
+      const type = WORD_TYPES.find((t) => t.value === selectedTypes[0]);
       return type?.label || selectedTypes[0];
     }
     return `${selectedTypes.length} tipos seleccionados`;
@@ -67,18 +67,21 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
               </Button>
             )}
           </div>
-          
+
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {WORD_TYPES.map((type) => (
               <div key={type.value} className="flex items-center space-x-2">
                 <Checkbox
                   id={type.value}
                   checked={selectedTypes.includes(type.value)}
-                  onCheckedChange={(checked) => 
+                  onCheckedChange={(checked) =>
                     handleTypeToggle(type.value, checked as boolean)
                   }
                 />
-                <Label htmlFor={type.value} className="text-sm font-normal cursor-pointer">
+                <Label
+                  htmlFor={type.value}
+                  className="text-sm font-normal cursor-pointer"
+                >
                   {type.label}
                 </Label>
               </div>
@@ -89,7 +92,7 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
             <div className="pt-2 border-t">
               <div className="flex flex-wrap gap-1">
                 {selectedTypes.map((typeValue) => {
-                  const type = WORD_TYPES.find(t => t.value === typeValue);
+                  const type = WORD_TYPES.find((t) => t.value === typeValue);
                   return (
                     <Badge
                       key={typeValue}
@@ -113,4 +116,4 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
       </PopoverContent>
     </Popover>
   );
-} 
+}

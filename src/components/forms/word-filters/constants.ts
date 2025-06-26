@@ -97,4 +97,4 @@ export const FILTER_GROUPS: FilterGroup[] = [
       { value: "updatedBefore", label: "Actualizado Antes" },
     ],
   },
-]; 
+];

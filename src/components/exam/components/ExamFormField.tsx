@@ -1,24 +1,24 @@
-import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
+import React from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ExamFormFieldProps } from '../types/examTypes';
+} from "@/components/ui/select";
+import { ExamFormFieldProps } from "../types/examTypes";
 
 export function ExamFormField(props: ExamFormFieldProps) {
   const { label, required, description, error, type } = props;
 
   const renderField = () => {
     switch (type) {
-      case 'text':
+      case "text":
         return (
           <Input
             value={props.value}
@@ -27,7 +27,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
           />
         );
 
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
             value={props.value}
@@ -38,7 +38,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
           />
         );
 
-      case 'number':
+      case "number":
         return (
           <div className="flex items-center gap-4">
             <Input
@@ -53,7 +53,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
           </div>
         );
 
-      case 'select':
+      case "select":
         return (
           <Select value={props.value} onValueChange={props.onChange}>
             <SelectTrigger>
@@ -76,7 +76,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
           </Select>
         );
 
-      case 'slider':
+      case "slider":
         return (
           <div className="space-y-3">
             <Slider
@@ -99,7 +99,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
           </div>
         );
 
-      case 'checkbox-group':
+      case "checkbox-group":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {props.options.map((option) => (
@@ -110,7 +110,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
                   onCheckedChange={(checked) => {
                     const newValue = checked
                       ? [...props.value, option.value]
-                      : props.value.filter(v => v !== option.value);
+                      : props.value.filter((v) => v !== option.value);
                     props.onChange(newValue);
                   }}
                 />
@@ -138,18 +138,16 @@ export function ExamFormField(props: ExamFormFieldProps) {
   return (
     <div className="space-y-2">
       <Label className="text-base font-medium">
-        {label} {required && '*'}
+        {label} {required && "*"}
       </Label>
-      
+
       {renderField()}
-      
+
       {description && !error && (
         <p className="text-sm text-muted-foreground">{description}</p>
       )}
-      
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
-} 
+}

@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,8 +9,8 @@ import { X, Save, Trash2 } from "lucide-react";
 import { useExamStore } from "@/lib/store/useExamStore";
 import { ExamQuestion } from "@/services/examService";
 import { Badge } from "@/components/ui/badge";
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { quillModules } from "../quillModules";
 
 interface ExamEditModalProps {
@@ -120,10 +116,14 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   };
 
   const addTag = () => {
-    if (newTag.trim() && editedQuestion && !editedQuestion.tags.includes(newTag.trim())) {
-      setEditedQuestion({ 
-        ...editedQuestion, 
-        tags: [...editedQuestion.tags, newTag.trim()] 
+    if (
+      newTag.trim() &&
+      editedQuestion &&
+      !editedQuestion.tags.includes(newTag.trim())
+    ) {
+      setEditedQuestion({
+        ...editedQuestion,
+        tags: [...editedQuestion.tags, newTag.trim()],
       });
       setNewTag("");
     }
@@ -131,9 +131,9 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
 
   const removeTag = (index: number) => {
     if (editedQuestion) {
-      setEditedQuestion({ 
-        ...editedQuestion, 
-        tags: editedQuestion.tags.filter((_, i) => i !== index) 
+      setEditedQuestion({
+        ...editedQuestion,
+        tags: editedQuestion.tags.filter((_, i) => i !== index),
       });
     }
   };
@@ -245,11 +245,14 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
                 <ReactQuill
-                  value={editedQuestion?.explanation || ''}
-                  onChange={(value) => editedQuestion && setEditedQuestion({ ...editedQuestion, explanation: value })}
+                  value={editedQuestion?.explanation || ""}
+                  onChange={(value) =>
+                    editedQuestion &&
+                    setEditedQuestion({ ...editedQuestion, explanation: value })
+                  }
                   theme="snow"
                   modules={quillModules}
-                  style={{ background: 'white' }}
+                  style={{ background: "white" }}
                 />
               </div>
 
@@ -362,11 +365,14 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
                 <ReactQuill
-                  value={editedQuestion?.explanation || ''}
-                  onChange={(value) => editedQuestion && setEditedQuestion({ ...editedQuestion, explanation: value })}
+                  value={editedQuestion?.explanation || ""}
+                  onChange={(value) =>
+                    editedQuestion &&
+                    setEditedQuestion({ ...editedQuestion, explanation: value })
+                  }
                   theme="snow"
                   modules={quillModules}
-                  style={{ background: 'white' }}
+                  style={{ background: "white" }}
                 />
               </div>
             </div>

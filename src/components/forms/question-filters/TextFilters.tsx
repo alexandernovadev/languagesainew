@@ -9,7 +9,12 @@ interface TextFiltersProps {
   onTagsChange: (value: string) => void;
 }
 
-export function TextFilters({ topic, tags, onTopicChange, onTagsChange }: TextFiltersProps) {
+export function TextFilters({
+  topic,
+  tags,
+  onTopicChange,
+  onTagsChange,
+}: TextFiltersProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -36,9 +41,10 @@ export function TextFilters({ topic, tags, onTopicChange, onTagsChange }: TextFi
           className="min-h-[80px]"
         />
         <p className="text-xs text-muted-foreground">
-          Ingresa las etiquetas separadas por comas para filtrar preguntas que contengan esas etiquetas.
+          Ingresa las etiquetas separadas por comas para filtrar preguntas que
+          contengan esas etiquetas.
         </p>
       </div>
     </div>
   );
-} 
+}

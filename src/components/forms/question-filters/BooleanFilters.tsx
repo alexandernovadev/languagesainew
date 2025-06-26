@@ -6,7 +6,10 @@ interface BooleanFiltersProps {
   onHasMediaChange: (value: boolean) => void;
 }
 
-export function BooleanFilters({ hasMedia, onHasMediaChange }: BooleanFiltersProps) {
+export function BooleanFilters({
+  hasMedia,
+  onHasMediaChange,
+}: BooleanFiltersProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -16,11 +19,8 @@ export function BooleanFilters({ hasMedia, onHasMediaChange }: BooleanFiltersPro
             Solo preguntas que incluyan audio, imagen o video
           </p>
         </div>
-        <Switch
-          checked={hasMedia}
-          onCheckedChange={onHasMediaChange}
-        />
+        <Switch checked={hasMedia} onCheckedChange={onHasMediaChange} />
       </div>
     </div>
   );
-} 
+}

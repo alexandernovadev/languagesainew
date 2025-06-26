@@ -6,41 +6,73 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Plus, X, FileText, Image, Video, Link, GripVertical } from "lucide-react";
-import { questionLevels, questionTypes, questionDifficulties } from "@/data/questionTypes";
-import { Question, QuestionInput, QuestionOption } from "@/models/Question";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Loader2, Plus, X, GripVertical } from "lucide-react";
+import {
+  questionLevels,
+  questionTypes,
+  questionDifficulties,
+} from "@/data/questionTypes";
+import { Question, QuestionInput } from "@/models/Question";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 // Schema de validación
 const questionSchema = z.object({
   text: z.string().min(1, "La pregunta es requerida"),
-  type: z.enum(['multiple_choice', 'fill_blank', 'translate', 'true_false', 'writing']),
+  type: z.enum([
+    "multiple_choice",
+    "fill_blank",
+    "translate",
+    "true_false",
+    "writing",
+  ]),
   isSingleAnswer: z.boolean().default(true),
-  level: z.enum(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']),
+  level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
   topic: z.string().optional(),
   difficulty: z.number().min(1).max(5),
-  options: z.array(z.object({
-    value: z.string().min(1, "El valor es requerido"),
-    label: z.string().min(1, "La etiqueta es requerida"),
-    isCorrect: z.boolean().default(false),
-  })).optional(),
-  correctAnswers: z.array(z.string()).min(1, "Debe tener al menos una respuesta correcta"),
+  options: z
+    .array(
+      z.object({
+        value: z.string().min(1, "El valor es requerido"),
+        label: z.string().min(1, "La etiqueta es requerida"),
+        isCorrect: z.boolean().default(false),
+      })
+    )
+    .optional(),
+  correctAnswers: z
+    .array(z.string())
+    .min(1, "Debe tener al menos una respuesta correcta"),
   explanation: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  media: z.object({
-    audio: z.string().optional(),
-    image: z.string().optional(),
-    video: z.string().optional(),
-  }).optional(),
+  media: z
+    .object({
+      audio: z.string().optional(),
+      image: z.string().optional(),
+      video: z.string().optional(),
+    })
+    .optional(),
 });
 
 type QuestionFormData = z.infer<typeof questionSchema>;
@@ -53,10 +85,22 @@ interface QuestionFormProps {
 }
 
 // Componente para cada opción arrastrable
-function DraggableOption({ id, index, option, onChange, onRemove, onSetCorrect, listeners, attributes, isDragging }: any) {
+function DraggableOption({
+  id,
+  index,
+  option,
+  onChange,
+  onRemove,
+  onSetCorrect,
+  listeners,
+  attributes,
+  isDragging,
+}: any) {
   return (
     <div
-      className={`flex items-center gap-3 p-3 rounded-lg border bg-background transition-colors duration-150 cursor-grab ${isDragging ? 'ring-2 ring-primary' : ''}`}
+      className={`flex items-center gap-3 p-3 rounded-lg border bg-background transition-colors duration-150 cursor-grab ${
+        isDragging ? "ring-2 ring-primary" : ""
+      }`}
       {...attributes}
       {...listeners}
     >
@@ -72,7 +116,7 @@ function DraggableOption({ id, index, option, onChange, onRemove, onSetCorrect, 
       <Input
         placeholder={`Opción ${index + 1}`}
         value={option.label}
-        onChange={(e) => onChange(index, 'label', e.target.value)}
+        onChange={(e) => onChange(index, "label", e.target.value)}
         className="flex-1"
       />
       <Button
@@ -89,7 +133,12 @@ function DraggableOption({ id, index, option, onChange, onRemove, onSetCorrect, 
   );
 }
 
-export function QuestionForm({ initialData, onSubmit, onCancel, loading = false }: QuestionFormProps) {
+export function QuestionForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  loading = false,
+}: QuestionFormProps) {
   const [activeTab, setActiveTab] = useState("basic");
 
   const {
@@ -120,7 +169,9 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
   });
 
   const watchedType = watch("type");
-  const shouldShowOptions = ["multiple_choice", "true_false"].includes(watchedType);
+  const shouldShowOptions = ["multiple_choice", "true_false"].includes(
+    watchedType
+  );
 
   const handleFormSubmit = async (data: QuestionFormData) => {
     try {
@@ -139,17 +190,27 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
   const addOption = () => {
     const currentOptions = watch("options") || [];
     const newValue = (currentOptions.length + 1).toString();
-    setValue("options", [...currentOptions, { value: newValue, label: "", isCorrect: false }]);
+    setValue("options", [
+      ...currentOptions,
+      { value: newValue, label: "", isCorrect: false },
+    ]);
   };
 
   const removeOption = (index: number) => {
     const currentOptions = watch("options") || [];
     if (currentOptions.length > 2) {
-      setValue("options", currentOptions.filter((_, i) => i !== index));
+      setValue(
+        "options",
+        currentOptions.filter((_, i) => i !== index)
+      );
     }
   };
 
-  const updateOption = (index: number, field: "value" | "label" | "isCorrect", value: string | boolean) => {
+  const updateOption = (
+    index: number,
+    field: "value" | "label" | "isCorrect",
+    value: string | boolean
+  ) => {
     const currentOptions = watch("options") || [];
     const updatedOptions = currentOptions.map((option, i) =>
       i === index ? { ...option, [field]: value } : option
@@ -174,7 +235,10 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
   const removeCorrectAnswer = (index: number) => {
     const currentAnswers = watch("correctAnswers") || [];
     if (currentAnswers.length > 1) {
-      setValue("correctAnswers", currentAnswers.filter((_, i) => i !== index));
+      setValue(
+        "correctAnswers",
+        currentAnswers.filter((_, i) => i !== index)
+      );
     }
   };
 
@@ -199,7 +263,9 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = options.findIndex((item: any) => item.value === active.id);
+      const oldIndex = options.findIndex(
+        (item: any) => item.value === active.id
+      );
       const newIndex = options.findIndex((item: any) => item.value === over.id);
       const newOptions = arrayMove(options, oldIndex, newIndex);
       setValue("options", newOptions);
@@ -238,7 +304,10 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="level">Nivel CEFR *</Label>
-                  <Select value={watch("level")} onValueChange={(value) => setValue("level", value as any)}>
+                  <Select
+                    value={watch("level")}
+                    onValueChange={(value) => setValue("level", value as any)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar nivel" />
                     </SelectTrigger>
@@ -251,13 +320,18 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                     </SelectContent>
                   </Select>
                   {errors.level && (
-                    <p className="text-sm text-red-500">{errors.level.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.level.message}
+                    </p>
                   )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="type">Tipo de Pregunta *</Label>
-                  <Select value={watch("type")} onValueChange={(value) => setValue("type", value as any)}>
+                  <Select
+                    value={watch("type")}
+                    onValueChange={(value) => setValue("type", value as any)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar tipo" />
                     </SelectTrigger>
@@ -270,26 +344,38 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                     </SelectContent>
                   </Select>
                   {errors.type && (
-                    <p className="text-sm text-red-500">{errors.type.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.type.message}
+                    </p>
                   )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="difficulty">Dificultad *</Label>
-                  <Select value={watch("difficulty").toString()} onValueChange={(value) => setValue("difficulty", parseInt(value))}>
+                  <Select
+                    value={watch("difficulty").toString()}
+                    onValueChange={(value) =>
+                      setValue("difficulty", parseInt(value))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar dificultad" />
                     </SelectTrigger>
                     <SelectContent>
                       {questionDifficulties.map((difficulty) => (
-                        <SelectItem key={difficulty.value} value={difficulty.value.toString()}>
+                        <SelectItem
+                          key={difficulty.value}
+                          value={difficulty.value.toString()}
+                        >
                           {difficulty.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   {errors.difficulty && (
-                    <p className="text-sm text-red-500">{errors.difficulty.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.difficulty.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -307,7 +393,9 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                 <Switch
                   id="isSingleAnswer"
                   checked={watch("isSingleAnswer")}
-                  onCheckedChange={(checked) => setValue("isSingleAnswer", checked)}
+                  onCheckedChange={(checked) =>
+                    setValue("isSingleAnswer", checked)
+                  }
                 />
                 <Label htmlFor="isSingleAnswer">Respuesta única</Label>
               </div>
@@ -359,7 +447,8 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                 <>
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-sm text-muted-foreground">
-                      Configura las opciones de respuesta para preguntas de opción múltiple
+                      Configura las opciones de respuesta para preguntas de
+                      opción múltiple
                     </p>
                     <Button
                       type="button"
@@ -372,17 +461,35 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                       Agregar opción
                     </Button>
                   </div>
-                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={options.map((o: any) => o.value)} strategy={verticalListSortingStrategy}>
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <SortableContext
+                      items={options.map((o: any) => o.value)}
+                      strategy={verticalListSortingStrategy}
+                    >
                       <div className="space-y-3">
                         {options.map((option: any, index: number) => {
-                          const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: option.value });
+                          const {
+                            attributes,
+                            listeners,
+                            setNodeRef,
+                            transform,
+                            transition,
+                            isDragging,
+                          } = useSortable({ id: option.value });
                           const style = {
                             transform: CSS.Transform.toString(transform),
                             transition,
                           };
                           return (
-                            <div ref={setNodeRef} style={style} key={option.value}>
+                            <div
+                              ref={setNodeRef}
+                              style={style}
+                              key={option.value}
+                            >
                               <DraggableOption
                                 id={option.value}
                                 index={index}
@@ -405,7 +512,8 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-muted-foreground">
-                      Configura las respuestas correctas para preguntas de texto libre
+                      Configura las respuestas correctas para preguntas de texto
+                      libre
                     </p>
                     <Button
                       type="button"
@@ -421,11 +529,16 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
 
                   <div className="space-y-3">
                     {(watch("correctAnswers") || []).map((answer, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-3 border rounded-lg"
+                      >
                         <Input
                           placeholder={`Respuesta correcta ${index + 1}`}
                           value={answer}
-                          onChange={(e) => updateCorrectAnswer(index, e.target.value)}
+                          onChange={(e) =>
+                            updateCorrectAnswer(index, e.target.value)
+                          }
                           className="flex-1"
                         />
                         {(watch("correctAnswers") || []).length > 1 && (
@@ -513,4 +626,4 @@ export function QuestionForm({ initialData, onSubmit, onCancel, loading = false 
       </div>
     </form>
   );
-} 
+}

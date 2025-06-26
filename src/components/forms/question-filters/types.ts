@@ -6,15 +6,15 @@ export interface QuestionFiltersState {
   type?: string;
   topic?: string;
   difficulty?: string;
-  
+
   // Filtros de contenido
   tags?: string;
   hasMedia?: string;
-  
+
   // Filtros avanzados
   createdAfter?: string;
   createdBefore?: string;
-  
+
   // Ordenamiento
   sortBy?: "createdAt" | "updatedAt" | "text" | "level" | "type" | "difficulty";
   sortOrder?: "asc" | "desc";
@@ -28,4 +28,4 @@ export interface QuestionBooleanFilters {
 export interface QuestionFiltersProps {
   onFiltersChange: (filters: Partial<QuestionFilters>) => void;
   className?: string;
-} 
+}

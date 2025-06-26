@@ -8,11 +8,11 @@ interface ViewsRangeFilterProps {
   onSeenMaxChange: (value: number | undefined) => void;
 }
 
-export function ViewsRangeFilter({ 
-  seenMin, 
-  seenMax, 
-  onSeenMinChange, 
-  onSeenMaxChange 
+export function ViewsRangeFilter({
+  seenMin,
+  seenMax,
+  onSeenMinChange,
+  onSeenMaxChange,
 }: ViewsRangeFilterProps) {
   return (
     <div className="space-y-3">
@@ -32,7 +32,7 @@ export function ViewsRangeFilter({
           }}
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="seenMax" className="text-sm font-medium">
           Máximo de vistas
@@ -51,4 +51,4 @@ export function ViewsRangeFilter({
       </div>
     </div>
   );
-} 
+}

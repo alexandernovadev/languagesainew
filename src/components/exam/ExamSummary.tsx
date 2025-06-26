@@ -1,18 +1,18 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Save, Eye, RefreshCw, FileText, Loader2 } from 'lucide-react';
-import { ExamGenerationResponse } from '@/services/examService';
-import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
-import { ExamStats } from './ExamStats';
-import { QuestionTypeStats } from './components/QuestionTypeStats';
-import { 
-  getLevelLabel, 
-  getDifficultyLabel, 
-  getLanguageLabel 
-} from './helpers/examUtils';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Save, Eye, RefreshCw, FileText, Loader2 } from "lucide-react";
+import { ExamGenerationResponse } from "@/services/examService";
+import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
+import { ExamStats } from "./ExamStats";
+import { QuestionTypeStats } from "./components/QuestionTypeStats";
+import {
+  getLevelLabel,
+  getDifficultyLabel,
+  getLanguageLabel,
+} from "./helpers/examUtils";
 
 interface ExamSummaryProps {
   exam: ExamGenerationResponse;
@@ -23,13 +23,13 @@ interface ExamSummaryProps {
   isSaving?: boolean;
 }
 
-export function ExamSummary({ 
-  exam, 
-  filters, 
-  onRegenerate, 
-  onDownload, 
+export function ExamSummary({
+  exam,
+  filters,
+  onRegenerate,
+  onDownload,
   onView,
-  isSaving = false
+  isSaving = false,
 }: ExamSummaryProps) {
   const totalQuestions = exam.questions.length;
 
@@ -46,7 +46,7 @@ export function ExamSummary({
             Resumen del Examen
           </CardTitle>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* Información básica */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -54,15 +54,17 @@ export function ExamSummary({
               <h4 className="font-medium text-foreground">Tema</h4>
               <p className="text-sm text-muted-foreground">{filters.topic}</p>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="font-medium text-foreground">Nivel</h4>
               <Badge variant="outline">{getLevelLabel(filters.level)}</Badge>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="font-medium text-foreground">Dificultad</h4>
-              <Badge variant="outline">{getDifficultyLabel(filters.difficulty)}</Badge>
+              <Badge variant="outline">
+                {getDifficultyLabel(filters.difficulty)}
+              </Badge>
             </div>
           </div>
 
@@ -79,10 +81,10 @@ export function ExamSummary({
               <Eye className="h-4 w-4 mr-2" />
               Ver Preguntas
             </Button>
-            
-            <Button 
-              onClick={onDownload} 
-              className="flex-1" 
+
+            <Button
+              onClick={onDownload}
+              className="flex-1"
               variant="outline"
               disabled={isSaving}
             >
@@ -98,7 +100,7 @@ export function ExamSummary({
                 </>
               )}
             </Button>
-            
+
             <Button onClick={onRegenerate} className="flex-1" variant="outline">
               <RefreshCw className="h-4 w-4 mr-2" />
               Regenerar
@@ -107,9 +109,13 @@ export function ExamSummary({
 
           {/* Información adicional */}
           <div className="p-3 bg-muted/50 border border-border rounded-lg">
-            <h4 className="font-medium text-foreground mb-2">Información del Examen</h4>
+            <h4 className="font-medium text-foreground mb-2">
+              Información del Examen
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-muted-foreground">
-              <div>• Idioma de explicaciones: {getLanguageLabel(filters.userLang)}</div>
+              <div>
+                • Idioma de explicaciones: {getLanguageLabel(filters.userLang)}
+              </div>
               <div>• Generado con IA avanzada</div>
               <div>• Incluye explicaciones detalladas</div>
               <div>• Optimizado para el nivel {filters.level}</div>
@@ -119,4 +125,4 @@ export function ExamSummary({
       </Card>
     </div>
   );
-} 
+}

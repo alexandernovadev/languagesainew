@@ -1,11 +1,16 @@
-import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { X, Edit } from 'lucide-react';
-import { Exam } from '@/services/examService';
-import { ExamHeader } from './ExamHeader';
-import { ExamQuestionView } from './ExamQuestionView';
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { X, Edit } from "lucide-react";
+import { Exam } from "@/services/examService";
+import { ExamHeader } from "./ExamHeader";
+import { ExamQuestionView } from "./ExamQuestionView";
 
 interface ExamViewModalProps {
   exam: Exam | null;
@@ -14,7 +19,12 @@ interface ExamViewModalProps {
   onEditExam: (exam: Exam) => void;
 }
 
-export default function ExamViewModal({ exam, isOpen, onClose, onEditExam }: ExamViewModalProps) {
+export default function ExamViewModal({
+  exam,
+  isOpen,
+  onClose,
+  onEditExam,
+}: ExamViewModalProps) {
   if (!exam) return null;
 
   return (
@@ -28,9 +38,9 @@ export default function ExamViewModal({ exam, isOpen, onClose, onEditExam }: Exa
               </DialogTitle>
             </div>
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onEditExam(exam)}
               >
                 <Edit className="w-4 h-4 mr-2" />
@@ -64,4 +74,4 @@ export default function ExamViewModal({ exam, isOpen, onClose, onEditExam }: Exa
       </DialogContent>
     </Dialog>
   );
-} 
+}

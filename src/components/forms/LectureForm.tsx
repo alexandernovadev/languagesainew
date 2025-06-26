@@ -122,10 +122,7 @@ export function LectureForm({
                         </SelectTrigger>
                         <SelectContent>
                           {lectureLevels.map((level) => (
-                            <SelectItem
-                              key={level.value}
-                              value={level.value}
-                            >
+                            <SelectItem key={level.value} value={level.value}>
                               {level.label}
                             </SelectItem>
                           ))}

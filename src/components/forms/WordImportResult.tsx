@@ -121,13 +121,27 @@ export default function WordImportResult({
       <CardContent>
         {/* Resumen global */}
         <div className="flex flex-wrap gap-3 mb-6 items-center text-sm">
-          <span>Total Words: <b>{data.totalWords}</b></span>
-          <span className={badgeStyle("Inserted")}>Inserted: {data.totalInserted}</span>
-          <span className={badgeStyle("Updated")}>Updated: {data.totalUpdated}</span>
-          <span className={badgeStyle("Skipped")}>Skipped: {data.totalSkipped}</span>
-          <span className={badgeStyle("Duplicates")}>Duplicates: {data.totalDuplicates}</span>
-          <span className={badgeStyle("Errors")}>Errors: {data.totalErrors}</span>
-          <span className={badgeStyle("Duration")}>Duration: {summary.duration}ms</span>
+          <span>
+            Total Words: <b>{data.totalWords}</b>
+          </span>
+          <span className={badgeStyle("Inserted")}>
+            Inserted: {data.totalInserted}
+          </span>
+          <span className={badgeStyle("Updated")}>
+            Updated: {data.totalUpdated}
+          </span>
+          <span className={badgeStyle("Skipped")}>
+            Skipped: {data.totalSkipped}
+          </span>
+          <span className={badgeStyle("Duplicates")}>
+            Duplicates: {data.totalDuplicates}
+          </span>
+          <span className={badgeStyle("Errors")}>
+            Errors: {data.totalErrors}
+          </span>
+          <span className={badgeStyle("Duration")}>
+            Duration: {summary.duration}ms
+          </span>
         </div>
 
         {/* Tabla de detalles o totales por batch */}
@@ -146,14 +160,43 @@ export default function WordImportResult({
               </thead>
               <tbody>
                 {allRows.map((row, i) => (
-                  <tr key={`${row.batchIndex}-${row.index}`} className="border-b last:border-0">
-                    <td className="px-3 py-2 text-center font-mono">{row.batchIndex}</td>
-                    <td className="px-3 py-2 text-center font-mono">{row.index}</td>
-                    <td className={`px-3 py-2 text-center ${statusColor(row.status)}`}>{row.status}</td>
-                    <td className={`px-3 py-2 text-center ${actionColor(row.action)}`}>{row.action || "-"}</td>
-                    <td className="px-3 py-2 text-red-500 text-xs max-w-[200px] truncate" title={row.error || "-"}>{row.error || "-"}</td>
-                    <td className="px-3 py-2 text-yellow-600 text-xs max-w-[200px] truncate" title={row.warnings?.join(", ") || "-"}>
-                      {row.warnings && row.warnings.length > 0 ? row.warnings.join(", ") : "-"}
+                  <tr
+                    key={`${row.batchIndex}-${row.index}`}
+                    className="border-b last:border-0"
+                  >
+                    <td className="px-3 py-2 text-center font-mono">
+                      {row.batchIndex}
+                    </td>
+                    <td className="px-3 py-2 text-center font-mono">
+                      {row.index}
+                    </td>
+                    <td
+                      className={`px-3 py-2 text-center ${statusColor(
+                        row.status
+                      )}`}
+                    >
+                      {row.status}
+                    </td>
+                    <td
+                      className={`px-3 py-2 text-center ${actionColor(
+                        row.action
+                      )}`}
+                    >
+                      {row.action || "-"}
+                    </td>
+                    <td
+                      className="px-3 py-2 text-red-500 text-xs max-w-[200px] truncate"
+                      title={row.error || "-"}
+                    >
+                      {row.error || "-"}
+                    </td>
+                    <td
+                      className="px-3 py-2 text-yellow-600 text-xs max-w-[200px] truncate"
+                      title={row.warnings?.join(", ") || "-"}
+                    >
+                      {row.warnings && row.warnings.length > 0
+                        ? row.warnings.join(", ")
+                        : "-"}
                     </td>
                   </tr>
                 ))}
@@ -177,15 +220,31 @@ export default function WordImportResult({
               <tbody>
                 {data.batches.map((batch) => (
                   <tr key={batch.batchIndex} className="border-b last:border-0">
-                    <td className="px-3 py-2 text-center font-mono">{batch.batchIndex}</td>
+                    <td className="px-3 py-2 text-center font-mono">
+                      {batch.batchIndex}
+                    </td>
                     <td className="px-3 py-2 text-center">{batch.processed}</td>
-                    <td className="px-3 py-2 text-center text-green-700 font-semibold">{batch.valid}</td>
-                    <td className="px-3 py-2 text-center text-red-700 font-semibold">{batch.invalid}</td>
-                    <td className="px-3 py-2 text-center text-green-700 font-semibold">{batch.inserted}</td>
-                    <td className="px-3 py-2 text-center text-green-700 font-semibold">{batch.updated}</td>
-                    <td className="px-3 py-2 text-center text-gray-500 font-semibold">{batch.skipped}</td>
-                    <td className="px-3 py-2 text-center text-yellow-600 font-semibold">{batch.duplicates}</td>
-                    <td className="px-3 py-2 text-center text-red-600 font-semibold">{batch.errors}</td>
+                    <td className="px-3 py-2 text-center text-green-700 font-semibold">
+                      {batch.valid}
+                    </td>
+                    <td className="px-3 py-2 text-center text-red-700 font-semibold">
+                      {batch.invalid}
+                    </td>
+                    <td className="px-3 py-2 text-center text-green-700 font-semibold">
+                      {batch.inserted}
+                    </td>
+                    <td className="px-3 py-2 text-center text-green-700 font-semibold">
+                      {batch.updated}
+                    </td>
+                    <td className="px-3 py-2 text-center text-gray-500 font-semibold">
+                      {batch.skipped}
+                    </td>
+                    <td className="px-3 py-2 text-center text-yellow-600 font-semibold">
+                      {batch.duplicates}
+                    </td>
+                    <td className="px-3 py-2 text-center text-red-600 font-semibold">
+                      {batch.errors}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -195,4 +254,4 @@ export default function WordImportResult({
       </CardContent>
     </Card>
   );
-} 
+}

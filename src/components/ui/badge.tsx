@@ -16,6 +16,12 @@ const badgeVariants = cva(
           "border-red-500 text-red-400 hover:shadow-[0_0_8px] hover:shadow-red-500/70 hover:text-red-200",
         outline:
           "border-zinc-600 text-zinc-300 hover:shadow-[0_0_8px] hover:shadow-zinc-400/70 hover:text-white",
+        yellow:
+          "border-yellow-500 text-yellow-400 hover:shadow-[0_0_8px] hover:shadow-yellow-500/70 hover:text-yellow-200",
+        blue:
+          "border-blue-500 text-blue-400 hover:shadow-[0_0_8px] hover:shadow-blue-500/70 hover:text-blue-200",
+        silver:
+          "border-gray-400 text-gray-300 hover:shadow-[0_0_8px] hover:shadow-gray-400/70 hover:text-gray-100",
       },
     },
     defaultVariants: {

@@ -1,15 +1,23 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ExamOptionCard } from './ExamOptionCard';
-import { getQuestionTypeColor, getQuestionTypeLabel } from './helpers/examUtils';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ExamOptionCard } from "./ExamOptionCard";
+import {
+  getQuestionTypeColor,
+  getQuestionTypeLabel,
+} from "./helpers/examUtils";
 
 interface ExamQuestionViewProps {
   question: {
     _id: string;
     text: string;
-    type: 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
+    type:
+      | "multiple_choice"
+      | "fill_blank"
+      | "true_false"
+      | "translate"
+      | "writing";
     isSingleAnswer: boolean;
     level: string;
     topic: string;
@@ -30,18 +38,24 @@ interface ExamQuestionViewProps {
   showAnswers?: boolean;
 }
 
-export function ExamQuestionView({ question, questionNumber, showAnswers = true }: ExamQuestionViewProps) {
+export function ExamQuestionView({
+  question,
+  questionNumber,
+  showAnswers = true,
+}: ExamQuestionViewProps) {
   // Helper para el círculo
   const renderCircle = (content: string, colorClass: string) => (
-    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}>
+    <div
+      className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}
+    >
       {content}
     </div>
   );
 
   // Helper para clases de hover (siempre verde)
-  const hoverClass = 'hover:ring-2 hover:ring-green-400/50';
+  const hoverClass = "hover:ring-2 hover:ring-green-400/50";
   // Helper para color del círculo (siempre verde)
-  const circleColor = 'bg-green-500';
+  const circleColor = "bg-green-500";
 
   const renderQuestionContent = () => {
     // Si hay options, mostrar con ExamOptionCard
@@ -60,7 +74,9 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
                 isCorrect={showAnswers ? option.isCorrect : false}
                 hoverClass={hoverClass}
                 circleColor={circleColor}
-                badgeText={showAnswers && option.isCorrect ? "Correcta" : undefined}
+                badgeText={
+                  showAnswers && option.isCorrect ? "Correcta" : undefined
+                }
               />
             ))}
           </div>
@@ -70,9 +86,9 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
 
     // Si no hay options, fallback por tipo
     switch (question.type) {
-      case 'fill_blank':
-      case 'translate':
-      case 'writing':
+      case "fill_blank":
+      case "translate":
+      case "writing":
         return (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -84,12 +100,16 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
                   key={index}
                   className={`flex items-center p-3 rounded-lg border bg-green-500/10 border-green-500/20 transition-all duration-150 ${hoverClass}`}
                 >
-                  {renderCircle(String.fromCharCode(65 + index), 'bg-green-500')}
-                  <span className="font-medium">
-                    {answer}
-                  </span>
+                  {renderCircle(
+                    String.fromCharCode(65 + index),
+                    "bg-green-500"
+                  )}
+                  <span className="font-medium">{answer}</span>
                   {showAnswers && (
-                    <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
+                    >
                       Correcta
                     </Badge>
                   )}
@@ -98,28 +118,42 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
             </div>
           </div>
         );
-      case 'true_false':
+      case "true_false":
         return (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-semibold text-foreground">Respuestas:</h4>
             </div>
             <div className="grid gap-2">
-              {['true', 'false'].map((val, idx) => (
+              {["true", "false"].map((val, idx) => (
                 <div
                   key={val}
                   className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
                     showAnswers && question.correctAnswers.includes(val)
-                      ? 'bg-green-500/10 border-green-500/20'
-                      : 'bg-muted/50 border-border'
+                      ? "bg-green-500/10 border-green-500/20"
+                      : "bg-muted/50 border-border"
                   } ${hoverClass}`}
                 >
-                  {renderCircle(val === 'true' ? 'V' : 'F', showAnswers && question.correctAnswers.includes(val) ? 'bg-green-500' : 'bg-muted')}
-                  <span className={showAnswers && question.correctAnswers.includes(val) ? 'font-medium' : ''}>
-                    {val === 'true' ? 'Verdadero' : 'Falso'}
+                  {renderCircle(
+                    val === "true" ? "V" : "F",
+                    showAnswers && question.correctAnswers.includes(val)
+                      ? "bg-green-500"
+                      : "bg-muted"
+                  )}
+                  <span
+                    className={
+                      showAnswers && question.correctAnswers.includes(val)
+                        ? "font-medium"
+                        : ""
+                    }
+                  >
+                    {val === "true" ? "Verdadero" : "Falso"}
                   </span>
                   {showAnswers && question.correctAnswers.includes(val) && (
-                    <Badge variant="secondary" className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400">
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
+                    >
                       Correcta
                     </Badge>
                   )}
@@ -152,26 +186,26 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {renderQuestionContent()}
-        
+
         {showAnswers && (
           <>
             <Separator />
-            
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="font-semibold text-foreground">Explicación:</h4>
               </div>
-              <div 
+              <div
                 className="p-4 bg-muted/50 rounded-lg prose prose-sm max-w-none dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: question.explanation }}
               />
             </div>
           </>
         )}
-        
+
         {question.tags.length > 0 && (
           <>
             <Separator />
@@ -192,4 +226,4 @@ export function ExamQuestionView({ question, questionNumber, showAnswers = true 
       </CardContent>
     </Card>
   );
-} 
+}

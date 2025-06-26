@@ -8,17 +8,21 @@ interface DifficultyFilterProps {
 }
 
 export function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
-  const selectedDifficulties = value ? value.split(',') : [];
+  const selectedDifficulties = value ? value.split(",") : [];
 
   const handleDifficultyClick = (difficultyValue: string) => {
     if (selectedDifficulties.includes(difficultyValue)) {
       // Remover dificultad
-      const newDifficulties = selectedDifficulties.filter(d => d !== difficultyValue);
-      onChange(newDifficulties.length > 0 ? newDifficulties.join(',') : undefined);
+      const newDifficulties = selectedDifficulties.filter(
+        (d) => d !== difficultyValue
+      );
+      onChange(
+        newDifficulties.length > 0 ? newDifficulties.join(",") : undefined
+      );
     } else {
       // Agregar dificultad
       const newDifficulties = [...selectedDifficulties, difficultyValue];
-      onChange(newDifficulties.join(','));
+      onChange(newDifficulties.join(","));
     }
   };
 
@@ -27,14 +31,16 @@ export function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
       <Label className="text-sm font-medium">Nivel de Dificultad</Label>
       <div className="flex flex-wrap gap-2">
         {questionDifficulties.map((difficulty) => {
-          const isSelected = selectedDifficulties.includes(difficulty.value.toString());
+          const isSelected = selectedDifficulties.includes(
+            difficulty.value.toString()
+          );
           return (
             <Badge
               key={difficulty.value}
               variant={isSelected ? "default" : "outline"}
               className={`cursor-pointer transition-all duration-200 ${
-                isSelected 
-                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105" 
+                isSelected
+                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                   : "hover:bg-primary/10"
               }`}
               onClick={() => handleDifficultyClick(difficulty.value.toString())}
@@ -46,4 +52,4 @@ export function DifficultyFilter({ value, onChange }: DifficultyFilterProps) {
       </div>
     </div>
   );
-} 
+}

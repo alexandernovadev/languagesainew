@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Save } from "lucide-react";
@@ -15,13 +11,11 @@ interface ExamTitleEditModalProps {
   onClose: () => void;
 }
 
-export function ExamTitleEditModal({ isOpen, onClose }: ExamTitleEditModalProps) {
-  const {
-    exam,
-    editingField,
-    updateExamTitle,
-    stopEditing,
-  } = useExamStore();
+export function ExamTitleEditModal({
+  isOpen,
+  onClose,
+}: ExamTitleEditModalProps) {
+  const { exam, editingField, updateExamTitle, stopEditing } = useExamStore();
 
   const [editedTitle, setEditedTitle] = useState("");
 
@@ -59,7 +53,7 @@ export function ExamTitleEditModal({ isOpen, onClose }: ExamTitleEditModalProps)
         <DialogTitle className="text-lg font-semibold">
           Editar Título del Examen
         </DialogTitle>
-        
+
         <div className="space-y-4 py-4">
           <div>
             <Label htmlFor="exam-title">Título</Label>
@@ -86,4 +80,4 @@ export function ExamTitleEditModal({ isOpen, onClose }: ExamTitleEditModalProps)
       </DialogContent>
     </Dialog>
   );
-} 
+}

@@ -16,12 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Filter,
   X,
@@ -119,9 +114,7 @@ export function WordFilters({ onFiltersChange, className }: WordFiltersProps) {
                     <Filter className="h-5 w-5" />
                     Filtros Avanzados
                     {hasActiveFilters && (
-                      <Badge variant="secondary">
-                        {activeFiltersCount}
-                      </Badge>
+                      <Badge variant="secondary">{activeFiltersCount}</Badge>
                     )}
                   </CardTitle>
                   {isOpen ? (
@@ -137,7 +130,9 @@ export function WordFilters({ onFiltersChange, className }: WordFiltersProps) {
                 <FiltersContent
                   filters={filters}
                   booleanFilters={booleanFilters}
-                  updateFilter={updateFilter as (key: string, value: any) => void}
+                  updateFilter={
+                    updateFilter as (key: string, value: any) => void
+                  }
                   updateBooleanFilter={updateBooleanFilter}
                 />
               </CardContent>
@@ -343,4 +338,4 @@ function FiltersContent({
       </TabsContent>
     </Tabs>
   );
-} 
+}

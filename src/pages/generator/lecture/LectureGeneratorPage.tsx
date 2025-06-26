@@ -244,7 +244,7 @@ export default function LectureGeneratorPage() {
               <>
                 <div className="flex flex-wrap gap-3 mt-3">
                   <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
-                    Nivel:{" "}
+                    Nivel:{" "} 
                     {lectureLevels.find((l) => l.value === watchedValues.level)
                       ?.label || watchedValues.level}
                   </span>

@@ -35,7 +35,9 @@ export function DateRangeFilter({
               id="createdAfter"
               type="datetime-local"
               value={createdAfter || ""}
-              onChange={(e) => onCreatedAfterChange(e.target.value || undefined)}
+              onChange={(e) =>
+                onCreatedAfterChange(e.target.value || undefined)
+              }
             />
           </div>
           <div className="space-y-1">
@@ -46,7 +48,9 @@ export function DateRangeFilter({
               id="createdBefore"
               type="datetime-local"
               value={createdBefore || ""}
-              onChange={(e) => onCreatedBeforeChange(e.target.value || undefined)}
+              onChange={(e) =>
+                onCreatedBeforeChange(e.target.value || undefined)
+              }
             />
           </div>
         </div>
@@ -63,7 +67,9 @@ export function DateRangeFilter({
               id="updatedAfter"
               type="datetime-local"
               value={updatedAfter || ""}
-              onChange={(e) => onUpdatedAfterChange(e.target.value || undefined)}
+              onChange={(e) =>
+                onUpdatedAfterChange(e.target.value || undefined)
+              }
             />
           </div>
           <div className="space-y-1">
@@ -74,11 +80,13 @@ export function DateRangeFilter({
               id="updatedBefore"
               type="datetime-local"
               value={updatedBefore || ""}
-              onChange={(e) => onUpdatedBeforeChange(e.target.value || undefined)}
+              onChange={(e) =>
+                onUpdatedBeforeChange(e.target.value || undefined)
+              }
             />
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

@@ -14,15 +14,20 @@ interface SortFilterProps {
   onSortOrderChange: (value: string | undefined) => void;
 }
 
-export function SortFilter({ 
-  sortBy, 
-  sortOrder, 
-  onSortByChange, 
-  onSortOrderChange 
+export function SortFilter({
+  sortBy,
+  sortOrder,
+  onSortByChange,
+  onSortOrderChange,
 }: SortFilterProps) {
   return (
     <div className="flex gap-2">
-      <Select value={sortBy || ""} onValueChange={(val) => onSortByChange(val === "none" ? undefined : val)}>
+      <Select
+        value={sortBy || ""}
+        onValueChange={(val) =>
+          onSortByChange(val === "none" ? undefined : val)
+        }
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Ordenar por" />
         </SelectTrigger>
@@ -35,8 +40,11 @@ export function SortFilter({
           ))}
         </SelectContent>
       </Select>
-      
-      <Select value={sortOrder || ""} onValueChange={(val) => onSortOrderChange(val === "" ? undefined : val)}>
+
+      <Select
+        value={sortOrder || ""}
+        onValueChange={(val) => onSortOrderChange(val === "" ? undefined : val)}
+      >
         <SelectTrigger className="w-32">
           <SelectValue placeholder="Seleccionar orden" />
         </SelectTrigger>
@@ -50,4 +58,4 @@ export function SortFilter({
       </Select>
     </div>
   );
-} 
+}

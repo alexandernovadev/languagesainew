@@ -1,13 +1,16 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { calculateQuestionTypeStats, getQuestionTypeLabel } from '../helpers/examUtils';
-import { QUESTION_TYPE_CHART_COLORS } from '../constants/examConstants';
-import { QuestionTypeStatsProps } from '../types/examTypes';
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  calculateQuestionTypeStats,
+  getQuestionTypeLabel,
+} from "../helpers/examUtils";
+import { QUESTION_TYPE_CHART_COLORS } from "../constants/examConstants";
+import { QuestionTypeStatsProps } from "../types/examTypes";
 
-export function QuestionTypeStats({ 
-  questions, 
-  showChart = true, 
-  showPercentages = true 
+export function QuestionTypeStats({
+  questions,
+  showChart = true,
+  showPercentages = true,
 }: QuestionTypeStatsProps) {
   const questionTypeStats = calculateQuestionTypeStats(questions);
   const totalQuestions = questions.length;
@@ -24,7 +27,7 @@ export function QuestionTypeStats({
   return (
     <div className="space-y-3">
       <h4 className="font-medium text-foreground">Estadísticas de Preguntas</h4>
-      
+
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center p-3 bg-blue-500/10 rounded-lg">
@@ -33,8 +36,8 @@ export function QuestionTypeStats({
           </div>
           <div className="text-xs text-blue-600 dark:text-blue-400">Total</div>
         </div>
-        
-        {questionTypes.map(type => (
+
+        {questionTypes.map((type) => (
           <div key={type} className="text-center p-3 bg-muted/50 rounded-lg">
             <div className="text-2xl font-bold text-muted-foreground">
               {questionTypeStats[type]}
@@ -51,10 +54,10 @@ export function QuestionTypeStats({
         <div className="space-y-2">
           <h4 className="font-medium text-foreground">Distribución por Tipo</h4>
           <div className="space-y-2">
-            {questionTypes.map(type => {
+            {questionTypes.map((type) => {
               const count = questionTypeStats[type];
               const percentage = Math.round((count / totalQuestions) * 100);
-              
+
               return (
                 <div key={type} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -67,8 +70,12 @@ export function QuestionTypeStats({
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-20 bg-muted rounded-full h-2">
-                      <div 
-                        className={`h-2 rounded-full ${QUESTION_TYPE_CHART_COLORS[type as keyof typeof QUESTION_TYPE_CHART_COLORS] || 'bg-gray-500'}`}
+                      <div
+                        className={`h-2 rounded-full ${
+                          QUESTION_TYPE_CHART_COLORS[
+                            type as keyof typeof QUESTION_TYPE_CHART_COLORS
+                          ] || "bg-gray-500"
+                        }`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -86,4 +93,4 @@ export function QuestionTypeStats({
       )}
     </div>
   );
-} 
+}

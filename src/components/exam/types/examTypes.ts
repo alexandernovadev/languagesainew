@@ -1,5 +1,5 @@
-import { ExamGenerationResponse } from '@/services/examService';
-import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
+import { ExamGenerationResponse } from "@/services/examService";
+import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 
 // Props interfaces for exam components
 export interface ExamConfigFormProps {
@@ -61,7 +61,7 @@ export interface BaseFieldProps {
 }
 
 export interface TextFieldProps extends BaseFieldProps {
-  type: 'text' | 'textarea';
+  type: "text" | "textarea";
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -69,7 +69,7 @@ export interface TextFieldProps extends BaseFieldProps {
 }
 
 export interface NumberFieldProps extends BaseFieldProps {
-  type: 'number';
+  type: "number";
   value: number;
   onChange: (value: number) => void;
   min?: number;
@@ -78,7 +78,7 @@ export interface NumberFieldProps extends BaseFieldProps {
 }
 
 export interface SelectFieldProps extends BaseFieldProps {
-  type: 'select';
+  type: "select";
   value: string;
   onChange: (value: string) => void;
   options: Array<{ value: string; label: string; description?: string }>;
@@ -86,7 +86,7 @@ export interface SelectFieldProps extends BaseFieldProps {
 }
 
 export interface SliderFieldProps extends BaseFieldProps {
-  type: 'slider';
+  type: "slider";
   value: number;
   onChange: (value: number) => void;
   min: number;
@@ -97,17 +97,17 @@ export interface SliderFieldProps extends BaseFieldProps {
 }
 
 export interface CheckboxGroupFieldProps extends BaseFieldProps {
-  type: 'checkbox-group';
+  type: "checkbox-group";
   value: string[];
   onChange: (value: string[]) => void;
   options: Array<{ value: string; label: string; description?: string }>;
 }
 
-export type ExamFormFieldProps = 
-  | TextFieldProps 
-  | NumberFieldProps 
-  | SelectFieldProps 
-  | SliderFieldProps 
+export type ExamFormFieldProps =
+  | TextFieldProps
+  | NumberFieldProps
+  | SelectFieldProps
+  | SliderFieldProps
   | CheckboxGroupFieldProps;
 
 // Utility types
@@ -122,4 +122,4 @@ export interface QuestionTypeStats {
 
 export interface TagStats {
   [key: string]: number;
-} 
+}

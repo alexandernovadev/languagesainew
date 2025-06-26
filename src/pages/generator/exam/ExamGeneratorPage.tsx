@@ -31,10 +31,7 @@ export default function ExamGeneratorPage() {
     generateExam,
     resetExam,
     resetFilters,
-    loadExistingExam,
-    getQuestionTypeLabel,
-    getLevelLabel,
-    getDifficultyLabel
+    loadExistingExam
   } = useExamGenerator();
 
   const {

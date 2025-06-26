@@ -1,16 +1,19 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { BookOpen, TrendingUp } from 'lucide-react';
-import { commonTopics } from '@/data/questionTypes';
-import { TOPIC_CATEGORIES } from './constants/examConstants';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, TrendingUp } from "lucide-react";
+import { commonTopics } from "@/data/questionTypes";
+import { TOPIC_CATEGORIES } from "./constants/examConstants";
 
 interface SuggestedTopicsProps {
   onTopicSelect: (topic: string) => void;
   selectedTopic: string;
 }
 
-export function SuggestedTopics({ onTopicSelect, selectedTopic }: SuggestedTopicsProps) {
+export function SuggestedTopics({
+  onTopicSelect,
+  selectedTopic,
+}: SuggestedTopicsProps) {
   return (
     <Card>
       <CardHeader>
@@ -19,7 +22,7 @@ export function SuggestedTopics({ onTopicSelect, selectedTopic }: SuggestedTopic
           Temas Sugeridos
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {Object.entries(TOPIC_CATEGORIES).map(([key, category]) => (
           <div key={key} className="space-y-3">
@@ -41,7 +44,7 @@ export function SuggestedTopics({ onTopicSelect, selectedTopic }: SuggestedTopic
             </div>
           </div>
         ))}
-        
+
         <div className="pt-4 border-t">
           <h4 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
@@ -63,4 +66,4 @@ export function SuggestedTopics({ onTopicSelect, selectedTopic }: SuggestedTopic
       </CardContent>
     </Card>
   );
-} 
+}

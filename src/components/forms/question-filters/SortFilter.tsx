@@ -1,5 +1,11 @@
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface SortFilterProps {
@@ -23,7 +29,12 @@ const orderOptions = [
   { value: "asc", label: "Ascendente" },
 ];
 
-export function SortFilter({ sortBy, sortOrder, onSortByChange, onSortOrderChange }: SortFilterProps) {
+export function SortFilter({
+  sortBy,
+  sortOrder,
+  onSortByChange,
+  onSortOrderChange,
+}: SortFilterProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -48,7 +59,10 @@ export function SortFilter({ sortBy, sortOrder, onSortByChange, onSortOrderChang
           <div className="grid grid-cols-1 gap-2">
             {orderOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={`order-${option.value}`} />
+                <RadioGroupItem
+                  value={option.value}
+                  id={`order-${option.value}`}
+                />
                 <Label htmlFor={`order-${option.value}`} className="text-sm">
                   {option.label}
                 </Label>
@@ -59,4 +73,4 @@ export function SortFilter({ sortBy, sortOrder, onSortByChange, onSortOrderChang
       </div>
     </div>
   );
-} 
+}

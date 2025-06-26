@@ -7,17 +7,17 @@ interface LanguageFilterProps {
 }
 
 export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
-  const selectedLanguages = value ? value.split(',') : [];
+  const selectedLanguages = value ? value.split(",") : [];
 
   const handleLanguageClick = (languageValue: string) => {
     if (selectedLanguages.includes(languageValue)) {
       // Remover idioma
-      const newLanguages = selectedLanguages.filter(l => l !== languageValue);
-      onChange(newLanguages.length > 0 ? newLanguages.join(',') : undefined);
+      const newLanguages = selectedLanguages.filter((l) => l !== languageValue);
+      onChange(newLanguages.length > 0 ? newLanguages.join(",") : undefined);
     } else {
       // Agregar idioma
       const newLanguages = [...selectedLanguages, languageValue];
-      onChange(newLanguages.join(','));
+      onChange(newLanguages.join(","));
     }
   };
 
@@ -30,8 +30,8 @@ export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
             key={language.value}
             variant={isSelected ? "default" : "outline"}
             className={`cursor-pointer transition-all duration-200 ${
-              isSelected 
-                ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105" 
+              isSelected
+                ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                 : "hover:bg-primary/10"
             }`}
             onClick={() => handleLanguageClick(language.value)}
@@ -43,4 +43,4 @@ export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
       })}
     </div>
   );
-} 
+}

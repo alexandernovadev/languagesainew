@@ -8,17 +8,17 @@ interface LevelFilterProps {
 }
 
 export function LevelFilter({ value, onChange }: LevelFilterProps) {
-  const selectedLevels = value ? value.split(',') : [];
+  const selectedLevels = value ? value.split(",") : [];
 
   const handleLevelClick = (levelValue: string) => {
     if (selectedLevels.includes(levelValue)) {
       // Remover nivel
-      const newLevels = selectedLevels.filter(l => l !== levelValue);
-      onChange(newLevels.length > 0 ? newLevels.join(',') : undefined);
+      const newLevels = selectedLevels.filter((l) => l !== levelValue);
+      onChange(newLevels.length > 0 ? newLevels.join(",") : undefined);
     } else {
       // Agregar nivel
       const newLevels = [...selectedLevels, levelValue];
-      onChange(newLevels.join(','));
+      onChange(newLevels.join(","));
     }
   };
 
@@ -33,8 +33,8 @@ export function LevelFilter({ value, onChange }: LevelFilterProps) {
               key={level.value}
               variant={isSelected ? "default" : "outline"}
               className={`cursor-pointer transition-all duration-200 ${
-                isSelected 
-                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105" 
+                isSelected
+                  ? "hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                   : "hover:bg-primary/10"
               }`}
               onClick={() => handleLevelClick(level.value)}
@@ -46,4 +46,4 @@ export function LevelFilter({ value, onChange }: LevelFilterProps) {
       </div>
     </div>
   );
-} 
+}

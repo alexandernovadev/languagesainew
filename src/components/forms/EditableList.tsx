@@ -2,10 +2,21 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X, GripVertical, Plus } from "lucide-react";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/components/ui/use-toast";
 
 interface EditableListProps {
@@ -22,10 +33,21 @@ function withIds(items: string[], ids: string[]) {
 }
 
 // Componente para cada item arrastrable
-function DraggableItem({ id, index, item, onChange, onRemove, listeners, attributes, isDragging }: any) {
+function DraggableItem({
+  id,
+  index,
+  item,
+  onChange,
+  onRemove,
+  listeners,
+  attributes,
+  isDragging,
+}: any) {
   return (
     <div
-      className={`flex items-center gap-2 group transition-colors duration-150 ${isDragging ? 'ring-2 ring-primary' : ''}`}
+      className={`flex items-center gap-2 group transition-colors duration-150 ${
+        isDragging ? "ring-2 ring-primary" : ""
+      }`}
       {...attributes}
     >
       <span {...listeners} className="flex items-center cursor-grab">
@@ -64,7 +86,12 @@ export function EditableList({
     setIds((prev) => {
       if (items.length > prev.length) {
         // Se agregó un item
-        return [...prev, ...Array(items.length - prev.length).fill(0).map(() => uuidv4())];
+        return [
+          ...prev,
+          ...Array(items.length - prev.length)
+            .fill(0)
+            .map(() => uuidv4()),
+        ];
       } else {
         // Se eliminó un item
         return prev.slice(0, items.length);
@@ -139,12 +166,23 @@ export function EditableList({
       </div>
       <div className="space-y-2 rounded-md border p-2 min-h-[80px]">
         {items.length > 0 ? (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={ids} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
                 {itemsWithIds.map((itemObj, index) => {
-                  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
-                    id: itemObj.id 
+                  const {
+                    attributes,
+                    listeners,
+                    setNodeRef,
+                    transform,
+                    transition,
+                    isDragging,
+                  } = useSortable({
+                    id: itemObj.id,
                   });
                   const style = {
                     transform: CSS.Transform.toString(transform),

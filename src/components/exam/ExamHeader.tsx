@@ -1,11 +1,11 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { BookOpen, Clock, Users, FileText, Edit } from 'lucide-react';
-import { Exam } from '@/services/examService';
-import { getLevelLabel } from './helpers/examUtils';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { BookOpen, Clock, Users, FileText, Edit } from "lucide-react";
+import { Exam } from "@/services/examService";
+import { getLevelLabel } from "./helpers/examUtils";
 
 interface ExamHeaderProps {
   exam: Exam;
@@ -14,24 +14,17 @@ interface ExamHeaderProps {
   onEditTitle?: () => void;
 }
 
-export function ExamHeader({ exam, showStats = true, showEditButton = false, onEditTitle }: ExamHeaderProps) {
-  const getLevelColor = (level: string) => {
-    const colors = {
-      A1: 'bg-green-100 text-green-800',
-      A2: 'bg-blue-100 text-blue-800',
-      B1: 'bg-yellow-100 text-yellow-800',
-      B2: 'bg-orange-100 text-orange-800',
-      C1: 'bg-red-100 text-red-800',
-      C2: 'bg-purple-100 text-purple-800'
-    };
-    return colors[level as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
-
+export function ExamHeader({
+  exam,
+  showStats = true,
+  showEditButton = false,
+  onEditTitle,
+}: ExamHeaderProps) {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -56,13 +49,11 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
                 </Button>
               )}
             </div>
-            <p className="text-muted-foreground">
-              {exam.description}
-            </p>
+            <p className="text-muted-foreground">{exam.description}</p>
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Información básica */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -70,14 +61,12 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
             <h4 className="font-medium text-foreground">Tema</h4>
             <p className="text-sm text-muted-foreground">{exam.topic}</p>
           </div>
-          
+
           <div className="space-y-2">
             <h4 className="font-medium text-foreground">Nivel</h4>
-            <Badge className={getLevelColor(exam.level)}>
-              {getLevelLabel(exam.level)}
-            </Badge>
+            <Badge>{getLevelLabel(exam.level)} SO</Badge>
           </div>
-          
+
           <div className="space-y-2">
             <h4 className="font-medium text-foreground">Idioma</h4>
             <Badge variant="outline">{exam.language.toUpperCase()}</Badge>
@@ -93,29 +82,45 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
                 <div className="bg-green-600/20 text-green-400 rounded-full p-2 mb-1">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold text-green-400">{exam.questions.length}</span>
-                <span className="text-xs font-medium mt-1 text-green-400">Preguntas</span>
+                <span className="text-xl font-bold text-green-400">
+                  {exam.questions.length}
+                </span>
+                <span className="text-xs font-medium mt-1 text-green-400">
+                  Preguntas
+                </span>
               </div>
               <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
                 <div className="bg-blue-600/20 text-blue-400 rounded-full p-2 mb-1">
                   <Clock className="w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold text-blue-400">{exam.timeLimit}</span>
-                <span className="text-xs font-medium mt-1 text-blue-400">Minutos</span>
+                <span className="text-xl font-bold text-blue-400">
+                  {exam.timeLimit}
+                </span>
+                <span className="text-xs font-medium mt-1 text-blue-400">
+                  Minutos
+                </span>
               </div>
               <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
                 <div className="bg-yellow-600/20 text-yellow-400 rounded-full p-2 mb-1">
                   <Users className="w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold text-yellow-400">{exam.attemptsAllowed}</span>
-                <span className="text-xs font-medium mt-1 text-yellow-400">Intentos</span>
+                <span className="text-xl font-bold text-yellow-400">
+                  {exam.attemptsAllowed}
+                </span>
+                <span className="text-xs font-medium mt-1 text-yellow-400">
+                  Intentos
+                </span>
               </div>
               <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
                 <div className="bg-purple-600/20 text-purple-400 rounded-full p-2 mb-1">
                   <FileText className="w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold text-purple-400">{exam.version}</span>
-                <span className="text-xs font-medium mt-1 text-purple-400">Versión</span>
+                <span className="text-xl font-bold text-purple-400">
+                  {exam.version}
+                </span>
+                <span className="text-xs font-medium mt-1 text-purple-400">
+                  Versión
+                </span>
               </div>
             </div>
           </>
@@ -123,14 +128,10 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
 
         {/* Información adicional */}
         <div className="flex gap-2 items-center">
-          <Badge variant={exam.source === 'ai' ? 'default' : 'secondary'}>
-            {exam.source === 'ai' ? 'IA' : 'Manual'}
+          <Badge variant={exam.source === "ai" ? "blue" : "silver"}>
+            {exam.source === "ai" ? "IA" : "Manual"}
           </Badge>
-          {exam.adaptive && (
-            <Badge variant="outline">
-              Adaptativo
-            </Badge>
-          )}
+          {exam.adaptive && <Badge variant="outline">Adaptativo</Badge>}
           <span className="text-xs text-muted-foreground ml-auto">
             Creado: {formatDate(exam.createdAt)}
           </span>
@@ -138,4 +139,4 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
       </CardContent>
     </Card>
   );
-} 
+}
