@@ -13,6 +13,8 @@ import { X, Save, Trash2 } from "lucide-react";
 import { useExamStore } from "@/lib/store/useExamStore";
 import { ExamQuestion } from "@/services/examService";
 import { Badge } from "@/components/ui/badge";
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 interface ExamEditModalProps {
   isOpen: boolean;
@@ -38,6 +40,17 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   const [editedExplanation, setEditedExplanation] = useState("");
   const [editedTags, setEditedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ]
+  };
 
   useEffect(() => {
     if (exam && editingQuestionIndex !== null) {
@@ -80,11 +93,6 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
       }
     }
 
-    stopEditing();
-    onClose();
-  };
-
-  const handleCancel = () => {
     stopEditing();
     onClose();
   };
@@ -250,12 +258,12 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
               {/* Explicación */}
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
-                <Textarea
-                  id="explanation-text"
+                <ReactQuill
                   value={editedExplanation}
-                  onChange={(e) => setEditedExplanation(e.target.value)}
-                  placeholder="Ingresa la explicación de la pregunta"
-                  rows={4}
+                  onChange={setEditedExplanation}
+                  theme="snow"
+                  modules={quillModules}
+                  style={{ background: 'white' }}
                 />
               </div>
 
@@ -367,12 +375,12 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="explanation-text">Explicación</Label>
-                <Textarea
-                  id="explanation-text"
+                <ReactQuill
                   value={editedExplanation}
-                  onChange={(e) => setEditedExplanation(e.target.value)}
-                  placeholder="Ingresa la explicación de la pregunta"
-                  rows={6}
+                  onChange={setEditedExplanation}
+                  theme="snow"
+                  modules={quillModules}
+                  style={{ background: 'white' }}
                 />
               </div>
             </div>

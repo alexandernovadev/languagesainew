@@ -248,3 +248,22 @@ body {
     background-position: 100% 0;
   }
 }
+
+/* Estilos dark para ReactQuill */
+.ql-snow .ql-editor {
+  background: #18181b;
+  color: #f4f4f5;
+}
+.ql-toolbar.ql-snow {
+  background: #232329;
+  border-color: #333;
+}
+.ql-snow .ql-picker {
+  color: #f4f4f5;
+}
+.ql-snow .ql-stroke {
+  stroke: #f4f4f5;
+}
+.ql-snow .ql-fill {
+  fill: #f4f4f5;
+}
