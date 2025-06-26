@@ -17,17 +17,16 @@ import {
 import { useExamAttempt } from "@/hooks/useExamAttempt";
 import { useAuth } from "@/hooks/useAuth";
 import { examService, Exam } from "@/services/examService";
-import { useToast } from "@/hooks/use-toast";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { ExamQuestionTaking } from "./ExamQuestionTaking";
 import { ExamSubmissionModal } from "./ExamSubmissionModal";
 import { ExamTimer } from "./ExamTimer";
 import { ExamProgress } from "./ExamProgress";
+import { toast } from "sonner";
 
 export function ExamTakingPage() {
   const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
 
   const [exam, setExam] = useState<Exam | null>(null);
@@ -76,10 +75,8 @@ export function ExamTakingPage() {
         }
       } catch (error) {
         console.error("Error loading exam:", error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "No se pudo cargar el examen",
-          variant: "destructive",
         });
         navigate("/exams");
       } finally {
@@ -88,7 +85,7 @@ export function ExamTakingPage() {
     };
 
     loadExam();
-  }, [examId, navigate, toast]);
+  }, [examId, navigate]);
 
   // Handle exam start
   const handleStartExam = async () => {
@@ -106,10 +103,8 @@ export function ExamTakingPage() {
 
     if (!isAuthenticated) {
       console.log("❌ User not authenticated");
-      toast({
-        title: "Debes iniciar sesión",
+      toast.error("Debes iniciar sesión", {
         description: "Necesitas estar logueado para tomar un examen",
-        variant: "destructive",
       });
       return;
     }
@@ -127,11 +122,9 @@ export function ExamTakingPage() {
       }
     } catch (error) {
       console.error("💥 Error in handleStartExam:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description:
           "No se pudo iniciar el examen. Por favor, intenta de nuevo.",
-        variant: "destructive",
       });
     }
   };

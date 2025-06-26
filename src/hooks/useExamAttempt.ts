@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useExamAttemptStore } from "@/lib/store/useExamAttemptStore";
 import { examAttemptService } from "@/services/examAttemptService";
 import { useUserStore } from "@/lib/store/user-store";
@@ -8,7 +8,6 @@ import { Exam } from "@/services/examService";
 
 export const useExamAttempt = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user } = useUserStore();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -68,10 +67,8 @@ export const useExamAttempt = () => {
       
       if (!user?._id) {
         console.log("❌ No user ID found");
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Debes iniciar sesión para tomar un examen",
-          variant: "destructive",
         });
         return false;
       }
@@ -93,11 +90,9 @@ export const useExamAttempt = () => {
 
         if (!canCreate.canCreate) {
           console.log("❌ Cannot create attempt:", canCreate.message);
-          toast({
-            title: "No puedes tomar este examen",
+          toast.error("No puedes tomar este examen", {
             description:
               canCreate.message || "Has alcanzado el límite de intentos",
-            variant: "destructive",
           });
           return false;
         }
@@ -106,15 +101,13 @@ export const useExamAttempt = () => {
         return true;
       } catch (error) {
         console.error("💥 Error checking if can start exam:", error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "No se pudo verificar si puedes tomar el examen",
-          variant: "destructive",
         });
         return false;
       }
     },
-    [user?._id, toast]
+    [user?._id]
   );
 
   // Start an exam attempt
@@ -124,10 +117,8 @@ export const useExamAttempt = () => {
       
       if (!user?._id) {
         console.log("❌ No user ID in startExam");
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Debes iniciar sesión para tomar un examen",
-          variant: "destructive",
         });
         return false;
       }
@@ -175,10 +166,8 @@ export const useExamAttempt = () => {
           startTimer();
         }
 
-        toast({
-          title: "¡Examen iniciado!",
+        toast.success("¡Examen iniciado!", {
           description: `Has comenzado el examen "${exam.title}"`,
-          variant: "default",
         });
 
         console.log("✅ Exam started successfully");
@@ -188,10 +177,8 @@ export const useExamAttempt = () => {
         const errorMessage =
           error instanceof Error ? error.message : "Error al iniciar el examen";
         setError(errorMessage);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: errorMessage,
-          variant: "destructive",
         });
         return false;
       } finally {
@@ -209,7 +196,6 @@ export const useExamAttempt = () => {
       resetAnswers,
       setTimeRemaining,
       startTimer,
-      toast,
     ]
   );
 
@@ -269,16 +255,14 @@ export const useExamAttempt = () => {
   // Handle time up
   const handleTimeUp = useCallback(async () => {
     if (currentAttempt?._id) {
-      toast({
-        title: "Tiempo agotado",
+      toast.error("Tiempo agotado", {
         description:
           "Se ha agotado el tiempo del examen. Enviando respuestas...",
-        variant: "destructive",
       });
 
       await finishExam();
     }
-  }, [currentAttempt?._id, toast]);
+  }, [currentAttempt?._id]);
 
   // Finish the exam
   const finishExam = useCallback(async (): Promise<boolean> => {
@@ -298,11 +282,9 @@ export const useExamAttempt = () => {
       );
       setCurrentAttempt(submittedAttempt);
 
-      toast({
-        title: "¡Examen enviado!",
+      toast.success("¡Examen enviado!", {
         description:
           "Tu examen ha sido enviado exitosamente. Los resultados estarán disponibles pronto.",
-        variant: "default",
       });
 
       // Navigate to results page
@@ -314,10 +296,8 @@ export const useExamAttempt = () => {
       const errorMessage =
         error instanceof Error ? error.message : "Error al finalizar el examen";
       setError(errorMessage);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: errorMessage,
-        variant: "destructive",
       });
       return false;
     } finally {
@@ -329,7 +309,6 @@ export const useExamAttempt = () => {
     setError,
     stopTimer,
     setCurrentAttempt,
-    toast,
     navigate,
     currentExamId,
   ]);

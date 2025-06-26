@@ -1,74 +1,44 @@
 import { api } from './api';
-import { getAuthHeaders } from '@/utils/services';
 
 export interface ExamGenerationParams {
   topic: string;
   level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   numberOfQuestions?: number;
-  types?: ('multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing')[];
+  types?: string[];
   difficulty?: number;
   userLang?: string;
 }
 
-export interface ExamQuestion {
-  text: string;
-  type: 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
-  isSingleAnswer: boolean;
-  options?: {
-    value: string;
-    label: string;
-    isCorrect: boolean;
-  }[];
-  correctAnswers: string[];
-  explanation: string;
-  tags: string[];
-}
-
 export interface ExamGenerationResponse {
-  questions: ExamQuestion[];
+  success: boolean;
+  message: string;
+  data: {
+    exam: any;
+    questions: any[];
+  };
 }
 
 export interface Exam {
   _id: string;
   title: string;
-  description: string;
+  description?: string;
   language: string;
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-  topic: string;
-  source: 'manual' | 'ai';
-  attemptsAllowed: number;
-  timeLimit: number;
-  adaptive: boolean;
-  version: number;
-  questions: Array<{
-    _id: string;
-    question: {
-      _id: string;
-      text: string;
-      type: 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
-      isSingleAnswer: boolean;
-      level: string;
-      topic: string;
-      difficulty: number;
-      options?: Array<{
-        _id: string;
-        value: string;
-        label: string;
-        isCorrect: boolean;
-      }>;
-      correctAnswers: string[];
-      explanation: string;
-      tags: string[];
-      createdAt: string;
-      updatedAt: string;
-    };
-    weight: number;
-    order: number;
+  topic?: string;
+  source?: 'manual' | 'ai';
+  attemptsAllowed?: number;
+  timeLimit?: number;
+  adaptive?: boolean;
+  version?: number;
+  questions?: Array<{
+    question: string;
+    weight?: number;
+    order?: number;
   }>;
-  createdBy: string;
+  createdBy?: string;
   metadata?: {
-    difficultyScore: number;
-    estimatedDuration: number;
+    difficultyScore?: number;
+    estimatedDuration?: number;
   };
   createdAt: string;
   updatedAt: string;
@@ -120,22 +90,18 @@ export interface UpdateExamRequest {
 }
 
 export interface Pagination {
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
 }
 
 export interface ExamListResponse {
   success: boolean;
   message: string;
   data: {
-    data: Exam[];
-    total: number;
-    page: number;
-    pages: number;
+    exams: Exam[];
+    pagination: Pagination;
   };
 }
 
@@ -153,114 +119,52 @@ export interface ExamStats {
   averageQuestionsPerExam: number;
 }
 
+export interface ExamQuestion {
+  text: string;
+  type: string;
+  isSingleAnswer: boolean;
+  options: string[];
+  correctAnswers: string[];
+  explanation?: string;
+  tags?: string[];
+}
+
 export const examService = {
   // Get all exams with pagination and filters
   async getExams(queryParams?: string): Promise<ExamListResponse> {
-    try {
-      const url = queryParams ? `/api/exams?${queryParams}` : '/api/exams';
-      const response = await api.get(url, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener los exámenes");
-      }
-    }
+    const url = queryParams ? `/api/exams?${queryParams}` : '/api/exams';
+    const response = await api.get(url);
+    return response.data;
   },
 
   // Get exam by ID
   async getExam(id: string): Promise<ExamResponse> {
-    try {
-      const response = await api.get(`/api/exams/${id}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener el examen");
-      }
-    }
+    const response = await api.get(`/api/exams/${id}`);
+    return response.data;
   },
 
   // Create new exam
   async createExam(examData: CreateExamRequest): Promise<ExamResponse> {
-    try {
-      const response = await api.post('/api/exams', examData, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al crear el examen");
-      }
-    }
+    const response = await api.post('/api/exams', examData);
+    return response.data;
   },
 
   // Update exam
   async updateExam(id: string, examData: UpdateExamRequest): Promise<ExamResponse> {
-    try {
-      const response = await api.put(`/api/exams/${id}`, examData, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al actualizar el examen");
-      }
-    }
+    const response = await api.put(`/api/exams/${id}`, examData);
+    return response.data;
   },
 
   // Delete exam
   async deleteExam(id: string): Promise<ExamResponse> {
-    try {
-      const response = await api.delete(`/api/exams/${id}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al eliminar el examen");
-      }
-    }
+    const response = await api.delete(`/api/exams/${id}`);
+    return response.data;
   },
 
   // Get exam statistics
   async getExamStats(): Promise<{ success: boolean; message: string; data: ExamStats }> {
-    try {
-      const response = await api.get('/api/exams/stats', {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener estadísticas de exámenes");
-      }
-    }
+    const response = await api.get('/api/exams/stats');
+    return response.data;
   },
 
   // Generate exam from questions
@@ -277,246 +181,130 @@ export const examService = {
     adaptive?: boolean;
     createdBy?: string;
   }): Promise<ExamResponse> {
-    try {
-      const response = await api.post('/api/exams/generate', data, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al generar el examen");
-      }
-    }
+    const response = await api.post('/api/exams/generate', data);
+    return response.data;
+  },
+
+  // Get exams by language
+  async getExamsByLanguage(language: string, limit?: number): Promise<{ success: boolean; message: string; data: Exam[] }> {
+    const url = limit ? `/api/exams/language/${language}?limit=${limit}` : `/api/exams/language/${language}`;
+    const response = await api.get(url);
+    return response.data;
   },
 
   // Get exams by level
   async getExamsByLevel(level: string, limit?: number): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    try {
-      const url = limit ? `/api/exams/level/${level}?limit=${limit}` : `/api/exams/level/${level}`;
-      const response = await api.get(url, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener exámenes por nivel");
-      }
-    }
+    const url = limit ? `/api/exams/level/${level}?limit=${limit}` : `/api/exams/level/${level}`;
+    const response = await api.get(url);
+    return response.data;
   },
 
   // Get exams by level and language
   async getExamsByLevelAndLanguage(level: string, language: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    try {
-      const response = await api.get(`/api/exams/level/${level}/language/${language}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener exámenes por nivel e idioma");
-      }
-    }
+    const response = await api.get(`/api/exams/level/${level}/language/${language}`);
+    return response.data;
   },
 
   // Get exams by topic
   async getExamsByTopic(topic: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    try {
-      const response = await api.get(`/api/exams/topic/${topic}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener exámenes por tema");
-      }
-    }
+    const response = await api.get(`/api/exams/topic/${topic}`);
+    return response.data;
   },
 
   // Get exams by creator
   async getExamsByCreator(creatorId: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    try {
-      const response = await api.get(`/api/exams/creator/${creatorId}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al obtener exámenes por creador");
-      }
-    }
+    const response = await api.get(`/api/exams/creator/${creatorId}`);
+    return response.data;
   },
 
   // Add question to exam
   async addQuestionToExam(examId: string, questionId: string, weight?: number, order?: number): Promise<ExamResponse> {
-    try {
-      const response = await api.post(`/api/exams/${examId}/questions`, {
-        questionId,
-        weight: weight || 1,
-        order: order || 0
-      }, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al agregar pregunta al examen");
-      }
-    }
+    const response = await api.post(`/api/exams/${examId}/questions`, {
+      questionId,
+      weight: weight || 1,
+      order: order || 0
+    });
+    return response.data;
   },
 
   // Remove question from exam
   async removeQuestionFromExam(examId: string, questionId: string): Promise<ExamResponse> {
-    try {
-      const response = await api.delete(`/api/exams/${examId}/questions/${questionId}`, {
-        headers: getAuthHeaders()
-      });
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else {
-        throw new Error("Error al remover pregunta del examen");
-      }
-    }
+    const response = await api.delete(`/api/exams/${examId}/questions/${questionId}`);
+    return response.data;
   },
 
   // Original methods for AI exam generation
   async generateExam(params: ExamGenerationParams): Promise<ExamGenerationResponse> {
-    try {
-      const response = await api.post('/api/ai/generate-exam', {
-        topic: params.topic,
-        level: params.level || 'B1',
-        numberOfQuestions: params.numberOfQuestions || 10,
-        types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
-        difficulty: params.difficulty || 3,
-        userLang: params.userLang || 'es'
-      }, {
-        headers: getAuthHeaders()
-      });
+    const response = await api.post('/api/ai/generate-exam', {
+      topic: params.topic,
+      level: params.level || 'B1',
+      numberOfQuestions: params.numberOfQuestions || 10,
+      types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
+      difficulty: params.difficulty || 3,
+      userLang: params.userLang || 'es'
+    });
 
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else if (error.message) {
-        throw new Error("Error al generar el examen");
-      } else {
-        throw new Error("Error al generar el examen");
-      }
-    }
+    return response.data;
   },
 
+  // Save exam with questions
   async saveExamWithQuestions(examData: {
     title: string;
-    topic: string;
     level: string;
     difficulty: string;
+    topic: string;
     questions: ExamQuestion[];
   }): Promise<any> {
-    try {
-      // Transformar las preguntas al formato esperado por la API
-      const questions = examData.questions.map(question => ({
-        text: question.text,
-        type: question.type,
-        isSingleAnswer: question.isSingleAnswer,
-        level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
-        difficulty: parseInt(examData.difficulty),
-        topic: examData.topic,
-        options: question.options,
-        correctAnswers: question.correctAnswers,
-        explanation: question.explanation,
-        tags: question.tags
-      }));
+    // Transformar las preguntas al formato esperado por la API
+    const questions = examData.questions.map(question => ({
+      text: question.text,
+      type: question.type,
+      isSingleAnswer: question.isSingleAnswer,
+      level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      difficulty: parseInt(examData.difficulty),
+      topic: examData.topic,
+      options: question.options,
+      correctAnswers: question.correctAnswers,
+      explanation: question.explanation,
+      tags: question.tags
+    }));
 
-      const response = await api.post('/api/exams/with-questions', {
-        title: examData.title,
-        language: 'es', // Por defecto español
-        level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
-        topic: examData.topic,
-        description: `Examen sobre ${examData.topic}`,
-        source: 'ai',
-        attemptsAllowed: 3,
-        timeLimit: 60, // 60 minutos por defecto
-        adaptive: false,
-        questions: questions
-      }, {
-        headers: getAuthHeaders()
-      });
+    const response = await api.post('/api/exams/with-questions', {
+      title: examData.title,
+      language: 'es', // Por defecto español
+      level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      topic: examData.topic,
+      description: `Examen sobre ${examData.topic}`,
+      source: 'ai',
+      attemptsAllowed: 3,
+      timeLimit: 60, // 60 minutos por defecto
+      adaptive: false,
+      questions: questions
+    });
 
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error al guardar el examen");
-      }
-    }
+    return response.data;
   },
 
-  async generateExamStream(
+  // Generate exam with progress tracking
+  async generateExamWithProgress(
     params: ExamGenerationParams,
     onProgress?: (data: any) => void
   ): Promise<ExamGenerationResponse> {
-    try {
-      const response = await api.post('/api/ai/generate-exam', {
-        topic: params.topic,
-        level: params.level || 'B1',
-        numberOfQuestions: params.numberOfQuestions || 10,
-        types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
-        difficulty: params.difficulty || 3,
-        userLang: params.userLang || 'es'
-      }, {
-        headers: getAuthHeaders(),
-        onDownloadProgress: (progressEvent) => {
-          if (onProgress) {
-            onProgress(progressEvent);
-          }
+    const response = await api.post('/api/ai/generate-exam', {
+      topic: params.topic,
+      level: params.level || 'B1',
+      numberOfQuestions: params.numberOfQuestions || 10,
+      types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
+      difficulty: params.difficulty || 3,
+      userLang: params.userLang || 'es'
+    }, {
+      onDownloadProgress: (progressEvent) => {
+        if (onProgress) {
+          onProgress(progressEvent);
         }
-      });
-
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        throw new Error(error.response.data.message);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error al generar el examen");
       }
-    }
+    });
+
+    return response.data;
   }
 }; 

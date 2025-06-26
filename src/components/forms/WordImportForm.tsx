@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
 import WordImportResult from "./WordImportResult";
+import { toast } from "sonner";
 
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
@@ -23,7 +23,6 @@ const duplicateStrategies = [
 ];
 
 export default function WordImportForm() {
-  const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [duplicateStrategy, setDuplicateStrategy] = useState("skip");
@@ -92,15 +91,12 @@ export default function WordImportForm() {
         throw new Error(data.message || "Import failed");
       }
       setResult(data);
-      toast({
-        title: "Import successful",
+      toast.success("Import successful", {
         description: data.message || "Words imported successfully",
       });
     } catch (error: any) {
-      toast({
-        title: "Import error",
+      toast.error("Import error", {
         description: error.message || "An error occurred during import",
-        variant: "destructive",
       });
     } finally {
       setLoading(false);

@@ -8,7 +8,6 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExamGenerator } from "@/hooks/useExamGenerator";
 import { useExamStore } from "@/lib/store/useExamStore";
-import { useToast } from "@/hooks/use-toast";
 import { examService } from "@/services/examService";
 import { ExamConfigForm } from "@/components/exam/ExamConfigForm";
 import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress";
@@ -17,10 +16,10 @@ import { ExamQuestionDisplay } from "@/components/exam/ExamQuestionDisplay";
 import { ExamEditModal } from "@/components/exam/ExamEditModal";
 import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
 import { ExamHeader } from "@/components/exam/ExamHeader";
+import { toast } from "sonner";
 
 export default function ExamGeneratorPage() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const editExamId = searchParams.get('edit');
 
@@ -108,25 +107,21 @@ export default function ExamGeneratorPage() {
             // Navigate to questions tab
             setActiveTab("questions");
             
-            toast({
-              title: "Examen cargado",
+            toast.success("Examen cargado", {
               description: "El examen ha sido cargado para edición",
-              variant: "default",
             });
           }
         } catch (error) {
           console.error('Error loading exam for editing:', error);
-          toast({
-            title: "Error",
+          toast.error("Error", {
             description: "No se pudo cargar el examen para edición",
-            variant: "destructive",
           });
         }
       }
     };
 
     loadExamForEditing();
-  }, [editExamId, loadExistingExam, setExam, setActiveTab, toast]);
+  }, [editExamId, loadExistingExam, setExam, setActiveTab]);
 
   const handleGenerate = async () => {
     resetExamStore();
@@ -156,10 +151,8 @@ export default function ExamGeneratorPage() {
     try {
       await saveExam();
       // Show success toast and redirect to exams page
-      toast({
-        title: "¡Éxito!",
+      toast.success("¡Éxito!", {
         description: "Guardado con éxito",
-        variant: "default",
       });
       navigate("/exams");
     } catch (error) {

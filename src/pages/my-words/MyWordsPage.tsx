@@ -100,7 +100,11 @@ export default function MyWordsPage() {
   }, [localSearch, setSearchQuery]);
 
   useEffect(() => {
-    getWords();
+    getWords().catch((error) => {
+      toast.error("Error al cargar palabras", {
+        description: error.message || "No se pudieron cargar las palabras",
+      });
+    });
   }, [getWords]); // Re-fetch when the store changes
 
   // Sync selectedWord with updated data from store
@@ -117,12 +121,24 @@ export default function MyWordsPage() {
   }, [words, selectedWord, detailsModalOpen]);
 
   const handleFormSubmit = async (data: Partial<Word>) => {
-    if (isEditing && selectedWord) {
-      await updateWord(selectedWord._id, data);
-    } else {
-      await createWord(data as Omit<Word, "_id">);
+    try {
+      if (isEditing && selectedWord) {
+        await updateWord(selectedWord._id, data);
+        toast.success("Palabra actualizada", {
+          description: `La palabra "${data.word || selectedWord.word}" ha sido actualizada correctamente`,
+        });
+      } else {
+        await createWord(data as Omit<Word, "_id">);
+        toast.success("Palabra creada", {
+          description: `La palabra "${data.word}" ha sido agregada a tu vocabulario`,
+        });
+      }
+      setDialogOpen(false);
+    } catch (error: any) {
+      toast.error("Error al guardar palabra", {
+        description: error.message || "No se pudo guardar la palabra",
+      });
     }
-    setDialogOpen(false);
   };
 
   const openDialog = (word?: Word, prefillWord?: string) => {
@@ -141,11 +157,20 @@ export default function MyWordsPage() {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedWord?._id) {
-      deleteWord(selectedWord._id);
-      setDeleteDialogOpen(false);
-      setSelectedWord(null);
+      try {
+        await deleteWord(selectedWord._id);
+        toast.success("Palabra eliminada", {
+          description: `La palabra "${selectedWord.word}" ha sido eliminada`,
+        });
+        setDeleteDialogOpen(false);
+        setSelectedWord(null);
+      } catch (error: any) {
+        toast.error("Error al eliminar palabra", {
+          description: error.message || "No se pudo eliminar la palabra",
+        });
+      }
     }
   };
 
@@ -156,89 +181,143 @@ export default function MyWordsPage() {
 
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
     if (selectedWord?._id) {
-      await updateWordLevel(selectedWord._id, level);
-      // Update selectedWord level directly since we only get level data back
-      setSelectedWord((prev) =>
-        prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null
-      );
+      try {
+        await updateWordLevel(selectedWord._id, level);
+        toast.success("Nivel actualizado", {
+          description: `El nivel de "${selectedWord.word}" ha sido cambiado a ${level}`,
+        });
+        // Update selectedWord level directly since we only get level data back
+        setSelectedWord((prev) =>
+          prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null
+        );
+      } catch (error: any) {
+        toast.error("Error al actualizar nivel", {
+          description: error.message || "No se pudo actualizar el nivel",
+        });
+      }
     }
   };
 
   const handleRefreshImage = async () => {
     if (selectedWord?._id) {
-      await updateWordImage(
-        selectedWord._id,
-        selectedWord.word,
-        selectedWord.img
-      );
-      // Update selectedWord with the latest data
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
-      if (updatedWord) {
-        setSelectedWord(updatedWord);
+      try {
+        await updateWordImage(
+          selectedWord._id,
+          selectedWord.word,
+          selectedWord.img
+        );
+        toast.success("Imagen actualizada", {
+          description: `La imagen de "${selectedWord.word}" ha sido regenerada`,
+        });
+        // Update selectedWord with the latest data
+        const updatedWord = words.find((w) => w._id === selectedWord._id);
+        if (updatedWord) {
+          setSelectedWord(updatedWord);
+        }
+      } catch (error: any) {
+        toast.error("Error al actualizar imagen", {
+          description: error.message || "No se pudo actualizar la imagen",
+        });
       }
     }
   };
 
   const handleRefreshExamples = async () => {
     if (selectedWord?._id) {
-      await updateWordExamples(
-        selectedWord._id,
-        selectedWord.word,
-        selectedWord.language,
-        selectedWord.examples || []
-      );
-      // Update selectedWord with the latest data
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
-      if (updatedWord) {
-        setSelectedWord(updatedWord);
+      try {
+        await updateWordExamples(
+          selectedWord._id,
+          selectedWord.word,
+          selectedWord.language,
+          selectedWord.examples || []
+        );
+        toast.success("Ejemplos actualizados", {
+          description: `Los ejemplos de "${selectedWord.word}" han sido regenerados`,
+        });
+        // Update selectedWord with the latest data
+        const updatedWord = words.find((w) => w._id === selectedWord._id);
+        if (updatedWord) {
+          setSelectedWord(updatedWord);
+        }
+      } catch (error: any) {
+        toast.error("Error al actualizar ejemplos", {
+          description: error.message || "No se pudo actualizar los ejemplos",
+        });
       }
     }
   };
 
   const handleRefreshSynonyms = async () => {
     if (selectedWord?._id) {
-      await updateWordSynonyms(
-        selectedWord._id,
-        selectedWord.word,
-        selectedWord.language,
-        selectedWord.examples || []
-      );
-      // Update selectedWord with the latest data
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
-      if (updatedWord) {
-        setSelectedWord(updatedWord);
+      try {
+        await updateWordSynonyms(
+          selectedWord._id,
+          selectedWord.word,
+          selectedWord.language,
+          selectedWord.examples || []
+        );
+        toast.success("Sinónimos actualizados", {
+          description: `Los sinónimos de "${selectedWord.word}" han sido regenerados`,
+        });
+        // Update selectedWord with the latest data
+        const updatedWord = words.find((w) => w._id === selectedWord._id);
+        if (updatedWord) {
+          setSelectedWord(updatedWord);
+        }
+      } catch (error: any) {
+        toast.error("Error al actualizar sinónimos", {
+          description: error.message || "No se pudo actualizar los sinónimos",
+        });
       }
     }
   };
 
   const handleRefreshCodeSwitching = async () => {
     if (selectedWord?._id) {
-      await updateWordCodeSwitching(
-        selectedWord._id,
-        selectedWord.word,
-        selectedWord.language,
-        selectedWord.examples || []
-      );
-      // Update selectedWord with the latest data
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
-      if (updatedWord) {
-        setSelectedWord(updatedWord);
+      try {
+        await updateWordCodeSwitching(
+          selectedWord._id,
+          selectedWord.word,
+          selectedWord.language,
+          selectedWord.examples || []
+        );
+        toast.success("Code switching actualizado", {
+          description: `El code switching de "${selectedWord.word}" ha sido regenerado`,
+        });
+        // Update selectedWord with the latest data
+        const updatedWord = words.find((w) => w._id === selectedWord._id);
+        if (updatedWord) {
+          setSelectedWord(updatedWord);
+        }
+      } catch (error: any) {
+        toast.error("Error al actualizar code switching", {
+          description: error.message || "No se pudo actualizar el code switching",
+        });
       }
     }
   };
 
   const handleRefreshTypes = async () => {
     if (selectedWord?._id) {
-      await updateWordTypes(
-        selectedWord._id,
-        selectedWord.word,
-        selectedWord.language,
-        selectedWord.examples || []
-      );
-      // Update selectedWord with the latest data
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
-      if (updatedWord) {
-        setSelectedWord(updatedWord);
+      try {
+        await updateWordTypes(
+          selectedWord._id,
+          selectedWord.word,
+          selectedWord.language,
+          selectedWord.examples || []
+        );
+        toast.success("Tipos actualizados", {
+          description: `Los tipos de "${selectedWord.word}" han sido regenerados`,
+        });
+        // Update selectedWord with the latest data
+        const updatedWord = words.find((w) => w._id === selectedWord._id);
+        if (updatedWord) {
+          setSelectedWord(updatedWord);
+        }
+      } catch (error: any) {
+        toast.error("Error al actualizar tipos", {
+          description: error.message || "No se pudo actualizar los tipos",
+        });
       }
     }
   };
@@ -253,8 +332,14 @@ export default function MyWordsPage() {
     setGenerating(true);
     try {
       await generateWord(localSearch);
-      toast.success(`Palabra "${localSearch}" generada correctamente.`);
+      toast.success("Palabra generada", {
+        description: `La palabra "${localSearch}" ha sido generada y agregada a tu vocabulario`,
+      });
       await getWords();
+    } catch (error: any) {
+      toast.error("Error al generar palabra", {
+        description: error.message || "No se pudo generar la palabra",
+      });
     } finally {
       setGenerating(false);
     }
@@ -435,7 +520,11 @@ export default function MyWordsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => getWords()}
+                              onClick={() => getWords().catch((error) => {
+                                toast.error("Error al recargar", {
+                                  description: error.message || "No se pudieron recargar las palabras",
+                                });
+                              })}
                               className="rounded-full"
                             >
                               <RotateCcw className="h-4 w-4 mr-2" />

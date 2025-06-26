@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { v4 as uuidv4 } from "uuid";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface EditableListProps {
   items: string[];
@@ -79,7 +79,6 @@ export function EditableList({
 }: EditableListProps) {
   const [newItem, setNewItem] = useState("");
   const [ids, setIds] = useState<string[]>(() => items.map(() => uuidv4()));
-  const { toast } = useToast();
 
   // Sincronizar ids si cambia la longitud de items
   if (items.length !== ids.length) {
@@ -135,8 +134,7 @@ export function EditableList({
       const newIds = arrayMove(ids, oldIndex, newIndex);
       onChange(newItems);
       setIds(newIds);
-      toast({
-        title: "¡Orden cambiado!",
+      toast("¡Orden cambiado!", {
         description: `Nuevo orden: ${newItems.join(", ")}`,
         duration: 1500,
       });

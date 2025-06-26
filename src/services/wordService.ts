@@ -1,231 +1,110 @@
 import { Word } from "../models/Word";
-import { getAuthHeaders } from "@/utils/services";
 import { api } from "./api";
 import { WordFilters } from "@/components/forms/word-filters/types";
 
 export const wordService = {
   async getWords(page: number, limit: number, filters?: Partial<WordFilters>) {
-    try {
-      // Construir query params
-      const params = new URLSearchParams();
-      
-      // Parámetros básicos
-      params.append('page', page.toString());
-      params.append('limit', limit.toString());
-      
-      // Agregar filtros si existen
-      if (filters) {
-        Object.entries(filters).forEach(([key, value]) => {
-          if (value !== undefined && value !== null && value !== '') {
-            params.append(key, value.toString());
-          }
-        });
-      }
-      
-      const url = `/api/words?${params.toString()}`;
-      const res = await api.get(url, { headers: getAuthHeaders() });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
+    // Construir query params
+    const params = new URLSearchParams();
+    
+    // Parámetros básicos
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    
+    // Agregar filtros si existen
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, value.toString());
+        }
+      });
     }
+    
+    const url = `/api/words?${params.toString()}`;
+    const res = await api.get(url);
+    return res.data;
   },
 
   async getWordById(id: string) {
-    try {
-      const res = await api.get(`/api/words/${id}`, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.get(`/api/words/${id}`);
+    return res.data;
   },
 
   async getWordByName(word: string) {
-    try {
-      const res = await api.get(`/api/words/word/${word}`, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.get(`/api/words/word/${word}`);
+    return res.data;
   },
 
   async createWord(wordData: Omit<Word, "_id">) {
-    try {
-      const res = await api.post(`/api/words`, wordData, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.post(`/api/words`, wordData);
+    return res.data;
   },
 
   async updateWord(id: string, wordData: Partial<Word>) {
-    try {
-      const res = await api.put(`/api/words/${id}`, wordData, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(`/api/words/${id}`, wordData);
+    return res.data;
   },
 
   async updateWordLevel(id: string, level: string) {
-    try {
-      const res = await api.put(
-        `/api/words/${id}/level`,
-        { level },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/words/${id}/level`,
+      { level }
+    );
+    return res.data;
   },
 
   async incrementWordSeen(id: string) {
-    try {
-      const res = await api.put(
-        `/api/words/${id}/increment-seen`,
-        {},
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/words/${id}/increment-seen`,
+      {}
+    );
+    return res.data;
   },
 
   async deleteWord(id: string) {
-    try {
-      const res = await api.delete(`/api/words/${id}`, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.delete(`/api/words/${id}`);
+    return res.data;
   },
 
   async getRecentHardOrMediumWords() {
-    try {
-      const res = await api.get(`/api/words/get-cards-anki`, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.get(`/api/words/get-cards-anki`);
+    return res.data;
   },
 
   async generateWordJSON(prompt: string, language = "en") {
-    try {
-      const res = await api.post(
-        `/api/ai/generate-wordJson`,
-        { prompt, language },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.post(
+      `/api/ai/generate-wordJson`,
+      { prompt, language }
+    );
+    return res.data;
   },
 
-  // AI Methods for updating word content
+  async importWords(file: File, duplicateStrategy: string, batchSize: number, validateOnly: boolean) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("duplicateStrategy", duplicateStrategy);
+    formData.append("batchSize", batchSize.toString());
+    formData.append("validateOnly", validateOnly.toString());
+
+    const res = await api.post(`/api/words/import-json`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  },
+
   async updateWordExamples(
     wordId: string,
     word: string,
     language: string,
     oldExamples: string[]
   ) {
-    try {
-      const res = await api.put(
-        `/api/ai/generate-word-examples/${wordId}`,
-        { word, language, oldExamples },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/ai/update-word-examples`,
+      { wordId, word, language, oldExamples }
+    );
+    return res.data;
   },
 
   async updateWordCodeSwitching(
@@ -234,24 +113,11 @@ export const wordService = {
     language: string,
     oldExamples: string[]
   ) {
-    try {
-      const res = await api.put(
-        `/api/ai/generate-code-switching/${wordId}`,
-        { word, language, oldExamples },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/ai/update-word-code-switching`,
+      { wordId, word, language, oldExamples }
+    );
+    return res.data;
   },
 
   async updateWordSynonyms(
@@ -260,24 +126,11 @@ export const wordService = {
     language: string,
     oldExamples: string[]
   ) {
-    try {
-      const res = await api.put(
-        `/api/ai/generate-code-synonyms/${wordId}`,
-        { word, language, oldExamples },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/ai/update-word-synonyms`,
+      { wordId, word, language, oldExamples }
+    );
+    return res.data;
   },
 
   async updateWordTypes(
@@ -286,61 +139,23 @@ export const wordService = {
     language: string,
     oldExamples: string[]
   ) {
-    try {
-      const res = await api.put(
-        `/api/ai/generate-word-wordtypes/${wordId}`,
-        { word, language, oldExamples },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/ai/update-word-types`,
+      { wordId, word, language, oldExamples }
+    );
+    return res.data;
   },
 
   async updateWordImage(wordId: string, word: string, imgOld: string = "") {
-    try {
-      const res = await api.post(
-        `/api/ai/generate-image/${wordId}`,
-        { word, imgOld },
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.put(
+      `/api/ai/update-word-image`,
+      { wordId, word, imgOld }
+    );
+    return res.data;
   },
 
   async exportWords() {
-    try {
-      const res = await api.get(`/api/words/export-json`, {
-        headers: getAuthHeaders(),
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        throw new Error(error.response.data.error);
-      } else if (error.message) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Error de conexión");
-      }
-    }
+    const res = await api.get(`/api/words/export-json`);
+    return res.data;
   },
 };

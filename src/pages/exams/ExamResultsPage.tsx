@@ -16,13 +16,12 @@ import {
 } from 'lucide-react';
 import { examAttemptService } from '@/services/examAttemptService';
 import { examService, Exam } from '@/services/examService';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from "sonner";
 import { ExamAttempt } from '@/lib/store/useExamAttemptStore';
 
 export default function ExamResultsPage() {
   const { examId, attemptId } = useParams<{ examId: string; attemptId: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
   
   const [exam, setExam] = useState<Exam | null>(null);
   const [attempt, setAttempt] = useState<ExamAttempt | null>(null);
@@ -48,10 +47,8 @@ export default function ExamResultsPage() {
         setAttempt(attemptData);
       } catch (error) {
         console.error('Error loading exam results:', error);
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "No se pudieron cargar los resultados del examen",
-          variant: "destructive",
         });
         navigate('/exams');
       } finally {
@@ -60,7 +57,7 @@ export default function ExamResultsPage() {
     };
 
     loadData();
-  }, [examId, attemptId, navigate, toast]);
+  }, [examId, attemptId, navigate]);
 
   if (loading) {
     return (
