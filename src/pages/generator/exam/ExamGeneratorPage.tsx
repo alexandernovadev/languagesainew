@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +8,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExamGenerator } from "@/hooks/useExamGenerator";
 import { useExamStore } from "@/lib/store/useExamStore";
+import { useToast } from "@/hooks/use-toast";
 import { ExamConfigForm } from "@/components/exam/ExamConfigForm";
 import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress";
 import { ExamSummary } from "@/components/exam/ExamSummary";
@@ -16,6 +18,9 @@ import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
 import { ExamHeader } from "@/components/exam/ExamHeader";
 
 export default function ExamGeneratorPage() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   const {
     state,
     filters,
@@ -91,10 +96,15 @@ export default function ExamGeneratorPage() {
   const handleSaveExam = async () => {
     try {
       await saveExam();
-      // Mostrar notificación de éxito
-      alert("¡Examen guardado exitosamente!");
+      // Show success toast and redirect to exams page
+      toast({
+        title: "¡Éxito!",
+        description: "Guardado con éxito",
+        variant: "default",
+      });
+      navigate("/exams");
     } catch (error) {
-      // El error ya se maneja en el store
+      // The error is already handled in the store
     }
   };
 
