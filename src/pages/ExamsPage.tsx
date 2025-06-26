@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +42,9 @@ export default function ExamsPage() {
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Evitar fetch duplicado por filtros/paginación al montar
+  const filtersFirstRender = useRef(true);
 
   const fetchExams = async () => {
     try {
@@ -110,6 +113,10 @@ export default function ExamsPage() {
 
   useEffect(() => {
     // Fetch when pagination or filters change (but not on initial mount)
+    if (filtersFirstRender.current) {
+      filtersFirstRender.current = false;
+      return;
+    }
     if (pagination.currentPage > 0) {
       fetchExams().catch((error) => {
         toast.error("Error al cargar exámenes", {

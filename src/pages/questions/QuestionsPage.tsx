@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,11 +60,20 @@ export default function QuestionsPage() {
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [localSearch, setLocalSearch] = useState("");
 
+  // Evitar fetch duplicado por filtros al montar
+  const filtersFirstRender = useRef(true);
+  // Evitar fetch duplicado por búsqueda local al montar
+  const searchFirstRender = useRef(true);
+
   useEffect(() => {
+    if (searchFirstRender.current) {
+      searchFirstRender.current = false;
+      return;
+    }
+    if (localSearch === "") return;
     const handler = setTimeout(() => {
       setSearchQuery(localSearch);
     }, 500); // 500ms debounce delay
-
     return () => {
       clearTimeout(handler);
     };
@@ -153,6 +162,10 @@ export default function QuestionsPage() {
 
   // Usar useCallback para evitar re-renders innecesarios
   const handleFiltersChange = useCallback((filters: any) => {
+    if (filtersFirstRender.current) {
+      filtersFirstRender.current = false;
+      return;
+    }
     setFilters(filters);
     // Llamar getQuestions después de actualizar los filtros
     setTimeout(() => {
