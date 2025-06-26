@@ -7,6 +7,7 @@ import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from "@
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { getLogs, exportLogs, clearLogs } from "@/services/logService";
+import { toast } from "sonner";
 
 const LEVELS = ["INFO", "ERROR", "UNKNOWN"];
 const METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
@@ -34,9 +35,11 @@ export default function LogsSettingsPage() {
       const res = await getLogs({ level, method, search, page, limit, dateFrom, dateTo });
       setLogs(res.data.data.logs || []);
       setTotal(res.data.data.pagination?.total || 0);
+      toast.success("Logs cargados exitosamente");
     } catch (e) {
       setLogs([]);
       setTotal(0);
+      toast.error("Error al cargar los logs");
     } finally {
       setLoading(false);
     }
