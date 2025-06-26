@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ExamQuestion, ExamGenerationResponse, examService } from '@/services/examService';
+import { ExamQuestion, UnifiedExamQuestion, ExamGenerationResponse, examService } from '@/services/examService';
 
 interface ExamStore {
   // Exam data
@@ -8,7 +8,7 @@ interface ExamStore {
     topic: string;
     level: string;
     difficulty: string;
-    questions: ExamQuestion[];
+    questions: UnifiedExamQuestion[];
   } | null;
   
   // Editing state
@@ -23,7 +23,7 @@ interface ExamStore {
   // Actions
   setExam: (exam: ExamStore['exam']) => void;
   updateExamTitle: (title: string) => void;
-  updateQuestion: (index: number, question: ExamQuestion) => void;
+  updateQuestion: (index: number, question: UnifiedExamQuestion) => void;
   updateExplanation: (questionIndex: number, explanation: string) => void;
   updateTags: (questionIndex: number, tags: string[]) => void;
   startEditing: (questionIndex: number | null, field: ExamStore['editingField']) => void;
@@ -86,7 +86,9 @@ export const useExamStore = create<ExamStore>((set, get) => ({
   
   saveExam: async () => {
     const { exam } = get();
-    if (!exam) return;
+    if (!exam) {
+      throw new Error('No hay examen para guardar');
+    }
     
     set({ isSaving: true, saveError: null });
     
@@ -100,7 +102,7 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       console.error('Error al guardar el examen:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error al guardar el examen';
       set({ isSaving: false, saveError: errorMessage });
-      throw error;
+      throw new Error('Error al guardar el examen. Por favor, verifica los datos e intenta de nuevo.');
     }
   },
   

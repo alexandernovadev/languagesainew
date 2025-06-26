@@ -7,21 +7,19 @@ interface LectureStore {
   activeLecture: Lecture | null;
   loading: boolean;
   actionLoading: { [key: string]: boolean };
-  errors: { [key: string]: string | null };
   totalPages: number;
   currentPage: number;
 
   getLectures: (page?: number, limit?: number) => Promise<void>;
   getLectureById: (id: string) => Promise<void>;
-  postLecture: (lectureData: Lecture) => Promise<void>;
-  putLecture: (id: string, lectureData: Lecture) => Promise<void>;
+  postLecture: (lectureData: Lecture) => Promise<Lecture>;
+  putLecture: (id: string, lectureData: Lecture) => Promise<Lecture>;
   putLectureImage: (
     id: string,
     lectureString: string,
     imgOld: string
   ) => Promise<void>;
   deleteLecture: (id: string | number) => Promise<void>;
-  clearErrors: () => void;
   updateUrlAudio: (id: string, urlAudio: string) => Promise<void>;
   loadMoreLectures: (page: number, limit?: number) => Promise<void>;
 }
@@ -31,14 +29,12 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
   activeLecture: null,
   loading: false,
   actionLoading: {},
-  errors: {},
   totalPages: 1,
   currentPage: 1,
 
   getLectures: async (page = 1, limit = 10) => {
     set({
       loading: true,
-      errors: { ...get().errors, get: null },
       currentPage: page,
     });
     try {
@@ -50,14 +46,14 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
         loading: false,
       });
     } catch (error: any) {
-      set({ errors: { ...get().errors, get: error.message }, loading: false });
+      set({ loading: false });
+      throw error;
     }
   },
 
   loadMoreLectures: async (page: number, limit = 10) => {
     set({
       loading: true,
-      errors: { ...get().errors, get: null },
     });
     try {
       const { data } = await lectureService.getLectures(page, limit);
@@ -77,27 +73,25 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
         };
       });
     } catch (error: any) {
-      set({ errors: { ...get().errors, get: error.message }, loading: false });
+      set({ loading: false });
+      throw error;
     }
   },
 
   getLectureById: async (id: string) => {
-    set({ loading: true, errors: { ...get().errors, getById: null } });
+    set({ loading: true });
     try {
       const data = await lectureService.getLectureById(id);
       set({ activeLecture: data, loading: false });
     } catch (error: any) {
-      set({
-        errors: { ...get().errors, getById: error.message },
-        loading: false,
-      });
+      set({ loading: false });
+      throw error;
     }
   },
 
   postLecture: async (lectureData: Lecture) => {
     set({
       actionLoading: { ...get().actionLoading, post: true },
-      errors: { ...get().errors, post: null },
     });
     try {
       const { data } = await lectureService.postLecture(lectureData);
@@ -106,18 +100,19 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
         lectures: [...state.lectures, data],
         actionLoading: { ...state.actionLoading, post: false },
       }));
+      
+      return data;
     } catch (error: any) {
       set({
-        errors: { ...get().errors, post: error.message },
         actionLoading: { ...get().actionLoading, post: false },
       });
+      throw error;
     }
   },
 
   updateUrlAudio: async (id: string, urlAudio: string, voice = "nova") => {
     set({
       actionLoading: { ...get().actionLoading, updateAudio: true },
-      errors: { ...get().errors, updateAudio: null },
     });
     try {
       const data = await lectureService.updateLectureAudioUrl(
@@ -137,16 +132,15 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       }));
     } catch (error: any) {
       set({
-        errors: { ...get().errors, updateAudio: error.message },
         actionLoading: { ...get().actionLoading, updateAudio: false },
       });
+      throw error;
     }
   },
 
   putLecture: async (id: string, lectureData: Lecture) => {
     set({
       actionLoading: { ...get().actionLoading, put: true },
-      errors: { ...get().errors, put: null },
     });
     try {
       const data = await lectureService.putLecture(id, lectureData);
@@ -157,11 +151,13 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
         activeLecture: data,
         actionLoading: { ...state.actionLoading, put: false },
       }));
+      
+      return data;
     } catch (error: any) {
       set({
-        errors: { ...get().errors, put: error.message },
         actionLoading: { ...get().actionLoading, put: false },
       });
+      throw error;
     }
   },
 
@@ -172,7 +168,6 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
   ) => {
     set({
       actionLoading: { ...get().actionLoading, putImage: true },
-      errors: { ...get().errors, putImage: null },
     });
     try {
       const data = await lectureService.putLectureImage(
@@ -198,16 +193,15 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       }));
     } catch (error: any) {
       set({
-        errors: { ...get().errors, putImage: error.message },
         actionLoading: { ...get().actionLoading, putImage: false },
       });
+      throw error;
     }
   },
 
   deleteLecture: async (id: string | number) => {
     set({
       actionLoading: { ...get().actionLoading, delete: true },
-      errors: { ...get().errors, delete: null },
     });
     try {
       await lectureService.deleteLecture(id);
@@ -219,11 +213,9 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       }));
     } catch (error: any) {
       set({
-        errors: { ...get().errors, delete: error.message },
         actionLoading: { ...get().actionLoading, delete: false },
       });
+      throw error;
     }
   },
-
-  clearErrors: () => set({ errors: {} }),
 }));

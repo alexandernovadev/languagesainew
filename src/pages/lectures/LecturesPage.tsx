@@ -28,6 +28,7 @@ import type { Lecture } from "@/models/Lecture";
 import { Plus, RotateCcw } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { toast } from "sonner";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -58,33 +59,68 @@ export default function LecturesPage() {
 
   // Fetch lectures on mount
   useEffect(() => {
-    getLectures(1, 10);
+    const loadLectures = async () => {
+      try {
+        await getLectures(1, 10);
+      } catch (error: any) {
+        toast.error(error.message || "Error al cargar las lecturas");
+      }
+    };
+    loadLectures();
   }, []);
 
-  const handlePageChange = (page: number) => {
-    getLectures(page, 10);
+  const handlePageChange = async (page: number) => {
+    try {
+      await getLectures(page, 10);
+    } catch (error: any) {
+      toast.error(error.message || "Error al cargar la página");
+    }
   };
 
   const handleAddLecture = async (
     data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
   ) => {
-    await postLecture(data as Lecture);
-    closeAddModal();
+    try {
+      await postLecture(data as Lecture);
+      toast.success("Lectura creada exitosamente");
+      closeAddModal();
+    } catch (error: any) {
+      toast.error(error.message || "Error al crear la lectura");
+    }
   };
 
   const handleEditLecture = async (
     data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
   ) => {
     if (selectedLectureId) {
-      await putLecture(selectedLectureId, data as Lecture);
-      closeEditModal();
+      try {
+        await putLecture(selectedLectureId, data as Lecture);
+        toast.success("Lectura actualizada exitosamente");
+        closeEditModal();
+      } catch (error: any) {
+        toast.error(error.message || "Error al actualizar la lectura");
+      }
     }
   };
 
   const handleDeleteConfirm = async () => {
     if (selectedLectureId) {
-      await deleteLecture(selectedLectureId);
-      closeDeleteDialog();
+      try {
+        await deleteLecture(selectedLectureId);
+        toast.success("Lectura eliminada exitosamente");
+        closeDeleteDialog();
+      } catch (error: any) {
+        toast.error(error.message || "Error al eliminar la lectura");
+      }
+    }
+  };
+
+  const handleRefresh = async () => {
+    try {
+      await getLectures(1, 10);
+      toast.success("Lecturas actualizadas");
+    } catch (error: any) {
+      toast.error(error.message || "Error al actualizar las lecturas");
     }
   };
 
@@ -137,6 +173,14 @@ export default function LecturesPage() {
                   </div>
                 </DialogContent>
               </Dialog>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                className="rounded-full"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         }
@@ -153,7 +197,7 @@ export default function LecturesPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => getLectures(1, 10)}
+                  onClick={handleRefresh}
                   className="rounded-full"
                 >
                   <RotateCcw className="h-4 w-4" />

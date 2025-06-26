@@ -14,6 +14,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { SPEECH_RATES } from "../../../speechRates";
+import { toast } from "sonner";
 
 export default function AnkiGamePage() {
   const {
@@ -25,7 +26,14 @@ export default function AnkiGamePage() {
   } = useWordStore();
 
   useEffect(() => {
-    getRecentHardOrMediumWords();
+    const fetchWords = async () => {
+      try {
+        await getRecentHardOrMediumWords();
+      } catch (error: any) {
+        toast.error(error.message || "Error al cargar tarjetas");
+      }
+    };
+    fetchWords();
   }, [getRecentHardOrMediumWords]);
 
   const [isFlipped, setIsFlipped] = useState(false);
@@ -57,9 +65,14 @@ export default function AnkiGamePage() {
 
   const handleSetLevel = async (level: "easy" | "medium" | "hard") => {
     if (words[gameStats.currentIndex]?._id) {
-      await updateWordLevel(words[gameStats.currentIndex]._id, level);
-      gameStats.next();
-      setIsFlipped(false);
+      try {
+        await updateWordLevel(words[gameStats.currentIndex]._id, level);
+        toast.success(`Palabra marcada como '${level}'`);
+        gameStats.next();
+        setIsFlipped(false);
+      } catch (error: any) {
+        toast.error(error.message || "Error al actualizar el nivel de la palabra");
+      }
     }
   };
 

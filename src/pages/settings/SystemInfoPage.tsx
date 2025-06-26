@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import packageJson from "../../../package.json";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
+import { toast } from "sonner";
 
 interface BackendInfo {
   date: string;
@@ -28,9 +29,11 @@ export default function SystemInfoPage() {
           setBackendInfo(data.data);
         } else {
           setError("Error al obtener información del backend");
+          toast.error("Error al obtener información del backend");
         }
       } catch (err) {
         setError("No se pudo conectar con el backend");
+        toast.error("No se pudo conectar con el backend");
       } finally {
         setLoading(false);
       }

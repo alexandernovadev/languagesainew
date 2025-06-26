@@ -8,6 +8,7 @@ import { examService, Exam } from '@/services/examService';
 import { useNavigate } from 'react-router-dom';
 import ExamCard from '@/components/exam/ExamCard';
 import ExamViewModal from '@/components/exam/ExamViewModal';
+import { toast } from 'sonner';
 
 interface ExamFilters {
   level: string;
@@ -63,12 +64,12 @@ export default function ExamsPage() {
       console.log('API Response:', response);
       
       if (response && response.success && response.data) {
-        setExams(response.data.data || []);
+        setExams(response.data.exams || []);
         
         setPagination({
-          currentPage: response.data.page || 1,
-          totalPages: response.data.pages || 1,
-          totalItems: response.data.total || 0,
+          currentPage: response.data.pagination?.page || 1,
+          totalPages: response.data.pagination?.pages || 1,
+          totalItems: response.data.pagination?.total || 0,
           itemsPerPage: pagination.itemsPerPage
         });
       } else {
@@ -80,8 +81,11 @@ export default function ExamsPage() {
           totalItems: 0
         }));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching exams:', error);
+      toast.error("Error al cargar exámenes", {
+        description: error.message || "No se pudieron cargar los exámenes",
+      });
       setExams([]);
       setPagination(prev => ({
         ...prev,
@@ -95,13 +99,21 @@ export default function ExamsPage() {
 
   useEffect(() => {
     // Initial fetch on component mount
-    fetchExams();
+    fetchExams().catch((error) => {
+      toast.error("Error al cargar exámenes", {
+        description: error.message || "No se pudieron cargar los exámenes",
+      });
+    });
   }, []); // Empty dependency array for initial load
 
   useEffect(() => {
     // Fetch when pagination or filters change (but not on initial mount)
     if (pagination.currentPage > 0) {
-      fetchExams();
+      fetchExams().catch((error) => {
+        toast.error("Error al cargar exámenes", {
+          description: error.message || "No se pudieron cargar los exámenes",
+        });
+      });
     }
   }, [pagination.currentPage, filters.sortBy, filters.sortOrder, filters.level, filters.language, filters.topic, filters.source, filters.adaptive]);
 
@@ -112,7 +124,11 @@ export default function ExamsPage() {
 
   const handleSearch = () => {
     setPagination(prev => ({ ...prev, currentPage: 1 }));
-    fetchExams();
+    fetchExams().catch((error) => {
+      toast.error("Error en la búsqueda", {
+        description: error.message || "No se pudo realizar la búsqueda",
+      });
+    });
   };
 
   const handleViewExam = (exam: Exam) => {

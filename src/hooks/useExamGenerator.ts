@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { examService, ExamGenerationParams, ExamGenerationResponse, ExamQuestion } from '@/services/examService';
+import { examService, ExamGenerationParams, ExamGenerationResponse, ExamQuestion, UnifiedExamQuestion } from '@/services/examService';
 import { questionTypes, questionLevels, questionDifficulties } from '@/data/questionTypes';
+import { toast } from 'sonner';
 
 export interface ExamGeneratorState {
   isGenerating: boolean;
@@ -41,7 +42,11 @@ export function useExamGenerator() {
 
   const generateExam = useCallback(async () => {
     if (!filters.topic.trim()) {
-      setState(prev => ({ ...prev, error: 'El tema es requerido' }));
+      const errorMsg = 'El tema es requerido';
+      setState(prev => ({ ...prev, error: errorMsg }));
+      toast.error("Error de validación", {
+        description: errorMsg,
+      });
       return;
     }
 
@@ -63,7 +68,7 @@ export function useExamGenerator() {
         userLang: filters.userLang
       };
 
-      const examData = await examService.generateExamStream(params, (data) => {
+      const examData = await examService.generateExamWithProgress(params, (data) => {
         setState(prev => ({ ...prev, progress: 50 }));
       });
 
@@ -73,12 +78,21 @@ export function useExamGenerator() {
         generatedExam: examData,
         progress: 100
       }));
+
+      toast.success("¡Examen generado!", {
+        description: `Se generaron ${examData.data.questions.length} preguntas sobre "${filters.topic}"`,
+      });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al generar el examen';
       setState(prev => ({
         ...prev,
         isGenerating: false,
-        error: error instanceof Error ? error.message : 'Error al generar el examen'
+        error: errorMessage
       }));
+      
+      toast.error("Error al generar examen", {
+        description: errorMessage,
+      });
     }
   }, [filters]);
 
@@ -115,6 +129,10 @@ export function useExamGenerator() {
       topic,
       level
     }));
+
+    toast.success("Examen cargado", {
+      description: `Examen sobre "${topic}" cargado para edición`,
+    });
   }, []);
 
   const getQuestionTypeLabel = useCallback((type: string) => {

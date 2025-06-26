@@ -123,10 +123,24 @@ export interface ExamQuestion {
   text: string;
   type: string;
   isSingleAnswer: boolean;
-  options: string[];
+  options?: Array<{
+    value: string;
+    label: string;
+    isCorrect: boolean;
+  }>;
   correctAnswers: string[];
   explanation?: string;
   tags?: string[];
+}
+
+// Interfaz unificada para preguntas de examen
+export interface UnifiedExamQuestion extends ExamQuestion {
+  // Campos adicionales para compatibilidad
+  level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  difficulty?: number;
+  topic?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const examService = {
@@ -253,7 +267,7 @@ export const examService = {
     level: string;
     difficulty: string;
     topic: string;
-    questions: ExamQuestion[];
+    questions: UnifiedExamQuestion[];
   }): Promise<any> {
     // Transformar las preguntas al formato esperado por la API
     const questions = examData.questions.map(question => ({
