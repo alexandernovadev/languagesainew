@@ -27,7 +27,6 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
     exam,
     editingQuestionIndex,
     editingField,
-    updateExamTitle,
     updateQuestion,
     updateExplanation,
     updateTags,
@@ -37,15 +36,11 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   const [editedQuestion, setEditedQuestion] = useState<ExamQuestion | null>(
     null
   );
-  const [editedTitle, setEditedTitle] = useState("");
   const [newTag, setNewTag] = useState("");
 
   useEffect(() => {
     if (exam && editingQuestionIndex !== null) {
       setEditedQuestion(exam.questions[editingQuestionIndex]);
-    }
-    if (exam && editingField === "title") {
-      setEditedTitle(exam.title);
     }
   }, [exam, editingQuestionIndex, editingField]);
 
@@ -65,9 +60,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
       alert("Todas las respuestas deben tener texto.");
       return;
     }
-    if (editingField === "title" && exam) {
-      updateExamTitle(editedTitle);
-    } else if (editedQuestion && editingQuestionIndex !== null) {
+    if (editedQuestion && editingQuestionIndex !== null) {
       if (editingField === "question") {
         updateQuestion(editingQuestionIndex, editedQuestion);
       } else if (editingField === "answers") {
@@ -146,7 +139,6 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
   };
 
   const getModalTitle = () => {
-    if (editingField === "title") return "Editar Título del Examen";
     if (editingQuestionIndex !== null) {
       switch (editingField) {
         case "question":

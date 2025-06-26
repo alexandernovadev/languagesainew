@@ -12,6 +12,7 @@ import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress
 import { ExamSummary } from "@/components/exam/ExamSummary";
 import { ExamQuestionDisplay } from "@/components/exam/ExamQuestionDisplay";
 import { ExamEditModal } from "@/components/exam/ExamEditModal";
+import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
 
 export default function ExamGeneratorPage() {
   const {
@@ -29,6 +30,7 @@ export default function ExamGeneratorPage() {
   const {
     exam,
     isEditing,
+    editingField,
     setExam,
     saveExam,
     resetExam: resetExamStore,
@@ -239,9 +241,13 @@ export default function ExamGeneratorPage() {
         </Tabs>
       </div>
 
-      {/* Edit Modal */}
+      {/* Edit Modals */}
       <ExamEditModal 
-        isOpen={isEditing} 
+        isOpen={isEditing && editingField !== 'title'} 
+        onClose={() => {}} 
+      />
+      <ExamTitleEditModal 
+        isOpen={isEditing && editingField === 'title'} 
         onClose={() => {}} 
       />
     </PageLayout>
