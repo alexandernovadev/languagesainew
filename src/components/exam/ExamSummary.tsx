@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Download, Eye, RefreshCw, FileText } from 'lucide-react';
+import { Save, Eye, RefreshCw, FileText } from 'lucide-react';
 import { ExamGenerationResponse } from '@/services/examService';
 import { ExamGeneratorFilters } from '@/hooks/useExamGenerator';
 import { ExamStats } from './ExamStats';
@@ -79,8 +79,8 @@ export function ExamSummary({
             </Button>
             
             <Button onClick={onDownload} className="flex-1" variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Descargar PDF
+              <Save className="h-4 w-4 mr-2" />
+              Guardar Examen
             </Button>
             
             <Button onClick={onRegenerate} className="flex-1" variant="outline">

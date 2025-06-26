@@ -6,6 +6,7 @@ export { ExamQuestionDisplay } from './ExamQuestionDisplay';
 export { SuggestedTopics } from './SuggestedTopics';
 export { ExamStats } from './ExamStats';
 export { ExamOptionCard } from './ExamOptionCard';
+export { ExamEditModal } from './ExamEditModal';
 
 // Sub-components
 export { ExamFormField } from './components/ExamFormField';

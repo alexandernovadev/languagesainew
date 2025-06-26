@@ -2,9 +2,12 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Edit } from 'lucide-react';
 import { ExamQuestion } from '@/services/examService';
 import { ExamOptionCard } from './ExamOptionCard';
 import { getQuestionTypeColor, getQuestionTypeLabel } from './helpers/examUtils';
+import { useExamStore } from '@/lib/store/useExamStore';
 
 interface ExamQuestionDisplayProps {
   question: ExamQuestion;
@@ -12,6 +15,8 @@ interface ExamQuestionDisplayProps {
 }
 
 export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDisplayProps) {
+  const { startEditing } = useExamStore();
+
   // Helper para el círculo
   const renderCircle = (content: string, colorClass: string) => (
     <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${colorClass} text-white`}>
@@ -24,11 +29,18 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
   // Helper para color del círculo (siempre verde)
   const circleColor = 'bg-green-500';
 
+  const handleEditQuestion = () => {
+    startEditing(questionNumber - 1, 'question');
+  };
+
   const renderQuestionContent = () => {
     // Si hay options, mostrar con ExamOptionCard
     if (question.options && question.options.length > 0) {
       return (
         <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="font-semibold text-foreground">Respuestas:</h4>
+          </div>
           <div className="grid gap-2">
             {question.options.map((option, index) => (
               <ExamOptionCard
@@ -53,6 +65,9 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
       case 'writing':
         return (
           <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="font-semibold text-foreground">Respuestas:</h4>
+            </div>
             <div className="grid gap-2">
               {question.correctAnswers.map((answer, index) => (
                 <div
@@ -74,6 +89,9 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
       case 'true_false':
         return (
           <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="font-semibold text-foreground">Respuestas:</h4>
+            </div>
             <div className="grid gap-2">
               {['true', 'false'].map((val, idx) => (
                 <div
@@ -116,9 +134,19 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
                 {getQuestionTypeLabel(question.type)}
               </Badge>
             </div>
-            <CardTitle className="text-lg leading-relaxed">
-              {question.text}
-            </CardTitle>
+            <div className="flex items-start justify-between">
+              <CardTitle className="text-lg leading-relaxed flex-1">
+                {question.text}
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleEditQuestion}
+                className="text-muted-foreground hover:text-foreground ml-2"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -129,7 +157,9 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
         <Separator />
         
         <div className="space-y-3">
-          <h4 className="font-semibold text-foreground">Explicación:</h4>
+          <div className="flex items-center justify-between">
+            <h4 className="font-semibold text-foreground">Explicación:</h4>
+          </div>
           <div 
             className="p-4 bg-muted/50 rounded-lg prose prose-sm max-w-none dark:prose-invert"
             dangerouslySetInnerHTML={{ __html: question.explanation }}
@@ -140,7 +170,9 @@ export function ExamQuestionDisplay({ question, questionNumber }: ExamQuestionDi
           <>
             <Separator />
             <div className="space-y-2">
-              <h4 className="font-semibold text-foreground">Etiquetas:</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-foreground">Etiquetas:</h4>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {question.tags.map((tag, index) => (
                   <Badge key={index} variant="outline" className="text-xs">
