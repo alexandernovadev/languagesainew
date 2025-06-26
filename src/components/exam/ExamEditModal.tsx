@@ -155,7 +155,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
         </div>
 
         {/* Contenido scrollable y flexible */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6">
           {/* Edit All (when editingField is 'question') */}
           {editingField === 'question' && editedQuestion && (
             <div className="space-y-6">
@@ -389,7 +389,7 @@ export function ExamEditModal({ isOpen, onClose }: ExamEditModalProps) {
         </div>
 
         {/* Footer fijo */}
-        <div className="sticky bottom-0 z-10 bg-background px-6 py-4 border-t flex justify-end gap-3">
+        <div className="z-10 bg-background px-6 border-t flex justify-end gap-3">
           <Button variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
