@@ -87,39 +87,35 @@ export function ExamHeader({ exam, showStats = true, showEditButton = false, onE
         {showStats && (
           <>
             <Separator />
-
-            {/* Estadísticas */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-medium">{exam.questions.length}</p>
-                  <p className="text-xs text-muted-foreground">Preguntas</p>
+            {/* Estadísticas visuales modernas y adaptadas a dark mode */}
+            <div className="flex flex-row justify-between gap-2 w-full mt-2 mb-2">
+              <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
+                <div className="bg-green-600/20 text-green-400 rounded-full p-2 mb-1">
+                  <BookOpen className="w-5 h-5" />
                 </div>
+                <span className="text-xl font-bold text-green-400">{exam.questions.length}</span>
+                <span className="text-xs font-medium mt-1 text-green-400">Preguntas</span>
               </div>
-              
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-medium">{exam.timeLimit}</p>
-                  <p className="text-xs text-muted-foreground">Minutos</p>
+              <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
+                <div className="bg-blue-600/20 text-blue-400 rounded-full p-2 mb-1">
+                  <Clock className="w-5 h-5" />
                 </div>
+                <span className="text-xl font-bold text-blue-400">{exam.timeLimit}</span>
+                <span className="text-xs font-medium mt-1 text-blue-400">Minutos</span>
               </div>
-              
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-medium">{exam.attemptsAllowed}</p>
-                  <p className="text-xs text-muted-foreground">Intentos</p>
+              <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
+                <div className="bg-yellow-600/20 text-yellow-400 rounded-full p-2 mb-1">
+                  <Users className="w-5 h-5" />
                 </div>
+                <span className="text-xl font-bold text-yellow-400">{exam.attemptsAllowed}</span>
+                <span className="text-xs font-medium mt-1 text-yellow-400">Intentos</span>
               </div>
-              
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-medium">{exam.version}</p>
-                  <p className="text-xs text-muted-foreground">Versión</p>
+              <div className="flex flex-col items-center flex-1 bg-muted border border-border rounded-xl py-3 shadow-sm">
+                <div className="bg-purple-600/20 text-purple-400 rounded-full p-2 mb-1">
+                  <FileText className="w-5 h-5" />
                 </div>
+                <span className="text-xl font-bold text-purple-400">{exam.version}</span>
+                <span className="text-xs font-medium mt-1 text-purple-400">Versión</span>
               </div>
             </div>
           </>
