@@ -31,7 +31,7 @@ export default function ExamCard({
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg mr-2">{exam.title}</CardTitle>
-          <Badge variant={'yellow'}>{exam.level}</Badge>
+          <Badge variant={"yellow"}>{exam.level}</Badge>
         </div>
         <p className="text-sm text-muted-foreground">{exam.description}</p>
       </CardHeader>
@@ -60,12 +60,6 @@ export default function ExamCard({
               {formatDate(exam.createdAt)}
             </span>
           </div>
-
-          {exam.topic && (
-            <Badge variant="outline" className="text-xs">
-              {exam.topic}
-            </Badge>
-          )}
 
           {/* Action Buttons */}
           <div className="flex gap-2 pt-2">
