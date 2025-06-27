@@ -6,6 +6,7 @@ import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
 import { SPEECH_RATES } from "../speechRates";
+import { formatDateShort } from "@/utils/common/time";
 
 interface WordDetailsModalProps {
   word: Word;
@@ -45,15 +46,6 @@ export function WordDetailsModal({
     utterance.rate = rate;
     utterance.lang = language;
     speechSynthesis.speak(utterance);
-  };
-
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   const SectionContainer = ({
@@ -306,7 +298,7 @@ export function WordDetailsModal({
                     Updated
                   </h4>
                   <p className="text-xs text-muted-foreground">
-                    {word.updatedAt ? formatDate(word.updatedAt) : "N/A"}
+                    {word.updatedAt ? formatDateShort(word.updatedAt) : "N/A"}
                   </p>
                 </div>
                 <div>
@@ -314,7 +306,7 @@ export function WordDetailsModal({
                     Created
                   </h4>
                   <p className="text-xs text-muted-foreground">
-                    {word.createdAt ? formatDate(word.createdAt) : "N/A"}
+                    {word.createdAt ? formatDateShort(word.createdAt) : "N/A"}
                   </p>
                 </div>
               </div>

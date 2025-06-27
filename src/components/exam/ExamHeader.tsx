@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { BookOpen, Clock, Users, FileText, Edit } from "lucide-react";
 import { Exam } from "@/services/examService";
 import { getLevelLabel } from "./helpers/examUtils";
+import { formatDateShort } from "@/utils/common/time";
 
 interface ExamHeaderProps {
   exam: Exam;
@@ -20,14 +21,6 @@ export function ExamHeader({
   showEditButton = false,
   onEditTitle,
 }: ExamHeaderProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -133,7 +126,7 @@ export function ExamHeader({
           </Badge>
           {exam.adaptive && <Badge variant="outline">Adaptativo</Badge>}
           <span className="text-xs text-muted-foreground ml-auto">
-            Creado: {formatDate(exam.createdAt)}
+            Creado: {formatDateShort(exam.createdAt)}
           </span>
         </div>
       </CardContent>

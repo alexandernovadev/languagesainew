@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, Users, Eye, Play, Edit } from "lucide-react";
 import { Exam } from "@/services/examService";
+import { formatDateShort } from "@/utils/common/time";
 
 interface ExamCardProps {
   exam: Exam;
@@ -18,14 +19,6 @@ export default function ExamCard({
   onTakeExam,
   onEditExam,
 }: ExamCardProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
@@ -39,7 +32,7 @@ export default function ExamCard({
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm">
             <BookOpen className="w-4 h-4" />
-            <span>{exam.questions.length} preguntas</span>
+            <span>{exam.questions?.length || 0} preguntas</span>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
@@ -57,7 +50,7 @@ export default function ExamCard({
               {exam.source === "ai" ? "IA" : "Manual"}
             </Badge>
             <span className="text-xs text-muted-foreground">
-              {formatDate(exam.createdAt)}
+              {formatDateShort(exam.createdAt)}
             </span>
           </div>
 
