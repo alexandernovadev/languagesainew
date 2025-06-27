@@ -60,13 +60,16 @@ export default function ExamViewModal({
 
             {/* Questions */}
             <div className="space-y-6">
-              {exam.questions.map((questionItem, index) => (
-                <ExamQuestionView
-                  key={questionItem._id}
-                  question={questionItem.question}
-                  questionNumber={index + 1}
-                  showAnswers={true}
-                />
+              {exam.questions?.map((questionItem, index) => (
+                <div key={index} className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Pregunta {index + 1}</h3>
+                  <p>{questionItem.question}</p>
+                  {questionItem.weight && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Peso: {questionItem.weight}
+                    </p>
+                  )}
+                </div>
               ))}
             </div>
           </div>
