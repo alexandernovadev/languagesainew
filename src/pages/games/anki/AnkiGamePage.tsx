@@ -72,7 +72,9 @@ export default function AnkiGamePage() {
         gameStats.next();
         setIsFlipped(false);
       } catch (error: any) {
-        toast.error(error.message || "Error al actualizar el nivel de la palabra");
+        toast.error(
+          error.message || "Error al actualizar el nivel de la palabra"
+        );
       }
     }
   };
@@ -104,14 +106,11 @@ export default function AnkiGamePage() {
         actions={actions}
       />
 
-      {/* Indicador de progreso debajo de los botones de acción */}
-      <div className="flex justify-center mt-2 mb-2">
-        <span className="text-xs text-muted-foreground bg-background/80 rounded px-3 py-1 shadow">
-          ({gameStats.currentIndex + 1}/{words.length})
+      <div className="flex flex-col items-center space-y-2">
+        {/* Indicador de progreso compacto */}
+        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm">
+          {gameStats.currentIndex + 1}/{words.length}
         </span>
-      </div>
-
-      <div className="flex justify-center py-2">
         <div className="relative w-full max-w-lg">
           <div
             className={`flip-card group w-full h-[23rem] cursor-pointer ${
@@ -309,58 +308,56 @@ export default function AnkiGamePage() {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex justify-center gap-4 mt-2">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={gameStats.currentIndex === 0}
-        >
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Anterior
-        </Button>
+        <div className="flex justify-center gap-4 mt-2">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={gameStats.currentIndex === 0}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+          </Button>
 
-        {isFlipped && (
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handleSetLevel("easy")}
-              disabled={actionLoading.updateLevel}
-              className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
-              title="Marcar como fácil"
-            >
-              Easy
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleSetLevel("medium")}
-              disabled={actionLoading.updateLevel}
-              className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
-              title="Marcar como medio"
-            >
-              Medium
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleSetLevel("hard")}
-              disabled={actionLoading.updateLevel}
-              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-              title="Marcar como difícil"
-            >
-              Hard
-            </Button>
-          </div>
-        )}
+          {isFlipped && (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => handleSetLevel("easy")}
+                disabled={actionLoading.updateLevel}
+                className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                title="Marcar como fácil"
+              >
+                Easy
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleSetLevel("medium")}
+                disabled={actionLoading.updateLevel}
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                title="Marcar como medio"
+              >
+                Medium
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleSetLevel("hard")}
+                disabled={actionLoading.updateLevel}
+                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                title="Marcar como difícil"
+              >
+                Hard
+              </Button>
+            </div>
+          )}
 
-        <Button
-          variant="outline"
-          onClick={handleNext}
-          disabled={gameStats.currentIndex === words.length - 1}
-        >
-          Siguiente
-          <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
+          <Button
+            variant="outline"
+            onClick={handleNext}
+            disabled={gameStats.currentIndex === words.length - 1}
+          >
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
       </div>
     </PageLayout>
   );
