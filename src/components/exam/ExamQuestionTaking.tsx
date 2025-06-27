@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CheckCircle, Circle, Save } from 'lucide-react';
+import { CheckCircle, Circle, Save, Check } from 'lucide-react';
 
 interface QuestionOption {
   _id: string;
@@ -120,42 +120,203 @@ export function ExamQuestionTaking({
     return typeColors[type] || 'bg-gray-100 text-gray-800';
   };
 
+  // Premium option card component
+  const PremiumOptionCard = ({ option, isSelected, onSelect }: { 
+    option: QuestionOption; 
+    isSelected: boolean; 
+    onSelect: () => void;
+  }) => {
+    const optionLetter = option.value.toUpperCase();
+    
+    return (
+      <div
+        onClick={onSelect}
+        className={`
+          relative cursor-pointer
+          p-3 rounded-xl border-2
+          transition-colors duration-200 ease-out
+          ${isSelected 
+            ? 'border-blue-500 bg-blue-500/10 shadow-blue-500/20 shadow-lg' 
+            : 'border-gray-600 bg-gray-800/50'
+          }
+          ${isAnswered && isSelected 
+            ? 'border-emerald-500 bg-emerald-500/10 shadow-emerald-500/20' 
+            : ''
+          }
+        `}
+      >
+        {/* Selection indicator */}
+        <div className={`
+          absolute top-2 right-2 w-5 h-5 rounded-full border-2 flex items-center justify-center
+          transition-colors duration-200 ease-out
+          ${isSelected 
+            ? 'border-blue-500 bg-blue-500' 
+            : 'border-gray-500 bg-gray-700'
+          }
+          ${isAnswered && isSelected 
+            ? 'border-emerald-500 bg-emerald-500' 
+            : ''
+          }
+        `}>
+          {isSelected && (
+            <Check className="w-3 h-3 text-white transition-opacity duration-200" strokeWidth={3} />
+          )}
+        </div>
+
+        {/* Option content - compact layout */}
+        <div className="flex items-start gap-3 pr-8">
+          {/* Option letter */}
+          <div className={`
+            w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0
+            transition-colors duration-200 ease-out
+            ${isSelected 
+              ? 'bg-blue-500 text-white' 
+              : 'bg-gray-600 text-gray-300'
+            }
+            ${isAnswered && isSelected 
+              ? 'bg-emerald-500 text-white' 
+              : ''
+            }
+          `}>
+            {optionLetter}
+          </div>
+
+          {/* Option text */}
+          <p className={`
+            text-sm leading-relaxed transition-colors duration-200 ease-out flex-1
+            ${isSelected 
+              ? 'text-gray-100 font-medium' 
+              : 'text-gray-300'
+            }
+          `}>
+            {option.label}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  // Premium true/false option card
+  const PremiumTrueFalseCard = ({ value, label, isSelected, onSelect }: {
+    value: string;
+    label: string;
+    isSelected: boolean;
+    onSelect: () => void;
+  }) => {
+    const isTrue = value === 'true';
+    
+    return (
+      <div
+        onClick={onSelect}
+        className={`
+          relative cursor-pointer
+          p-4 rounded-xl border-2
+          transition-colors duration-200 ease-out
+          ${isSelected 
+            ? 'border-blue-500 bg-blue-500/10 shadow-blue-500/20 shadow-lg' 
+            : 'border-gray-600 bg-gray-800/50'
+          }
+          ${isAnswered && isSelected 
+            ? 'border-emerald-500 bg-emerald-500/10 shadow-emerald-500/20' 
+            : ''
+          }
+        `}
+      >
+        {/* Selection indicator */}
+        <div className={`
+          absolute top-3 right-3 w-5 h-5 rounded-full border-2 flex items-center justify-center
+          transition-colors duration-200 ease-out
+          ${isSelected 
+            ? 'border-blue-500 bg-blue-500' 
+            : 'border-gray-500 bg-gray-700'
+          }
+          ${isAnswered && isSelected 
+            ? 'border-emerald-500 bg-emerald-500' 
+            : ''
+          }
+        `}>
+          {isSelected && (
+            <Check className="w-3 h-3 text-white transition-opacity duration-200" strokeWidth={3} />
+          )}
+        </div>
+
+        {/* Content - compact layout */}
+        <div className="flex items-center gap-3 pr-8">
+          {/* Icon */}
+          <div className={`
+            w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0
+            transition-colors duration-200 ease-out
+            ${isSelected 
+              ? isTrue ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+              : 'bg-gray-600 text-gray-300'
+            }
+            ${isAnswered && isSelected 
+              ? isTrue ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
+              : ''
+            }
+          `}>
+            {isTrue ? '✓' : '✗'}
+          </div>
+
+          {/* Label */}
+          <p className={`
+            text-base font-semibold transition-colors duration-200 ease-out flex-1
+            ${isSelected 
+              ? 'text-gray-100' 
+              : 'text-gray-300'
+            }
+          `}>
+            {label}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   const renderQuestionContent = () => {
     switch (question.type) {
       case 'multiple_choice':
         return (
-          <RadioGroup
-            value={answer}
-            onValueChange={handleAnswerChange}
-            className="space-y-3"
-          >
-            {question.options?.map((option) => (
-              <div key={option._id} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={option._id} />
-                <Label htmlFor={option._id} className="flex-1 cursor-pointer">
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
+          <div className="space-y-4">
+            <RadioGroup
+              value={answer}
+              onValueChange={handleAnswerChange}
+              className="grid gap-4"
+            >
+              {question.options?.map((option) => (
+                <PremiumOptionCard
+                  key={option._id}
+                  option={option}
+                  isSelected={answer === option.value}
+                  onSelect={() => handleAnswerChange(option.value)}
+                />
+              ))}
+            </RadioGroup>
+          </div>
         );
 
       case 'true_false':
         return (
-          <RadioGroup
-            value={answer}
-            onValueChange={handleAnswerChange}
-            className="space-y-3"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="true" id="true" />
-              <Label htmlFor="true" className="cursor-pointer">Verdadero</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="false" id="false" />
-              <Label htmlFor="false" className="cursor-pointer">Falso</Label>
-            </div>
-          </RadioGroup>
+          <div className="space-y-4">
+            <RadioGroup
+              value={answer}
+              onValueChange={handleAnswerChange}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              <PremiumTrueFalseCard
+                value="true"
+                label="Verdadero"
+                isSelected={answer === 'true'}
+                onSelect={() => handleAnswerChange('true')}
+              />
+              <PremiumTrueFalseCard
+                value="false"
+                label="Falso"
+                isSelected={answer === 'false'}
+                onSelect={() => handleAnswerChange('false')}
+              />
+            </RadioGroup>
+          </div>
         );
 
       case 'fill_blank':
@@ -165,7 +326,7 @@ export function ExamQuestionTaking({
               value={answer}
               onChange={(e) => handleAnswerChange(e.target.value)}
               placeholder="Escribe tu respuesta aquí..."
-              className="min-h-[100px]"
+              className="min-h-[100px] resize-none border border-gray-600 bg-gray-900 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
             />
           </div>
         );
@@ -177,7 +338,7 @@ export function ExamQuestionTaking({
               value={answer}
               onChange={(e) => handleAnswerChange(e.target.value)}
               placeholder="Escribe tu traducción aquí..."
-              className="min-h-[120px]"
+              className="min-h-[120px] resize-none border border-gray-600 bg-gray-900 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
             />
           </div>
         );
@@ -189,7 +350,7 @@ export function ExamQuestionTaking({
               value={answer}
               onChange={(e) => handleAnswerChange(e.target.value)}
               placeholder="Escribe tu respuesta aquí..."
-              className="min-h-[150px]"
+              className="min-h-[150px] resize-none border border-gray-600 bg-gray-900 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
             />
           </div>
         );
