@@ -1,6 +1,7 @@
 export * from "./string";
 export * from "./classnames";
 export * from "./time";
+export * from "./shuffle";
 
 /**
  * Downloads data as a JSON file to the user's device

@@ -15,6 +15,7 @@ import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
+import { shuffleArray } from "@/utils/common";
 
 export default function AnkiGamePage() {
   const {
@@ -24,6 +25,9 @@ export default function AnkiGamePage() {
     updateWordLevel,
     actionLoading,
   } = useWordStore();
+
+  // Estado local para palabras mezcladas
+  const [shuffledWords, setShuffledWords] = useState(words);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -37,8 +41,13 @@ export default function AnkiGamePage() {
     fetchWords();
   }, [getRecentHardOrMediumWords]);
 
+  // Sincroniza shuffledWords cuando words cambia
+  useEffect(() => {
+    setShuffledWords(words);
+  }, [words]);
+
   const [isFlipped, setIsFlipped] = useState(false);
-  const gameStats = useGameStats(words.length);
+  const gameStats = useGameStats(shuffledWords.length);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -55,19 +64,21 @@ export default function AnkiGamePage() {
   };
 
   const handleShuffle = () => {
+    setShuffledWords(shuffleArray(words));
     gameStats.reset();
     setIsFlipped(false);
   };
 
   const handleReset = () => {
+    setShuffledWords(words);
     gameStats.reset();
     setIsFlipped(false);
   };
 
   const handleSetLevel = async (level: "easy" | "medium" | "hard") => {
-    if (words[gameStats.currentIndex]?._id) {
+    if (shuffledWords[gameStats.currentIndex]?._id) {
       try {
-        await updateWordLevel(words[gameStats.currentIndex]._id, level);
+        await updateWordLevel(shuffledWords[gameStats.currentIndex]._id, level);
         toast.success(`Palabra marcada como '${level}'`);
         gameStats.next();
         setIsFlipped(false);
@@ -91,12 +102,12 @@ export default function AnkiGamePage() {
   );
 
   const currentCard = useMemo(
-    () => words[gameStats.currentIndex],
-    [words, gameStats.currentIndex]
+    () => shuffledWords[gameStats.currentIndex],
+    [shuffledWords, gameStats.currentIndex]
   );
 
   if (loading) return <div>Cargando tarjetas...</div>;
-  if (!words.length) return <div>No hay tarjetas para practicar.</div>;
+  if (!shuffledWords.length) return <div>No hay tarjetas para practicar.</div>;
 
   return (
     <PageLayout>
@@ -109,7 +120,7 @@ export default function AnkiGamePage() {
       <div className="flex flex-col items-center space-y-2">
         {/* Indicador de progreso compacto */}
         <span className="text-xs text-muted-foreground rounded px-2 shadow-sm">
-          {gameStats.currentIndex + 1}/{words.length}
+          {gameStats.currentIndex + 1}/{shuffledWords.length}
         </span>
         <div className="relative w-full max-w-lg">
           <div
@@ -353,7 +364,7 @@ export default function AnkiGamePage() {
           <Button
             variant="outline"
             onClick={handleNext}
-            disabled={gameStats.currentIndex === words.length - 1}
+            disabled={gameStats.currentIndex === shuffledWords.length - 1}
           >
             <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
