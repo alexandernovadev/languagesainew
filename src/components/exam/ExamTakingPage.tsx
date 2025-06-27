@@ -15,7 +15,7 @@ import { useExamAttempt } from "@/hooks/useExamAttempt";
 import { useAuth } from "@/hooks/useAuth";
 import { examService, Exam } from "@/services/examService";
 import { LoginModal } from "@/components/auth/LoginModal";
-import { ExamQuestionTaking } from "./ExamQuestionTaking";
+import { ExamQuestionTaking } from "./taking/ExamQuestionTaking";
 import { ExamSubmissionModal } from "./ExamSubmissionModal";
 import { ExamTimer } from "./ExamTimer";
 import { ExamProgress } from "./ExamProgress";

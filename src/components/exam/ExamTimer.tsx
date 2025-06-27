@@ -26,17 +26,17 @@ export function ExamTimer({ timeRemaining, isRunning, formatTime }: ExamTimerPro
 
   return (
     <Card className={`border ${getTimerColor()}`}>
-      <CardContent className="p-3">
-        <div className="flex items-center gap-2">
+      <CardContent className="p-1.5">
+        <div className="flex items-center gap-1">
           {getIcon()}
-          <span className="font-mono font-semibold text-lg">
+          <span className="font-mono font-semibold text-base">
             {formatTime(timeRemaining)}
           </span>
           {isRunning && (
             <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
           )}
         </div>
-        <div className="text-xs mt-1 opacity-75">
+        <div className="text-[10px] mt-0.5 opacity-75">
           {isCritical ? '¡Tiempo crítico!' : isWarning ? 'Poco tiempo' : 'Tiempo restante'}
         </div>
       </CardContent>

@@ -10,7 +10,7 @@ export { SuggestedTopics } from "./SuggestedTopics";
 
 // Exam taking components
 export { ExamTakingPage } from "./ExamTakingPage";
-export { ExamQuestionTaking } from "./ExamQuestionTaking";
+export { ExamQuestionTaking } from "./taking/ExamQuestionTaking";
 export { ExamTimer } from "./ExamTimer";
 export { ExamProgress } from "./ExamProgress";
 export { ExamSubmissionModal } from "./ExamSubmissionModal";
@@ -25,3 +25,6 @@ export { QuestionTypeStats } from "./components/QuestionTypeStats";
 
 // Helpers
 export * from "./helpers/examUtils";
+
+// Taking components
+export * from "./taking";
