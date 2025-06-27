@@ -26,6 +26,9 @@ import { QuestionTable } from "@/components/questions/QuestionTable";
 import { QuestionPagination } from "@/components/questions/QuestionPagination";
 import { QuestionForm } from "@/components/forms/QuestionForm";
 import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Plus,
   Search,
@@ -173,15 +176,86 @@ export default function QuestionsPage() {
     }, 0);
   }, [setFilters, getQuestions]);
 
+  if (loading) {
+    return (
+      <PageLayout>
+        <PageHeader
+          title={<Skeleton className="w-32 h-8" />}
+          description={<Skeleton className="w-96 h-4" />}
+          actions={
+            <div className="flex gap-2">
+              <Skeleton className="w-32 h-10 rounded" />
+            </div>
+          }
+        />
+        <div className="space-y-6">
+          {/* Search and Actions Skeleton */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Skeleton className="flex-1 h-10 rounded" />
+            <Skeleton className="w-32 h-10 rounded" />
+          </div>
+
+          {/* Filters Skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="w-24 h-6" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="w-20 h-4" />
+                    <Skeleton className="w-full h-10 rounded" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Table Skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="w-32 h-6" />
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <QuestionTable
+                  questions={[]}
+                  onEdit={() => {}}
+                  onDelete={() => {}}
+                  onView={() => {}}
+                  onRetry={() => {}}
+                  loading={true}
+                />
+                
+                {/* Pagination Skeleton */}
+                <div className="flex justify-center gap-2">
+                  <Skeleton className="w-10 h-10 rounded" />
+                  <Skeleton className="w-10 h-10 rounded" />
+                  <Skeleton className="w-10 h-10 rounded" />
+                  <Skeleton className="w-10 h-10 rounded" />
+                  <Skeleton className="w-10 h-10 rounded" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Questions</h1>
-        <p className="text-muted-foreground">
-          Manage and create questions for language learning exercises and assessments.
-        </p>
-      </div>
+    <PageLayout>
+      <PageHeader
+        title="Questions"
+        description="Manage and create questions for language learning exercises and assessments."
+        actions={
+          <Button onClick={() => openDialog()} className="sm:w-auto">
+            <Plus className="h-4 w-4 mr-2" />
+            Nueva Pregunta
+          </Button>
+        }
+      />
 
       {/* Search and Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
@@ -204,10 +278,6 @@ export default function QuestionsPage() {
             </Button>
           )}
         </div>
-        <Button onClick={() => openDialog()} className="sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          Nueva Pregunta
-        </Button>
       </div>
 
       {/* Filters */}
@@ -292,6 +362,6 @@ export default function QuestionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageLayout>
   );
 } 

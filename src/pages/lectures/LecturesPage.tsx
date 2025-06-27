@@ -28,6 +28,7 @@ import type { Lecture } from "@/models/Lecture";
 import { Plus, RotateCcw } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 export default function LecturesPage() {
@@ -133,6 +134,50 @@ export default function LecturesPage() {
     return lectures.find((lecture) => lecture._id === selectedLectureId);
   };
 
+  if (loading) {
+    return (
+      <PageLayout>
+        <PageHeader
+          title={<Skeleton className="w-32 h-8" />}
+          description={<Skeleton className="w-64 h-4" />}
+          actions={
+            <div className="flex items-center gap-4">
+              <Skeleton className="w-32 h-6 rounded" />
+              <Skeleton className="w-12 h-12 rounded-full" />
+              <Skeleton className="w-10 h-10 rounded-full" />
+            </div>
+          }
+        />
+        <div className="space-y-6">
+          {/* Skeleton Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="space-y-3">
+                <Skeleton className="w-full h-48 rounded-lg" />
+                <div className="space-y-2">
+                  <Skeleton className="w-3/4 h-4" />
+                  <Skeleton className="w-1/2 h-3" />
+                  <div className="flex gap-2">
+                    <Skeleton className="w-16 h-6 rounded" />
+                    <Skeleton className="w-20 h-6 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Skeleton Pagination */}
+          <div className="flex justify-center gap-2">
+            <Skeleton className="w-10 h-10 rounded" />
+            <Skeleton className="w-10 h-10 rounded" />
+            <Skeleton className="w-10 h-10 rounded" />
+            <Skeleton className="w-10 h-10 rounded" />
+            <Skeleton className="w-10 h-10 rounded" />
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <PageHeader
@@ -189,9 +234,7 @@ export default function LecturesPage() {
       <div className="space-y-6">
         {/* Grid de lecturas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {loading ? (
-            <div className="col-span-full text-center py-10">Cargando...</div>
-          ) : lectures.length === 0 ? (
+          {lectures.length === 0 ? (
             <div className="col-span-full text-center py-10 text-muted-foreground">
               <div className="space-y-4">
                 <p>No hay lecturas disponibles.</p>

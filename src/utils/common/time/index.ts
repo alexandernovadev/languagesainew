@@ -1,1 +1,2 @@
-export * from "./calculateReadingTime"; 
+export * from "./calculateReadingTime";
+export * from "./formatDate"; 

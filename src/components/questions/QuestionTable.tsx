@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Edit, Trash2, Eye, RotateCcw } from "lucide-react";
 import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
 
@@ -76,18 +77,35 @@ export function QuestionTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 7 }).map((_, i) => (
             <TableRow key={i}>
-              <TableCell colSpan={6}>
-                <div className="flex items-center space-x-4 p-4">
-                  <div className="space-y-2 flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              <TableCell className="max-w-md">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <div className="flex gap-1">
+                    <Skeleton className="h-5 w-12 rounded" />
+                    <Skeleton className="h-5 w-16 rounded" />
+                    <Skeleton className="h-5 w-10 rounded" />
                   </div>
-                  <div className="space-y-2">
-                    <div className="h-6 bg-gray-200 rounded w-16"></div>
-                    <div className="h-6 bg-gray-200 rounded w-20"></div>
-                  </div>
+                </div>
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-16 rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-20 rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-6 w-16 rounded" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-24" />
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-8 w-8 rounded" />
                 </div>
               </TableCell>
             </TableRow>

@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatDateToSpanish } from "@/utils/common/time/formatDate";
 import packageJson from "../../../package.json";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
@@ -60,13 +62,32 @@ export default function SystemInfoPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Versión Backend</span>
               {loading ? (
-                <Badge variant="outline">Cargando...</Badge>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="w-16 h-6 rounded" />
+                  <Skeleton className="w-4 h-4 rounded-full" />
+                </div>
               ) : error ? (
-                <Badge variant="destructive">Error</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="destructive">Error</Badge>
+                  <Skeleton className="w-4 h-4 rounded-full bg-red-200" />
+                </div>
               ) : backendInfo ? (
                 <Badge variant="secondary">{backendInfo.version}</Badge>
               ) : (
                 <Badge variant="outline">No disponible</Badge>
+              )}
+            </div>
+            <Separator />
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Fecha Backend</span>
+              {loading ? (
+                <Skeleton className="w-24 h-4" />
+              ) : error ? (
+                <span className="text-sm text-muted-foreground">No disponible</span>
+              ) : backendInfo ? (
+                <span className="text-sm text-muted-foreground">{formatDateToSpanish(backendInfo.date)}</span>
+              ) : (
+                <span className="text-sm text-muted-foreground">No disponible</span>
               )}
             </div>
             <Separator />
