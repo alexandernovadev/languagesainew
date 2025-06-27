@@ -6,9 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   ChevronLeft,
   ChevronRight,
-  Clock,
-  CheckCircle,
-  Circle,
   AlertTriangle,
   Loader2,
   Send,
@@ -244,7 +241,7 @@ export function ExamTakingPage() {
               <div className="space-y-2">
                 <h3 className="font-semibold">Información del examen</h3>
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p>• Preguntas: {exam.questions.length}</p>
+                  <p>• Preguntas: {exam.questions?.length ?? 0}</p>
                   <p>• Intentos permitidos: {exam.attemptsAllowed}</p>
                   {exam.timeLimit && (
                     <p>• Tiempo límite: {exam.timeLimit} minutos</p>
@@ -295,8 +292,9 @@ export function ExamTakingPage() {
   }
 
   // Show exam interface
-  const currentQuestion = exam.questions[currentQuestionIndex];
-  const totalQuestions = exam.questions.length;
+  const totalQuestions = exam.questions?.length ?? 0;
+  const currentQuestionObj = exam.questions?.[currentQuestionIndex] as any;
+  const currentQuestion = currentQuestionObj?.question;
   const progressPercentage = getProgressPercentage(totalQuestions);
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
@@ -334,9 +332,9 @@ export function ExamTakingPage() {
         <ExamProgress
           currentIndex={currentQuestionIndex}
           totalQuestions={totalQuestions}
-          answeredQuestions={Array.from(Array(totalQuestions).keys()).filter(
-            (i) => isQuestionAnswered(exam.questions[i].question._id)
-          )}
+          answeredQuestions={(exam.questions ?? [])
+            .map((q: any) => q.question._id)
+            .filter((id: string) => isQuestionAnswered(id))}
           onQuestionClick={goToQuestion}
         />
       </div>
@@ -346,33 +344,34 @@ export function ExamTakingPage() {
         <CardContent className="p-6">
           {currentQuestion && (
             <ExamQuestionTaking
-              question={currentQuestion.question}
+              question={currentQuestion}
               questionNumber={currentQuestionIndex + 1}
-              currentAnswer={getAnswer(currentQuestion.question._id)}
+              currentAnswer={getAnswer(currentQuestion._id)}
               onAnswerSubmit={(answer) =>
-                handleAnswerSubmit(currentQuestion.question._id, answer)
+                handleAnswerSubmit(currentQuestion._id, answer)
               }
-              isAnswered={isQuestionAnswered(currentQuestion.question._id)}
+              isAnswered={isQuestionAnswered(currentQuestion._id)}
             />
           )}
         </CardContent>
       </Card>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={previousQuestion}
-          disabled={isFirstQuestion || isFinishing}
-        >
-          <ChevronLeft className="h-4 w-4 mr-2" />
-          Anterior
-        </Button>
+      <div className="flex items-center justify-end gap-4">
+        <div className="text-sm text-muted-foreground">
+          {getAnsweredCount()} de {totalQuestions} respondidas
+        </div>
 
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-muted-foreground">
-            {getAnsweredCount()} de {totalQuestions} respondidas
-          </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={previousQuestion}
+            disabled={isFirstQuestion || isFinishing}
+            className="h-10 w-10"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
 
           {isLastQuestion ? (
             <Button
@@ -394,11 +393,13 @@ export function ExamTakingPage() {
             </Button>
           ) : (
             <Button
+              variant="outline"
+              size="icon"
               onClick={() => nextQuestion(totalQuestions)}
               disabled={isFinishing}
+              className="h-10 w-10"
             >
-              Siguiente
-              <ChevronRight className="h-4 w-4 ml-2" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           )}
         </div>

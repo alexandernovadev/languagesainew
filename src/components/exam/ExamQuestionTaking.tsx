@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,7 +6,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Circle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { CheckCircle, Circle, Save } from 'lucide-react';
 
 interface QuestionOption {
   _id: string;
@@ -43,28 +44,59 @@ export function ExamQuestionTaking({
 }: ExamQuestionTakingProps) {
   const [answer, setAnswer] = useState<any>(currentAnswer || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Update local answer when currentAnswer prop changes
   useEffect(() => {
     setAnswer(currentAnswer || '');
   }, [currentAnswer]);
 
-  const handleAnswerChange = (value: any) => {
-    setAnswer(value);
-  };
-
-  const handleSubmit = async () => {
-    if (answer === null || answer === undefined || answer === '') {
+  // Auto-save function
+  const autoSave = async (value: any) => {
+    if (value === null || value === undefined || value === '') {
       return;
     }
 
-    setIsSubmitting(true);
+    setIsSaving(true);
     try {
-      await onAnswerSubmit(answer);
+      await onAnswerSubmit(value);
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   };
+
+  // Debounced auto-save for text inputs
+  const debouncedAutoSave = (value: any) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    
+    debounceRef.current = setTimeout(() => {
+      autoSave(value);
+    }, 1000); // 1 second delay
+  };
+
+  const handleAnswerChange = (value: any) => {
+    setAnswer(value);
+    
+    // Immediate save for multiple choice and true/false
+    if (question.type === 'multiple_choice' || question.type === 'true_false') {
+      autoSave(value);
+    } else {
+      // Debounced save for text inputs
+      debouncedAutoSave(value);
+    }
+  };
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
   const getQuestionTypeLabel = (type: string) => {
     const typeLabels: Record<string, string> = {
@@ -200,16 +232,16 @@ export function ExamQuestionTaking({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <Badge variant="outline" className="text-sm">
-              Pregunta {questionNumber}
-            </Badge>
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 font-semibold text-base">
+              {questionNumber}
+            </div>
             <Badge variant="yellow" className="text-xs">
               {getQuestionTypeLabel(question.type)}
             </Badge>
-            {isAnswered && (
-              <Badge variant="secondary" className="text-xs">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                Respondida
+            {isSaving && (
+              <Badge variant="outline" className="text-xs">
+                <Save className="h-3 w-3 mr-1 animate-spin" />
+                Guardando...
               </Badge>
             )}
           </div>
@@ -217,34 +249,28 @@ export function ExamQuestionTaking({
             {question.text}
           </h3>
         </div>
+        
+        {/* Answered indicator on the right */}
+        {isAnswered && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors cursor-help border border-green-500/20">
+                  <CheckCircle className="h-4 w-4" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Respondida</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
 
       {/* Question Content */}
       <div className="space-y-4">
         {renderQuestionContent()}
       </div>
-
-      {/* Submit Button */}
-      <div className="flex justify-end">
-        <Button
-          onClick={handleSubmit}
-          disabled={!hasValidAnswer() || isSubmitting}
-          className="min-w-[120px]"
-        >
-          {isSubmitting ? 'Guardando...' : 'Guardar Respuesta'}
-        </Button>
-      </div>
-
-      {/* Tags */}
-      {question.tags && question.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-4 border-t">
-          {question.tags.map((tag, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
     </div>
   );
 } 
