@@ -87,12 +87,15 @@ export function useExamGenerator() {
       setState(prev => ({
         ...prev,
         isGenerating: false,
-        error: errorMessage
+        error: errorMessage,
+        progress: 0
       }));
       
       toast.error("Error al generar examen", {
         description: errorMessage,
       });
+
+      throw error;
     }
   }, [filters]);
 
