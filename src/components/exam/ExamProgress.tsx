@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CheckCircle, Grid3X3, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CheckCircle, Grid3X3, X } from "lucide-react";
 
 interface ExamProgressProps {
   currentIndex: number;
@@ -14,14 +19,14 @@ export function ExamProgress({
   currentIndex,
   totalQuestions,
   answeredQuestions,
-  onQuestionClick
+  onQuestionClick,
 }: ExamProgressProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getQuestionStatus = (index: number) => {
-    if (index === currentIndex) return 'current';
-    if (answeredQuestions.includes(index)) return 'answered';
-    return 'unanswered';
+    if (index === currentIndex) return "current";
+    if (answeredQuestions.includes(index)) return "answered";
+    return "unanswered";
   };
 
   const handleQuestionClick = (index: number) => {
@@ -30,38 +35,40 @@ export function ExamProgress({
   };
 
   // Barra de progreso visual
-  const progressPercent = Math.round((answeredQuestions.length / totalQuestions) * 100);
+  const progressPercent = Math.round(
+    (answeredQuestions.length / totalQuestions) * 100
+  );
 
   // Botón de pregunta premium
   const renderQuestionButton = (index: number) => {
     const status = getQuestionStatus(index);
     let base =
-      'flex items-center justify-center rounded-full transition-all duration-200 font-bold select-none text-sm w-10 h-10 shadow-lg border-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 ';
-    let style = '';
-    let pulse = '';
-    if (status === 'current') {
-      style = 'bg-blue-600 text-white border-blue-400 shadow-blue-500/40';
-      pulse = 'animate-pulse-slow';
-    } else if (status === 'answered') {
-      style = 'bg-green-500 text-white border-green-400 shadow-green-500/30';
+      "flex items-center justify-center rounded-full transition-all duration-200 font-bold select-none text-sm w-10 h-10 shadow-lg border-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 ";
+    let style = "";
+    let pulse = "";
+    if (status === "current") {
+      style = "bg-blue-600 text-white border-blue-400 shadow-blue-500/40";
+      pulse = "animate-pulse-slow";
+    } else if (status === "answered") {
+      style =
+        "bg-emerald-500 text-white border-emerald-400 shadow-emerald-500/50 hover:bg-emerald-600";
     } else {
-      style = 'bg-black/30 text-gray-400 border-gray-700 hover:border-blue-400 hover:shadow-blue-400/20';
+      style =
+        "bg-black/30 text-gray-400 border-gray-700 hover:border-blue-400 hover:shadow-blue-400/20";
     }
     return (
       <button
         key={index}
         onClick={() => handleQuestionClick(index)}
-        className={
-          base +
-          style +
-          ' hover:scale-110 active:scale-95 ' +
-          pulse
-        }
+        className={base + style + " hover:scale-110 active:scale-95 " + pulse}
         tabIndex={0}
         aria-label={`Ir a pregunta ${index + 1}`}
       >
-        {status === 'answered' ? (
-          <CheckCircle className="h-5 w-5 text-white drop-shadow-lg" strokeWidth={3} />
+        {status === "answered" ? (
+          <CheckCircle
+            className="h-5 w-5 text-white drop-shadow-lg"
+            strokeWidth={3}
+          />
         ) : (
           <span>{index + 1}</span>
         )}
@@ -70,14 +77,19 @@ export function ExamProgress({
   };
 
   // Leyenda compacta
-  const LegendCircle = ({ type }: { type: 'current' | 'answered' | 'unanswered' }) => {
-    let style = 'inline-block w-5 h-5 rounded-full border-2 mr-1 align-middle';
-    if (type === 'current') {
-      style += ' bg-blue-600 border-blue-400 shadow-blue-500/40 animate-pulse-slow';
-    } else if (type === 'answered') {
-      style += ' bg-green-500 border-green-400 shadow-green-500/30';
+  const LegendCircle = ({
+    type,
+  }: {
+    type: "current" | "answered" | "unanswered";
+  }) => {
+    let style = "inline-block w-5 h-5 rounded-full border-2 mr-1 align-middle";
+    if (type === "current") {
+      style +=
+        " bg-blue-600 border-blue-400 shadow-blue-500/40 animate-pulse-slow";
+    } else if (type === "answered") {
+      style += " bg-emerald-500 border-emerald-400 shadow-emerald-500/50";
     } else {
-      style += ' bg-black/30 border-gray-700';
+      style += " bg-black/30 border-gray-700";
     }
     return <span className={style} />;
   };
@@ -111,7 +123,7 @@ export function ExamProgress({
               <span>Navegar entre preguntas</span>
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Contenido fijo superior */}
             <div className="flex-shrink-0 space-y-3 pb-3">
@@ -119,7 +131,7 @@ export function ExamProgress({
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-3 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
                   <div
-                    className="h-3 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-300 shadow-lg"
+                    className="h-3 bg-gradient-to-r from-blue-500 to-emerald-400 rounded-full transition-all duration-300 shadow-lg"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -128,14 +140,20 @@ export function ExamProgress({
                 </span>
               </div>
               <div className="text-base text-white/90 font-semibold">
-                Progreso: <span className="font-bold">{answeredQuestions.length} de {totalQuestions}</span> respondidas
+                Progreso:{" "}
+                <span className="font-bold">
+                  {answeredQuestions.length} de {totalQuestions}
+                </span>{" "}
+                respondidas
               </div>
             </div>
 
             {/* Grid de preguntas con scroll */}
             <div className="flex-1 overflow-y-auto">
               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 p-3 rounded-lg">
-                {Array.from({ length: totalQuestions }, (_, i) => renderQuestionButton(i))}
+                {Array.from({ length: totalQuestions }, (_, i) =>
+                  renderQuestionButton(i)
+                )}
               </div>
             </div>
 
@@ -171,4 +189,4 @@ export function ExamProgress({
       `}</style>
     </>
   );
-} 
+}

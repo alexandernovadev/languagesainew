@@ -333,8 +333,9 @@ export function ExamTakingPage() {
           currentIndex={currentQuestionIndex}
           totalQuestions={totalQuestions}
           answeredQuestions={(exam.questions ?? [])
-            .map((q: any) => q.question._id)
-            .filter((id: string) => isQuestionAnswered(id))}
+            .map((q: any, index: number) => ({ id: q.question._id, index }))
+            .filter((item: any) => isQuestionAnswered(item.id))
+            .map((item: any) => item.index)}
           onQuestionClick={goToQuestion}
         />
       </div>
