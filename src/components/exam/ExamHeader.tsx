@@ -83,7 +83,7 @@ export function ExamHeader({
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <span className="text-xl font-bold text-green-400">
-                  {exam.questions.length}
+                  {exam.questions?.length || 0}
                 </span>
                 <span className="text-xs font-medium mt-1 text-green-400">
                   Preguntas
