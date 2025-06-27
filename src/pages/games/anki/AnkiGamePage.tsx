@@ -16,6 +16,7 @@ import { useWordStore } from "@/lib/store/useWordStore";
 import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AnkiGamePage() {
   const {
@@ -106,7 +107,32 @@ export default function AnkiGamePage() {
     [shuffledWords, gameStats.currentIndex]
   );
 
-  if (loading) return <div>Cargando tarjetas...</div>;
+  if (loading)
+    return (
+      <PageLayout>
+        <PageHeader
+          title={<Skeleton className="w-32 h-6" />}
+          description={<Skeleton className="w-48 h-4" />}
+          actions={
+            <div className="flex gap-2">
+              <Skeleton className="w-8 h-8 rounded" />
+              <Skeleton className="w-8 h-8 rounded" />
+            </div>
+          }
+        />
+        <div className="flex flex-col flex-1 items-center w-full py-4">
+          <Skeleton className="w-16 h-4 mb-4" />
+          <div className="flex-1 flex items-center justify-center w-full max-w-md">
+            <Skeleton className="w-full h-96 rounded-xl" />
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Skeleton className="w-10 h-8 rounded" />
+            <Skeleton className="w-16 h-8 rounded" />
+            <Skeleton className="w-10 h-8 rounded" />
+          </div>
+        </div>
+      </PageLayout>
+    );
   if (!shuffledWords.length) return <div>No hay tarjetas para practicar.</div>;
 
   return (
@@ -116,15 +142,14 @@ export default function AnkiGamePage() {
         description="Practica vocabulario con tarjetas interactivas"
         actions={actions}
       />
-
-      <div className="flex flex-col items-center space-y-2">
+      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-22px)] items-center w-full">
         {/* Indicador de progreso compacto */}
-        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm">
+        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-2 mb-2">
           {gameStats.currentIndex + 1}/{shuffledWords.length}
         </span>
-        <div className="relative w-full max-w-lg">
+        <div className="flex-1 flex items-center justify-center w-full max-w-lg min-h-0">
           <div
-            className={`flip-card group w-full h-[23rem] cursor-pointer ${
+            className={`flip-card group w-full h-full max-h-full cursor-pointer ${
               isFlipped ? "flipped" : ""
             }`}
             onClick={handleFlip}
@@ -319,8 +344,8 @@ export default function AnkiGamePage() {
             </div>
           </div>
         </div>
-
-        <div className="flex justify-center gap-4 mt-2">
+        {/* Botones SIEMPRE abajo */}
+        <div className="flex justify-center gap-4 mt-4 mb-4 w-full">
           <Button
             variant="outline"
             onClick={handlePrevious}
