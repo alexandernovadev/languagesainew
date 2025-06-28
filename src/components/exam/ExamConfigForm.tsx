@@ -49,10 +49,10 @@ export function ExamConfigForm({
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Layout principal: 2 columnas */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Columna izquierda: Todos los campos excepto temas de gramática */}
-              <div className="space-y-6">
+            {/* Layout principal: 2 columnas con proporción 3:2 */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              {/* Columna izquierda: Todos los campos excepto temas de gramática (3/5 del espacio) */}
+              <div className="space-y-6 lg:col-span-3">
                 {/* Tema del examen */}
                 <ExamFormField
                   type="textarea"
@@ -139,8 +139,8 @@ export function ExamConfigForm({
                 </div>
               </div>
 
-              {/* Columna derecha: Temas de gramática (altura completa) */}
-              <div>
+              {/* Columna derecha: Temas de gramática (2/5 del espacio) */}
+              <div className="lg:col-span-2">
                 <GrammarTopicsSelector
                   selectedTopics={filters.grammarTopics}
                   onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
