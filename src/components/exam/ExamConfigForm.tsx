@@ -49,88 +49,104 @@ export function ExamConfigForm({
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Tema del examen y Temas de gramática */}
+            {/* Layout principal: 2 columnas */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ExamFormField
-                type="textarea"
-                label="Tema del Examen"
-                required
-                value={filters.topic}
-                onChange={(value) => updateFilter("topic", value)}
-                placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
-                description="Sé específico para obtener mejores resultados"
-                error={validation.errors.find((e) => e.includes("tema"))}
-              />
+              {/* Columna izquierda: Todos los campos excepto temas de gramática */}
+              <div className="space-y-6">
+                {/* Tema del examen */}
+                <ExamFormField
+                  type="textarea"
+                  label="Tema del Examen"
+                  required
+                  value={filters.topic}
+                  onChange={(value) => updateFilter("topic", value)}
+                  placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
+                  description="Sé específico para obtener mejores resultados"
+                  error={validation.errors.find((e) => e.includes("tema"))}
+                />
 
-              <GrammarTopicsSelector
-                selectedTopics={filters.grammarTopics}
-                onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
-                error={validation.errors.find((e) => e.includes("gramática"))}
-              />
+                <Separator />
+
+                {/* Configuración en grid de 4 columnas */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <ExamFormField
+                    type="select"
+                    label="Nivel CEFR"
+                    value={filters.level}
+                    onChange={(value) => updateFilter("level", value)}
+                    options={questionLevels}
+                    placeholder="Seleccionar nivel"
+                    description={
+                      filters.level ? getLevelDescription(filters.level) : undefined
+                    }
+                  />
+
+                  <ExamFormField
+                    type="slider"
+                    label="Dificultad"
+                    value={filters.difficulty}
+                    onChange={(value) => updateFilter("difficulty", value)}
+                    min={EXAM_VALIDATION_LIMITS.minDifficulty}
+                    max={EXAM_VALIDATION_LIMITS.maxDifficulty}
+                    step={1}
+                    showLabels
+                    getLabel={getDifficultyLabel}
+                  />
+
+                  <ExamFormField
+                    type="number"
+                    label="Número de Preguntas"
+                    value={filters.numberOfQuestions}
+                    onChange={(value) => updateFilter("numberOfQuestions", value)}
+                    min={EXAM_VALIDATION_LIMITS.minQuestions}
+                    max={EXAM_VALIDATION_LIMITS.maxQuestions}
+                    description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
+                  />
+
+                  <ExamFormField
+                    type="select"
+                    label="Idioma de las Explicaciones"
+                    value={filters.userLang}
+                    onChange={(value) => updateFilter("userLang", value)}
+                    options={LANGUAGE_OPTIONS}
+                    placeholder="Seleccionar idioma"
+                  />
+                </div>
+
+                <Separator />
+
+                {/* Tipos de preguntas */}
+                <ExamFormField
+                  type="checkbox-group"
+                  label="Tipos de Preguntas"
+                  value={filters.types}
+                  onChange={(value) => updateFilter("types", value)}
+                  options={questionTypes}
+                  error={validation.errors.find((e) => e.includes("tipo"))}
+                />
+
+                {/* Tips */}
+                <div className="p-4 bg-muted/50 border border-border rounded-lg">
+                  <h4 className="font-medium mb-2">
+                    💡 Consejos para mejores resultados:
+                  </h4>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    {EXAM_GENERATION_TIPS.map((tip, index) => (
+                      <li key={index}>• {tip}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Columna derecha: Temas de gramática (altura completa) */}
+              <div>
+                <GrammarTopicsSelector
+                  selectedTopics={filters.grammarTopics}
+                  onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
+                  error={validation.errors.find((e) => e.includes("gramática"))}
+                />
+              </div>
             </div>
-
-            <Separator />
-
-            {/* Nivel, dificultad y número de preguntas */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <ExamFormField
-                type="select"
-                label="Nivel CEFR"
-                value={filters.level}
-                onChange={(value) => updateFilter("level", value)}
-                options={questionLevels}
-                placeholder="Seleccionar nivel"
-                description={
-                  filters.level ? getLevelDescription(filters.level) : undefined
-                }
-              />
-
-              <ExamFormField
-                type="slider"
-                label="Dificultad"
-                value={filters.difficulty}
-                onChange={(value) => updateFilter("difficulty", value)}
-                min={EXAM_VALIDATION_LIMITS.minDifficulty}
-                max={EXAM_VALIDATION_LIMITS.maxDifficulty}
-                step={1}
-                showLabels
-                getLabel={getDifficultyLabel}
-              />
-
-              <ExamFormField
-                type="number"
-                label="Número de Preguntas"
-                value={filters.numberOfQuestions}
-                onChange={(value) => updateFilter("numberOfQuestions", value)}
-                min={EXAM_VALIDATION_LIMITS.minQuestions}
-                max={EXAM_VALIDATION_LIMITS.maxQuestions}
-                description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
-              />
-            </div>
-
-            <Separator />
-
-            {/* Tipos de preguntas */}
-            <ExamFormField
-              type="checkbox-group"
-              label="Tipos de Preguntas"
-              value={filters.types}
-              onChange={(value) => updateFilter("types", value)}
-              options={questionTypes}
-              error={validation.errors.find((e) => e.includes("tipo"))}
-            />
-
-            <Separator />
-
-            {/* Idioma */}
-            <ExamFormField
-              type="select"
-              label="Idioma de las Explicaciones"
-              value={filters.userLang}
-              onChange={(value) => updateFilter("userLang", value)}
-              options={LANGUAGE_OPTIONS}
-              placeholder="Seleccionar idioma"
-            />
 
             {/* Error display */}
             {error && (
@@ -159,18 +175,6 @@ export function ExamConfigForm({
                   </>
                 )}
               </Button>
-            </div>
-
-            {/* Tips */}
-            <div className="p-4 bg-muted/50 border border-border rounded-lg">
-              <h4 className="font-medium mb-2">
-                💡 Consejos para mejores resultados:
-              </h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                {EXAM_GENERATION_TIPS.map((tip, index) => (
-                  <li key={index}>• {tip}</li>
-                ))}
-              </ul>
             </div>
           </CardContent>
         </Card>
