@@ -207,35 +207,40 @@ export function GrammarTopicsSelector({
                   value={categoryKey}
                   className="border rounded-lg"
                 >
-                  <AccordionTrigger className="px-4 hover:no-underline">
-                    <div className="flex items-center gap-3 w-full">
-                      <Checkbox
-                        checked={isSelected}
-                        onChange={() => handleSelectCategory(categoryKey)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                      <span className="text-lg">{category.icon}</span>
-                      <div className="flex-1 text-left">
-                        <div className="font-medium">{category.title}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
+                  <div className="flex items-center px-4">
+                    <Checkbox
+                      checked={isSelected || isPartiallySelected}
+                      onCheckedChange={() => handleSelectCategory(categoryKey)}
+                      className="mr-3"
+                      data-testid={`category-checkbox-${categoryKey}`}
+                      aria-label={`Select all topics in ${category.title}`}
+                    />
+                    <AccordionTrigger className="flex-1 hover:no-underline py-4">
+                      <div className="flex items-center gap-3 w-full">
+                        <span className="text-lg">{category.icon}</span>
+                        <div className="flex-1 text-left">
+                          <div className="font-medium">{category.title}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </AccordionTrigger>
+                    </AccordionTrigger>
+                  </div>
                   <AccordionContent className="px-4 pb-4">
-                    <div className="grid grid-cols-1 gap-2 mt-2">
+                    <div className="space-y-2 mt-2 ml-8">
                       {categoryTopics.map((topic) => (
-                        <div
+                        <label
                           key={topic}
-                          className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50"
+                          className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
                         >
                           <Checkbox
                             checked={selectedTopics.includes(topic)}
                             onCheckedChange={() => handleTopicToggle(topic)}
+                            aria-label={`Select topic: ${topic}`}
                           />
                           <span className="text-sm">{topic}</span>
-                        </div>
+                        </label>
                       ))}
                     </div>
                   </AccordionContent>
