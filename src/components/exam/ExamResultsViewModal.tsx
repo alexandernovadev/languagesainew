@@ -431,10 +431,46 @@ export default function ExamResultsViewModal({
                             </div>
                           ))
                         ) : (
-                          <div className="p-2 rounded-lg border-2 bg-green-500/10 border-green-500/30 shadow-sm">
-                            <span className="font-semibold text-sm">
-                              {answerItem.question.correctAnswers.join(", ")}
-                            </span>
+                          // Para preguntas sin opciones (traducción, escritura, fill_blank)
+                          <div className="space-y-3">
+                            {/* Tu respuesta */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <h4 className="font-semibold text-foreground text-sm">
+                                  Tu respuesta:
+                                </h4>
+                              </div>
+                              <div className={`
+                                p-3 rounded-lg border-2 transition-all duration-200
+                                ${answerItem.isCorrect 
+                                  ? "bg-green-500/10 border-green-500/30 shadow-sm" 
+                                  : "bg-red-500/10 border-red-500/30 shadow-sm"
+                                }
+                              `}>
+                                <span className="text-sm font-medium">
+                                  {Array.isArray(answerItem.answer) 
+                                    ? answerItem.answer.join(", ") 
+                                    : answerItem.answer || "Sin respuesta"
+                                  }
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Respuesta correcta */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <h4 className="font-semibold text-foreground text-sm">
+                                  Respuesta correcta:
+                                </h4>
+                              </div>
+                              <div className="p-3 rounded-lg border-2 bg-green-500/10 border-green-500/30 shadow-sm">
+                                <span className="text-sm font-semibold">
+                                  {answerItem.question.correctAnswers.join(", ")}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>
