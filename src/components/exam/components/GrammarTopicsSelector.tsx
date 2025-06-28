@@ -246,9 +246,9 @@ export function GrammarTopicsSelector({
         </ScrollArea>
 
         {/* Info */}
-        <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-800">
+        <div className="flex items-start gap-2 p-3 bg-muted/50 border border-border rounded-lg">
+          <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-muted-foreground">
             <p className="font-medium">¿Cómo funciona?</p>
             <p>
               Los temas seleccionados se incluirán obligatoriamente en el examen. 

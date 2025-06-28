@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Sparkles, Settings } from "lucide-react";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 import { questionTypes, questionLevels } from "@/data/questionTypes";
-import { SuggestedTopics } from "./SuggestedTopics";
 import { ExamFormField } from "./components/ExamFormField";
 import { GrammarTopicsSelector } from "./components/GrammarTopicsSelector";
 import {
@@ -34,17 +33,13 @@ export function ExamConfigForm({
   isGenerating,
   error,
 }: ExamConfigFormProps) {
-  const handleTopicSelect = (topic: string) => {
-    updateFilter("topic", topic);
-  };
-
   const validation = validateExamFilters(filters);
   const isFormValid = validation.isValid && !isGenerating;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {/* Main configuration */}
-      <div className="lg:col-span-2">
+      <div>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -183,14 +178,6 @@ export function ExamConfigForm({
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Suggested topics sidebar */}
-      <div className="lg:col-span-1">
-        <SuggestedTopics
-          onTopicSelect={handleTopicSelect}
-          selectedTopic={filters.topic}
-        />
       </div>
     </div>
   );
