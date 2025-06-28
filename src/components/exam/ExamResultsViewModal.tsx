@@ -126,17 +126,17 @@ export default function ExamResultsViewModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950/30 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-2xl">
-        <DialogHeader className="pb-6">
+        <DialogHeader className="pb-4">
           <div className="flex justify-between items-start">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                <Award className="w-8 h-8 text-white" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                <Award className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-1">
                   Resultados del Examen
                 </DialogTitle>
-                <p className="text-muted-foreground text-lg">
+                <p className="text-muted-foreground text-base">
                   {examAttempt.exam.title}
                 </p>
               </div>
@@ -300,34 +300,34 @@ export default function ExamResultsViewModal({
             </Card>
 
             {/* Questions with Results */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Preguntas y Respuestas</h3>
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold">Preguntas y Respuestas</h3>
               {examAttempt.answers.map((answerItem, index) => (
                 <Card
                   key={answerItem._id}
                   className="relative overflow-hidden border-2 border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/50 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {/* Result indicator */}
-                  <div className="absolute top-4 right-4 z-10">
+                  <div className="absolute top-3 right-3 z-10">
                     {answerItem.isCorrect ? (
-                      <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-full shadow-lg">
-                        <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+                      <div className="p-1.5 bg-green-100 dark:bg-green-900/50 rounded-full shadow-lg">
+                        <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                       </div>
                     ) : (
-                      <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-full shadow-lg">
-                        <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                      <div className="p-1.5 bg-red-100 dark:bg-red-900/50 rounded-full shadow-lg">
+                        <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
                       </div>
                     )}
                   </div>
 
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between pr-16">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between pr-12">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full text-white font-bold text-sm shadow-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full text-white font-bold text-xs shadow-lg">
                             {index + 1}
                           </div>
-                          <Badge variant="yellow" className="px-3 py-1">
+                          <Badge variant="yellow" className="px-2 py-0.5 text-xs">
                             {answerItem.question.type === "multiple_choice" &&
                               "Opción Múltiple"}
                             {answerItem.question.type === "true_false" &&
@@ -343,42 +343,42 @@ export default function ExamResultsViewModal({
                             variant={
                               answerItem.isCorrect ? "default" : "destructive"
                             }
-                            className="px-3 py-1"
+                            className="px-2 py-0.5 text-xs"
                           >
                             {answerItem.score}%
                           </Badge>
                         </div>
-                        <h4 className="text-lg leading-relaxed font-medium">
+                        <h4 className="text-sm leading-relaxed font-medium">
                           {answerItem.question.text}
                         </h4>
                       </div>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-3">
                     {/* Correct Answer and Explanation */}
-                    <div className="space-y-4">
-                      <div className="grid gap-3">
+                    <div className="space-y-2">
+                      <div className="grid gap-2">
                         {answerItem.question.options &&
                         answerItem.question.options.length > 0 ? (
                           answerItem.question.options.map((option) => (
                             <div
                               key={option._id}
-                              className={`flex items-center p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                              className={`flex items-center p-2 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${
                                 option.isCorrect
                                   ? "bg-green-500/10 border-green-500/30 shadow-sm"
                                   : "bg-muted/30 border-border hover:border-gray-300 dark:hover:border-gray-600"
                               }`}
                             >
                               <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 shadow-md ${
+                                className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 shadow-md ${
                                   option.isCorrect ? "bg-green-500" : "bg-muted"
-                                } text-white font-bold`}
+                                } text-white font-bold text-xs`}
                               >
                                 {option.value}
                               </div>
                               <span
-                                className={`flex-1 ${
+                                className={`flex-1 text-sm ${
                                   option.isCorrect ? "font-semibold" : ""
                                 }`}
                               >
@@ -409,7 +409,7 @@ export default function ExamResultsViewModal({
                               })() && (
                                 <Badge
                                   variant="blue"
-                                  className="ml-auto px-3 py-1"
+                                  className="ml-auto px-2 py-0.5 text-xs"
                                 >
                                   Tu selección
                                 </Badge>
@@ -417,8 +417,8 @@ export default function ExamResultsViewModal({
                             </div>
                           ))
                         ) : (
-                          <div className="p-4 rounded-xl border-2 bg-green-500/10 border-green-500/30 shadow-sm">
-                            <span className="font-semibold text-lg">
+                          <div className="p-2 rounded-lg border-2 bg-green-500/10 border-green-500/30 shadow-sm">
+                            <span className="font-semibold text-sm">
                               {answerItem.question.correctAnswers.join(", ")}
                             </span>
                           </div>
@@ -428,15 +428,15 @@ export default function ExamResultsViewModal({
 
                     {/* Explanation */}
                     {answerItem.question.explanation && (
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <h4 className="font-semibold text-foreground text-lg">
+                          <h4 className="font-semibold text-foreground text-sm">
                             Explicación:
                           </h4>
                         </div>
                         <div
-                          className="p-6 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl border border-blue-200/50 dark:border-blue-800/50 prose prose-sm max-w-none dark:prose-invert shadow-sm"
+                          className="p-3 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/50 prose prose-sm max-w-none dark:prose-invert shadow-sm"
                           dangerouslySetInnerHTML={{
                             __html: answerItem.question.explanation,
                           }}
