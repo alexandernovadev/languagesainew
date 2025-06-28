@@ -182,10 +182,14 @@ export const TOPIC_CATEGORIES = {
 
 // Exam generation tips
 export const EXAM_GENERATION_TIPS = [
-  'Sé específico con el tema (ej: "verbos irregulares en presente" en lugar de "gramática")',
-  'Combina diferentes tipos de preguntas para variedad',
+  'Sé específico con el tema (ej: "viajes de negocios" en lugar de "trabajo")',
+  'Selecciona 3-5 temas de gramática para una distribución equilibrada',
+  'Combina diferentes tipos de preguntas para variedad y evaluación completa',
   'Ajusta la dificultad según el nivel CEFR seleccionado',
-  'Usa entre 10-20 preguntas para un examen equilibrado'
+  'Usa entre 10-20 preguntas para un examen equilibrado',
+  'Los temas de gramática se incluirán obligatoriamente en el examen',
+  'El tema principal determina el contexto, la gramática define las estructuras',
+  'Para exámenes avanzados, selecciona temas de gramática más complejos'
 ];
 
 // Question type colors for charts and visualizations
