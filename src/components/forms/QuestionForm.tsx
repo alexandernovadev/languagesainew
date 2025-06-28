@@ -40,7 +40,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 // Schema de validación
 const questionSchema = z.object({
-  text: z.string().min(1, "La pregunta es requerida"),
+  text: z.string().min(1, "El texto de la pregunta es requerido"),
   type: z.enum([
     "multiple_choice",
     "fill_blank",
@@ -48,7 +48,6 @@ const questionSchema = z.object({
     "true_false",
     "writing",
   ]),
-  isSingleAnswer: z.boolean().default(true),
   level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
   topic: z.string().optional(),
   difficulty: z.number().min(1).max(5),
@@ -153,7 +152,6 @@ export function QuestionForm({
     defaultValues: {
       text: initialData?.text || "",
       type: initialData?.type || "multiple_choice",
-      isSingleAnswer: initialData?.isSingleAnswer ?? true,
       level: initialData?.level || "A1",
       topic: initialData?.topic || "",
       difficulty: initialData?.difficulty || 1,
@@ -387,17 +385,6 @@ export function QuestionForm({
                   placeholder="Ej: Gramática, Vocabulario, Comprensión..."
                   {...register("topic")}
                 />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="isSingleAnswer"
-                  checked={watch("isSingleAnswer")}
-                  onCheckedChange={(checked) =>
-                    setValue("isSingleAnswer", checked)
-                  }
-                />
-                <Label htmlFor="isSingleAnswer">Respuesta única</Label>
               </div>
             </CardContent>
           </Card>

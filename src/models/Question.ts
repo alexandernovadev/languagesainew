@@ -13,8 +13,7 @@ export interface QuestionMedia {
 export interface Question {
   _id: string;
   text: string;
-  type: 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
-  isSingleAnswer: boolean;
+  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   topic?: string;
   difficulty: number; // 1-5
@@ -29,8 +28,7 @@ export interface Question {
 
 export interface QuestionInput {
   text: string;
-  type: 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
-  isSingleAnswer: boolean;
+  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   topic?: string;
   difficulty: number; // 1-5

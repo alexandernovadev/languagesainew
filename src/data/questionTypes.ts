@@ -1,7 +1,12 @@
 export const questionTypes = [
   {
+    value: "single_choice",
+    label: "Selección Única",
+    description: "Pregunta con una sola opción correcta"
+  },
+  {
     value: "multiple_choice",
-    label: "Opción Múltiple",
+    label: "Selección Múltiple",
     description: "Pregunta con varias opciones de respuesta"
   },
   {

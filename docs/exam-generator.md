@@ -111,19 +111,16 @@ POST /api/ai/generate-exam
 {
   "questions": [
     {
-      "text": "Choose the correct verb form...",
+      "text": "What is the correct form of the verb 'to be' for 'I'?",
       "type": "multiple_choice",
-      "isSingleAnswer": true,
       "options": [
-        {
-          "value": "A",
-          "label": "have",
-          "isCorrect": false
-        }
+        { "value": "A", "label": "am", "isCorrect": true },
+        { "value": "B", "label": "is", "isCorrect": false },
+        { "value": "C", "label": "are", "isCorrect": false }
       ],
-      "correctAnswers": ["B"],
-      "explanation": "🔴 <span style='color: #e74c3c;'>AI</span> es singular...",
-      "tags": ["grammar", "verb tenses"]
+      "correctAnswers": ["A"],
+      "explanation": "The correct form of 'to be' for first person singular is 'am'.",
+      "tags": ["grammar", "present_tense"]
     }
   ]
 }

@@ -81,25 +81,17 @@ export default function ExamGeneratorPage() {
             // Convert exam data to store format
             const examForStore = {
               title: examData.title,
-              topic: examData.topic,
+              topic: examData.topic || '',
               level: examData.level,
               difficulty: '3', // Default difficulty
-              questions: examData.questions.map(q => ({
-                text: q.question.text,
-                type: q.question.type,
-                isSingleAnswer: q.question.isSingleAnswer,
-                options: q.question.options,
-                correctAnswers: q.question.correctAnswers,
-                explanation: q.question.explanation,
-                tags: q.question.tags
-              }))
+              questions: [] // We'll handle questions separately if needed
             };
             
             setExam(examForStore);
             
             // Load the exam into the generator state
             const mockGeneratedExam = {
-              questions: examForStore.questions
+              questions: []
             };
             
             loadExistingExam(mockGeneratedExam, examData.topic, examData.level);
@@ -191,7 +183,6 @@ export default function ExamGeneratorPage() {
           _id: `temp-q-${index}`,
           text: q.text,
           type: q.type,
-          isSingleAnswer: q.isSingleAnswer,
           level: filters.level,
           topic: filters.topic,
           difficulty: filters.difficulty,

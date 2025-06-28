@@ -8,8 +8,7 @@ export interface QuestionOption {
 export interface Question {
   _id: string;
   text: string;
-  type: 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
-  isSingleAnswer: boolean;
+  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
   options?: QuestionOption[];
   correctAnswers: string[];
   explanation: string;

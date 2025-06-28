@@ -115,10 +115,8 @@ export function QuestionDetailsModal({ question, open, onOpenChange }: QuestionD
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-muted-foreground">Tipo de respuesta</Label>
-                    <Badge variant={question.isSingleAnswer ? "default" : "secondary"}>
-                      {question.isSingleAnswer ? "Respuesta única" : "Múltiples respuestas"}
-                    </Badge>
+                    <Label className="text-sm font-medium text-muted-foreground">Tipo</Label>
+                    <Badge variant="outline">{getTypeLabel(question.type)}</Badge>
                   </div>
                 </div>
 

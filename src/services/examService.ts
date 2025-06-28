@@ -124,7 +124,6 @@ export interface ExamStats {
 export interface ExamQuestion {
   text: string;
   type: string;
-  isSingleAnswer: boolean;
   options?: Array<{
     value: string;
     label: string;
@@ -275,7 +274,6 @@ export const examService = {
     const questions = examData.questions.map(question => ({
       text: question.text,
       type: question.type,
-      isSingleAnswer: question.isSingleAnswer,
       level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
       difficulty: parseInt(examData.difficulty),
       topic: examData.topic,

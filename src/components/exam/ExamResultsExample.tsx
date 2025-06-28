@@ -37,7 +37,6 @@ export function ExamResultsExample() {
           _id: "685f64010d184da40fc423c9",
           text: "In Ancient Rome, many structures were built using concrete, which ______ invented by the Romans.",
           type: "fill_blank" as const,
-          isSingleAnswer: true,
           level: "B2",
           topic: "proposiciones en inglés con la temática de Roma antigua",
           difficulty: 5,
@@ -73,7 +72,6 @@ export function ExamResultsExample() {
           _id: "685f64010d184da40fc423cd",
           text: "Choose the correct sentence: If the Romans hadn't built roads, ______ .",
           type: "multiple_choice" as const,
-          isSingleAnswer: true,
           level: "B2",
           topic: "proposiciones en inglés con la temática de Roma antigua",
           difficulty: 5,
@@ -203,4 +201,47 @@ export function ExamResultsExample() {
       </Card>
     </div>
   );
-} 
+}
+
+export const exampleExamResults = {
+  exam: {
+    _id: "exam-123",
+    title: "Grammar Basics Test",
+    level: "A2",
+    topic: "Basic Grammar",
+    timeLimit: 30,
+    attemptsAllowed: 3,
+  },
+  questions: [
+    {
+      _id: "q1",
+      text: "What is the correct form of the verb 'to be' for 'I'?",
+      type: "multiple_choice",
+      options: [
+        { value: "A", label: "am", isCorrect: true },
+        { value: "B", label: "is", isCorrect: false },
+        { value: "C", label: "are", isCorrect: false },
+      ],
+      correctAnswers: ["A"],
+      userAnswer: "A",
+      isCorrect: true,
+      explanation: "The correct form of 'to be' for first person singular is 'am'.",
+    },
+    {
+      _id: "q2",
+      text: "Complete: 'I _____ to school every day.'",
+      type: "fill_blank",
+      correctAnswers: ["go"],
+      userAnswer: "go",
+      isCorrect: true,
+      explanation: "The present simple form 'go' is correct for regular activities.",
+    },
+  ],
+  results: {
+    totalQuestions: 2,
+    correctAnswers: 2,
+    score: 100,
+    timeSpent: 120, // seconds
+    completedAt: new Date().toISOString(),
+  },
+}; 
