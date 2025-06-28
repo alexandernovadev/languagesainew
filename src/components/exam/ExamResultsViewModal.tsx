@@ -17,7 +17,12 @@ interface ExamAttemptAnswer {
   question: {
     _id: string;
     text: string;
-    type: 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
+    type:
+      | "multiple_choice"
+      | "fill_blank"
+      | "translate"
+      | "true_false"
+      | "writing";
     isSingleAnswer: boolean;
     level: string;
     topic: string;
@@ -87,29 +92,32 @@ export default function ExamResultsViewModal({
   if (!examAttempt) return null;
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(date).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   const calculateTotalScore = () => {
-    const totalScore = examAttempt.answers.reduce((sum, answer) => sum + answer.score, 0);
+    const totalScore = examAttempt.answers.reduce(
+      (sum, answer) => sum + answer.score,
+      0
+    );
     const maxScore = examAttempt.answers.length * 100;
     return Math.round((totalScore / maxScore) * 100);
   };
 
   const getCorrectAnswersCount = () => {
-    return examAttempt.answers.filter(answer => answer.isCorrect).length;
+    return examAttempt.answers.filter((answer) => answer.isCorrect).length;
   };
 
   const totalScore = calculateTotalScore();
@@ -117,76 +125,181 @@ export default function ExamResultsViewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden">
-        <DialogHeader>
+      <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950/30 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-2xl">
+        <DialogHeader className="pb-6">
           <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <DialogTitle className="text-2xl font-bold mb-2">
-                Resultados del Examen
-              </DialogTitle>
-              <p className="text-muted-foreground">
-                {examAttempt.exam.title}
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+                <Award className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">
+                  Resultados del Examen
+                </DialogTitle>
+                <p className="text-muted-foreground text-lg">
+                  {examAttempt.exam.title}
+                </p>
+              </div>
             </div>
           </div>
         </DialogHeader>
 
         <ScrollArea className="h-[85vh] pr-4">
-          <div className="space-y-6 pb-12">
+          <div className="space-y-8 pb-24">
             {/* Exam Results Summary */}
-            <Card>
-              <CardHeader>
+            <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20">
+              <CardHeader className="pb-4">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-xl font-bold">{examAttempt.exam.title}</h2>
-                    <p className="text-muted-foreground mt-1">{examAttempt.exam.description}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                      <Award className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                        {examAttempt.exam.title}
+                      </h2>
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        {examAttempt.exam.description}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant={examAttempt.passed ? "default" : "destructive"}>
-                      {examAttempt.passed ? "Aprobado" : "No Aprobado"}
+                    <Badge
+                      variant={examAttempt.passed ? "default" : "destructive"}
+                      className="px-3 py-1"
+                    >
+                      {examAttempt.passed ? "✅ Aprobado" : "❌ No Aprobado"}
                     </Badge>
-                    <Badge variant="outline">{examAttempt.exam.level}</Badge>
+                    <Badge variant="outline" className="px-3 py-1">
+                      {examAttempt.exam.level}
+                    </Badge>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
+                {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{totalScore}% Puntuación</span>
+                  <div className="flex items-center gap-3 p-3 dark:bg-gray-800 rounded-lg border border-blue-200/50 dark:border-blue-800/50">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                      <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        Puntuación
+                      </p>
+                      <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                        {totalScore}%
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">{correctAnswers}/{examAttempt.answers.length} Correctas</span>
+                  <div className="flex items-center gap-3 p-3 dark:bg-gray-800 rounded-lg border border-green-200/50 dark:border-green-800/50">
+                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Correctas</p>
+                      <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                        {correctAnswers}/{examAttempt.answers.length}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{formatDuration(examAttempt.duration)}</span>
+                  <div className="flex items-center gap-3 p-3 dark:bg-gray-800 rounded-lg border border-purple-200/50 dark:border-purple-800/50">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                      <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Duración</p>
+                      <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                        {formatDuration(examAttempt.duration)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={examAttempt.exam.source === "ai" ? "default" : "secondary"}>
-                      {examAttempt.exam.source === "ai" ? "IA" : "Manual"}
-                    </Badge>
+                  <div className="flex items-center gap-3 p-3 dark:bg-gray-800 rounded-lg border border-orange-200/50 dark:border-orange-800/50">
+                    <div className="p-2 dark:bg-orange-900/50 rounded-lg">
+                      <Badge
+                        variant={
+                          examAttempt.exam.source === "ai"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className="text-xs"
+                      >
+                        {examAttempt.exam.source === "ai"
+                          ? "🤖 IA"
+                          : "✍️ Manual"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Origen</p>
+                      <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
+                        {examAttempt.exam.source === "ai" ? "IA" : "Manual"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="mt-4 pt-4 border-t">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Estudiante:</span>
-                      <span className="ml-2">{examAttempt.user.firstName} {examAttempt.user.lastName}</span>
+
+                {/* User Info Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 rounded-xl border border-blue-200/50 dark:border-blue-800/50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                        <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Estudiante
+                        </p>
+                        <p className="font-semibold text-blue-600 dark:text-blue-400">
+                          {examAttempt.user.firstName}{" "}
+                          {examAttempt.user.lastName}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Intento:</span>
-                      <span className="ml-2">#{examAttempt.attemptNumber}</span>
+                  </div>
+
+                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 rounded-xl border border-green-200/50 dark:border-green-800/50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                        <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Intento</p>
+                        <p className="font-semibold text-green-600 dark:text-green-400">
+                          #{examAttempt.attemptNumber}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Iniciado:</span>
-                      <span className="ml-2">{formatDate(examAttempt.startedAt)}</span>
+                  </div>
+
+                  <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 rounded-xl border border-purple-200/50 dark:border-purple-800/50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                        <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Iniciado
+                        </p>
+                        <p className="font-semibold text-purple-600 dark:text-purple-400">
+                          {formatDate(examAttempt.startedAt)}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Finalizado:</span>
-                      <span className="ml-2">{formatDate(examAttempt.submittedAt)}</span>
+                  </div>
+
+                  <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/30 rounded-xl border border-orange-200/50 dark:border-orange-800/50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
+                        <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          Finalizado
+                        </p>
+                        <p className="font-semibold text-orange-600 dark:text-orange-400">
+                          {formatDate(examAttempt.submittedAt)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -197,90 +310,122 @@ export default function ExamResultsViewModal({
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Preguntas y Respuestas</h3>
               {examAttempt.answers.map((answerItem, index) => (
-                <Card key={answerItem._id} className="relative">
+                <Card
+                  key={answerItem._id}
+                  className="relative overflow-hidden border-2 border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/50 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
                   {/* Result indicator */}
                   <div className="absolute top-4 right-4 z-10">
                     {answerItem.isCorrect ? (
-                      <CheckCircle className="h-6 w-6 text-green-500" />
+                      <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-full shadow-lg">
+                        <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+                      </div>
                     ) : (
-                      <XCircle className="h-6 w-6 text-red-500" />
+                      <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-full shadow-lg">
+                        <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                      </div>
                     )}
                   </div>
 
-                  <CardHeader>
-                    <div className="flex items-start justify-between pr-12">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between pr-16">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-lg font-bold text-muted-foreground">
-                            Pregunta {index + 1}
-                          </span>
-                          <Badge variant="yellow">
-                            {answerItem.question.type === 'multiple_choice' && 'Opción Múltiple'}
-                            {answerItem.question.type === 'true_false' && 'Verdadero/Falso'}
-                            {answerItem.question.type === 'fill_blank' && 'Completar'}
-                            {answerItem.question.type === 'translate' && 'Traducción'}
-                            {answerItem.question.type === 'writing' && 'Escritura'}
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full text-white font-bold text-sm shadow-lg">
+                            {index + 1}
+                          </div>
+                          <Badge variant="yellow" className="px-3 py-1">
+                            {answerItem.question.type === "multiple_choice" &&
+                              "Opción Múltiple"}
+                            {answerItem.question.type === "true_false" &&
+                              "Verdadero/Falso"}
+                            {answerItem.question.type === "fill_blank" &&
+                              "Completar"}
+                            {answerItem.question.type === "translate" &&
+                              "Traducción"}
+                            {answerItem.question.type === "writing" &&
+                              "Escritura"}
                           </Badge>
-                          <Badge variant={answerItem.isCorrect ? "default" : "destructive"}>
+                          <Badge
+                            variant={
+                              answerItem.isCorrect ? "default" : "destructive"
+                            }
+                            className="px-3 py-1"
+                          >
                             {answerItem.score}%
                           </Badge>
                         </div>
-                        <h4 className="text-lg leading-relaxed">
+                        <h4 className="text-lg leading-relaxed font-medium">
                           {answerItem.question.text}
                         </h4>
                       </div>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
                     {/* Correct Answer and Explanation */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-semibold text-foreground">Respuesta Correcta:</h4>
-                      </div>
-                      <div className="grid gap-2">
-                        {answerItem.question.options && answerItem.question.options.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="grid gap-3">
+                        {answerItem.question.options &&
+                        answerItem.question.options.length > 0 ? (
                           answerItem.question.options.map((option) => (
                             <div
                               key={option._id}
-                              className={`flex items-center p-3 rounded-lg border transition-all duration-150 ${
+                              className={`flex items-center p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
                                 option.isCorrect
-                                  ? "bg-green-500/10 border-green-500/20"
-                                  : "bg-muted/50 border-border"
+                                  ? "bg-green-500/10 border-green-500/30 shadow-sm"
+                                  : "bg-muted/30 border-border hover:border-gray-300 dark:hover:border-gray-600"
                               }`}
                             >
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
-                                option.isCorrect ? "bg-green-500" : "bg-muted"
-                              } text-white`}>
+                              <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 shadow-md ${
+                                  option.isCorrect ? "bg-green-500" : "bg-muted"
+                                } text-white font-bold`}
+                              >
                                 {option.value}
                               </div>
-                              <span className={option.isCorrect ? "font-medium" : ""}>
+                              <span
+                                className={`flex-1 ${
+                                  option.isCorrect ? "font-semibold" : ""
+                                }`}
+                              >
                                 {option.label}
                               </span>
                               {(() => {
                                 // Para preguntas de true/false, convertir la respuesta del usuario
-                                if (answerItem.question.type === 'true_false') {
+                                if (answerItem.question.type === "true_false") {
                                   const userAnswer = answerItem.answer;
                                   const optionValue = option.value;
-                                  
+
                                   // Mapear respuestas de true/false a valores de opción
-                                  if (userAnswer === 'true' && optionValue === 'A') return true;
-                                  if (userAnswer === 'false' && optionValue === 'B') return true;
+                                  if (
+                                    userAnswer === "true" &&
+                                    optionValue === "A"
+                                  )
+                                    return true;
+                                  if (
+                                    userAnswer === "false" &&
+                                    optionValue === "B"
+                                  )
+                                    return true;
                                   return false;
                                 }
-                                
+
                                 // Para otras preguntas, comparar directamente
                                 return answerItem.answer === option.value;
                               })() && (
-                                <Badge variant="blue" className="ml-auto">
+                                <Badge
+                                  variant="blue"
+                                  className="ml-auto px-3 py-1"
+                                >
                                   Tu selección
                                 </Badge>
                               )}
                             </div>
                           ))
                         ) : (
-                          <div className="p-3 rounded-lg border bg-green-500/10 border-green-500/20">
-                            <span className="font-medium">
+                          <div className="p-4 rounded-xl border-2 bg-green-500/10 border-green-500/30 shadow-sm">
+                            <span className="font-semibold text-lg">
                               {answerItem.question.correctAnswers.join(", ")}
                             </span>
                           </div>
@@ -290,13 +435,18 @@ export default function ExamResultsViewModal({
 
                     {/* Explanation */}
                     {answerItem.question.explanation && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-foreground">Explicación:</h4>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <h4 className="font-semibold text-foreground text-lg">
+                            Explicación:
+                          </h4>
                         </div>
                         <div
-                          className="p-4 bg-muted/50 rounded-lg prose prose-sm max-w-none dark:prose-invert"
-                          dangerouslySetInnerHTML={{ __html: answerItem.question.explanation }}
+                          className="p-6 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl border border-blue-200/50 dark:border-blue-800/50 prose prose-sm max-w-none dark:prose-invert shadow-sm"
+                          dangerouslySetInnerHTML={{
+                            __html: answerItem.question.explanation,
+                          }}
                         />
                       </div>
                     )}
@@ -309,4 +459,4 @@ export default function ExamResultsViewModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}
