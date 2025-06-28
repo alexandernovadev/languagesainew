@@ -9,13 +9,13 @@ interface TrueFalseOptionProps {
   onSelect: () => void;
 }
 
-export function TrueFalseOption({
+export const TrueFalseOption = React.memo(({
   value,
   label,
   isSelected,
   isAnswered,
   onSelect
-}: TrueFalseOptionProps) {
+}: TrueFalseOptionProps) => {
   const isTrue = value === 'true';
   
   return (
@@ -84,4 +84,4 @@ export function TrueFalseOption({
       </div>
     </div>
   );
-} 
+}); 

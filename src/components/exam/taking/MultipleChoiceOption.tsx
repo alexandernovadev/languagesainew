@@ -9,12 +9,12 @@ interface MultipleChoiceOptionProps {
   onSelect: () => void;
 }
 
-export function MultipleChoiceOption({
+export const MultipleChoiceOption = React.memo(({
   option,
   isSelected,
   isAnswered,
   onSelect
-}: MultipleChoiceOptionProps) {
+}: MultipleChoiceOptionProps) => {
   const optionLetter = option.value.toUpperCase();
   
   return (
@@ -83,4 +83,4 @@ export function MultipleChoiceOption({
       </div>
     </div>
   );
-} 
+}); 

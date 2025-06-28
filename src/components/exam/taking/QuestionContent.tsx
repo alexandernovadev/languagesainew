@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,12 +13,12 @@ interface QuestionContentProps {
   onAnswerChange: (value: any) => void;
 }
 
-export function QuestionContent({
+export const QuestionContent = React.memo(({
   question,
   answer,
   isAnswered,
   onAnswerChange
-}: QuestionContentProps) {
+}: QuestionContentProps) => {
   const renderQuestionContent = () => {
     switch (question.type) {
       case 'single_choice':
@@ -45,6 +45,7 @@ export function QuestionContent({
       case 'multiple_choice':
         // Handle multiple choice with checkboxes for multiple selection
         const selectedAnswers = Array.isArray(answer) ? answer : [];
+        const selectedAnswersSet = useMemo(() => new Set(selectedAnswers), [selectedAnswers]);
         
         const handleMultipleChoiceChange = (optionValue: string, checked: boolean) => {
           let newAnswers: string[];
@@ -66,28 +67,29 @@ export function QuestionContent({
                     relative cursor-pointer
                     p-3 rounded-xl border-2
                     transition-colors duration-200 ease-out
-                    ${selectedAnswers.includes(option.value)
+                    ${selectedAnswersSet.has(option.value)
                       ? 'border-blue-500 bg-blue-500/10 shadow-blue-500/20 shadow-lg' 
                       : 'border-gray-600 bg-gray-800/50'
                     }
-                    ${isAnswered && selectedAnswers.includes(option.value)
+                    ${isAnswered && selectedAnswersSet.has(option.value)
                       ? 'border-emerald-500 bg-emerald-500/10 shadow-emerald-500/20' 
                       : ''
                     }
                   `}
+                  onClick={() => handleMultipleChoiceChange(option.value, !selectedAnswersSet.has(option.value))}
                 >
                   {/* Checkbox */}
                   <div className="absolute right-2 top-1/2 -translate-y-1/2">
                     <Checkbox
-                      checked={selectedAnswers.includes(option.value)}
+                      checked={selectedAnswersSet.has(option.value)}
                       onCheckedChange={(checked) => handleMultipleChoiceChange(option.value, checked as boolean)}
                       className={`
                         w-5 h-5 border-2
-                        ${selectedAnswers.includes(option.value)
+                        ${selectedAnswersSet.has(option.value)
                           ? 'border-blue-500 bg-blue-500' 
                           : 'border-gray-500 bg-gray-700'
                         }
-                        ${isAnswered && selectedAnswers.includes(option.value)
+                        ${isAnswered && selectedAnswersSet.has(option.value)
                           ? 'border-emerald-500 bg-emerald-500' 
                           : ''
                         }
@@ -101,11 +103,11 @@ export function QuestionContent({
                     <div className={`
                       w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0
                       transition-colors duration-200 ease-out
-                      ${selectedAnswers.includes(option.value)
+                      ${selectedAnswersSet.has(option.value)
                         ? 'bg-blue-500 text-white' 
                         : 'bg-gray-600 text-gray-300'
                       }
-                      ${isAnswered && selectedAnswers.includes(option.value)
+                      ${isAnswered && selectedAnswersSet.has(option.value)
                         ? 'bg-emerald-500 text-white' 
                         : ''
                       }
@@ -116,7 +118,7 @@ export function QuestionContent({
                     {/* Option text */}
                     <p className={`
                       text-sm leading-relaxed transition-colors duration-200 ease-out flex-1
-                      ${selectedAnswers.includes(option.value)
+                      ${selectedAnswersSet.has(option.value)
                         ? 'text-gray-100 font-medium' 
                         : 'text-gray-300'
                       }
@@ -181,7 +183,7 @@ export function QuestionContent({
         return (
           <div className="space-y-3">
             <Textarea
-              value={answer}
+              value={answer || ''}
               onChange={(e) => onAnswerChange(e.target.value)}
               placeholder="Escribe tu respuesta aquí..."
               className="min-h-[100px] resize-none border border-gray-600 bg-gray-900/60 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
@@ -193,7 +195,7 @@ export function QuestionContent({
         return (
           <div className="space-y-3">
             <Textarea
-              value={answer}
+              value={answer || ''}
               onChange={(e) => onAnswerChange(e.target.value)}
               placeholder="Escribe tu traducción aquí..."
               className="min-h-[120px] resize-none border border-gray-600 bg-gray-900/60 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
@@ -205,7 +207,7 @@ export function QuestionContent({
         return (
           <div className="space-y-3">
             <Textarea
-              value={answer}
+              value={answer || ''}
               onChange={(e) => onAnswerChange(e.target.value)}
               placeholder="Escribe tu respuesta aquí..."
               className="min-h-[150px] resize-none border border-gray-600 bg-gray-900/60 text-gray-100 focus:border-gray-400 focus:ring-0 transition-all duration-200"
@@ -229,4 +231,4 @@ export function QuestionContent({
       {renderQuestionContent()}
     </div>
   );
-} 
+}); 

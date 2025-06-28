@@ -18,7 +18,7 @@ export function useAutoSave({ currentAnswer, onAnswerSubmit, questionType }: Use
 
   // Auto-save function
   const autoSave = async (value: any) => {
-    if (value === null || value === undefined || value === '') {
+    if (value === null || value === undefined) {
       return;
     }
 
@@ -38,23 +38,20 @@ export function useAutoSave({ currentAnswer, onAnswerSubmit, questionType }: Use
     
     debounceRef.current = setTimeout(() => {
       autoSave(value);
-    }, 1000); // 1 second delay
+    }, 800); // 800ms delay
   };
 
   const handleAnswerChange = (value: any) => {
     setAnswer(value);
     
-    // Immediate save for single choice, true/false, and fill_blank with options
-    if (questionType === 'single_choice' || questionType === 'true_false' || 
-        (questionType === 'fill_blank' && value && typeof value === 'string' && value.length > 0)) {
-      autoSave(value);
-    } else if (questionType === 'multiple_choice') {
-      // For multiple choice, save immediately if it's a valid array
-      if (Array.isArray(value) && value.length > 0) {
-        autoSave(value);
+    // Immediate save ONLY for single choice and true/false
+    if (questionType === 'single_choice' || questionType === 'true_false') {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
       }
+      autoSave(value);
     } else {
-      // Debounced save for text inputs
+      // Debounced save for everything else (text inputs, multiple choice, etc.)
       debouncedAutoSave(value);
     }
   };
