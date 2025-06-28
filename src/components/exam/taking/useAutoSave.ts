@@ -44,8 +44,9 @@ export function useAutoSave({ currentAnswer, onAnswerSubmit, questionType }: Use
   const handleAnswerChange = (value: any) => {
     setAnswer(value);
     
-    // Immediate save for multiple choice and true/false
-    if (questionType === 'multiple_choice' || questionType === 'true_false') {
+    // Immediate save for multiple choice, true/false, and fill_blank with options
+    if (questionType === 'multiple_choice' || questionType === 'true_false' || 
+        (questionType === 'fill_blank' && value && typeof value === 'string' && value.length > 0)) {
       autoSave(value);
     } else {
       // Debounced save for text inputs

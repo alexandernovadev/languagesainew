@@ -68,6 +68,27 @@ export function QuestionContent({
         );
 
       case 'fill_blank':
+        if (question.options && question.options.length > 0) {
+          return (
+            <div className="space-y-4">
+              <RadioGroup
+                value={answer}
+                onValueChange={onAnswerChange}
+                className="grid gap-4"
+              >
+                {question.options?.map((option) => (
+                  <MultipleChoiceOption
+                    key={option._id}
+                    option={option}
+                    isSelected={answer === option.value}
+                    isAnswered={isAnswered}
+                    onSelect={() => onAnswerChange(option.value)}
+                  />
+                ))}
+              </RadioGroup>
+            </div>
+          );
+        }
         return (
           <div className="space-y-3">
             <Textarea
