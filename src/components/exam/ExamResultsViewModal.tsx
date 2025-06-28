@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Eye, CheckCircle, XCircle, Clock, Award, User, Hash, Play, CheckSquare } from "lucide-react";
+import { X, Eye, CheckCircle, XCircle, Clock, Award, User, Hash, Play, CheckSquare, Bot, PenTool } from "lucide-react";
 import { ExamQuestionView } from "./ExamQuestionView";
 
 // Tipos basados en la respuesta del backend
@@ -216,18 +216,11 @@ export default function ExamResultsViewModal({
                   </div>
                   <div className="flex items-center gap-3 p-3 dark:bg-gray-800 rounded-lg border border-orange-200/50 dark:border-orange-800/50">
                     <div className="p-2 dark:bg-orange-900/50 rounded-lg">
-                      <Badge
-                        variant={
-                          examAttempt.exam.source === "ai"
-                            ? "default"
-                            : "secondary"
-                        }
-                        className="text-xs"
-                      >
-                        {examAttempt.exam.source === "ai"
-                          ? "🤖 IA"
-                          : "✍️ Manual"}
-                      </Badge>
+                      {examAttempt.exam.source === "ai" ? (
+                        <Bot className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                      ) : (
+                        <PenTool className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                      )}
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Origen</p>
