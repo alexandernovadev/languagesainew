@@ -88,12 +88,19 @@ export function ExamFormField(props: ExamFormFieldProps) {
               className="w-full"
             />
             {props.showLabels && (
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Muy Fácil</span>
-                <span className="font-medium">
-                  {props.getLabel ? props.getLabel(props.value) : props.value}
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+              </div>
+            )}
+            {props.getLabel && (
+              <div className="text-center">
+                <span className="text-sm font-medium">
+                  {props.getLabel(props.value)}
                 </span>
-                <span>Muy Difícil</span>
               </div>
             )}
           </div>

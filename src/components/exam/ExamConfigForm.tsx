@@ -49,31 +49,30 @@ export function ExamConfigForm({
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Tema del examen */}
-            <ExamFormField
-              type="textarea"
-              label="Tema del Examen"
-              required
-              value={filters.topic}
-              onChange={(value) => updateFilter("topic", value)}
-              placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
-              description="Sé específico para obtener mejores resultados"
-              error={validation.errors.find((e) => e.includes("tema"))}
-            />
+            {/* Tema del examen y Temas de gramática */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ExamFormField
+                type="textarea"
+                label="Tema del Examen"
+                required
+                value={filters.topic}
+                onChange={(value) => updateFilter("topic", value)}
+                placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
+                description="Sé específico para obtener mejores resultados"
+                error={validation.errors.find((e) => e.includes("tema"))}
+              />
+
+              <GrammarTopicsSelector
+                selectedTopics={filters.grammarTopics}
+                onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
+                error={validation.errors.find((e) => e.includes("gramática"))}
+              />
+            </div>
 
             <Separator />
 
-            {/* Temas de gramática obligatorios */}
-            <GrammarTopicsSelector
-              selectedTopics={filters.grammarTopics}
-              onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
-              error={validation.errors.find((e) => e.includes("gramática"))}
-            />
-
-            <Separator />
-
-            {/* Nivel y dificultad */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Nivel, dificultad y número de preguntas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <ExamFormField
                 type="select"
                 label="Nivel CEFR"
@@ -97,20 +96,17 @@ export function ExamConfigForm({
                 showLabels
                 getLabel={getDifficultyLabel}
               />
+
+              <ExamFormField
+                type="number"
+                label="Número de Preguntas"
+                value={filters.numberOfQuestions}
+                onChange={(value) => updateFilter("numberOfQuestions", value)}
+                min={EXAM_VALIDATION_LIMITS.minQuestions}
+                max={EXAM_VALIDATION_LIMITS.maxQuestions}
+                description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
+              />
             </div>
-
-            <Separator />
-
-            {/* Número de preguntas */}
-            <ExamFormField
-              type="number"
-              label="Número de Preguntas"
-              value={filters.numberOfQuestions}
-              onChange={(value) => updateFilter("numberOfQuestions", value)}
-              min={EXAM_VALIDATION_LIMITS.minQuestions}
-              max={EXAM_VALIDATION_LIMITS.maxQuestions}
-              description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
-            />
 
             <Separator />
 
