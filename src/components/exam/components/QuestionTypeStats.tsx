@@ -4,7 +4,6 @@ import {
   calculateQuestionTypeStats,
   getQuestionTypeLabel,
 } from "../helpers/examUtils";
-import { QUESTION_TYPE_CHART_COLORS } from "../constants/examConstants";
 import { QuestionTypeStatsProps } from "../types/examTypes";
 
 export function QuestionTypeStats({
@@ -30,11 +29,11 @@ export function QuestionTypeStats({
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="text-center p-3 bg-blue-500/10 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+        <div className="text-center p-3 bg-yellow-500/10 rounded-lg">
+          <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
             {totalQuestions}
           </div>
-          <div className="text-xs text-blue-600 dark:text-blue-400">Total</div>
+          <div className="text-xs text-yellow-600 dark:text-yellow-400">Total</div>
         </div>
 
         {questionTypes.map((type) => (
@@ -71,11 +70,7 @@ export function QuestionTypeStats({
                   <div className="flex items-center gap-2">
                     <div className="w-20 bg-muted rounded-full h-2">
                       <div
-                        className={`h-2 rounded-full ${
-                          QUESTION_TYPE_CHART_COLORS[
-                            type as keyof typeof QUESTION_TYPE_CHART_COLORS
-                          ] || "bg-gray-500"
-                        }`}
+                        className="h-2 rounded-full bg-yellow-500"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>

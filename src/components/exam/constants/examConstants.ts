@@ -42,11 +42,11 @@ export const EXAM_GENERATION_TIPS = [
 
 // Question type colors for charts and visualizations
 export const QUESTION_TYPE_CHART_COLORS = {
-  multiple_choice: 'bg-blue-500',
-  fill_blank: 'bg-green-500',
-  true_false: 'bg-purple-500',
-  translate: 'bg-orange-500',
-  writing: 'bg-red-500'
+  multiple_choice: 'bg-yellow-500',
+  fill_blank: 'bg-yellow-500',
+  true_false: 'bg-yellow-500',
+  translate: 'bg-yellow-500',
+  writing: 'bg-yellow-500'
 };
 
 // Default exam configuration

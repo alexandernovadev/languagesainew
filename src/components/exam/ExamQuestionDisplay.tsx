@@ -7,7 +7,6 @@ import { Edit } from "lucide-react";
 import { ExamQuestion } from "@/services/examService";
 import { ExamOptionCard } from "./ExamOptionCard";
 import {
-  getQuestionTypeColor,
   getQuestionTypeLabel,
 } from "./helpers/examUtils";
 import { useExamStore } from "@/lib/store/useExamStore";
@@ -154,7 +153,7 @@ export function ExamQuestionDisplay({
               <span className="text-lg font-bold text-muted-foreground">
                 Pregunta {questionNumber}
               </span>
-              <Badge className={getQuestionTypeColor(question.type)}>
+              <Badge variant="yellow">
                 {getQuestionTypeLabel(question.type)}
               </Badge>
             </div>

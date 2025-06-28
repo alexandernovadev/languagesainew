@@ -10,30 +10,6 @@ export const getQuestionTypeLabel = (type: string): string => {
   return typeData?.label || type;
 };
 
-export const getQuestionTypeDescription = (type: string): string => {
-  const typeData = questionTypes.find((t) => t.value === type);
-  return typeData?.description || "";
-};
-
-export const getQuestionTypeColor = (type: string): string => {
-  const colors: Record<string, string> = {
-    multiple_choice:
-      "bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:ring-2 hover:ring-blue-400/50 hover:bg-blue-500/30",
-    fill_blank:
-      "bg-green-500/20 text-green-600 dark:text-green-400 hover:ring-2 hover:ring-green-400/50 hover:bg-green-500/30",
-    true_false:
-      "bg-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400 hover:ring-2 hover:ring-fuchsia-400/50 hover:bg-fuchsia-500/30",
-    translate:
-      "bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:ring-2 hover:ring-purple-400/50 hover:bg-purple-500/30",
-    writing:
-      "bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:ring-2 hover:ring-orange-400/50 hover:bg-orange-500/30",
-  };
-  return (
-    colors[type] ||
-    "bg-muted text-muted-foreground hover:ring-2 hover:ring-gray-400/50 hover:bg-muted/40"
-  );
-};
-
 // Level Helpers
 export const getLevelLabel = (level: string): string => {
   const levelData = questionLevels.find((l) => l.value === level);
@@ -51,13 +27,6 @@ export const getDifficultyLabel = (difficulty: number): string => {
     (d) => d.value === difficulty
   );
   return difficultyData?.label || `Nivel ${difficulty}`;
-};
-
-export const getDifficultyDescription = (difficulty: number): string => {
-  const difficultyData = questionDifficulties.find(
-    (d) => d.value === difficulty
-  );
-  return difficultyData?.description || "";
 };
 
 // Language Helpers
@@ -79,22 +48,6 @@ export const calculateQuestionTypeStats = (questions: any[]) => {
     acc[question.type] = (acc[question.type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-};
-
-export const calculateTagStats = (questions: any[]) => {
-  return questions.reduce((acc, question) => {
-    question.tags.forEach((tag: string) => {
-      acc[tag] = (acc[tag] || 0) + 1;
-    });
-    return acc;
-  }, {} as Record<string, number>);
-};
-
-export const getTopTags = (questions: any[], limit: number = 5) => {
-  const tagStats = calculateTagStats(questions);
-  return Object.entries(tagStats)
-    .sort(([, a], [, b]) => (b as number) - (a as number))
-    .slice(0, limit);
 };
 
 export const calculateEstimatedTime = (questions: any[]): number => {
