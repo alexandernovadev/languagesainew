@@ -9,7 +9,20 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Eye, CheckCircle, XCircle, Clock, Award, User, Hash, Play, CheckSquare, Bot, PenTool } from "lucide-react";
+import {
+  X,
+  Eye,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Award,
+  User,
+  Hash,
+  Play,
+  CheckSquare,
+  Bot,
+  PenTool,
+} from "lucide-react";
 import { ExamQuestionView } from "./ExamQuestionView";
 
 // Tipos basados en la respuesta del backend
@@ -150,19 +163,6 @@ export default function ExamResultsViewModal({
             <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20">
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
-                      <Award className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                        {examAttempt.exam.title}
-                      </h2>
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        {examAttempt.exam.description}
-                      </p>
-                    </div>
-                  </div>
                   <div className="flex gap-2">
                     <Badge
                       variant={examAttempt.passed ? "default" : "destructive"}
@@ -301,7 +301,9 @@ export default function ExamResultsViewModal({
 
             {/* Questions with Results */}
             <div className="space-y-4">
-              <h3 className="text-base font-semibold">Preguntas y Respuestas</h3>
+              <h3 className="text-base font-semibold">
+                Preguntas y Respuestas
+              </h3>
               {examAttempt.answers.map((answerItem, index) => (
                 <Card
                   key={answerItem._id}
@@ -327,7 +329,10 @@ export default function ExamResultsViewModal({
                           <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full text-white font-bold text-xs shadow-lg">
                             {index + 1}
                           </div>
-                          <Badge variant="yellow" className="px-2 py-0.5 text-xs">
+                          <Badge
+                            variant="yellow"
+                            className="px-2 py-0.5 text-xs"
+                          >
                             {answerItem.question.type === "multiple_choice" &&
                               "Opción Múltiple"}
                             {answerItem.question.type === "true_false" &&
