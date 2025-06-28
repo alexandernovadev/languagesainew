@@ -42,6 +42,7 @@ import { CSS } from "@dnd-kit/utilities";
 const questionSchema = z.object({
   text: z.string().min(1, "El texto de la pregunta es requerido"),
   type: z.enum([
+    "single_choice",
     "multiple_choice",
     "fill_blank",
     "translate",
