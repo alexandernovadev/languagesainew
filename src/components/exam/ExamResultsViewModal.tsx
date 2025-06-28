@@ -126,17 +126,17 @@ export default function ExamResultsViewModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950/30 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-2xl">
-        <DialogHeader className="pb-4">
+        <DialogHeader className="pb-3">
           <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                <Award className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-lg">
+                <Award className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-1">
+                <DialogTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-0.5">
                   Resultados del Examen
                 </DialogTitle>
-                <p className="text-muted-foreground text-base">
+                <p className="text-muted-foreground text-sm">
                   {examAttempt.exam.title}
                 </p>
               </div>
