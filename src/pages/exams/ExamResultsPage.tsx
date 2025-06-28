@@ -12,12 +12,15 @@ import {
   Clock, 
   Award,
   Loader2,
-  BarChart3
+  BarChart3,
+  Eye
 } from 'lucide-react';
 import { examAttemptService } from '@/services/examAttemptService';
 import { examService, Exam } from '@/services/examService';
 import { toast } from "sonner";
 import { ExamAttempt } from '@/lib/store/useExamAttemptStore';
+import ViewExamResultsButton from '@/components/exam/ViewExamResultsButton';
+import ExamResultsViewModal from '@/components/exam/ExamResultsViewModal';
 
 export default function ExamResultsPage() {
   const { examId, attemptId } = useParams<{ examId: string; attemptId: string }>();
@@ -26,6 +29,8 @@ export default function ExamResultsPage() {
   const [exam, setExam] = useState<Exam | null>(null);
   const [attempt, setAttempt] = useState<ExamAttempt | null>(null);
   const [loading, setLoading] = useState(true);
+  const [detailedAttempt, setDetailedAttempt] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -149,6 +154,24 @@ export default function ExamResultsPage() {
   };
 
   const averageScore = getAverageScore();
+
+  const handleViewDetailedResults = async () => {
+    if (!attemptId) return;
+    
+    try {
+      // Obtener los datos completos del intento desde el backend
+      const response = await examAttemptService.getAttempt(attemptId);
+      if (response) {
+        setDetailedAttempt(response);
+        setIsModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error loading detailed attempt:', error);
+      toast.error("Error", {
+        description: "No se pudieron cargar los resultados detallados",
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -367,7 +390,24 @@ export default function ExamResultsPage() {
         >
           Ver Todos los Exámenes
         </Button>
+        <Button 
+          variant="outline"
+          onClick={handleViewDetailedResults}
+          className="flex-1"
+        >
+          <Eye className="w-4 h-4 mr-2" />
+          Ver Resultados Detallados
+        </Button>
       </div>
+
+      {/* Detailed Results Modal */}
+      {detailedAttempt && (
+        <ExamResultsViewModal
+          examAttempt={detailedAttempt}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 } 
