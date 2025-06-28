@@ -63,6 +63,7 @@ export function ExamConfigForm({
                   placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
                   description="Sé específico para obtener mejores resultados"
                   error={validation.errors.find((e) => e.includes("tema"))}
+                  rows={5}
                 />
 
                 <Separator />
