@@ -132,7 +132,7 @@ export default function ExamResultsViewModal({
         </DialogHeader>
 
         <ScrollArea className="h-[85vh] pr-4">
-          <div className="space-y-6">
+          <div className="space-y-6 pb-12">
             {/* Exam Results Summary */}
             <Card>
               <CardHeader>
@@ -233,52 +233,6 @@ export default function ExamResultsViewModal({
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    {/* User's Answer */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-semibold text-foreground">Tu Respuesta:</h4>
-                      </div>
-                      <div className={`p-3 rounded-lg border ${
-                        answerItem.isCorrect 
-                          ? "bg-green-500/10 border-green-500/20" 
-                          : "bg-red-500/10 border-red-500/20"
-                      }`}>
-                        <span className="font-medium">
-                          {(() => {
-                            // Limpiar y formatear la respuesta del usuario
-                            let cleanAnswer = answerItem.answer || "Sin respuesta";
-                            
-                            // Si es una respuesta de opción múltiple, mostrar la letra y el texto
-                            if (answerItem.question.options && answerItem.question.options.length > 0) {
-                              const selectedOption = answerItem.question.options.find(
-                                option => option.value === cleanAnswer
-                              );
-                              if (selectedOption) {
-                                cleanAnswer = `${selectedOption.value}. ${selectedOption.label}`;
-                              }
-                            }
-                            
-                            // Si es true/false, mostrar el texto completo
-                            if (cleanAnswer === "true") {
-                              cleanAnswer = "Verdadero";
-                            } else if (cleanAnswer === "false") {
-                              cleanAnswer = "Falso";
-                            }
-                            
-                            // Limpiar cualquier formato con guiones bajos
-                            cleanAnswer = cleanAnswer.replace(/__+/g, '').trim();
-                            
-                            return cleanAnswer;
-                          })()}
-                        </span>
-                        {answerItem.feedback && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {answerItem.feedback}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
                     {/* Correct Answer and Explanation */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
@@ -303,12 +257,23 @@ export default function ExamResultsViewModal({
                               <span className={option.isCorrect ? "font-medium" : ""}>
                                 {option.label}
                               </span>
-                              {option.isCorrect && (
-                                <Badge 
-                                  variant={answerItem.isCorrect ? "default" : "destructive"}
-                                  className="ml-auto"
-                                >
-                                  {answerItem.isCorrect ? "Correcta" : "Incorrecta"}
+                              {(() => {
+                                // Para preguntas de true/false, convertir la respuesta del usuario
+                                if (answerItem.question.type === 'true_false') {
+                                  const userAnswer = answerItem.answer;
+                                  const optionValue = option.value;
+                                  
+                                  // Mapear respuestas de true/false a valores de opción
+                                  if (userAnswer === 'true' && optionValue === 'A') return true;
+                                  if (userAnswer === 'false' && optionValue === 'B') return true;
+                                  return false;
+                                }
+                                
+                                // Para otras preguntas, comparar directamente
+                                return answerItem.answer === option.value;
+                              })() && (
+                                <Badge variant="blue" className="ml-auto">
+                                  Tu selección
                                 </Badge>
                               )}
                             </div>

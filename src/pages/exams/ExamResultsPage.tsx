@@ -332,8 +332,14 @@ export default function ExamResultsPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Estado:</span>
-                <Badge variant={attempt.status === 'graded' ? 'default' : 'secondary'}>
-                  {attempt.status === 'graded' ? 'Calificado' : 'En proceso'}
+                <Badge variant={
+                  attempt.status === 'graded' ? 'secondary' : 
+                  attempt.status === 'submitted' ? 'yellow' : 
+                  'blue'
+                }>
+                  {attempt.status === 'graded' ? 'Calificado' : 
+                   attempt.status === 'submitted' ? 'Enviado' : 
+                   'En proceso'}
                 </Badge>
               </div>
               {attempt.submittedAt && (
