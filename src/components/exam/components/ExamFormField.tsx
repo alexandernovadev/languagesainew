@@ -154,7 +154,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
         <p className="text-sm text-muted-foreground">{description}</p>
       )}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
     </div>
   );
 }
