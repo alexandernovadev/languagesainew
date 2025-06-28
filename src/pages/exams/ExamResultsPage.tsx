@@ -84,14 +84,42 @@ export default function ExamResultsPage() {
   }
 
   const getAverageScore = () => {
-    if (!attempt.aiEvaluation) return 0;
-    const scores = [
-      attempt.aiEvaluation.grammar || 0,
-      attempt.aiEvaluation.fluency || 0,
-      attempt.aiEvaluation.coherence || 0,
-      attempt.aiEvaluation.vocabulary || 0
-    ];
-    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+    // First try to use AI evaluation if available and has valid scores
+    if (attempt.aiEvaluation && hasValidAIEvaluation(attempt.aiEvaluation)) {
+      const scores = [
+        attempt.aiEvaluation.grammar || 0,
+        attempt.aiEvaluation.fluency || 0,
+        attempt.aiEvaluation.coherence || 0,
+        attempt.aiEvaluation.vocabulary || 0
+      ].filter(score => score > 0);
+      
+      if (scores.length > 0) {
+        return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+      }
+    }
+    
+    // Fallback to individual answer scores
+    if (attempt.answers && attempt.answers.length > 0) {
+      const totalScore = attempt.answers.reduce((sum, answer) => sum + (answer.score || 0), 0);
+      return Math.round(totalScore / attempt.answers.length);
+    }
+    
+    return 0;
+  };
+
+  const hasValidAIEvaluation = (aiEvaluation: any) => {
+    return aiEvaluation && (
+      (aiEvaluation.grammar !== undefined && aiEvaluation.grammar > 0) ||
+      (aiEvaluation.fluency !== undefined && aiEvaluation.fluency > 0) ||
+      (aiEvaluation.coherence !== undefined && aiEvaluation.coherence > 0) ||
+      (aiEvaluation.vocabulary !== undefined && aiEvaluation.vocabulary > 0)
+    );
+  };
+
+  const getIndividualAccuracy = () => {
+    if (!attempt.answers || attempt.answers.length === 0) return 0;
+    const correctCount = attempt.answers.filter(answer => answer.isCorrect).length;
+    return Math.round((correctCount / attempt.answers.length) * 100);
   };
 
   const getScoreColor = (score: number) => {
@@ -172,12 +200,12 @@ export default function ExamResultsPage() {
       </Card>
 
       {/* Detailed Scores */}
-      {attempt.aiEvaluation && (
+      {attempt.aiEvaluation && hasValidAIEvaluation(attempt.aiEvaluation) ? (
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Evaluación Detallada
+              Evaluación Detallada por IA
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -232,6 +260,25 @@ export default function ExamResultsPage() {
             </div>
           </CardContent>
         </Card>
+      ) : (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5" />
+              Precisión de Respuestas
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center space-y-4">
+              <div className="text-4xl font-bold" style={{ color: getScoreColor(getIndividualAccuracy()) }}>
+                {getIndividualAccuracy()}%
+              </div>
+              <div className="text-lg">
+                {attempt.answers.filter(answer => answer.isCorrect).length} de {attempt.answers.length} respuestas correctas
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Exam Information */}
@@ -258,7 +305,7 @@ export default function ExamResultsPage() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Preguntas respondidas:</span>
-                <span>{attempt.answers.length} de {exam.questions.length}</span>
+                <span>{attempt.answers.length} de {exam.questions?.length || 0}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Estado:</span>

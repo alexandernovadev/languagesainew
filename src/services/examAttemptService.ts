@@ -33,6 +33,13 @@ export interface GradeAttemptRequest {
   aiNotes?: string;
 }
 
+export interface GetAttemptsParams {
+  userId?: string;
+  examId?: string;
+  page?: number;
+  limit?: number;
+}
+
 export const examAttemptService = {
   // Check if user can create a new attempt
   async checkCanCreateAttempt(userId: string, examId: string): Promise<CanCreateAttempt> {
@@ -44,6 +51,25 @@ export const examAttemptService = {
     const response = await api.get(url);
     
     console.log("📥 Response received:", response.data);
+    return response.data.data;
+  },
+
+  // Get paginated exam attempts
+  async getAttempts(params: GetAttemptsParams): Promise<{ 
+    data: ExamAttempt[]; 
+    total: number; 
+    page: number; 
+    pages: number; 
+  }> {
+    const queryParams = new URLSearchParams();
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        queryParams.append(key, value.toString());
+      }
+    });
+
+    const response = await api.get(`/api/exam-attempts?${queryParams.toString()}`);
     return response.data.data;
   },
 
@@ -74,6 +100,30 @@ export const examAttemptService = {
   // Grade the exam attempt (after AI evaluation)
   async gradeAttempt(attemptId: string, data: GradeAttemptRequest): Promise<ExamAttempt> {
     const response = await api.post(`/api/exam-attempts/${attemptId}/grade`, data);
+    return response.data.data;
+  },
+
+  // Get evaluation status of an attempt
+  async getEvaluationStatus(attemptId: string): Promise<{
+    attemptId: string;
+    status: string;
+    evaluationStatus: {
+      isComplete: boolean;
+      requiresAI: boolean;
+      totalAnswers: number;
+      answersRequiringAI: number;
+      autoEvaluatedAnswers: number;
+    };
+    answersRequiringAI: Array<{
+      questionId: string;
+      answer: any;
+      feedback: string;
+      type: string;
+    }>;
+    totalScore: number;
+    accuracy: number;
+  }> {
+    const response = await api.get(`/api/exam-attempts/${attemptId}/evaluation-status`);
     return response.data.data;
   },
 
