@@ -2,6 +2,7 @@ import { api } from './api';
 
 export interface ExamGenerationParams {
   topic: string;
+  grammarTopics?: string[];
   level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   numberOfQuestions?: number;
   types?: string[];
@@ -252,6 +253,7 @@ export const examService = {
   async generateExam(params: ExamGenerationParams): Promise<ExamGenerationResponse> {
     const response = await api.post('/api/ai/generate-exam', {
       topic: params.topic,
+      grammarTopics: params.grammarTopics || [],
       level: params.level || 'B1',
       numberOfQuestions: params.numberOfQuestions || 10,
       types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
@@ -306,6 +308,7 @@ export const examService = {
   ): Promise<ExamGenerationResponse> {
     const response = await api.post('/api/ai/generate-exam', {
       topic: params.topic,
+      grammarTopics: params.grammarTopics || [],
       level: params.level || 'B1',
       numberOfQuestions: params.numberOfQuestions || 10,
       types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],

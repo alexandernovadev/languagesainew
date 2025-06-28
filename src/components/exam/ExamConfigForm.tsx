@@ -7,6 +7,7 @@ import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 import { questionTypes, questionLevels } from "@/data/questionTypes";
 import { SuggestedTopics } from "./SuggestedTopics";
 import { ExamFormField } from "./components/ExamFormField";
+import { GrammarTopicsSelector } from "./components/GrammarTopicsSelector";
 import {
   getDifficultyLabel,
   getLevelDescription,
@@ -63,6 +64,15 @@ export function ExamConfigForm({
               placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
               description="Sé específico para obtener mejores resultados"
               error={validation.errors.find((e) => e.includes("tema"))}
+            />
+
+            <Separator />
+
+            {/* Temas de gramática obligatorios */}
+            <GrammarTopicsSelector
+              selectedTopics={filters.grammarTopics}
+              onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
+              error={validation.errors.find((e) => e.includes("gramática"))}
             />
 
             <Separator />

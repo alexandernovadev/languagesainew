@@ -3,6 +3,7 @@ import {
   questionLevels,
   questionDifficulties,
 } from "@/data/questionTypes";
+import { EXAM_VALIDATION_LIMITS } from "../constants/examConstants";
 
 // Question Type Helpers
 export const getQuestionTypeLabel = (type: string): string => {
@@ -64,12 +65,21 @@ export const validateExamFilters = (
     errors.push("El tema del examen es requerido");
   }
 
+  // Validación de temas de gramática
+  if (filters.grammarTopics && !Array.isArray(filters.grammarTopics)) {
+    errors.push("Los temas de gramática deben ser un array");
+  }
+
+  if (filters.grammarTopics && filters.grammarTopics.length > EXAM_VALIDATION_LIMITS.maxGrammarTopics) {
+    errors.push(`Máximo ${EXAM_VALIDATION_LIMITS.maxGrammarTopics} temas de gramática permitidos`);
+  }
+
   if (!filters.types || filters.types.length === 0) {
     errors.push("Debe seleccionar al menos un tipo de pregunta");
   }
 
-  if (filters.numberOfQuestions < 1 || filters.numberOfQuestions > 50) {
-    errors.push("El número de preguntas debe estar entre 1 y 50");
+  if (filters.numberOfQuestions < EXAM_VALIDATION_LIMITS.minQuestions || filters.numberOfQuestions > EXAM_VALIDATION_LIMITS.maxQuestions) {
+    errors.push(`El número de preguntas debe estar entre ${EXAM_VALIDATION_LIMITS.minQuestions} y ${EXAM_VALIDATION_LIMITS.maxQuestions}`);
   }
 
   return {

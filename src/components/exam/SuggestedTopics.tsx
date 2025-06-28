@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp } from "lucide-react";
-import { TOPIC_CATEGORIES } from "./constants/examConstants";
+import { TrendingUp, Lightbulb } from "lucide-react";
+import { EXAM_PROMPTS } from "./constants/examPrompts";
 
 interface SuggestedTopicsProps {
   onTopicSelect: (topic: string) => void;
@@ -17,27 +17,30 @@ export function SuggestedTopics({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5" />
-          Temas de Gramática Sugeridos
+          <Lightbulb className="h-5 w-5" />
+          Temas Sugeridos
         </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Ideas para el tema principal de tu examen
+        </p>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {Object.entries(TOPIC_CATEGORIES).map(([key, category]) => (
+        {Object.entries(EXAM_PROMPTS).map(([key, category]) => (
           <div key={key} className="space-y-3">
             <h4 className="font-medium text-gray-700 flex items-center gap-2">
               <span>{category.icon}</span>
               {category.title}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {category.topics.map((topic) => (
+              {category.prompts.map((prompt) => (
                 <Badge
-                  key={topic}
-                  variant={selectedTopic === topic ? "default" : "outline"}
-                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                  onClick={() => onTopicSelect(topic)}
+                  key={prompt}
+                  variant={selectedTopic === prompt ? "default" : "outline"}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors text-xs"
+                  onClick={() => onTopicSelect(prompt)}
                 >
-                  {topic}
+                  {prompt}
                 </Badge>
               ))}
             </div>

@@ -12,6 +12,7 @@ export interface ExamGeneratorState {
 
 export interface ExamGeneratorFilters {
   topic: string;
+  grammarTopics: string[];
   level: string;
   numberOfQuestions: number;
   types: string[];
@@ -29,6 +30,7 @@ export function useExamGenerator() {
 
   const [filters, setFilters] = useState<ExamGeneratorFilters>({
     topic: '',
+    grammarTopics: [],
     level: 'B1',
     numberOfQuestions: 10,
     types: ['multiple_choice', 'fill_blank', 'true_false'],
@@ -61,6 +63,7 @@ export function useExamGenerator() {
     try {
       const params: ExamGenerationParams = {
         topic: filters.topic.trim(),
+        grammarTopics: filters.grammarTopics,
         level: filters.level as ExamGenerationParams['level'],
         numberOfQuestions: filters.numberOfQuestions,
         types: filters.types as ExamGenerationParams['types'],
@@ -111,6 +114,7 @@ export function useExamGenerator() {
   const resetFilters = useCallback(() => {
     setFilters({
       topic: '',
+      grammarTopics: [],
       level: 'B1',
       numberOfQuestions: 10,
       types: ['multiple_choice', 'fill_blank', 'true_false'],
