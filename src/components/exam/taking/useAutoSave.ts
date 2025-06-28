@@ -44,10 +44,15 @@ export function useAutoSave({ currentAnswer, onAnswerSubmit, questionType }: Use
   const handleAnswerChange = (value: any) => {
     setAnswer(value);
     
-    // Immediate save for multiple choice, true/false, and fill_blank with options
-    if (questionType === 'multiple_choice' || questionType === 'true_false' || 
+    // Immediate save for single choice, true/false, and fill_blank with options
+    if (questionType === 'single_choice' || questionType === 'true_false' || 
         (questionType === 'fill_blank' && value && typeof value === 'string' && value.length > 0)) {
       autoSave(value);
+    } else if (questionType === 'multiple_choice') {
+      // For multiple choice, save immediately if it's a valid array
+      if (Array.isArray(value) && value.length > 0) {
+        autoSave(value);
+      }
     } else {
       // Debounced save for text inputs
       debouncedAutoSave(value);

@@ -31,6 +31,7 @@ interface ExamAttemptAnswer {
     _id: string;
     text: string;
     type:
+      | "single_choice"
       | "multiple_choice"
       | "fill_blank"
       | "translate"
@@ -52,7 +53,7 @@ interface ExamAttemptAnswer {
     createdAt: string;
     updatedAt: string;
   };
-  answer: string;
+  answer: string | string[];
   isCorrect: boolean;
   score: number;
   feedback: string;
@@ -333,6 +334,8 @@ export default function ExamResultsViewModal({
                             variant="yellow"
                             className="px-2 py-0.5 text-xs"
                           >
+                            {answerItem.question.type === "single_choice" &&
+                              "Selección Única"}
                             {answerItem.question.type === "multiple_choice" &&
                               "Opción Múltiple"}
                             {answerItem.question.type === "true_false" &&
@@ -409,7 +412,13 @@ export default function ExamResultsViewModal({
                                   return false;
                                 }
 
-                                // Para otras preguntas, comparar directamente
+                                // Para multiple_choice, verificar si la opción está en el array de respuestas
+                                if (answerItem.question.type === "multiple_choice") {
+                                  const userAnswers = Array.isArray(answerItem.answer) ? answerItem.answer : [answerItem.answer];
+                                  return userAnswers.includes(option.value);
+                                }
+
+                                // Para single_choice y otras preguntas, comparar directamente
                                 return answerItem.answer === option.value;
                               })() && (
                                 <Badge

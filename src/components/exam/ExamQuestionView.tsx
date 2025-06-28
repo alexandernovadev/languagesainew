@@ -12,6 +12,7 @@ interface ExamQuestionViewProps {
     _id: string;
     text: string;
     type:
+      | "single_choice"
       | "multiple_choice"
       | "fill_blank"
       | "true_false"

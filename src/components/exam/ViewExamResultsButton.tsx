@@ -8,7 +8,7 @@ interface ExamAttemptAnswer {
   question: {
     _id: string;
     text: string;
-    type: 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
+    type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
     isSingleAnswer: boolean;
     level: string;
     topic: string;
@@ -25,7 +25,7 @@ interface ExamAttemptAnswer {
     createdAt: string;
     updatedAt: string;
   };
-  answer: string;
+  answer: string | string[];
   isCorrect: boolean;
   score: number;
   feedback: string;

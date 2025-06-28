@@ -1,5 +1,6 @@
 import React from 'react';
 import { RadioGroup } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { MultipleChoiceOption } from './MultipleChoiceOption';
 import { TrueFalseOption } from './TrueFalseOption';
@@ -20,7 +21,7 @@ export function QuestionContent({
 }: QuestionContentProps) {
   const renderQuestionContent = () => {
     switch (question.type) {
-      case 'multiple_choice':
+      case 'single_choice':
         return (
           <div className="space-y-4">
             <RadioGroup
@@ -38,6 +39,94 @@ export function QuestionContent({
                 />
               ))}
             </RadioGroup>
+          </div>
+        );
+
+      case 'multiple_choice':
+        // Handle multiple choice with checkboxes for multiple selection
+        const selectedAnswers = Array.isArray(answer) ? answer : [];
+        
+        const handleMultipleChoiceChange = (optionValue: string, checked: boolean) => {
+          let newAnswers: string[];
+          if (checked) {
+            newAnswers = [...selectedAnswers, optionValue];
+          } else {
+            newAnswers = selectedAnswers.filter(val => val !== optionValue);
+          }
+          onAnswerChange(newAnswers);
+        };
+
+        return (
+          <div className="space-y-4">
+            <div className="grid gap-4">
+              {question.options?.map((option) => (
+                <div
+                  key={option._id}
+                  className={`
+                    relative cursor-pointer
+                    p-3 rounded-xl border-2
+                    transition-colors duration-200 ease-out
+                    ${selectedAnswers.includes(option.value)
+                      ? 'border-blue-500 bg-blue-500/10 shadow-blue-500/20 shadow-lg' 
+                      : 'border-gray-600 bg-gray-800/50'
+                    }
+                    ${isAnswered && selectedAnswers.includes(option.value)
+                      ? 'border-emerald-500 bg-emerald-500/10 shadow-emerald-500/20' 
+                      : ''
+                    }
+                  `}
+                >
+                  {/* Checkbox */}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                    <Checkbox
+                      checked={selectedAnswers.includes(option.value)}
+                      onCheckedChange={(checked) => handleMultipleChoiceChange(option.value, checked as boolean)}
+                      className={`
+                        w-5 h-5 border-2
+                        ${selectedAnswers.includes(option.value)
+                          ? 'border-blue-500 bg-blue-500' 
+                          : 'border-gray-500 bg-gray-700'
+                        }
+                        ${isAnswered && selectedAnswers.includes(option.value)
+                          ? 'border-emerald-500 bg-emerald-500' 
+                          : ''
+                        }
+                      `}
+                    />
+                  </div>
+
+                  {/* Option content */}
+                  <div className="flex items-start gap-3 pr-8">
+                    {/* Option letter */}
+                    <div className={`
+                      w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0
+                      transition-colors duration-200 ease-out
+                      ${selectedAnswers.includes(option.value)
+                        ? 'bg-blue-500 text-white' 
+                        : 'bg-gray-600 text-gray-300'
+                      }
+                      ${isAnswered && selectedAnswers.includes(option.value)
+                        ? 'bg-emerald-500 text-white' 
+                        : ''
+                      }
+                    `}>
+                      {option.value.toUpperCase()}
+                    </div>
+
+                    {/* Option text */}
+                    <p className={`
+                      text-sm leading-relaxed transition-colors duration-200 ease-out flex-1
+                      ${selectedAnswers.includes(option.value)
+                        ? 'text-gray-100 font-medium' 
+                        : 'text-gray-300'
+                      }
+                    `}>
+                      {option.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         );
 

@@ -3,13 +3,21 @@ export const hasValidAnswer = (answer: any, questionType: string, options?: any[
     return false;
   }
 
-  // For multiple choice, true/false, and fill_blank with options, check if it's a valid option
-  if (questionType === 'multiple_choice' || questionType === 'true_false' || 
+  // For single choice, true/false, and fill_blank with options, check if it's a valid option
+  if (questionType === 'single_choice' || questionType === 'true_false' || 
       (questionType === 'fill_blank' && options && options.length > 0)) {
-    if (questionType === 'multiple_choice' || questionType === 'fill_blank') {
+    if (questionType === 'single_choice' || questionType === 'fill_blank') {
       return options?.some(opt => opt.value === answer);
     }
     return answer === 'true' || answer === 'false';
+  }
+
+  // For multiple choice, check if it's an array with valid options
+  if (questionType === 'multiple_choice') {
+    if (!Array.isArray(answer) || answer.length === 0) {
+      return false;
+    }
+    return answer.every(selectedValue => options?.some(opt => opt.value === selectedValue));
   }
 
   // For text-based questions, check if it's not just whitespace
