@@ -1,9 +1,9 @@
-import { api } from './api';
+import { api } from "./api";
 
 export interface ExamGenerationParams {
   topic: string;
   grammarTopics?: string[];
-  level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   numberOfQuestions?: number;
   types?: string[];
   difficulty?: number;
@@ -24,9 +24,9 @@ export interface Exam {
   title: string;
   description?: string;
   language: string;
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   topic?: string;
-  source?: 'manual' | 'ai';
+  source?: "manual" | "ai";
   attemptsAllowed?: number;
   timeLimit?: number;
   adaptive?: boolean;
@@ -49,9 +49,9 @@ export interface CreateExamRequest {
   title: string;
   description?: string;
   language: string;
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   topic?: string;
-  source?: 'manual' | 'ai';
+  source?: "manual" | "ai";
   attemptsAllowed?: number;
   timeLimit?: number;
   adaptive?: boolean;
@@ -72,9 +72,9 @@ export interface UpdateExamRequest {
   title?: string;
   description?: string;
   language?: string;
-  level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   topic?: string;
-  source?: 'manual' | 'ai';
+  source?: "manual" | "ai";
   attemptsAllowed?: number;
   timeLimit?: number;
   adaptive?: boolean;
@@ -138,7 +138,7 @@ export interface ExamQuestion {
 // Interfaz unificada para preguntas de examen
 export interface UnifiedExamQuestion extends ExamQuestion {
   // Campos adicionales para compatibilidad
-  level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  level?: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   difficulty?: number;
   topic?: string;
   createdAt?: string;
@@ -148,7 +148,7 @@ export interface UnifiedExamQuestion extends ExamQuestion {
 export const examService = {
   // Get all exams with pagination and filters
   async getExams(queryParams?: string): Promise<ExamListResponse> {
-    const url = queryParams ? `/api/exams?${queryParams}` : '/api/exams';
+    const url = queryParams ? `/api/exams?${queryParams}` : "/api/exams";
     const response = await api.get(url);
     return response.data;
   },
@@ -161,12 +161,15 @@ export const examService = {
 
   // Create new exam
   async createExam(examData: CreateExamRequest): Promise<ExamResponse> {
-    const response = await api.post('/api/exams', examData);
+    const response = await api.post("/api/exams", examData);
     return response.data;
   },
 
   // Update exam
-  async updateExam(id: string, examData: UpdateExamRequest): Promise<ExamResponse> {
+  async updateExam(
+    id: string,
+    examData: UpdateExamRequest
+  ): Promise<ExamResponse> {
     const response = await api.put(`/api/exams/${id}`, examData);
     return response.data;
   },
@@ -178,8 +181,12 @@ export const examService = {
   },
 
   // Get exam statistics
-  async getExamStats(): Promise<{ success: boolean; message: string; data: ExamStats }> {
-    const response = await api.get('/api/exams/stats');
+  async getExamStats(): Promise<{
+    success: boolean;
+    message: string;
+    data: ExamStats;
+  }> {
+    const response = await api.get("/api/exams/stats");
     return response.data;
   },
 
@@ -188,77 +195,108 @@ export const examService = {
     questions: string[];
     title: string;
     language: string;
-    level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+    level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
     description?: string;
     topic?: string;
-    source?: 'manual' | 'ai';
+    source?: "manual" | "ai";
     attemptsAllowed?: number;
     timeLimit?: number;
     adaptive?: boolean;
     createdBy?: string;
   }): Promise<ExamResponse> {
-    const response = await api.post('/api/exams/generate', data);
+    const response = await api.post("/api/exams/generate", data);
     return response.data;
   },
 
   // Get exams by language
-  async getExamsByLanguage(language: string, limit?: number): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    const url = limit ? `/api/exams/language/${language}?limit=${limit}` : `/api/exams/language/${language}`;
+  async getExamsByLanguage(
+    language: string,
+    limit?: number
+  ): Promise<{ success: boolean; message: string; data: Exam[] }> {
+    const url = limit
+      ? `/api/exams/language/${language}?limit=${limit}`
+      : `/api/exams/language/${language}`;
     const response = await api.get(url);
     return response.data;
   },
 
   // Get exams by level
-  async getExamsByLevel(level: string, limit?: number): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    const url = limit ? `/api/exams/level/${level}?limit=${limit}` : `/api/exams/level/${level}`;
+  async getExamsByLevel(
+    level: string,
+    limit?: number
+  ): Promise<{ success: boolean; message: string; data: Exam[] }> {
+    const url = limit
+      ? `/api/exams/level/${level}?limit=${limit}`
+      : `/api/exams/level/${level}`;
     const response = await api.get(url);
     return response.data;
   },
 
   // Get exams by level and language
-  async getExamsByLevelAndLanguage(level: string, language: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
-    const response = await api.get(`/api/exams/level/${level}/language/${language}`);
+  async getExamsByLevelAndLanguage(
+    level: string,
+    language: string
+  ): Promise<{ success: boolean; message: string; data: Exam[] }> {
+    const response = await api.get(
+      `/api/exams/level/${level}/language/${language}`
+    );
     return response.data;
   },
 
   // Get exams by topic
-  async getExamsByTopic(topic: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
+  async getExamsByTopic(
+    topic: string
+  ): Promise<{ success: boolean; message: string; data: Exam[] }> {
     const response = await api.get(`/api/exams/topic/${topic}`);
     return response.data;
   },
 
   // Get exams by creator
-  async getExamsByCreator(creatorId: string): Promise<{ success: boolean; message: string; data: Exam[] }> {
+  async getExamsByCreator(
+    creatorId: string
+  ): Promise<{ success: boolean; message: string; data: Exam[] }> {
     const response = await api.get(`/api/exams/creator/${creatorId}`);
     return response.data;
   },
 
   // Add question to exam
-  async addQuestionToExam(examId: string, questionId: string, weight?: number, order?: number): Promise<ExamResponse> {
+  async addQuestionToExam(
+    examId: string,
+    questionId: string,
+    weight?: number,
+    order?: number
+  ): Promise<ExamResponse> {
     const response = await api.post(`/api/exams/${examId}/questions`, {
       questionId,
       weight: weight || 1,
-      order: order || 0
+      order: order || 0,
     });
     return response.data;
   },
 
   // Remove question from exam
-  async removeQuestionFromExam(examId: string, questionId: string): Promise<ExamResponse> {
-    const response = await api.delete(`/api/exams/${examId}/questions/${questionId}`);
+  async removeQuestionFromExam(
+    examId: string,
+    questionId: string
+  ): Promise<ExamResponse> {
+    const response = await api.delete(
+      `/api/exams/${examId}/questions/${questionId}`
+    );
     return response.data;
   },
 
   // Original methods for AI exam generation
-  async generateExam(params: ExamGenerationParams): Promise<ExamGenerationResponse> {
-    const response = await api.post('/api/ai/generate-exam', {
+  async generateExam(
+    params: ExamGenerationParams
+  ): Promise<ExamGenerationResponse> {
+    const response = await api.post("/api/ai/generate-exam", {
       topic: params.topic,
       grammarTopics: params.grammarTopics || [],
-      level: params.level || 'B1',
+      level: params.level || "B1",
       numberOfQuestions: params.numberOfQuestions || 10,
-      types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
+      types: params.types || ["multiple_choice", "fill_blank", "true_false"],
       difficulty: params.difficulty || 3,
-      userLang: params.userLang || 'es'
+      userLang: params.userLang || "es",
     });
 
     return response.data;
@@ -273,29 +311,29 @@ export const examService = {
     questions: UnifiedExamQuestion[];
   }): Promise<any> {
     // Transformar las preguntas al formato esperado por la API
-    const questions = examData.questions.map(question => ({
+    const questions = examData.questions.map((question) => ({
       text: question.text,
       type: question.type,
-      level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      level: examData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       difficulty: parseInt(examData.difficulty),
       topic: examData.topic,
       options: question.options,
       correctAnswers: question.correctAnswers,
       explanation: question.explanation,
-      tags: question.tags
+      tags: question.tags,
     }));
 
-    const response = await api.post('/api/exams/with-questions', {
+    const response = await api.post("/api/exams/with-questions", {
       title: examData.title,
-      language: 'es', // Por defecto español
-      level: examData.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      language: "es", // Por defecto español
+      level: examData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: examData.topic,
       description: `Examen sobre ${examData.topic}`,
-      source: 'ai',
+      source: "ai",
       attemptsAllowed: 3,
       timeLimit: 60, // 60 minutos por defecto
       adaptive: false,
-      questions: questions
+      questions: questions,
     });
 
     return response.data;
@@ -305,23 +343,27 @@ export const examService = {
   async generateExamWithProgress(
     params: ExamGenerationParams,
     onProgress?: (data: any) => void
-  ): Promise<ExamGenerationResponse> {
-    const response = await api.post('/api/ai/generate-exam', {
-      topic: params.topic,
-      grammarTopics: params.grammarTopics || [],
-      level: params.level || 'B1',
-      numberOfQuestions: params.numberOfQuestions || 10,
-      types: params.types || ['multiple_choice', 'fill_blank', 'true_false'],
-      difficulty: params.difficulty || 3,
-      userLang: params.userLang || 'es'
-    }, {
-      onDownloadProgress: (progressEvent) => {
-        if (onProgress) {
-          onProgress(progressEvent);
-        }
+  ): Promise<any> {
+    const response = await api.post(
+      "/api/ai/generate-exam",
+      {
+        topic: params.topic,
+        grammarTopics: params.grammarTopics || [],
+        level: params.level || "B1",
+        numberOfQuestions: params.numberOfQuestions || 10,
+        types: params.types || ["multiple_choice", "fill_blank", "true_false"],
+        difficulty: params.difficulty || 3,
+        userLang: params.userLang || "es",
+      },
+      {
+        onDownloadProgress: (progressEvent) => {
+          if (onProgress) {
+            onProgress(progressEvent);
+          }
+        },
       }
-    });
+    );
 
     return response.data;
-  }
-}; 
+  },
+};

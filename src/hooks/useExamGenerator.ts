@@ -1,7 +1,17 @@
-import { useState, useCallback } from 'react';
-import { examService, ExamGenerationParams, ExamGenerationResponse, ExamQuestion, UnifiedExamQuestion } from '@/services/examService';
-import { questionTypes, questionLevels, questionDifficulties } from '@/data/questionTypes';
-import { toast } from 'sonner';
+import { useState, useCallback } from "react";
+import {
+  examService,
+  ExamGenerationParams,
+  ExamGenerationResponse,
+  ExamQuestion,
+  UnifiedExamQuestion,
+} from "@/services/examService";
+import {
+  questionTypes,
+  questionLevels,
+  questionDifficulties,
+} from "@/data/questionTypes";
+import { toast } from "sonner";
 
 export interface ExamGeneratorState {
   isGenerating: boolean;
@@ -25,75 +35,82 @@ export function useExamGenerator() {
     isGenerating: false,
     generatedExam: null,
     error: null,
-    progress: 0
+    progress: 0,
   });
 
   const [filters, setFilters] = useState<ExamGeneratorFilters>({
-    topic: '',
+    topic: "",
     grammarTopics: [],
-    level: 'B1',
+    level: "B1",
     numberOfQuestions: 10,
-    types: ['multiple_choice', 'fill_blank', 'true_false'],
+    types: ["multiple_choice", "fill_blank", "true_false"],
     difficulty: 3,
-    userLang: 'es'
+    userLang: "es",
   });
 
-  const updateFilter = useCallback((key: keyof ExamGeneratorFilters, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  }, []);
+  const updateFilter = useCallback(
+    (key: keyof ExamGeneratorFilters, value: any) => {
+      setFilters((prev) => ({ ...prev, [key]: value }));
+    },
+    []
+  );
 
   const generateExam = useCallback(async () => {
     if (!filters.topic.trim()) {
-      const errorMsg = 'El tema es requerido';
-      setState(prev => ({ ...prev, error: errorMsg }));
+      const errorMsg = "El tema es requerido";
+      setState((prev) => ({ ...prev, error: errorMsg }));
       toast.error("Error de validación", {
         description: errorMsg,
       });
       return;
     }
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isGenerating: true,
       error: null,
       progress: 0,
-      generatedExam: null
+      generatedExam: null,
     }));
 
     try {
       const params: ExamGenerationParams = {
         topic: filters.topic.trim(),
         grammarTopics: filters.grammarTopics,
-        level: filters.level as ExamGenerationParams['level'],
+        level: filters.level as ExamGenerationParams["level"],
         numberOfQuestions: filters.numberOfQuestions,
-        types: filters.types as ExamGenerationParams['types'],
+        types: filters.types as ExamGenerationParams["types"],
         difficulty: filters.difficulty,
-        userLang: filters.userLang
+        userLang: filters.userLang,
       };
 
-      const examData = await examService.generateExamWithProgress(params, (data) => {
-        setState(prev => ({ ...prev, progress: 50 }));
-      });
+      const examData = await examService.generateExamWithProgress(
+        params,
+        (data) => {
+          setState((prev) => ({ ...prev, progress: 50 }));
+        }
+      );
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         isGenerating: false,
         generatedExam: examData,
-        progress: 100
+        progress: 100,
       }));
 
       toast.success("¡Examen generado!", {
-        description: `Se generaron ${examData.data.questions.length} preguntas sobre "${filters.topic}"`,
+        description: `Se generaron ${examData.questions.length} preguntas sobre "${filters.topic}"`,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error al generar el examen';
-      setState(prev => ({
+      const errorMessage =
+        error instanceof Error ? error.message : "Error al generar el examen";
+      setState((prev) => ({
         ...prev,
         isGenerating: false,
         error: errorMessage,
-        progress: 0
+        progress: 0,
       }));
-      
+
       toast.error("Error al generar examen", {
         description: errorMessage,
       });
@@ -107,53 +124,58 @@ export function useExamGenerator() {
       isGenerating: false,
       generatedExam: null,
       error: null,
-      progress: 0
+      progress: 0,
     });
   }, []);
 
   const resetFilters = useCallback(() => {
     setFilters({
-      topic: '',
+      topic: "",
       grammarTopics: [],
-      level: 'B1',
+      level: "B1",
       numberOfQuestions: 10,
-      types: ['multiple_choice', 'fill_blank', 'true_false'],
+      types: ["multiple_choice", "fill_blank", "true_false"],
       difficulty: 3,
-      userLang: 'es'
+      userLang: "es",
     });
   }, []);
 
-  const loadExistingExam = useCallback((examData: ExamGenerationResponse, topic: string, level: string) => {
-    setState({
-      isGenerating: false,
-      generatedExam: examData,
-      error: null,
-      progress: 100
-    });
-    
-    setFilters(prev => ({
-      ...prev,
-      topic,
-      level
-    }));
+  const loadExistingExam = useCallback(
+    (examData: ExamGenerationResponse, topic: string, level: string) => {
+      setState({
+        isGenerating: false,
+        generatedExam: examData,
+        error: null,
+        progress: 100,
+      });
 
-    toast.success("Examen cargado", {
-      description: `Examen sobre "${topic}" cargado para edición`,
-    });
-  }, []);
+      setFilters((prev) => ({
+        ...prev,
+        topic,
+        level,
+      }));
+
+      toast.success("Examen cargado", {
+        description: `Examen sobre "${topic}" cargado para edición`,
+      });
+    },
+    []
+  );
 
   const getQuestionTypeLabel = useCallback((type: string) => {
-    const questionType = questionTypes.find(qt => qt.value === type);
+    const questionType = questionTypes.find((qt) => qt.value === type);
     return questionType?.label || type;
   }, []);
 
   const getLevelLabel = useCallback((level: string) => {
-    const levelData = questionLevels.find(l => l.value === level);
+    const levelData = questionLevels.find((l) => l.value === level);
     return levelData?.label || level;
   }, []);
 
   const getDifficultyLabel = useCallback((difficulty: number) => {
-    const difficultyData = questionDifficulties.find(d => d.value === difficulty);
+    const difficultyData = questionDifficulties.find(
+      (d) => d.value === difficulty
+    );
     return difficultyData?.label || `Nivel ${difficulty}`;
   }, []);
 
@@ -170,6 +192,6 @@ export function useExamGenerator() {
     getDifficultyLabel,
     questionTypes,
     questionLevels,
-    questionDifficulties
+    questionDifficulties,
   };
-} 
+}
