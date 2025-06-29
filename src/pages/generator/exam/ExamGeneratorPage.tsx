@@ -143,6 +143,12 @@ export default function ExamGeneratorPage() {
     setActiveTab("config");
   };
 
+  const handleNewGeneration = () => {
+    resetExam();
+    resetExamStore();
+    setActiveTab("config");
+  };
+
   const handleViewQuestions = () => {
     setActiveTab("questions");
   };
@@ -223,7 +229,7 @@ export default function ExamGeneratorPage() {
         actions={
           <div className="flex gap-2">
             {state.generatedExam && (
-              <Button variant="outline" onClick={handleBackToConfig}>
+              <Button variant="outline" onClick={handleNewGeneration}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Nueva Generación
               </Button>
