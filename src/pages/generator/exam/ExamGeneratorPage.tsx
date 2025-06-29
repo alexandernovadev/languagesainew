@@ -3,7 +3,15 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, FileText, Sparkles, Eye, Save, Edit, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  FileText,
+  Sparkles,
+  Eye,
+  Save,
+  Edit,
+  Loader2,
+} from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExamGenerator } from "@/hooks/useExamGenerator";
@@ -21,7 +29,7 @@ import { toast } from "sonner";
 export default function ExamGeneratorPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const editExamId = searchParams.get('edit');
+  const editExamId = searchParams.get("edit");
 
   const {
     state,
@@ -30,7 +38,7 @@ export default function ExamGeneratorPage() {
     generateExam,
     resetExam,
     resetFilters,
-    loadExistingExam
+    loadExistingExam,
   } = useExamGenerator();
 
   const {
@@ -43,7 +51,7 @@ export default function ExamGeneratorPage() {
     saveExam,
     resetExam: resetExamStore,
     startEditing,
-    clearSaveError
+    clearSaveError,
   } = useExamStore();
 
   const [activeTab, setActiveTab] = useState("config");
@@ -57,7 +65,7 @@ export default function ExamGeneratorPage() {
         topic: filters.topic,
         level: filters.level,
         difficulty: filters.difficulty.toString(),
-        questions: state.generatedExam.questions
+        questions: state.generatedExam.questions,
       });
     }
   }, [state.generatedExam, filters, exam, setExam]);
@@ -77,34 +85,34 @@ export default function ExamGeneratorPage() {
           const response = await examService.getExam(editExamId);
           if (response.success && response.data) {
             const examData = response.data;
-            
+
             // Convert exam data to store format
             const examForStore = {
               title: examData.title,
-              topic: examData.topic || '',
+              topic: examData.topic || "",
               level: examData.level,
-              difficulty: '3', // Default difficulty
-              questions: [] // We'll handle questions separately if needed
+              difficulty: "3", // Default difficulty
+              questions: [], // We'll handle questions separately if needed
             };
-            
+
             setExam(examForStore);
-            
+
             // Load the exam into the generator state
             const mockGeneratedExam = {
-              questions: []
+              questions: [],
             };
-            
+
             loadExistingExam(mockGeneratedExam, examData.topic, examData.level);
-            
+
             // Navigate to questions tab
             setActiveTab("questions");
-            
+
             toast.success("Examen cargado", {
               description: "El examen ha sido cargado para edición",
             });
           }
         } catch (error) {
-          console.error('Error loading exam for editing:', error);
+          console.error("Error loading exam for editing:", error);
           toast.error("Error", {
             description: "No se pudo cargar el examen para edición",
           });
@@ -117,10 +125,10 @@ export default function ExamGeneratorPage() {
 
   const handleGenerate = async () => {
     resetExamStore();
-    
+
     // Cambiar inmediatamente a la pestaña progress
     setActiveTab("progress");
-    
+
     try {
       await generateExam();
     } catch (error) {
@@ -153,7 +161,7 @@ export default function ExamGeneratorPage() {
   };
 
   const handleEditTitle = () => {
-    startEditing(null, 'title');
+    startEditing(null, "title");
     setShowTitleModal(true);
   };
 
@@ -166,13 +174,13 @@ export default function ExamGeneratorPage() {
     const currentExam = exam || state.generatedExam;
     const examTitle = exam?.title || `Examen: ${filters.topic}`;
     return {
-      _id: 'temp',
+      _id: "temp",
       title: examTitle,
       description: `Examen generado sobre ${filters.topic}`,
-      language: 'es',
-      level: filters.level as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+      language: "es",
+      level: filters.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: filters.topic,
-      source: 'ai' as const,
+      source: "ai" as const,
       attemptsAllowed: 3,
       timeLimit: 60,
       adaptive: false,
@@ -190,20 +198,20 @@ export default function ExamGeneratorPage() {
             _id: `temp-opt-${index}-${optIndex}`,
             value: opt.value,
             label: opt.label,
-            isCorrect: opt.isCorrect
+            isCorrect: opt.isCorrect,
           })),
           correctAnswers: q.correctAnswers,
           explanation: q.explanation,
           tags: q.tags,
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
         },
         weight: 1,
-        order: index
+        order: index,
       })),
-      createdBy: 'user',
+      createdBy: "user",
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
   };
 
@@ -242,14 +250,6 @@ export default function ExamGeneratorPage() {
           </div>
         )}
 
-        {/* Progress indicator */}
-        {state.isGenerating && (
-          <ExamGenerationProgress 
-            progress={state.progress} 
-            isGenerating={state.isGenerating} 
-          />
-        )}
-
         {/* Main content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -257,7 +257,10 @@ export default function ExamGeneratorPage() {
               <FileText className="h-4 w-4 mr-2" />
               Configuración
             </TabsTrigger>
-            <TabsTrigger value="progress" disabled={!state.isGenerating && !state.generatedExam}>
+            <TabsTrigger
+              value="progress"
+              disabled={!state.isGenerating && !state.generatedExam}
+            >
               <Sparkles className="h-4 w-4 mr-2" />
               Progreso
             </TabsTrigger>
@@ -288,16 +291,10 @@ export default function ExamGeneratorPage() {
                 isSaving={isSaving}
               />
             ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Generando Examen</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground shimmer-text">
-                    El examen se está generando. Por favor espera...
-                  </p>
-                </CardContent>
-              </Card>
+              <ExamGenerationProgress
+                progress={state.progress}
+                isGenerating={state.isGenerating}
+              />
             )}
           </TabsContent>
 
@@ -318,19 +315,25 @@ export default function ExamGeneratorPage() {
                 />
                 {/* Questions using ExamQuestionDisplay for editing functionality */}
                 <div className="space-y-6">
-                  {(exam?.questions || state.generatedExam.questions).map((question, index) => (
-                    <ExamQuestionDisplay
-                      key={index}
-                      question={question}
-                      questionNumber={index + 1}
-                    />
-                  ))}
+                  {(exam?.questions || state.generatedExam.questions).map(
+                    (question, index) => (
+                      <ExamQuestionDisplay
+                        key={index}
+                        question={question}
+                        questionNumber={index + 1}
+                      />
+                    )
+                  )}
                 </div>
                 {/* Footer actions */}
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Button onClick={handleRegenerate} className="flex-1" variant="outline">
+                      <Button
+                        onClick={handleRegenerate}
+                        className="flex-1"
+                        variant="outline"
+                      >
                         <Sparkles className="h-4 w-4 mr-2" />
                         Generar Nuevo Examen
                       </Button>
@@ -359,9 +362,9 @@ export default function ExamGeneratorPage() {
       </div>
 
       {/* Edit Modals */}
-      <ExamEditModal 
-        isOpen={isEditing && editingField !== 'title'} 
-        onClose={() => {}} 
+      <ExamEditModal
+        isOpen={isEditing && editingField !== "title"}
+        onClose={() => {}}
       />
     </PageLayout>
   );
