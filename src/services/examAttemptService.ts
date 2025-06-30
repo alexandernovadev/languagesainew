@@ -65,14 +65,14 @@ export interface SubmitAttemptRequest {
 class ExamAttemptService {
   // POST /api/exam-attempts/start
   async startAttempt(examId: string): Promise<ExamAttempt> {
-    const response = await api.post('/exam-attempts/start', { examId });
+    const response = await api.post('/api/exam-attempts/start', { examId });
     return response.data.data;
   }
 
   // GET /api/exam-attempts/in-progress/:examId
   async getInProgressAttempt(examId: string): Promise<ExamAttempt | null> {
     try {
-      const response = await api.get(`/exam-attempts/in-progress/${examId}`);
+      const response = await api.get(`/api/exam-attempts/in-progress/${examId}`);
       return response.data.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
@@ -84,38 +84,38 @@ class ExamAttemptService {
 
   // POST /api/exam-attempts/:id/submit
   async submitAttempt(attemptId: string, answers: ExamAnswer[]): Promise<ExamAttempt> {
-    const response = await api.post(`/exam-attempts/${attemptId}/submit`, { answers });
+    const response = await api.post(`/api/exam-attempts/${attemptId}/submit`, { answers });
     return response.data.data;
   }
 
   // POST /api/exam-attempts/:id/grade
   async gradeAttempt(attemptId: string): Promise<ExamAttempt> {
-    const response = await api.post(`/exam-attempts/${attemptId}/grade`);
+    const response = await api.post(`/api/exam-attempts/${attemptId}/grade`);
     return response.data.data;
   }
 
   // GET /api/exam-attempts/user/:userId
   async getUserAttempts(userId: string): Promise<ExamAttempt[]> {
-    const response = await api.get(`/exam-attempts/user/${userId}`);
+    const response = await api.get(`/api/exam-attempts/user/${userId}`);
     return response.data.data;
   }
 
   // GET /api/exam-attempts/:id
   async getAttemptDetails(attemptId: string): Promise<ExamAttempt> {
-    const response = await api.get(`/exam-attempts/${attemptId}`);
+    const response = await api.get(`/api/exam-attempts/${attemptId}`);
     return response.data.data;
   }
 
   // POST /api/exam-attempts/:id/abandon
   async abandonAttempt(attemptId: string): Promise<ExamAttempt> {
-    const response = await api.post(`/exam-attempts/${attemptId}/abandon`);
+    const response = await api.post(`/api/exam-attempts/${attemptId}/abandon`);
     return response.data.data;
   }
 
   // GET /api/exam-attempts/stats/:userId
   async getAttemptStats(userId: string, examId?: string): Promise<AttemptStats> {
     const params = examId ? { examId } : {};
-    const response = await api.get(`/exam-attempts/stats/${userId}`, { params });
+    const response = await api.get(`/api/exam-attempts/stats/${userId}`, { params });
     return response.data.data;
   }
 
@@ -172,13 +172,13 @@ class ExamAttemptService {
       });
     }
 
-    const response = await api.get(`/exams/with-attempts?${queryParams.toString()}`);
+    const response = await api.get(`/api/exams/with-attempts?${queryParams.toString()}`);
     return response.data.data;
   }
 
   // GET /api/exams/:id/attempt-stats
   async getExamAttemptStats(examId: string): Promise<AttemptStats> {
-    const response = await api.get(`/exams/${examId}/attempt-stats`);
+    const response = await api.get(`/api/exams/${examId}/attempt-stats`);
     return response.data.data;
   }
 }
