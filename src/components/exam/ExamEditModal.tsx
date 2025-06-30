@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   BookOpen,
@@ -122,6 +123,8 @@ const QuestionItem = React.memo(function QuestionItem({
   const correctAnswers = getQuestionCorrectAnswers(question);
   const questionTags = getQuestionTags(question);
   const explanation = getQuestionExplanation(question);
+
+  const isSingleChoice = ['single_choice', 'true_false', 'fill_blank'].includes(questionType);
 
   const handleAddTag = () => {
     if (newTag.trim()) {
@@ -244,48 +247,62 @@ const QuestionItem = React.memo(function QuestionItem({
               Agregar
             </Button>
           </div>
-          <div className="space-y-2">
-            {questionOptions.map((option, optionIndex) => (
-              <div
-                key={optionIndex}
-                className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
-                  correctAnswers.includes(option.value)
-                    ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
-                    : "bg-muted/30 border-border hover:bg-muted/50"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    checked={correctAnswers.includes(option.value)}
-                    onCheckedChange={(checked) =>
-                      onCorrectAnswerChange(index, option.value, checked as boolean)
-                    }
-                    disabled={loading}
-                  />
-                  <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
-                    {String.fromCharCode(65 + optionIndex)}.
-                  </span>
-                </div>
-                <Input
-                  value={option.label || option.value}
-                  onChange={(e) => onOptionChange(index, optionIndex, "label", e.target.value)}
-                  placeholder={`Opción ${optionIndex + 1}`}
-                  disabled={loading}
-                  className={`text-sm flex-1`}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onRemoveOption(index, optionIndex)}
-                  disabled={loading}
-                  className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
+          <RadioGroup
+            value={correctAnswers[0]}
+            onValueChange={(value) => onCorrectAnswerChange(index, value, true)}
+            disabled={loading}
+          >
+            <div className="space-y-2">
+              {questionOptions.map((option, optionIndex) => {
+                const isCorrect = correctAnswers.includes(option.value);
+
+                return (
+                  <div
+                    key={optionIndex}
+                    className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+                      isCorrect
+                        ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
+                        : "bg-muted/30 border-border hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isSingleChoice ? (
+                        <RadioGroupItem value={option.value} id={`${index}-${optionIndex}`} />
+                      ) : (
+                        <Checkbox
+                          checked={isCorrect}
+                          onCheckedChange={(checked) =>
+                            onCorrectAnswerChange(index, option.value, checked as boolean)
+                          }
+                          disabled={loading}
+                        />
+                      )}
+                      <label htmlFor={`${index}-${optionIndex}`} className="text-sm font-medium text-muted-foreground min-w-[20px] cursor-pointer">
+                        {String.fromCharCode(65 + optionIndex)}.
+                      </label>
+                    </div>
+                    <Input
+                      value={option.label || option.value}
+                      onChange={(e) => onOptionChange(index, optionIndex, "label", e.target.value)}
+                      placeholder={`Opción ${optionIndex + 1}`}
+                      disabled={loading}
+                      className={`text-sm flex-1`}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onRemoveOption(index, optionIndex)}
+                      disabled={loading}
+                      className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </RadioGroup>
         </div>
       ) : needsTextInput(questionType) ? (
         <div className="mb-4">
@@ -480,7 +497,6 @@ export function ExamEditModal({
         adaptive: exam.adaptive || false,
       });
       
-      // Sort questions by order field to ensure correct display order
       const sortedQuestions = (exam.questions || []).sort((a, b) => {
         const orderA = typeof a === 'object' && a !== null ? (a.order || 0) : 0;
         const orderB = typeof b === 'object' && b !== null ? (b.order || 0) : 0;
@@ -490,6 +506,19 @@ export function ExamEditModal({
       setQuestions(sortedQuestions);
     }
   }, [exam]);
+
+  const needsOptions = (type: string) => {
+    return [
+      "single_choice",
+      "multiple_choice",
+      "true_false",
+      "fill_blank",
+    ].includes(type);
+  };
+
+  const needsTextInput = (type: string) => {
+    return ["translate", "writing"].includes(type);
+  };
 
   // Memoized Handlers for Performance
   const handleInputChange = useCallback((field: string, value: string | boolean) => {
@@ -506,19 +535,87 @@ export function ExamEditModal({
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== index) return q;
-        if (typeof q === "string") return value;
-        return { ...q, question: value };
+
+        if (typeof q === 'string') {
+          return {
+            question: value,
+            type: 'single_choice',
+            options: [],
+            correctAnswers: [],
+            tags: []
+          };
+        }
+
+        if (typeof q === 'object' && q !== null) {
+          const newQ = { ...q };
+
+          if (typeof newQ.question === 'object' && newQ.question !== null && 'text' in newQ.question) {
+            newQ.question = { ...newQ.question, text: value };
+          }
+          else if ('question' in newQ || typeof newQ.question !== 'undefined') {
+            newQ.question = value;
+          }
+          else if ('text' in newQ) {
+            newQ.text = value;
+          }
+          else if ('content' in newQ) {
+            newQ.content = value;
+          }
+          else if ('title' in newQ) {
+            newQ.title = value;
+          }
+          else {
+            newQ.question = value;
+          }
+          return newQ;
+        }
+
+        return q;
       })
     );
   }, []);
+
+  const updateQuestionOptions = (question: any, updater: (options: any[]) => any[]) => {
+    const newQ = { ...question };
+
+    if (typeof newQ.question === 'object' && newQ.question !== null && Array.isArray(newQ.question.options)) {
+        const newOptions = updater(newQ.question.options);
+        newQ.question = { ...newQ.question, options: newOptions };
+    } 
+    else {
+        const originalOptions = Array.isArray(newQ.options) ? newQ.options : [];
+        const newOptions = updater(originalOptions);
+        newQ.options = newOptions;
+    }
+
+    return newQ;
+  };
+
+  const updateQuestionTags = (question: any, updater: (tags: string[]) => string[]) => {
+    const newQ = { ...question };
+
+    if (typeof newQ.question === 'object' && newQ.question !== null && Array.isArray(newQ.question.tags)) {
+        const newTags = updater(newQ.question.tags);
+        newQ.question = { ...newQ.question, tags: newTags };
+    } 
+    else {
+        const originalTags = Array.isArray(newQ.tags) ? newQ.tags : [];
+        const newTags = updater(originalTags);
+        newQ.tags = newTags;
+    }
+
+    return newQ;
+  };
 
   const handleOptionChange = useCallback((questionIndex: number, optionIndex: number, field: string, value: any) => {
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
-        const newOptions = [...(q.options || [])];
-        newOptions[optionIndex] = { ...newOptions[optionIndex], [field]: value };
-        return { ...q, options: newOptions };
+        return updateQuestionOptions(q, (options) => {
+            const newOptions = [...options];
+            newOptions[optionIndex] = { ...newOptions[optionIndex], [field]: value };
+            return newOptions;
+        });
       })
     );
   }, []);
@@ -527,13 +624,14 @@ export function ExamEditModal({
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
-        const options = q.options || [];
-        const newOption = {
-          value: `option_${options.length + 1}`,
-          label: "",
-          isCorrect: false,
-        };
-        return { ...q, options: [...options, newOption] };
+        return updateQuestionOptions(q, (options) => {
+            const newOption = {
+              value: `option_${options.length + 1}`,
+              label: "",
+              isCorrect: false,
+            };
+            return [...options, newOption];
+        });
       })
     );
   }, []);
@@ -542,36 +640,50 @@ export function ExamEditModal({
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
-        const newOptions = [...(q.options || [])];
-        newOptions.splice(optionIndex, 1);
-        return { ...q, options: newOptions };
+        return updateQuestionOptions(q, (options) => {
+            const newOptions = [...options];
+            newOptions.splice(optionIndex, 1);
+            return newOptions;
+        });
       })
     );
   }, []);
 
-  const handleQuestionTypeChange = useCallback((questionIndex: number, type: any) => {
-    const defaultOptions = (t: string) => {
-      if (t === "true_false") {
-        return [
-          { value: "true", label: "Verdadero", isCorrect: false },
-          { value: "false", label: "Falso", isCorrect: false },
-        ];
-      }
-      return [];
-    };
-
+  const handleQuestionTypeChange = useCallback((questionIndex: number, newType: any) => {
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
+
+        const oldType = q.type;
+        let correctAnswers = q.correctAnswers || [];
+        let options = q.options || [];
+
+        const isNewTypeIncompatible = needsTextInput(newType);
+        const isNewTypeTrueFalse = newType === 'true_false';
+        const wasOldTypeTrueFalse = oldType === 'true_false';
+
+        if (isNewTypeIncompatible || isNewTypeTrueFalse || wasOldTypeTrueFalse) {
+          correctAnswers = [];
+        }
+
+        if (isNewTypeTrueFalse) {
+          options = [
+            { value: "true", label: "Verdadero", isCorrect: false },
+            { value: "false", label: "Falso", isCorrect: false },
+          ];
+        } else if (isNewTypeIncompatible || wasOldTypeTrueFalse) {
+          options = [];
+        }
+
         return {
           ...q,
-          type: type,
-          correctAnswers: [],
-          options: needsOptions(type) ? defaultOptions(type) : [],
+          type: newType,
+          correctAnswers,
+          options,
         };
       })
     );
-  }, []);
+  }, [needsTextInput]);
 
   const handleCorrectAnswerChange = useCallback((questionIndex: number, optionValue: string, isChecked: boolean) => {
     setQuestions((prev) =>
@@ -598,11 +710,12 @@ export function ExamEditModal({
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
-        const tags = q.tags || [];
-        if (!tags.includes(tag)) {
-          return { ...q, tags: [...tags, tag] };
-        }
-        return q;
+        return updateQuestionTags(q, (tags) => {
+          if (!tags.includes(tag)) {
+            return [...tags, tag];
+          }
+          return tags;
+        });
       })
     );
   }, []);
@@ -611,9 +724,11 @@ export function ExamEditModal({
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
-        const newTags = [...(q.tags || [])];
-        newTags.splice(tagIndex, 1);
-        return { ...q, tags: newTags };
+        return updateQuestionTags(q, (tags) => {
+          const newTags = [...tags];
+          newTags.splice(tagIndex, 1);
+          return newTags;
+        });
       })
     );
   }, []);
@@ -750,19 +865,6 @@ export function ExamEditModal({
       default:
         return <CircleDot className="w-4 h-4" />;
     }
-  };
-
-  const needsOptions = (type: string) => {
-    return [
-      "single_choice",
-      "multiple_choice",
-      "true_false",
-      "fill_blank",
-    ].includes(type);
-  };
-
-  const needsTextInput = (type: string) => {
-    return ["translate", "writing"].includes(type);
   };
 
   if (!exam) return null;
