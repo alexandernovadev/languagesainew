@@ -882,6 +882,8 @@ export function ExamEditModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
 
     if (!exam) return;
 
@@ -916,8 +918,6 @@ export function ExamEditModal({
     }
 
     try {
-      setLoading(true);
-
       // 1. Actualizar metadatos y relación de preguntas del examen
       const questionsForExam = questions.map((q, idx) => ({
         question: typeof q.question === 'string' ? q.question : q.question?._id,
