@@ -535,6 +535,7 @@ export function ExamEditModal({
     topic: "",
     source: "" as "manual" | "ai" | "",
     adaptive: false,
+    timeLimit: undefined as number | undefined,
   });
   const [questions, setQuestions] = useState<any[]>([]);
   const [newTag, setNewTag] = useState("");
@@ -551,6 +552,7 @@ export function ExamEditModal({
         topic: exam.topic || "",
         source: exam.source || "",
         adaptive: exam.adaptive || false,
+        timeLimit: exam.timeLimit,
       });
 
       const sortedQuestions = (exam.questions || []).sort((a, b) => {
@@ -916,40 +918,20 @@ export function ExamEditModal({
     try {
       setLoading(true);
 
-      const normalizedQuestions = questions.map((q, index) => {
-        const questionText = getQuestionText(q);
-        const questionType = getQuestionType(q);
-        const options = getQuestionOptions(q).map((opt) => ({
-          value: opt.value,
-          label: opt.label,
-          isCorrect: opt.isCorrect,
-        }));
-        const correctAnswers = getQuestionCorrectAnswers(q);
-        const tags = getQuestionTags(q);
-        const explanation = getQuestionExplanation(q);
-
-        // Rebuild the object from scratch to ensure a clean structure without _id
-        return {
-          question: questionText,
-          type: questionType,
-          options: options,
-          correctAnswers: correctAnswers,
-          tags: tags,
-          explanation: explanation,
-          order: q.order || index + 1,
-          weight: q.weight || 1,
-        };
-      });
-
+      // Solo actualizar campos básicos del examen, no las preguntas
+      // Las preguntas se manejan por separado para evitar conflictos de estructura
+      // El backend espera questions como Array<{question: ObjectId, weight: number, order: number}>
+      // pero el frontend maneja preguntas con estructura completa (text, type, options, etc.)
+      // Por ahora solo actualizamos los metadatos del examen
       const updateData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
         level: formData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
         language: formData.language,
         topic: formData.topic,
-        source: formData.source as "manual" | "ai" | undefined,
+        source: formData.source || "ai", // Default a "ai" si está vacío
         adaptive: formData.adaptive,
-        questions: normalizedQuestions,
+        version: exam.version || 1, // Mantener la versión actual
       };
 
       const response = await examService.updateExam(exam._id, updateData);
