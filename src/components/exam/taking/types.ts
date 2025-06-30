@@ -11,7 +11,7 @@ export interface Question {
   type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
   options?: QuestionOption[];
   correctAnswers: string[];
-  explanation: string;
+  explanation?: string;
   tags: string[];
 }
 

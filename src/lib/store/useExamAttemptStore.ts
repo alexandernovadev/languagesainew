@@ -1,34 +1,24 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Types based on backend documentation
 export interface ExamAttempt {
   _id: string;
   user: string;
   exam: string;
   attemptNumber: number;
-  status: 'in_progress' | 'submitted' | 'graded';
-  startedAt: Date;
-  submittedAt?: Date;
-  duration?: number;
-  passed?: boolean;
-  cefrEstimated?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-  aiEvaluation?: {
-    grammar?: number;
-    fluency?: number;
-    coherence?: number;
-    vocabulary?: number;
-    comments?: string;
-  };
-  aiNotes?: string;
   answers: Array<{
     question: string;
     answer: any;
-    isCorrect?: boolean;
-    score?: number;
-    feedback?: string;
-    submittedAt: Date;
+    submittedAt: string;
   }>;
+  startedAt: string;
+  submittedAt?: string;
+  duration?: number;
+  status: 'in_progress' | 'submitted' | 'graded';
+  passed?: boolean;
+  userNotes?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CanCreateAttempt {
@@ -49,49 +39,35 @@ export interface UserStats {
 }
 
 interface ExamAttemptStore {
-  // Current attempt state
+  // State
   currentAttempt: ExamAttempt | null;
   currentExamId: string | null;
   currentQuestionIndex: number;
-  
-  // Answers state
-  answers: Record<string, any>; // questionId -> answer
+  answers: Record<string, any>;
   answeredQuestions: Set<string>;
-  
-  // UI state
   isStarting: boolean;
   isSubmitting: boolean;
   isFinishing: boolean;
   error: string | null;
-  
-  // Timer state
-  timeRemaining: number; // in seconds
+  timeRemaining: number;
   isTimerRunning: boolean;
-  
+
   // Actions
   setCurrentAttempt: (attempt: ExamAttempt | null) => void;
   setCurrentExamId: (examId: string | null) => void;
   setCurrentQuestionIndex: (index: number) => void;
-  
-  // Answer management
   setAnswer: (questionId: string, answer: any) => void;
   getAnswer: (questionId: string) => any;
   isQuestionAnswered: (questionId: string) => boolean;
   getAnsweredCount: () => number;
-  
-  // Timer management
   setTimeRemaining: (seconds: number) => void;
   startTimer: () => void;
   stopTimer: () => void;
   updateTimer: () => void;
-  
-  // Loading states
   setStarting: (loading: boolean) => void;
   setSubmitting: (loading: boolean) => void;
   setFinishing: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  
-  // Reset
   resetAttempt: () => void;
   resetAnswers: () => void;
 }

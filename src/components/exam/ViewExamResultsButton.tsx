@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, Award } from "lucide-react";
 import ExamResultsViewModal from "./ExamResultsViewModal";
+import { ExamAttempt } from "@/lib/store/useExamAttemptStore";
 
 // Tipos basados en la respuesta del backend
 interface ExamAttemptAnswer {
@@ -20,7 +21,7 @@ interface ExamAttemptAnswer {
       isCorrect: boolean;
     }>;
     correctAnswers: string[];
-    explanation: string;
+    explanation?: string;
     tags: string[];
     createdAt: string;
     updatedAt: string;
@@ -31,37 +32,6 @@ interface ExamAttemptAnswer {
   feedback: string;
   submittedAt: string;
   _id: string;
-}
-
-interface ExamAttempt {
-  _id: string;
-  user: {
-    _id: string;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
-  exam: {
-    _id: string;
-    title: string;
-    description: string;
-    language: string;
-    level: string;
-    topic: string;
-    timeLimit: number;
-    attemptsAllowed: number;
-    source: string;
-    version: number;
-    createdAt: string;
-  };
-  attemptNumber: number;
-  startedAt: string;
-  status: string;
-  answers: ExamAttemptAnswer[];
-  duration: number;
-  passed: boolean;
-  submittedAt: string;
 }
 
 interface ViewExamResultsButtonProps {

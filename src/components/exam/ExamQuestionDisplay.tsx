@@ -177,19 +177,23 @@ export function ExamQuestionDisplay({
       <CardContent className="space-y-4">
         {renderQuestionContent()}
 
-        <Separator />
+        {question.explanation && (
+          <>
+            <Separator />
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="font-semibold text-foreground">Explicación:</h4>
-          </div>
-          <div
-            className="p-4 bg-muted/50 rounded-lg prose prose-sm max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: question.explanation }}
-          />
-        </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-foreground">Explicación:</h4>
+              </div>
+              <div
+                className="p-4 bg-muted/50 rounded-lg prose prose-sm max-w-none dark:prose-invert"
+                dangerouslySetInnerHTML={{ __html: question.explanation || '' }}
+              />
+            </div>
+          </>
+        )}
 
-        {question.tags.length > 0 && (
+        {question.tags && question.tags.length > 0 && (
           <>
             <Separator />
             <div className="space-y-2">

@@ -1,87 +1,106 @@
 import { api } from './api';
-import { ExamAttempt, CanCreateAttempt, UserStats } from '@/lib/store/useExamAttemptStore';
 
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
-
-export interface CreateAttemptRequest {
+export interface ExamAttempt {
+  _id: string;
   user: string;
   exam: string;
-  attemptNumber?: number;
+  attemptNumber: number;
+  answers: Array<{
+    question: string;
+    answer: any;
+    submittedAt: string;
+  }>;
+  startedAt: string;
+  submittedAt?: string;
+  duration?: number;
+  status: 'in_progress' | 'submitted' | 'graded';
+  passed?: boolean;
+  userNotes?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SubmitAnswerRequest {
   questionId: string;
   answer: any;
-  isCorrect?: boolean;
-  score?: number;
-  feedback?: string;
 }
 
-export interface GradeAttemptRequest {
-  aiEvaluation: {
-    grammar?: number;
-    fluency?: number;
-    coherence?: number;
-    vocabulary?: number;
-    comments?: string;
-  };
-  cefrEstimated?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-  aiNotes?: string;
-}
-
-export interface GetAttemptsParams {
-  userId?: string;
-  examId?: string;
-  page?: number;
-  limit?: number;
+export interface CreateAttemptRequest {
+  userId: string;
+  examId: string;
+  attemptNumber?: number;
 }
 
 export const examAttemptService = {
-  // Check if user can create a new attempt
-  async checkCanCreateAttempt(userId: string, examId: string): Promise<CanCreateAttempt> {
-    console.log("🌐 examAttemptService.checkCanCreateAttempt called", { userId, examId });
-    
-    const url = `/api/exam-attempts/user/${userId}/exam/${examId}/can-create`;
-    console.log("📡 Making request to:", url);
-    
-    const response = await api.get(url);
-    
-    console.log("📥 Response received:", response.data);
+  // Create a new exam attempt
+  async createAttempt(data: CreateAttemptRequest): Promise<ExamAttempt> {
+    const response = await api.post("/api/exam-attempts", data);
     return response.data.data;
   },
 
-  // Get paginated exam attempts
-  async getAttempts(params: GetAttemptsParams): Promise<{ 
-    data: ExamAttempt[]; 
-    total: number; 
-    page: number; 
-    pages: number; 
+  // Get exam attempt by ID
+  async getAttempt(attemptId: string): Promise<ExamAttempt> {
+    const response = await api.get(`/api/exam-attempts/${attemptId}`);
+    return response.data.data;
+  },
+
+  // Get all exam attempts with filters
+  async getAttempts(filters: {
+    page?: number;
+    limit?: number;
+    user?: string;
+    exam?: string;
+    status?: string;
+    passed?: boolean;
+    startedAfter?: string;
+    startedBefore?: string;
+    submittedAfter?: string;
+    submittedBefore?: string;
+  } = {}): Promise<{
+    data: ExamAttempt[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
   }> {
-    const queryParams = new URLSearchParams();
+    const params = new URLSearchParams();
     
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        queryParams.append(key, value.toString());
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params.append(key, value.toString());
       }
     });
 
-    const response = await api.get(`/api/exam-attempts?${queryParams.toString()}`);
+    const response = await api.get(`/api/exam-attempts?${params.toString()}`);
     return response.data.data;
   },
 
-  // Create a new exam attempt
-  async createAttempt(data: CreateAttemptRequest): Promise<ExamAttempt> {
-    console.log("🌐 examAttemptService.createAttempt called", data);
-    
-    console.log("📡 Making POST request to /api/exam-attempts");
-    
-    const response = await api.post('/api/exam-attempts', data);
-    
-    console.log("📥 Create attempt response:", response.data);
+  // Update exam attempt
+  async updateAttempt(attemptId: string, data: Partial<ExamAttempt>): Promise<ExamAttempt> {
+    const response = await api.put(`/api/exam-attempts/${attemptId}`, data);
+    return response.data.data;
+  },
+
+  // Delete exam attempt
+  async deleteAttempt(attemptId: string): Promise<void> {
+    await api.delete(`/api/exam-attempts/${attemptId}`);
+  },
+
+  // Get attempts by user and exam
+  async getAttemptsByUserAndExam(userId: string, examId: string): Promise<ExamAttempt[]> {
+    const response = await api.get(`/api/exam-attempts/user/${userId}/exam/${examId}`);
+    return response.data.data;
+  },
+
+  // Get attempts by status
+  async getAttemptsByStatus(status: string): Promise<ExamAttempt[]> {
+    const response = await api.get(`/api/exam-attempts/status/${status}`);
+    return response.data.data;
+  },
+
+  // Get passed attempts
+  async getPassedAttempts(): Promise<ExamAttempt[]> {
+    const response = await api.get("/api/exam-attempts/passed/all");
     return response.data.data;
   },
 
@@ -91,57 +110,46 @@ export const examAttemptService = {
     return response.data.data;
   },
 
-  // Submit the exam attempt (finish)
+  // Submit the complete exam attempt
   async submitAttempt(attemptId: string): Promise<ExamAttempt> {
-    const response = await api.post(`/api/exam-attempts/${attemptId}/submit`, {});
+    const response = await api.post(`/api/exam-attempts/${attemptId}/submit`);
     return response.data.data;
   },
 
-  // Grade the exam attempt (after AI evaluation)
-  async gradeAttempt(attemptId: string, data: GradeAttemptRequest): Promise<ExamAttempt> {
-    const response = await api.post(`/api/exam-attempts/${attemptId}/grade`, data);
-    return response.data.data;
-  },
-
-  // Get evaluation status of an attempt
-  async getEvaluationStatus(attemptId: string): Promise<{
-    attemptId: string;
-    status: string;
-    evaluationStatus: {
-      isComplete: boolean;
-      requiresAI: boolean;
-      totalAnswers: number;
-      answersRequiringAI: number;
-      autoEvaluatedAnswers: number;
-    };
-    answersRequiringAI: Array<{
-      questionId: string;
-      answer: any;
-      feedback: string;
-      type: string;
-    }>;
-    totalScore: number;
-    accuracy: number;
+  // Get attempt statistics
+  async getAttemptStats(): Promise<{
+    total: number;
+    byStatus: Record<string, number>;
+    passed: number;
+    averageScore: number;
+    averageDuration: number;
   }> {
-    const response = await api.get(`/api/exam-attempts/${attemptId}/evaluation-status`);
-    return response.data.data;
-  },
-
-  // Get attempt history for a user and exam
-  async getAttemptHistory(userId: string, examId: string): Promise<ExamAttempt[]> {
-    const response = await api.get(`/api/exam-attempts/user/${userId}/exam/${examId}`);
+    const response = await api.get("/api/exam-attempts/stats/overview");
     return response.data.data;
   },
 
   // Get user statistics
-  async getUserStats(userId: string): Promise<UserStats> {
-    const response = await api.get(`/api/exam-attempts/user/${userId}/stats`);
+  async getUserStats(userId: string): Promise<{
+    totalAttempts: number;
+    passedAttempts: number;
+    avgScore: number;
+    totalDuration: number;
+    byExam: Record<string, number>;
+    byStatus: Record<string, number>;
+  }> {
+    const response = await api.get(`/api/exam-attempts/stats/user/${userId}`);
     return response.data.data;
   },
 
-  // Get a specific attempt by ID
-  async getAttempt(attemptId: string): Promise<ExamAttempt> {
-    const response = await api.get(`/api/exam-attempts/${attemptId}`);
+  // Check if user can create a new attempt
+  async checkCanCreateAttempt(userId: string, examId: string): Promise<{
+    canCreate: boolean;
+    currentAttempts: number;
+    maxAttempts: number;
+    nextAttemptNumber: number;
+    message: string;
+  }> {
+    const response = await api.get(`/api/exam-attempts/can-create/${userId}/${examId}`);
     return response.data.data;
   }
 }; 

@@ -148,8 +148,8 @@ export const useExamAttempt = () => {
 
         // Create attempt
         const attempt = await examAttemptService.createAttempt({
-          user: user._id,
-          exam: exam._id,
+          userId: user._id,
+          examId: exam._id,
         });
 
         console.log("🎉 Attempt created:", attempt);
@@ -319,7 +319,7 @@ export const useExamAttempt = () => {
       if (!user?._id) return [];
 
       try {
-        return await examAttemptService.getAttemptHistory(user._id, examId);
+        return await examAttemptService.getAttemptsByUserAndExam(user._id, examId);
       } catch (error) {
         console.error("Error getting attempt history:", error);
         return [];

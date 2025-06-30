@@ -190,7 +190,7 @@ export function ExamQuestionView({
       <CardContent className="space-y-4">
         {renderQuestionContent()}
 
-        {showAnswers && (
+        {showAnswers && question.explanation && (
           <>
             <Separator />
 
