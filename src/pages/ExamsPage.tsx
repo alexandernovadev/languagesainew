@@ -1,14 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus, Filter, BookOpen } from 'lucide-react';
-import { examService, Exam } from '@/services/examService';
-import { useNavigate } from 'react-router-dom';
-import ExamCard from '@/components/exam/ExamCard';
-import ExamViewModal from '@/components/exam/ExamViewModal';
-import { toast } from 'sonner';
+import React, { useState, useEffect, useRef } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Search,
+  Plus,
+  Filter,
+  BookOpen,
+  Eye,
+  Edit,
+  Trash2,
+  Play,
+  RotateCcw,
+} from "lucide-react";
+import { examService, Exam } from "@/services/examService";
+import { useNavigate } from "react-router-dom";
+import { ExamTable } from "@/components/exam/ExamTable";
+import ExamFiltersModal from "@/components/exam/ExamFiltersModal";
+import ExamViewModal from "@/components/exam/ExamViewModal";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ExamFilters {
   level: string;
@@ -16,31 +37,40 @@ interface ExamFilters {
   topic: string;
   source: string;
   adaptive: string;
+  createdBy: string;
   sortBy: string;
   sortOrder: string;
+  createdAfter: string;
+  createdBefore: string;
 }
 
 export default function ExamsPage() {
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<ExamFilters>({
-    level: 'all',
-    language: 'all',
-    topic: 'all',
-    source: 'all',
-    adaptive: 'all',
-    sortBy: 'createdAt',
-    sortOrder: 'desc'
+    level: "all",
+    language: "all",
+    topic: "all",
+    source: "all",
+    adaptive: "all",
+    createdBy: "",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+    createdAfter: "",
+    createdBefore: "",
   });
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
-    itemsPerPage: 10
+    itemsPerPage: 10,
   });
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
+  const [examToDelete, setExamToDelete] = useState<Exam | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   // Evitar fetch duplicado por filtros/paginación al montar
@@ -53,49 +83,60 @@ export default function ExamsPage() {
         page: pagination.currentPage.toString(),
         limit: pagination.itemsPerPage.toString(),
         sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder
+        sortOrder: filters.sortOrder,
       });
 
-      if (filters.level && filters.level !== 'all') params.append('level', filters.level);
-      if (filters.language && filters.language !== 'all') params.append('language', filters.language);
-      if (filters.topic && filters.topic !== 'all') params.append('topic', filters.topic);
-      if (filters.source && filters.source !== 'all') params.append('source', filters.source);
-      if (filters.adaptive && filters.adaptive !== 'all') params.append('adaptive', filters.adaptive);
+      // Agregar filtros solo si no son 'all' o están vacíos
+      if (filters.level && filters.level !== "all")
+        params.append("level", filters.level);
+      if (filters.language && filters.language !== "all")
+        params.append("language", filters.language);
+      if (filters.topic && filters.topic !== "all")
+        params.append("topic", filters.topic);
+      if (filters.source && filters.source !== "all")
+        params.append("source", filters.source);
+      if (filters.adaptive && filters.adaptive !== "all")
+        params.append("adaptive", filters.adaptive);
+      if (filters.createdBy) params.append("createdBy", filters.createdBy);
+      if (filters.createdAfter)
+        params.append("createdAfter", filters.createdAfter);
+      if (filters.createdBefore)
+        params.append("createdBefore", filters.createdBefore);
 
-      console.log('Fetching exams with params:', params.toString());
+      console.log("Fetching exams with params:", params.toString());
       const response = await examService.getExams(params.toString());
-      console.log('API Response:', response);
-      
+      console.log("API Response:", response);
+
       if (response && response.success && response.data) {
         setExams(response.data.data || []);
-        
+
         setPagination({
           currentPage: response.data.page || 1,
           totalPages: response.data.pages || 1,
           totalItems: response.data.total || 0,
-          itemsPerPage: pagination.itemsPerPage
+          itemsPerPage: pagination.itemsPerPage,
         });
-        
+
         toast.success("Exámenes cargados exitosamente");
       } else {
-        console.warn('Unexpected response structure:', response);
+        console.warn("Unexpected response structure:", response);
         setExams([]);
-        setPagination(prev => ({
+        setPagination((prev) => ({
           ...prev,
           totalPages: 1,
-          totalItems: 0
+          totalItems: 0,
         }));
       }
     } catch (error: any) {
-      console.error('Error fetching exams:', error);
+      console.error("Error fetching exams:", error);
       toast.error("Error al cargar exámenes", {
         description: error.message || "No se pudieron cargar los exámenes",
       });
       setExams([]);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         totalPages: 1,
-        totalItems: 0
+        totalItems: 0,
       }));
     } finally {
       setLoading(false);
@@ -124,15 +165,58 @@ export default function ExamsPage() {
         });
       });
     }
-  }, [pagination.currentPage, filters.sortBy, filters.sortOrder, filters.level, filters.language, filters.topic, filters.source, filters.adaptive]);
+  }, [
+    pagination.currentPage,
+    filters.sortBy,
+    filters.sortOrder,
+    filters.level,
+    filters.language,
+    filters.topic,
+    filters.source,
+    filters.adaptive,
+    filters.createdBy,
+    filters.createdAfter,
+    filters.createdBefore,
+  ]);
 
-  const handleFilterChange = (key: keyof ExamFilters, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
+  const handleFilterChange = (newFilters: ExamFilters) => {
+    setFilters(newFilters);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
+  const handleApplyFilters = () => {
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    fetchExams().catch((error) => {
+      toast.error("Error al aplicar filtros", {
+        description: error.message || "No se pudieron aplicar los filtros",
+      });
+    });
+  };
+
+  const handleClearFilters = () => {
+    const defaultFilters: ExamFilters = {
+      level: "all",
+      language: "all",
+      topic: "all",
+      source: "all",
+      adaptive: "all",
+      createdBy: "",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+      createdAfter: "",
+      createdBefore: "",
+    };
+    setFilters(defaultFilters);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    fetchExams().catch((error) => {
+      toast.error("Error al limpiar filtros", {
+        description: error.message || "No se pudieron limpiar los filtros",
+      });
+    });
   };
 
   const handleSearch = () => {
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
     fetchExams().catch((error) => {
       toast.error("Error en la búsqueda", {
         description: error.message || "No se pudo realizar la búsqueda",
@@ -146,8 +230,39 @@ export default function ExamsPage() {
   };
 
   const handleTakeExam = (exam: Exam) => {
-    // Navigate to exam taking page
-    navigate(`/exams/${exam._id}/take`);
+    // Por ahora no hace nada, como solicitaste
+    toast.info("Función de contestar examen en desarrollo", {
+      description: "Esta funcionalidad estará disponible próximamente",
+    });
+  };
+
+  const handleEditExam = (exam: Exam) => {
+    // Por ahora no hace nada, como solicitaste
+    toast.info("Función de editar examen en desarrollo", {
+      description: "Esta funcionalidad estará disponible próximamente",
+    });
+  };
+
+  const handleRemoveExam = (exam: Exam) => {
+    setExamToDelete(exam);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!examToDelete) return;
+
+    try {
+      // Por ahora no hace nada, como solicitaste
+      toast.info("Función de eliminar examen en desarrollo", {
+        description: "Esta funcionalidad estará disponible próximamente",
+      });
+      setIsDeleteDialogOpen(false);
+      setExamToDelete(null);
+    } catch (error: any) {
+      toast.error("Error al eliminar examen", {
+        description: error.message || "No se pudo eliminar el examen",
+      });
+    }
   };
 
   const handleCloseViewModal = () => {
@@ -155,10 +270,10 @@ export default function ExamsPage() {
     setSelectedExam(null);
   };
 
-  const handleEditExam = (exam: Exam) => {
-    // Navigate to exam generator with exam data
-    navigate(`/generator/exam?edit=${exam._id}`);
-  };
+  const hasActiveFilters = Object.values(filters).some(
+    (value) =>
+      value && value !== "all" && value !== "createdAt" && value !== "desc"
+  );
 
   if (loading) {
     return (
@@ -176,52 +291,34 @@ export default function ExamsPage() {
           </Button>
         </div>
 
-        {/* Skeleton Filters */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="h-6 bg-muted rounded w-32 animate-pulse"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i}>
-                  <div className="h-4 bg-muted rounded w-16 mb-2 animate-pulse"></div>
-                  <div className="h-10 bg-muted rounded animate-pulse"></div>
-                </div>
-              ))}
+        {/* Skeleton Search and Actions */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex gap-2 flex-1">
+            <div className="h-10 bg-muted rounded flex-1 animate-pulse"></div>
+            <div className="h-10 bg-muted rounded w-10 animate-pulse"></div>
+          </div>
+          <div className="flex gap-2">
+            <div className="h-10 bg-muted rounded w-32 animate-pulse"></div>
+            <div className="h-10 bg-muted rounded w-10 animate-pulse"></div>
+          </div>
+        </div>
+
+        {/* Skeleton Table */}
+        <Card>
+          <CardContent className="p-0">
+            <div className="space-y-4 p-6">
+              <div className="h-6 bg-muted rounded w-32 animate-pulse"></div>
+              <div className="space-y-2">
+                {Array.from({ length: 7 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-12 bg-muted rounded animate-pulse"
+                  ></div>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
-
-        {/* Skeleton Search */}
-        <div className="flex gap-2 mb-6">
-          <div className="h-10 bg-muted rounded flex-1 animate-pulse"></div>
-          <div className="h-10 bg-muted rounded w-10 animate-pulse"></div>
-        </div>
-
-        {/* Skeleton Exam Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-5 bg-muted rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-muted rounded w-1/2"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="h-4 bg-muted rounded w-full"></div>
-                  <div className="h-4 bg-muted rounded w-2/3"></div>
-                  <div className="h-4 bg-muted rounded w-1/2"></div>
-                </div>
-                <div className="flex gap-2 mt-4">
-                  <div className="h-8 bg-muted rounded w-16"></div>
-                  <div className="h-8 bg-muted rounded w-16"></div>
-                  <div className="h-8 bg-muted rounded w-16"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
     );
   }
@@ -235,112 +332,69 @@ export default function ExamsPage() {
             Gestiona y revisa todos tus exámenes
           </p>
         </div>
-        <Button onClick={() => navigate('/generator/exam')}>
+        <Button onClick={() => navigate("/generator/exam")}>
           <Plus className="w-4 h-4 mr-2" />
           Crear Examen
         </Button>
       </div>
 
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="w-5 h-5" />
+      {/* Search and Actions */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="flex gap-2 flex-1">
+          <Input
+            placeholder="Buscar exámenes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <Button onClick={handleSearch}>
+            <Search className="w-4 h-4" />
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setIsFiltersModalOpen(true)}
+            className={hasActiveFilters ? "border-blue-500 text-blue-600" : ""}
+          >
+            <Filter className="w-4 h-4 mr-2" />
             Filtros
+            {hasActiveFilters && (
+              <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 text-xs">
+                !
+              </Badge>
+            )}
+          </Button>
+          <Button variant="outline" onClick={fetchExams} disabled={loading}>
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Exams Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Lista de Exámenes</span>
+            <span className="text-sm text-muted-foreground">
+              {pagination.totalItems} exámenes encontrados
+            </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="text-sm font-medium">Nivel</label>
-              <Select value={filters.level} onValueChange={(value) => handleFilterChange('level', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los niveles" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los niveles</SelectItem>
-                  <SelectItem value="A1">A1</SelectItem>
-                  <SelectItem value="A2">A2</SelectItem>
-                  <SelectItem value="B1">B1</SelectItem>
-                  <SelectItem value="B2">B2</SelectItem>
-                  <SelectItem value="C1">C1</SelectItem>
-                  <SelectItem value="C2">C2</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Idioma</label>
-              <Select value={filters.language} onValueChange={(value) => handleFilterChange('language', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los idiomas" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los idiomas</SelectItem>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="en">Inglés</SelectItem>
-                  <SelectItem value="fr">Francés</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Origen</label>
-              <Select value={filters.source} onValueChange={(value) => handleFilterChange('source', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos los orígenes" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los orígenes</SelectItem>
-                  <SelectItem value="manual">Manual</SelectItem>
-                  <SelectItem value="ai">IA</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Ordenar por</label>
-              <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange('sortBy', value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="createdAt">Fecha de creación</SelectItem>
-                  <SelectItem value="title">Título</SelectItem>
-                  <SelectItem value="level">Nivel</SelectItem>
-                  <SelectItem value="language">Idioma</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <CardContent className="p-0">
+          <div className="table-container">
+            <ExamTable
+              exams={exams}
+              onView={handleViewExam}
+              onEdit={handleEditExam}
+              onRemove={handleRemoveExam}
+              onTake={handleTakeExam}
+              loading={loading}
+              searchQuery={searchTerm}
+            />
           </div>
         </CardContent>
       </Card>
-
-      {/* Search */}
-      <div className="flex gap-2 mb-6">
-        <Input
-          placeholder="Buscar exámenes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-        />
-        <Button onClick={handleSearch}>
-          <Search className="w-4 h-4" />
-        </Button>
-      </div>
-
-      {/* Exams Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {exams.map((exam) => (
-          <ExamCard
-            key={exam._id}
-            exam={exam}
-            onViewExam={handleViewExam}
-            onTakeExam={handleTakeExam}
-            onEditExam={handleEditExam}
-          />
-        ))}
-      </div>
 
       {/* Pagination */}
       {pagination.totalPages > 1 && (
@@ -349,19 +403,29 @@ export default function ExamsPage() {
             <Button
               variant="outline"
               disabled={pagination.currentPage === 1}
-              onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
+              onClick={() =>
+                setPagination((prev) => ({
+                  ...prev,
+                  currentPage: prev.currentPage - 1,
+                }))
+              }
             >
               Anterior
             </Button>
-            
+
             <span className="flex items-center px-4">
               Página {pagination.currentPage} de {pagination.totalPages}
             </span>
-            
+
             <Button
               variant="outline"
               disabled={pagination.currentPage === pagination.totalPages}
-              onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
+              onClick={() =>
+                setPagination((prev) => ({
+                  ...prev,
+                  currentPage: prev.currentPage + 1,
+                }))
+              }
             >
               Siguiente
             </Button>
@@ -369,19 +433,15 @@ export default function ExamsPage() {
         </div>
       )}
 
-      {exams.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium mb-2">No hay exámenes</h3>
-          <p className="text-muted-foreground mb-4">
-            Comienza creando tu primer examen
-          </p>
-          <Button onClick={() => navigate('/generator/exam')}>
-            <Plus className="w-4 h-4 mr-2" />
-            Crear Examen
-          </Button>
-        </div>
-      )}
+      {/* Filters Modal */}
+      <ExamFiltersModal
+        isOpen={isFiltersModalOpen}
+        onClose={() => setIsFiltersModalOpen(false)}
+        filters={filters}
+        onFiltersChange={handleFilterChange}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
+      />
 
       {/* Exam View Modal */}
       <ExamViewModal
@@ -390,6 +450,31 @@ export default function ExamsPage() {
         onClose={handleCloseViewModal}
         onEditExam={handleEditExam}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar examen?</AlertDialogTitle>
+            <AlertDialogDescription>
+              ¿Estás seguro de que quieres eliminar el examen "
+              {examToDelete?.title}"? Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 border-none"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
-} 
+}
