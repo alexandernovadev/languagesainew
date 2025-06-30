@@ -10,7 +10,7 @@ export const LectureGeneratorPage = lazy(() => import("../pages/generator/lectur
 export const ExamGeneratorPage = lazy(() => import("../pages/generator/exam/ExamGeneratorPage"));
 export const ExamsPage = lazy(() => import("../pages/ExamsPage"));
 export const ExamTakingPage = lazy(() => import("../pages/exams/ExamTakingPage"));
-export const ExamResultsPage = lazy(() => import("../pages/exams/ExamResultsPage"));
+export const ExamHistoryPage = lazy(() => import("../pages/exams/ExamHistoryPage"));
 export const SettingsPage = lazy(() => import("../pages/settings/SettingsPage"));
 export const GeneralSettingsPage = lazy(() => import("../pages/settings/GeneralSettingsPage"));
 export const ImportSettingsPage = lazy(() => import("../pages/settings/ImportSettingsPage"));

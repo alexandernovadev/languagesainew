@@ -8,6 +8,7 @@ import {
   Gamepad2,
   HelpCircle,
   ClipboardList,
+  History,
 } from "lucide-react";
 
 export const menuItems = [
@@ -35,6 +36,11 @@ export const menuItems = [
     title: "Exámenes",
     url: "/exams",
     icon: ClipboardList,
+  },
+  {
+    title: "Historial de Exámenes",
+    url: "/exam-history",
+    icon: History,
   },
   {
     title: "Estadísticas",

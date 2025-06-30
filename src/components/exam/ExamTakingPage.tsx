@@ -11,7 +11,7 @@ import {
   Send,
   LogIn,
 } from "lucide-react";
-import { useExamAttempt } from "@/hooks/useExamAttempt";
+import { useExamTaking } from "@/hooks/useExamTaking";
 import { useAuth } from "@/hooks/useAuth";
 import { examService, Exam } from "@/services/examService";
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -19,6 +19,7 @@ import { ExamQuestionTaking } from "./taking/ExamQuestionTaking";
 import { ExamSubmissionModal } from "./ExamSubmissionModal";
 import { ExamTimer } from "./ExamTimer";
 import { ExamProgress } from "./ExamProgress";
+import ExamResultsViewModal from "./ExamResultsViewModal";
 import { toast } from "sonner";
 
 export function ExamTakingPage() {
@@ -31,8 +32,12 @@ export function ExamTakingPage() {
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   const [showConfirmExit, setShowConfirmExit] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showResultsModal, setShowResultsModal] = useState(false);
+  const [examResult, setExamResult] = useState<any>(null);
 
   const {
+    exam: examData,
     currentAttempt,
     currentQuestionIndex,
     answers,
@@ -47,6 +52,7 @@ export function ExamTakingPage() {
     previousQuestion,
     goToQuestion,
     getAnswer,
+    setAnswer,
     isQuestionAnswered,
     getAnsweredCount,
     formatTimeRemaining,
@@ -54,7 +60,7 @@ export function ExamTakingPage() {
     getProgressPercentage,
     resetAttempt,
     checkCanStartExam,
-  } = useExamAttempt();
+  } = useExamTaking(examId);
 
   // Load exam data
   useEffect(() => {
@@ -128,7 +134,16 @@ export function ExamTakingPage() {
   // Handle exam submission
   const handleSubmitExam = async () => {
     setShowSubmissionModal(false);
-    await finishExam();
+    try {
+      const result = await finishExam();
+      if (result) {
+        setExamResult(result);
+        setShowResultsModal(true);
+      }
+    } catch (error) {
+      console.error('Error finishing exam:', error);
+      toast.error('Error al finalizar el examen');
+    }
   };
 
   // Handle exit exam
@@ -335,67 +350,46 @@ export function ExamTakingPage() {
       </div>
 
       {/* Question */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          {currentQuestion && (
-            <ExamQuestionTaking
-              question={currentQuestion}
-              questionNumber={currentQuestionIndex + 1}
-              currentAnswer={getAnswer(currentQuestion._id)}
-              isAnswered={isQuestionAnswered(currentQuestion._id)}
-            />
-          )}
-        </CardContent>
-      </Card>
+      {currentQuestion && (
+        <ExamQuestionTaking
+          question={currentQuestion}
+          questionNumber={currentQuestionIndex + 1}
+          currentAnswer={getAnswer(currentQuestion._id)}
+          isAnswered={isQuestionAnswered(currentQuestion._id)}
+          onAnswerChange={setAnswer}
+          onNext={() => nextQuestion(totalQuestions)}
+          onPrevious={previousQuestion}
+          onNavigate={goToQuestion}
+          totalQuestions={totalQuestions}
+          answeredQuestions={Object.keys(answers).map((_, index) => index + 1)}
+          isFullScreen={isFullScreen}
+          onToggleFullScreen={() => setIsFullScreen(!isFullScreen)}
+        />
+      )}
 
-      {/* Navigation */}
-      <div className="flex items-center justify-end gap-4">
-        <div className="text-sm text-muted-foreground">
-          {getAnsweredCount()} de {totalQuestions} respondidas
-        </div>
-
-        <div className="flex items-center gap-2">
+      {/* Final Submit Button */}
+      {isLastQuestion && (
+        <div className="flex justify-center mt-6">
           <Button
-            variant="outline"
-            size="icon"
-            onClick={previousQuestion}
-            disabled={isFirstQuestion || isFinishing}
-            className="h-10 w-10"
+            onClick={() => setShowSubmissionModal(true)}
+            disabled={isFinishing || !isExamCompleted(totalQuestions)}
+            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-white"
           >
-            <ChevronLeft className="h-4 w-4" />
+            {isFinishing ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4 mr-2" />
+                Finalizar Examen
+              </>
+            )}
           </Button>
-
-          {isLastQuestion ? (
-            <Button
-              onClick={() => setShowSubmissionModal(true)}
-              disabled={isFinishing || !isExamCompleted(totalQuestions)}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              {isFinishing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4 mr-2" />
-                  Finalizar Examen
-                </>
-              )}
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => nextQuestion(totalQuestions)}
-              disabled={isFinishing}
-              className="h-10 w-10"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          )}
         </div>
-      </div>
+      )}
 
       {/* Submission Modal */}
       <ExamSubmissionModal
@@ -440,6 +434,22 @@ export function ExamTakingPage() {
 
       {/* Login Modal */}
       <LoginModal open={showLoginModal} setOpen={setShowLoginModal} />
+
+      {/* Results Modal */}
+      <ExamResultsViewModal
+        isOpen={showResultsModal}
+        onClose={() => setShowResultsModal(false)}
+        result={examResult}
+        onRetakeExam={() => {
+          setShowResultsModal(false);
+          resetAttempt();
+          // Optionally navigate to exam start
+        }}
+        onViewExam={() => {
+          setShowResultsModal(false);
+          // Optionally navigate to exam view
+        }}
+      />
     </div>
   );
 }

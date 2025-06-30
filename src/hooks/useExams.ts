@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { examService, Exam } from '@/services/examService';
 import { toast } from 'sonner';
 
@@ -77,6 +78,7 @@ const defaultFilters: ExamFilters = {
 };
 
 export function useExams(): UseExamsReturn {
+  const navigate = useNavigate();
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -209,9 +211,8 @@ export function useExams(): UseExamsReturn {
   };
 
   const handleTakeExam = (exam: Exam) => {
-    toast.info("Función de contestar examen en desarrollo", {
-      description: "Esta funcionalidad estará disponible próximamente",
-    });
+    // Navigate to exam taking page using React Router
+    navigate(`/exams/take/${exam._id}`);
   };
 
   const handleEditExam = (exam: Exam) => {

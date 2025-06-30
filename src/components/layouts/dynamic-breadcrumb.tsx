@@ -20,6 +20,7 @@ const routeNameMapping: { [key: string]: string } = {
   "/games/verbs": "Verbs Game",
   "/generator/lecture": "Lecture Generator",
   "/generator/exam": "Exam Generator",
+  "/exam-history": "Historial de Exámenes",
 };
 
 export function DynamicBreadcrumb() {

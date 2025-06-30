@@ -16,7 +16,7 @@ import {
   ExamGeneratorPage,
   ExamsPage,
   ExamTakingPage,
-  ExamResultsPage,
+  ExamHistoryPage,
   SettingsPage,
   GeneralSettingsPage,
   ImportSettingsPage,
@@ -43,7 +43,7 @@ export default function App() {
                 <Route path="/lectures/:id" element={<LectureDetailPage />} />
                 <Route path="/exams" element={<ExamsPage />} />
                 <Route path="/exams/:examId/take" element={<ExamTakingPage />} />
-                <Route path="/exams/:examId/results/:attemptId" element={<ExamResultsPage />} />
+                <Route path="/exam-history" element={<ExamHistoryPage />} />
                 <Route path="/games/anki" element={<AnkiGamePage />} />
                 <Route path="/games/verbs" element={<VerbsGamePage />} />
                 <Route path="/generator/lecture" element={<LectureGeneratorPage />} />
