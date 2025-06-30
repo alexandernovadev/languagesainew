@@ -729,10 +729,8 @@ export function ExamEditModal({
                                 }
                                 disabled={loading}
                               >
-                                <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[140px]">
-                                  {getQuestionTypeIcon(
-                                    question.type || "single_choice"
-                                  )}
+                                <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
+                                  {getQuestionTypeIcon(question.type || "single_choice")}
                                   <span className="text-xs">
                                     {
                                       questionTypes.find(
@@ -741,6 +739,9 @@ export function ExamEditModal({
                                           (question.type || "single_choice")
                                       )?.label
                                     }
+                                  </span>
+                                  <span className="ml-auto">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                                   </span>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -754,14 +755,30 @@ export function ExamEditModal({
                                         <span>
                                           {getQuestionTypeIcon(type.value)}
                                         </span>
-                                        <span className="text-xs ">
-                                          {type.label}
-                                        </span>
+                                        <span className="text-xs ">{type.label}</span>
                                       </div>
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-xs text-muted-foreground">Peso:</span>
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  max="10"
+                                  value={question.weight || 1}
+                                  onChange={(e) =>
+                                    handleQuestionChange(
+                                      index,
+                                      "weight",
+                                      parseInt(e.target.value) || 1
+                                    )
+                                  }
+                                  disabled={loading}
+                                  className="w-12 h-7 text-xs px-1 py-0"
+                                />
+                              </div>
                             </div>
                             <div className="flex items-center gap-2">
                               <Button
@@ -792,49 +809,6 @@ export function ExamEditModal({
                               className="text-sm"
                               rows={3}
                             />
-                          </div>
-
-                          {/* Question Metadata */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div className="space-y-2">
-                              <Label className="text-sm font-medium text-muted-foreground">
-                                Peso
-                              </Label>
-                              <Input
-                                type="number"
-                                min="1"
-                                max="10"
-                                value={question.weight || 1}
-                                onChange={(e) =>
-                                  handleQuestionChange(
-                                    index,
-                                    "weight",
-                                    parseInt(e.target.value) || 1
-                                  )
-                                }
-                                disabled={loading}
-                                className="text-sm"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="text-sm font-medium text-muted-foreground">
-                                Orden
-                              </Label>
-                              <Input
-                                type="number"
-                                min="1"
-                                value={question.order || index + 1}
-                                onChange={(e) =>
-                                  handleQuestionChange(
-                                    index,
-                                    "order",
-                                    parseInt(e.target.value) || index + 1
-                                  )
-                                }
-                                disabled={loading}
-                                className="text-sm"
-                              />
-                            </div>
                           </div>
 
                           {/* Dynamic Content Based on Question Type */}
