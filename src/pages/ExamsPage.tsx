@@ -7,11 +7,6 @@ import {
   Search,
   Plus,
   Filter,
-  BookOpen,
-  Eye,
-  Edit,
-  Trash2,
-  Play,
   RotateCcw,
 } from "lucide-react";
 import { examService, Exam } from "@/services/examService";
