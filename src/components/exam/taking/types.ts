@@ -19,6 +19,5 @@ export interface ExamQuestionTakingProps {
   question: Question;
   questionNumber: number;
   currentAnswer: any;
-  onAnswerSubmit: (answer: any) => void;
   isAnswered: boolean;
 } 

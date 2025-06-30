@@ -42,7 +42,6 @@ export function ExamTakingPage() {
     timeRemaining,
     isTimerRunning,
     startExam,
-    submitAnswer,
     finishExam,
     nextQuestion,
     previousQuestion,
@@ -124,11 +123,6 @@ export function ExamTakingPage() {
           "No se pudo iniciar el examen. Por favor, intenta de nuevo.",
       });
     }
-  };
-
-  // Handle answer submission
-  const handleAnswerSubmit = async (questionId: string, answer: any) => {
-    await submitAnswer(questionId, answer);
   };
 
   // Handle exam submission
@@ -348,9 +342,6 @@ export function ExamTakingPage() {
               question={currentQuestion}
               questionNumber={currentQuestionIndex + 1}
               currentAnswer={getAnswer(currentQuestion._id)}
-              onAnswerSubmit={(answer) =>
-                handleAnswerSubmit(currentQuestion._id, answer)
-              }
               isAnswered={isQuestionAnswered(currentQuestion._id)}
             />
           )}
