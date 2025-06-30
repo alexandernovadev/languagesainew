@@ -84,8 +84,17 @@ interface QuestionItemProps {
   questionRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
   onQuestionChange: (index: number, field: string, value: any) => void;
   onQuestionTextChange: (index: number, value: string) => void;
-  onOptionChange: (questionIndex: number, optionIndex: number, field: string, value: any) => void;
-  onCorrectAnswerChange: (questionIndex: number, optionValue: string, isChecked: boolean) => void;
+  onOptionChange: (
+    questionIndex: number,
+    optionIndex: number,
+    field: string,
+    value: any
+  ) => void;
+  onCorrectAnswerChange: (
+    questionIndex: number,
+    optionValue: string,
+    isChecked: boolean
+  ) => void;
   onQuestionTypeChange: (questionIndex: number, type: any) => void;
   onAddOption: (questionIndex: number) => void;
   onRemoveOption: (questionIndex: number, optionIndex: number) => void;
@@ -124,7 +133,9 @@ const QuestionItem = React.memo(function QuestionItem({
   const questionTags = getQuestionTags(question);
   const explanation = getQuestionExplanation(question);
 
-  const isSingleChoice = ['single_choice', 'true_false', 'fill_blank'].includes(questionType);
+  const isSingleChoice = ["single_choice", "true_false", "fill_blank"].includes(
+    questionType
+  );
 
   const handleAddTag = () => {
     if (newTag.trim()) {
@@ -150,12 +161,7 @@ const QuestionItem = React.memo(function QuestionItem({
           </Badge>
           <Select
             value={questionType}
-            onValueChange={(value) =>
-              onQuestionTypeChange(
-                index,
-                value as any
-              )
-            }
+            onValueChange={(value) => onQuestionTypeChange(index, value as any)}
             disabled={loading}
           >
             <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
@@ -164,7 +170,15 @@ const QuestionItem = React.memo(function QuestionItem({
                 {questionTypes.find((t) => t.value === questionType)?.label}
               </span>
               <span className="ml-auto">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                  <path
+                    d="M7 10l5 5 5-5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
             </SelectTrigger>
             <SelectContent>
@@ -190,11 +204,7 @@ const QuestionItem = React.memo(function QuestionItem({
               max="10"
               value={question.weight || 1}
               onChange={(e) =>
-                onQuestionChange(
-                  index,
-                  "weight",
-                  parseInt(e.target.value) || 1
-                )
+                onQuestionChange(index, "weight", parseInt(e.target.value) || 1)
               }
               disabled={loading}
               className="w-12 h-7 text-xs px-1 py-0"
@@ -234,7 +244,9 @@ const QuestionItem = React.memo(function QuestionItem({
       {needsOptions(questionType) ? (
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium text-muted-foreground">Opciones:</h4>
+            <h4 className="text-sm font-medium text-muted-foreground">
+              Opciones:
+            </h4>
             <Button
               type="button"
               variant="outline"
@@ -267,23 +279,40 @@ const QuestionItem = React.memo(function QuestionItem({
                   >
                     <div className="flex items-center gap-2">
                       {isSingleChoice ? (
-                        <RadioGroupItem value={option.value} id={`${index}-${optionIndex}`} />
+                        <RadioGroupItem
+                          value={option.value}
+                          id={`${index}-${optionIndex}`}
+                        />
                       ) : (
                         <Checkbox
                           checked={isCorrect}
                           onCheckedChange={(checked) =>
-                            onCorrectAnswerChange(index, option.value, checked as boolean)
+                            onCorrectAnswerChange(
+                              index,
+                              option.value,
+                              checked as boolean
+                            )
                           }
                           disabled={loading}
                         />
                       )}
-                      <label htmlFor={`${index}-${optionIndex}`} className="text-sm font-medium text-muted-foreground min-w-[20px] cursor-pointer">
+                      <label
+                        htmlFor={`${index}-${optionIndex}`}
+                        className="text-sm font-medium text-muted-foreground min-w-[20px] cursor-pointer"
+                      >
                         {String.fromCharCode(65 + optionIndex)}.
                       </label>
                     </div>
                     <Input
                       value={option.label || option.value}
-                      onChange={(e) => onOptionChange(index, optionIndex, "label", e.target.value)}
+                      onChange={(e) =>
+                        onOptionChange(
+                          index,
+                          optionIndex,
+                          "label",
+                          e.target.value
+                        )
+                      }
                       placeholder={`Opción ${optionIndex + 1}`}
                       disabled={loading}
                       className={`text-sm flex-1`}
@@ -307,14 +336,20 @@ const QuestionItem = React.memo(function QuestionItem({
       ) : needsTextInput(questionType) ? (
         <div className="mb-4">
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-muted-foreground">Respuesta Correcta:</Label>
+            <Label className="text-sm font-medium text-muted-foreground">
+              Respuesta Correcta:
+            </Label>
             <Textarea
               value={correctAnswers[0] || ""}
-              onChange={(e) => onCorrectAnswerChange(index, e.target.value, true)}
+              onChange={(e) =>
+                onCorrectAnswerChange(index, e.target.value, true)
+              }
               placeholder={
-                questionType === "fill_blank" ? "Escribe la palabra o frase..."
-                : questionType === "translate" ? "Escribe la traducción correcta"
-                : "Escribe la respuesta esperada"
+                questionType === "fill_blank"
+                  ? "Escribe la palabra o frase..."
+                  : questionType === "translate"
+                  ? "Escribe la traducción correcta"
+                  : "Escribe la respuesta esperada"
               }
               disabled={loading}
               className="text-sm"
@@ -327,17 +362,28 @@ const QuestionItem = React.memo(function QuestionItem({
       {/* Explanation */}
       {explanation && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
-          <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">Explicación:</h4>
-          <p className="text-sm text-blue-600 dark:text-blue-400">{explanation}</p>
+          <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+            Explicación:
+          </h4>
+          <p className="text-sm text-blue-600 dark:text-blue-400">
+            {explanation}
+          </p>
         </div>
       )}
 
       {/* Tags */}
       <div className="space-y-2">
-        <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1"><Tag className="w-4 h-4" />Etiquetas:</h4>
+        <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+          <Tag className="w-4 h-4" />
+          Etiquetas:
+        </h4>
         <div className="flex flex-wrap gap-1 mb-2">
           {questionTags.map((tag, tagIndex) => (
-            <Badge key={tagIndex} variant="outline" className="text-xs flex items-center gap-1">
+            <Badge
+              key={tagIndex}
+              variant="outline"
+              className="text-xs flex items-center gap-1"
+            >
               {tag}
               <Button
                 type="button"
@@ -387,7 +433,7 @@ interface QuestionOrderItemProps {
   index: number;
   loading: boolean;
   questionCount: number;
-  onMoveQuestion: (index: number, direction: 'up' | 'down') => void;
+  onMoveQuestion: (index: number, direction: "up" | "down") => void;
 }
 
 const QuestionOrderItem = React.memo(function QuestionOrderItem({
@@ -401,9 +447,7 @@ const QuestionOrderItem = React.memo(function QuestionOrderItem({
   const questionType = getQuestionType(question);
 
   return (
-    <div
-      className="flex items-center gap-2 p-2 border rounded-md bg-muted/20 hover:bg-muted/30 transition-colors cursor-move"
-    >
+    <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/20 hover:bg-muted/30 transition-colors cursor-move">
       {/* Drag Handle */}
       <div className="flex flex-col items-center justify-center w-6 h-6 text-muted-foreground">
         <div className="w-3 h-3 flex flex-col gap-0.5">
@@ -439,24 +483,36 @@ const QuestionOrderItem = React.memo(function QuestionOrderItem({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => onMoveQuestion(index, 'up')}
+          onClick={() => onMoveQuestion(index, "up")}
           disabled={index === 0 || loading}
           className="h-5 w-5 p-0"
         >
           <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
-            <path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path
+              d="M18 15l-6-6-6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </Button>
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => onMoveQuestion(index, 'down')}
+          onClick={() => onMoveQuestion(index, "down")}
           disabled={index === questionCount - 1 || loading}
           className="h-5 w-5 p-0"
         >
           <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path
+              d="M6 9l6 6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </Button>
       </div>
@@ -496,13 +552,13 @@ export function ExamEditModal({
         source: exam.source || "",
         adaptive: exam.adaptive || false,
       });
-      
+
       const sortedQuestions = (exam.questions || []).sort((a, b) => {
-        const orderA = typeof a === 'object' && a !== null ? (a.order || 0) : 0;
-        const orderB = typeof b === 'object' && b !== null ? (b.order || 0) : 0;
+        const orderA = typeof a === "object" && a !== null ? a.order || 0 : 0;
+        const orderB = typeof b === "object" && b !== null ? b.order || 0 : 0;
         return orderA - orderB;
       });
-      
+
       setQuestions(sortedQuestions);
     }
   }, [exam]);
@@ -521,190 +577,238 @@ export function ExamEditModal({
   };
 
   // Memoized Handlers for Performance
-  const handleInputChange = useCallback((field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const handleInputChange = useCallback(
+    (field: string, value: string | boolean) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
-  const handleQuestionChange = useCallback((index: number, field: string, value: any) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
-    );
-  }, []);
+  const handleQuestionChange = useCallback(
+    (index: number, field: string, value: any) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
+      );
+    },
+    []
+  );
 
-  const handleQuestionTextChange = useCallback((index: number, value: string) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => {
-        if (i !== index) return q;
+  const handleQuestionTextChange = useCallback(
+    (index: number, value: string) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => {
+          if (i !== index) return q;
 
-        if (typeof q === 'string') {
-          return {
-            question: value,
-            type: 'single_choice',
-            options: [],
-            correctAnswers: [],
-            tags: []
-          };
-        }
-
-        if (typeof q === 'object' && q !== null) {
-          const newQ = { ...q };
-
-          if (typeof newQ.question === 'object' && newQ.question !== null && 'text' in newQ.question) {
-            newQ.question = { ...newQ.question, text: value };
+          if (typeof q === "string") {
+            return {
+              question: value,
+              type: "single_choice",
+              options: [],
+              correctAnswers: [],
+              tags: [],
+            };
           }
-          else if ('question' in newQ || typeof newQ.question !== 'undefined') {
-            newQ.question = value;
-          }
-          else if ('text' in newQ) {
-            newQ.text = value;
-          }
-          else if ('content' in newQ) {
-            newQ.content = value;
-          }
-          else if ('title' in newQ) {
-            newQ.title = value;
-          }
-          else {
-            newQ.question = value;
-          }
-          return newQ;
-        }
 
-        return q;
-      })
-    );
-  }, []);
+          if (typeof q === "object" && q !== null) {
+            const newQ = { ...q };
 
-  const updateQuestionOptions = (question: any, updater: (options: any[]) => any[]) => {
+            if (
+              typeof newQ.question === "object" &&
+              newQ.question !== null &&
+              "text" in newQ.question
+            ) {
+              newQ.question = { ...newQ.question, text: value };
+            } else if (
+              "question" in newQ ||
+              typeof newQ.question !== "undefined"
+            ) {
+              newQ.question = value;
+            } else if ("text" in newQ) {
+              newQ.text = value;
+            } else if ("content" in newQ) {
+              newQ.content = value;
+            } else if ("title" in newQ) {
+              newQ.title = value;
+            } else {
+              newQ.question = value;
+            }
+            return newQ;
+          }
+
+          return q;
+        })
+      );
+    },
+    []
+  );
+
+  const updateQuestionOptions = (
+    question: any,
+    updater: (options: any[]) => any[]
+  ) => {
     const newQ = { ...question };
 
-    if (typeof newQ.question === 'object' && newQ.question !== null && Array.isArray(newQ.question.options)) {
-        const newOptions = updater(newQ.question.options);
-        newQ.question = { ...newQ.question, options: newOptions };
-    } 
-    else {
-        const originalOptions = Array.isArray(newQ.options) ? newQ.options : [];
-        const newOptions = updater(originalOptions);
-        newQ.options = newOptions;
+    if (
+      typeof newQ.question === "object" &&
+      newQ.question !== null &&
+      Array.isArray(newQ.question.options)
+    ) {
+      const newOptions = updater(newQ.question.options);
+      newQ.question = { ...newQ.question, options: newOptions };
+    } else {
+      const originalOptions = Array.isArray(newQ.options) ? newQ.options : [];
+      const newOptions = updater(originalOptions);
+      newQ.options = newOptions;
     }
 
     return newQ;
   };
 
-  const updateQuestionTags = (question: any, updater: (tags: string[]) => string[]) => {
+  const updateQuestionTags = (
+    question: any,
+    updater: (tags: string[]) => string[]
+  ) => {
     const newQ = { ...question };
 
-    if (typeof newQ.question === 'object' && newQ.question !== null && Array.isArray(newQ.question.tags)) {
-        const newTags = updater(newQ.question.tags);
-        newQ.question = { ...newQ.question, tags: newTags };
-    } 
-    else {
-        const originalTags = Array.isArray(newQ.tags) ? newQ.tags : [];
-        const newTags = updater(originalTags);
-        newQ.tags = newTags;
+    if (
+      typeof newQ.question === "object" &&
+      newQ.question !== null &&
+      Array.isArray(newQ.question.tags)
+    ) {
+      const newTags = updater(newQ.question.tags);
+      newQ.question = { ...newQ.question, tags: newTags };
+    } else {
+      const originalTags = Array.isArray(newQ.tags) ? newQ.tags : [];
+      const newTags = updater(originalTags);
+      newQ.tags = newTags;
     }
 
     return newQ;
   };
 
-  const handleOptionChange = useCallback((questionIndex: number, optionIndex: number, field: string, value: any) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => {
-        if (i !== questionIndex) return q;
-        return updateQuestionOptions(q, (options) => {
+  const handleOptionChange = useCallback(
+    (questionIndex: number, optionIndex: number, field: string, value: any) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => {
+          if (i !== questionIndex) return q;
+          return updateQuestionOptions(q, (options) => {
             const newOptions = [...options];
-            newOptions[optionIndex] = { ...newOptions[optionIndex], [field]: value };
+            newOptions[optionIndex] = {
+              ...newOptions[optionIndex],
+              [field]: value,
+            };
             return newOptions;
-        });
-      })
-    );
-  }, []);
+          });
+        })
+      );
+    },
+    []
+  );
 
   const addOption = useCallback((questionIndex: number) => {
     setQuestions((prev) =>
       prev.map((q, i) => {
         if (i !== questionIndex) return q;
         return updateQuestionOptions(q, (options) => {
-            const newOption = {
-              value: `option_${options.length + 1}`,
-              label: "",
-              isCorrect: false,
-            };
-            return [...options, newOption];
+          const newOption = {
+            value: `option_${options.length + 1}`,
+            label: "",
+            isCorrect: false,
+          };
+          return [...options, newOption];
         });
       })
     );
   }, []);
 
-  const removeOption = useCallback((questionIndex: number, optionIndex: number) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => {
-        if (i !== questionIndex) return q;
-        return updateQuestionOptions(q, (options) => {
+  const removeOption = useCallback(
+    (questionIndex: number, optionIndex: number) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => {
+          if (i !== questionIndex) return q;
+          return updateQuestionOptions(q, (options) => {
             const newOptions = [...options];
             newOptions.splice(optionIndex, 1);
             return newOptions;
-        });
-      })
-    );
-  }, []);
+          });
+        })
+      );
+    },
+    []
+  );
 
-  const handleQuestionTypeChange = useCallback((questionIndex: number, newType: any) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => {
-        if (i !== questionIndex) return q;
+  const handleQuestionTypeChange = useCallback(
+    (questionIndex: number, newType: any) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => {
+          if (i !== questionIndex) return q;
 
-        const oldType = q.type;
-        let correctAnswers = q.correctAnswers || [];
-        let options = q.options || [];
+          const oldType = q.type;
+          let correctAnswers = q.correctAnswers || [];
+          let options = q.options || [];
 
-        const isNewTypeIncompatible = needsTextInput(newType);
-        const isNewTypeTrueFalse = newType === 'true_false';
-        const wasOldTypeTrueFalse = oldType === 'true_false';
+          const isNewTypeIncompatible = needsTextInput(newType);
+          const isNewTypeTrueFalse = newType === "true_false";
+          const wasOldTypeTrueFalse = oldType === "true_false";
 
-        if (isNewTypeIncompatible || isNewTypeTrueFalse || wasOldTypeTrueFalse) {
-          correctAnswers = [];
-        }
-
-        if (isNewTypeTrueFalse) {
-          options = [
-            { value: "true", label: "Verdadero", isCorrect: false },
-            { value: "false", label: "Falso", isCorrect: false },
-          ];
-        } else if (isNewTypeIncompatible || wasOldTypeTrueFalse) {
-          options = [];
-        }
-
-        return {
-          ...q,
-          type: newType,
-          correctAnswers,
-          options,
-        };
-      })
-    );
-  }, [needsTextInput]);
-
-  const handleCorrectAnswerChange = useCallback((questionIndex: number, optionValue: string, isChecked: boolean) => {
-    setQuestions((prev) =>
-      prev.map((q, i) => {
-        if (i !== questionIndex) return q;
-        let newCorrectAnswers = [...(q.correctAnswers || [])];
-        if (q.type === "single_choice" || q.type === "true_false" || q.type === "fill_blank") {
-          newCorrectAnswers = isChecked ? [optionValue] : [];
-        } else {
-          if (isChecked) {
-            if (!newCorrectAnswers.includes(optionValue)) {
-              newCorrectAnswers.push(optionValue);
-            }
-          } else {
-            newCorrectAnswers = newCorrectAnswers.filter((answer) => answer !== optionValue);
+          if (
+            isNewTypeIncompatible ||
+            isNewTypeTrueFalse ||
+            wasOldTypeTrueFalse
+          ) {
+            correctAnswers = [];
           }
-        }
-        return { ...q, correctAnswers: newCorrectAnswers };
-      })
-    );
-  }, []);
+
+          if (isNewTypeTrueFalse) {
+            options = [
+              { value: "true", label: "Verdadero", isCorrect: false },
+              { value: "false", label: "Falso", isCorrect: false },
+            ];
+          } else if (isNewTypeIncompatible || wasOldTypeTrueFalse) {
+            options = [];
+          }
+
+          return {
+            ...q,
+            type: newType,
+            correctAnswers,
+            options,
+          };
+        })
+      );
+    },
+    [needsTextInput]
+  );
+
+  const handleCorrectAnswerChange = useCallback(
+    (questionIndex: number, optionValue: string, isChecked: boolean) => {
+      setQuestions((prev) =>
+        prev.map((q, i) => {
+          if (i !== questionIndex) return q;
+          let newCorrectAnswers = [...(q.correctAnswers || [])];
+          if (
+            q.type === "single_choice" ||
+            q.type === "true_false" ||
+            q.type === "fill_blank"
+          ) {
+            newCorrectAnswers = isChecked ? [optionValue] : [];
+          } else {
+            if (isChecked) {
+              if (!newCorrectAnswers.includes(optionValue)) {
+                newCorrectAnswers.push(optionValue);
+              }
+            } else {
+              newCorrectAnswers = newCorrectAnswers.filter(
+                (answer) => answer !== optionValue
+              );
+            }
+          }
+          return { ...q, correctAnswers: newCorrectAnswers };
+        })
+      );
+    },
+    []
+  );
 
   const addTag = useCallback((questionIndex: number, tag: string) => {
     setQuestions((prev) =>
@@ -761,15 +865,18 @@ export function ExamEditModal({
     });
   }, []);
 
-  const moveQuestion = useCallback((index: number, direction: 'up' | 'down') => {
-    setQuestions((prev) => {
-      const updated = [...prev];
-      const [movedItem] = updated.splice(index, 1);
-      const newIndex = direction === 'up' ? index - 1 : index + 1;
-      updated.splice(newIndex, 0, movedItem);
-      return updated.map((q, idx) => ({ ...q, order: idx + 1 }));
-    });
-  }, []);
+  const moveQuestion = useCallback(
+    (index: number, direction: "up" | "down") => {
+      setQuestions((prev) => {
+        const updated = [...prev];
+        const [movedItem] = updated.splice(index, 1);
+        const newIndex = direction === "up" ? index - 1 : index + 1;
+        updated.splice(newIndex, 0, movedItem);
+        return updated.map((q, idx) => ({ ...q, order: idx + 1 }));
+      });
+    },
+    []
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -809,6 +916,31 @@ export function ExamEditModal({
     try {
       setLoading(true);
 
+      const normalizedQuestions = questions.map((q, index) => {
+        const questionText = getQuestionText(q);
+        const questionType = getQuestionType(q);
+        const options = getQuestionOptions(q).map((opt) => ({
+          value: opt.value,
+          label: opt.label,
+          isCorrect: opt.isCorrect,
+        }));
+        const correctAnswers = getQuestionCorrectAnswers(q);
+        const tags = getQuestionTags(q);
+        const explanation = getQuestionExplanation(q);
+
+        // Rebuild the object from scratch to ensure a clean structure without _id
+        return {
+          question: questionText,
+          type: questionType,
+          options: options,
+          correctAnswers: correctAnswers,
+          tags: tags,
+          explanation: explanation,
+          order: q.order || index + 1,
+          weight: q.weight || 1,
+        };
+      });
+
       const updateData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -817,7 +949,7 @@ export function ExamEditModal({
         topic: formData.topic,
         source: formData.source as "manual" | "ai" | undefined,
         adaptive: formData.adaptive,
-        questions: questions,
+        questions: normalizedQuestions,
       };
 
       const response = await examService.updateExam(exam._id, updateData);
@@ -992,9 +1124,13 @@ export function ExamEditModal({
                               <SelectValue placeholder="Selecciona el nivel" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="A1">A1 - Principiante</SelectItem>
+                              <SelectItem value="A1">
+                                A1 - Principiante
+                              </SelectItem>
                               <SelectItem value="A2">A2 - Básico</SelectItem>
-                              <SelectItem value="B1">B1 - Intermedio</SelectItem>
+                              <SelectItem value="B1">
+                                B1 - Intermedio
+                              </SelectItem>
                               <SelectItem value="B2">
                                 B2 - Intermedio Alto
                               </SelectItem>
@@ -1027,7 +1163,9 @@ export function ExamEditModal({
                               <SelectItem value="french">Francés</SelectItem>
                               <SelectItem value="german">Alemán</SelectItem>
                               <SelectItem value="italian">Italiano</SelectItem>
-                              <SelectItem value="portuguese">Portugués</SelectItem>
+                              <SelectItem value="portuguese">
+                                Portugués
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -1094,8 +1232,8 @@ export function ExamEditModal({
                           Examen Adaptativo
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Los exámenes adaptativos ajustan la dificultad según el
-                          rendimiento del estudiante.
+                          Los exámenes adaptativos ajustan la dificultad según
+                          el rendimiento del estudiante.
                         </p>
                       </div>
 
