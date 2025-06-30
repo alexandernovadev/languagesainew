@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   BookOpen,
   Clock,
@@ -47,6 +48,7 @@ import {
   Languages,
   HelpCircle,
   Edit3,
+  ListOrdered,
 } from "lucide-react";
 import { toast } from "sonner";
 import { examService, Exam } from "@/services/examService";
@@ -106,7 +108,15 @@ export function ExamEditModal({
         source: exam.source || "",
         adaptive: exam.adaptive || false,
       });
-      setQuestions(exam.questions || []);
+      
+      // Sort questions by order field to ensure correct display order
+      const sortedQuestions = (exam.questions || []).sort((a, b) => {
+        const orderA = typeof a === 'object' && a !== null ? (a.order || 0) : 0;
+        const orderB = typeof b === 'object' && b !== null ? (b.order || 0) : 0;
+        return orderA - orderB;
+      });
+      
+      setQuestions(sortedQuestions);
     }
   }, [exam]);
 
@@ -325,6 +335,14 @@ export function ExamEditModal({
 
   const removeQuestion = (index: number) => {
     const updatedQuestions = questions.filter((_, i) => i !== index);
+    
+    // Update the order field for remaining questions
+    updatedQuestions.forEach((question, idx) => {
+      if (typeof question === 'object' && question !== null) {
+        question.order = idx + 1;
+      }
+    });
+    
     setQuestions(updatedQuestions);
   };
 
@@ -424,6 +442,27 @@ export function ExamEditModal({
     }
   };
 
+  const moveQuestion = (index: number, direction: 'up' | 'down') => {
+    const updatedQuestions = [...questions];
+    const temp = updatedQuestions[index];
+    if (direction === 'up') {
+      updatedQuestions[index] = updatedQuestions[index - 1];
+      updatedQuestions[index - 1] = temp;
+    } else {
+      updatedQuestions[index] = updatedQuestions[index + 1];
+      updatedQuestions[index + 1] = temp;
+    }
+    
+    // Update the order field for all questions to maintain consistency
+    updatedQuestions.forEach((question, idx) => {
+      if (typeof question === 'object' && question !== null) {
+        question.order = idx + 1;
+      }
+    });
+    
+    setQuestions(updatedQuestions);
+  };
+
   if (!exam) return null;
 
   return (
@@ -436,595 +475,715 @@ export function ExamEditModal({
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea ref={scrollAreaRef} className="h-[80vh] pr-4">
-          <div className="space-y-6">
-            {/* Compact Dates Section */}
-            <Card>
-              <CardContent className="pt-4">
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>Creado: {formatDate(exam.createdAt)}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>Actualizado: {formatDate(exam.updatedAt)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      ID: {exam._id.slice(-8)}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <Tabs defaultValue="general" className="flex-1 flex flex-col">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="general" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              General
+            </TabsTrigger>
+            <TabsTrigger value="questions" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Preguntas
+            </TabsTrigger>
+            <TabsTrigger value="order" className="flex items-center gap-2">
+              <ListOrdered className="w-4 h-4" />
+              Orden
+            </TabsTrigger>
+          </TabsList>
 
-            {/* Edit Form */}
-            <Card>
-              <CardHeader>
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <PenTool className="w-5 h-5" />
-                  Editar Información del Examen
-                </h3>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Título */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="title"
-                      className="text-sm font-medium text-muted-foreground"
-                    >
-                      Título del Examen *
-                    </Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) =>
-                        handleInputChange("title", e.target.value)
-                      }
-                      placeholder="Ingresa el título del examen"
-                      disabled={loading}
-                      className="text-sm"
-                    />
-                  </div>
-
-                  {/* Descripción */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="description"
-                      className="text-sm font-medium text-muted-foreground"
-                    >
-                      Descripción
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) =>
-                        handleInputChange("description", e.target.value)
-                      }
-                      placeholder="Ingresa una descripción del examen"
-                      rows={3}
-                      disabled={loading}
-                      className="text-sm"
-                    />
-                  </div>
-
-                  {/* Nivel y Idioma */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="level"
-                        className="text-sm font-medium text-muted-foreground"
-                      >
-                        Nivel *
-                      </Label>
-                      <Select
-                        value={formData.level}
-                        onValueChange={(value) =>
-                          handleInputChange("level", value)
-                        }
-                        disabled={loading}
-                      >
-                        <SelectTrigger className="text-sm">
-                          <SelectValue placeholder="Selecciona el nivel" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="A1">A1 - Principiante</SelectItem>
-                          <SelectItem value="A2">A2 - Básico</SelectItem>
-                          <SelectItem value="B1">B1 - Intermedio</SelectItem>
-                          <SelectItem value="B2">
-                            B2 - Intermedio Alto
-                          </SelectItem>
-                          <SelectItem value="C1">C1 - Avanzado</SelectItem>
-                          <SelectItem value="C2">C2 - Maestría</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="language"
-                        className="text-sm font-medium text-muted-foreground"
-                      >
-                        Idioma *
-                      </Label>
-                      <Select
-                        value={formData.language}
-                        onValueChange={(value) =>
-                          handleInputChange("language", value)
-                        }
-                        disabled={loading}
-                      >
-                        <SelectTrigger className="text-sm">
-                          <SelectValue placeholder="Selecciona el idioma" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="english">Inglés</SelectItem>
-                          <SelectItem value="spanish">Español</SelectItem>
-                          <SelectItem value="french">Francés</SelectItem>
-                          <SelectItem value="german">Alemán</SelectItem>
-                          <SelectItem value="italian">Italiano</SelectItem>
-                          <SelectItem value="portuguese">Portugués</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {/* Tema y Fuente */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="topic"
-                        className="text-sm font-medium text-muted-foreground"
-                      >
-                        Tema
-                      </Label>
-                      <Input
-                        id="topic"
-                        value={formData.topic}
-                        onChange={(e) =>
-                          handleInputChange("topic", e.target.value)
-                        }
-                        placeholder="Ej: Gramática, Vocabulario, etc."
-                        disabled={loading}
-                        className="text-sm"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="source"
-                        className="text-sm font-medium text-muted-foreground"
-                      >
-                        Fuente
-                      </Label>
-                      <Select
-                        value={formData.source}
-                        onValueChange={(value) =>
-                          handleInputChange("source", value)
-                        }
-                        disabled={loading}
-                      >
-                        <SelectTrigger className="text-sm">
-                          <SelectValue placeholder="Selecciona la fuente" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="manual">Manual</SelectItem>
-                          <SelectItem value="ai">IA</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {/* Adaptativo */}
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                      <input
-                        type="checkbox"
-                        checked={formData.adaptive}
-                        onChange={(e) =>
-                          handleInputChange("adaptive", e.target.checked)
-                        }
-                        disabled={loading}
-                        className="rounded border-gray-300"
-                      />
-                      Examen Adaptativo
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Los exámenes adaptativos ajustan la dificultad según el
-                      rendimiento del estudiante.
-                    </p>
-                  </div>
-
-                  <Separator />
-
-                  {/* Información del examen (read-only) */}
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Información del Examen
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Preguntas
-                        </p>
-                        <p className="text-sm font-medium">
-                          {questions.length}
-                        </p>
+          <TabsContent value="general" className="flex-1 flex flex-col">
+            <ScrollArea className="h-[80vh] pr-4 pb-32">
+              <div className="space-y-6">
+                {/* Compact Dates Section */}
+                <Card>
+                  <CardContent className="pt-4">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>Creado: {formatDate(exam.createdAt)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>Actualizado: {formatDate(exam.updatedAt)}</span>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Versión
-                        </p>
-                        <p className="text-sm font-medium">
-                          {exam.version || 1}
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          ID: {exam._id.slice(-8)}
+                        </Badge>
                       </div>
                     </div>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Questions Section */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Preguntas del Examen ({questions.length})
-                  </h3>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {questions.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>No hay preguntas en este examen</p>
-                      <p className="text-sm">
-                        Haz clic en "Agregar Pregunta" para comenzar
-                      </p>
-                    </div>
-                  ) : (
-                    questions.map((question, index) => {
-                      const questionText = getQuestionText(question);
-                      const questionType = getQuestionType(question);
-                      const questionOptions = getQuestionOptions(question);
-                      const correctAnswers =
-                        getQuestionCorrectAnswers(question);
-                      const questionTags = getQuestionTags(question);
-                      const explanation = getQuestionExplanation(question);
-
-                      return (
-                        <div
-                          key={index}
-                          ref={(el) => {
-                            questionRefs.current[index] = el;
-                          }}
-                          className="border rounded-lg p-6 bg-muted/20"
+                {/* Edit Form */}
+                <Card>
+                  <CardHeader>
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <PenTool className="w-5 h-5" />
+                      Información General del Examen
+                    </h3>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      {/* Título */}
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="title"
+                          className="text-sm font-medium text-muted-foreground"
                         >
-                          {/* Question Header */}
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-xs">
-                                #{index + 1}
-                              </Badge>
-                              <Select
-                                value={question.type || "single_choice"}
-                                onValueChange={(value) =>
-                                  handleQuestionTypeChange(
-                                    index,
-                                    value as
-                                      | "single_choice"
-                                      | "multiple_choice"
-                                      | "fill_blank"
-                                      | "translate"
-                                      | "true_false"
-                                      | "writing"
-                                  )
-                                }
-                                disabled={loading}
-                              >
-                                <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
-                                  {getQuestionTypeIcon(question.type || "single_choice")}
-                                  <span className="text-xs">
-                                    {
-                                      questionTypes.find(
-                                        (t) =>
-                                          t.value ===
-                                          (question.type || "single_choice")
-                                      )?.label
+                          Título del Examen *
+                        </Label>
+                        <Input
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) =>
+                            handleInputChange("title", e.target.value)
+                          }
+                          placeholder="Ingresa el título del examen"
+                          disabled={loading}
+                          className="text-sm"
+                        />
+                      </div>
+
+                      {/* Descripción */}
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="description"
+                          className="text-sm font-medium text-muted-foreground"
+                        >
+                          Descripción
+                        </Label>
+                        <Textarea
+                          id="description"
+                          value={formData.description}
+                          onChange={(e) =>
+                            handleInputChange("description", e.target.value)
+                          }
+                          placeholder="Ingresa una descripción del examen"
+                          rows={3}
+                          disabled={loading}
+                          className="text-sm"
+                        />
+                      </div>
+
+                      {/* Nivel y Idioma */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="level"
+                            className="text-sm font-medium text-muted-foreground"
+                          >
+                            Nivel *
+                          </Label>
+                          <Select
+                            value={formData.level}
+                            onValueChange={(value) =>
+                              handleInputChange("level", value)
+                            }
+                            disabled={loading}
+                          >
+                            <SelectTrigger className="text-sm">
+                              <SelectValue placeholder="Selecciona el nivel" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="A1">A1 - Principiante</SelectItem>
+                              <SelectItem value="A2">A2 - Básico</SelectItem>
+                              <SelectItem value="B1">B1 - Intermedio</SelectItem>
+                              <SelectItem value="B2">
+                                B2 - Intermedio Alto
+                              </SelectItem>
+                              <SelectItem value="C1">C1 - Avanzado</SelectItem>
+                              <SelectItem value="C2">C2 - Maestría</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="language"
+                            className="text-sm font-medium text-muted-foreground"
+                          >
+                            Idioma *
+                          </Label>
+                          <Select
+                            value={formData.language}
+                            onValueChange={(value) =>
+                              handleInputChange("language", value)
+                            }
+                            disabled={loading}
+                          >
+                            <SelectTrigger className="text-sm">
+                              <SelectValue placeholder="Selecciona el idioma" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="english">Inglés</SelectItem>
+                              <SelectItem value="spanish">Español</SelectItem>
+                              <SelectItem value="french">Francés</SelectItem>
+                              <SelectItem value="german">Alemán</SelectItem>
+                              <SelectItem value="italian">Italiano</SelectItem>
+                              <SelectItem value="portuguese">Portugués</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {/* Tema y Fuente */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="topic"
+                            className="text-sm font-medium text-muted-foreground"
+                          >
+                            Tema
+                          </Label>
+                          <Input
+                            id="topic"
+                            value={formData.topic}
+                            onChange={(e) =>
+                              handleInputChange("topic", e.target.value)
+                            }
+                            placeholder="Ej: Gramática, Vocabulario, etc."
+                            disabled={loading}
+                            className="text-sm"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="source"
+                            className="text-sm font-medium text-muted-foreground"
+                          >
+                            Fuente
+                          </Label>
+                          <Select
+                            value={formData.source}
+                            onValueChange={(value) =>
+                              handleInputChange("source", value)
+                            }
+                            disabled={loading}
+                          >
+                            <SelectTrigger className="text-sm">
+                              <SelectValue placeholder="Selecciona la fuente" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="manual">Manual</SelectItem>
+                              <SelectItem value="ai">IA</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {/* Adaptativo */}
+                      <div className="space-y-2">
+                        <Label className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                          <input
+                            type="checkbox"
+                            checked={formData.adaptive}
+                            onChange={(e) =>
+                              handleInputChange("adaptive", e.target.checked)
+                            }
+                            disabled={loading}
+                            className="rounded border-gray-300"
+                          />
+                          Examen Adaptativo
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Los exámenes adaptativos ajustan la dificultad según el
+                          rendimiento del estudiante.
+                        </p>
+                      </div>
+
+                      <Separator />
+
+                      {/* Información del examen (read-only) */}
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-medium text-muted-foreground">
+                          Información del Examen
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                              Preguntas
+                            </p>
+                            <p className="text-sm font-medium">
+                              {questions.length}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                              Versión
+                            </p>
+                            <p className="text-sm font-medium">
+                              {exam.version || 1}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="questions" className="flex-1 flex flex-col">
+            <ScrollArea ref={scrollAreaRef} className="h-[80vh] pr-4 pb-32">
+              <div className="space-y-6">
+                {/* Questions Section */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <FileText className="w-5 h-5" />
+                        Preguntas del Examen ({questions.length})
+                      </h3>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {questions.length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                          <p>No hay preguntas en este examen</p>
+                          <p className="text-sm">
+                            Haz clic en "Agregar Pregunta" para comenzar
+                          </p>
+                        </div>
+                      ) : (
+                        questions.map((question, index) => {
+                          const questionText = getQuestionText(question);
+                          const questionType = getQuestionType(question);
+                          const questionOptions = getQuestionOptions(question);
+                          const correctAnswers =
+                            getQuestionCorrectAnswers(question);
+                          const questionTags = getQuestionTags(question);
+                          const explanation = getQuestionExplanation(question);
+
+                          return (
+                            <div
+                              key={index}
+                              ref={(el) => {
+                                questionRefs.current[index] = el;
+                              }}
+                              className="border rounded-lg p-6 bg-muted/20"
+                            >
+                              {/* Question Header */}
+                              <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline" className="text-xs">
+                                    #{index + 1}
+                                  </Badge>
+                                  <Select
+                                    value={questionType}
+                                    onValueChange={(value) =>
+                                      handleQuestionTypeChange(
+                                        index,
+                                        value as
+                                          | "single_choice"
+                                          | "multiple_choice"
+                                          | "fill_blank"
+                                          | "translate"
+                                          | "true_false"
+                                          | "writing"
+                                      )
                                     }
-                                  </span>
-                                  <span className="ml-auto">
-                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                  </span>
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {questionTypes.map((type) => (
-                                    <SelectItem
-                                      key={type.value}
-                                      value={type.value}
-                                      className={`rounded-md hover:bg-muted/40 transition-all cursor-pointer`}
-                                    >
-                                      <div className="flex flex-row items-center gap-2">
-                                        <span>
-                                          {getQuestionTypeIcon(type.value)}
-                                        </span>
-                                        <span className="text-xs ">{type.label}</span>
-                                      </div>
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <div className="flex items-center gap-1 ml-2">
-                                <span className="text-xs text-muted-foreground">Peso:</span>
-                                <Input
-                                  type="number"
-                                  min="1"
-                                  max="10"
-                                  value={question.weight || 1}
-                                  onChange={(e) =>
-                                    handleQuestionChange(
-                                      index,
-                                      "weight",
-                                      parseInt(e.target.value) || 1
-                                    )
-                                  }
-                                  disabled={loading}
-                                  className="w-12 h-7 text-xs px-1 py-0"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeQuestion(index)}
-                                disabled={loading}
-                                className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
-
-                          {/* Question Text */}
-                          <div className="mb-4">
-                            <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                              Texto de la Pregunta *
-                            </Label>
-                            <Textarea
-                              value={questionText}
-                              onChange={(e) =>
-                                handleQuestionTextChange(index, e.target.value)
-                              }
-                              placeholder="Ingresa el texto de la pregunta"
-                              disabled={loading}
-                              className="text-sm"
-                              rows={3}
-                            />
-                          </div>
-
-                          {/* Dynamic Content Based on Question Type */}
-                          {needsOptions(question.type || "single_choice") ? (
-                            /* Options for choice questions */
-                            <div className="mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <h4 className="text-sm font-medium text-muted-foreground">
-                                  Opciones:
-                                </h4>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => addOption(index)}
-                                  disabled={loading}
-                                  className="flex items-center gap-1 text-xs"
-                                >
-                                  <Plus className="w-3 h-3" />
-                                  Agregar
-                                </Button>
-                              </div>
-                              <div className="space-y-2">
-                                {questionOptions.length === 0 ? (
-                                  <p className="text-xs text-muted-foreground">
-                                    No hay opciones definidas
-                                  </p>
-                                ) : (
-                                  questionOptions.map((option, optionIndex) => {
-                                    const isCorrect = correctAnswers.includes(
-                                      option.value
-                                    );
-                                    const questionType =
-                                      question.type || "single_choice";
-
-                                    return (
-                                      <div
-                                        key={optionIndex}
-                                        className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
-                                          isCorrect
-                                            ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
-                                            : "bg-muted/30 border-border hover:bg-muted/50"
-                                        }`}
-                                      >
-                                        <div className="flex items-center gap-2">
-                                          <Checkbox
-                                            checked={isCorrect}
-                                            onCheckedChange={(checked) =>
-                                              handleCorrectAnswerChange(
-                                                index,
-                                                option.value,
-                                                checked as boolean
-                                              )
-                                            }
-                                            disabled={loading}
-                                            className={`${
-                                              isCorrect
-                                                ? "border-emerald-500 bg-emerald-500 text-white"
-                                                : "border-gray-300"
-                                            }`}
-                                          />
-                                          <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
-                                            {String.fromCharCode(
-                                              65 + optionIndex
-                                            )}
-                                            .
-                                          </span>
-                                        </div>
-                                        <Input
-                                          value={option.label || option.value}
-                                          onChange={(e) =>
-                                            handleOptionChange(
-                                              index,
-                                              optionIndex,
-                                              "label",
-                                              e.target.value
-                                            )
-                                          }
-                                          placeholder={`Opción ${
-                                            optionIndex + 1
-                                          }`}
-                                          disabled={loading}
-                                          className={`text-sm flex-1 ${
-                                            isCorrect
-                                              ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800"
-                                              : ""
-                                          }`}
-                                        />
-                                        <Button
-                                          type="button"
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() =>
-                                            removeOption(index, optionIndex)
-                                          }
-                                          disabled={loading}
-                                          className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                                    disabled={loading}
+                                  >
+                                    <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
+                                      {getQuestionTypeIcon(questionType)}
+                                      <span className="text-xs">
+                                        {
+                                          questionTypes.find(
+                                            (t) =>
+                                              t.value === questionType
+                                          )?.label
+                                        }
+                                      </span>
+                                      <span className="ml-auto">
+                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                      </span>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {questionTypes.map((type) => (
+                                        <SelectItem
+                                          key={type.value}
+                                          value={type.value}
+                                          className={`rounded-md hover:bg-muted/40 transition-all cursor-pointer`}
                                         >
-                                          <X className="w-4 h-4" />
-                                        </Button>
-                                      </div>
-                                    );
-                                  })
-                                )}
+                                          <div className="flex flex-row items-center gap-2">
+                                            <span>
+                                              {getQuestionTypeIcon(type.value)}
+                                            </span>
+                                            <span className="text-xs ">{type.label}</span>
+                                          </div>
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <div className="flex items-center gap-1 ml-2">
+                                    <span className="text-xs text-muted-foreground">Peso:</span>
+                                    <Input
+                                      type="number"
+                                      min="1"
+                                      max="10"
+                                      value={question.weight || 1}
+                                      onChange={(e) =>
+                                        handleQuestionChange(
+                                          index,
+                                          "weight",
+                                          parseInt(e.target.value) || 1
+                                        )
+                                      }
+                                      disabled={loading}
+                                      className="w-12 h-7 text-xs px-1 py-0"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeQuestion(index)}
+                                    disabled={loading}
+                                    className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
                               </div>
-                            </div>
-                          ) : needsTextInput(
-                              question.type || "single_choice"
-                            ) ? (
-                            /* Text input for writing/translation/fill_blank questions */
-                            <div className="mb-4">
-                              <div className="space-y-2">
-                                <Label className="text-sm font-medium text-muted-foreground">
-                                  Respuesta Correcta:
+
+                              {/* Question Text */}
+                              <div className="mb-4">
+                                <Label className="text-sm font-medium text-muted-foreground mb-2 block">
+                                  Texto de la Pregunta *
                                 </Label>
                                 <Textarea
-                                  value={correctAnswers[0] || ""}
+                                  value={questionText}
                                   onChange={(e) =>
-                                    handleTextAnswerChange(
-                                      index,
-                                      e.target.value
-                                    )
+                                    handleQuestionTextChange(index, e.target.value)
                                   }
-                                  placeholder={
-                                    question.type === "fill_blank"
-                                      ? "Escribe la palabra o frase que completa el espacio en blanco"
-                                      : question.type === "translate"
-                                      ? "Escribe la traducción correcta"
-                                      : "Escribe la respuesta esperada"
-                                  }
+                                  placeholder="Ingresa el texto de la pregunta"
                                   disabled={loading}
                                   className="text-sm"
                                   rows={3}
                                 />
                               </div>
-                            </div>
-                          ) : null}
 
-                          {/* Explanation */}
-                          {explanation && (
-                            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
-                              <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-                                Explicación:
-                              </h4>
-                              <p className="text-sm text-blue-600 dark:text-blue-400">
-                                {explanation}
-                              </p>
-                            </div>
-                          )}
+                              {/* Dynamic Content Based on Question Type */}
+                              {needsOptions(questionType) ? (
+                                /* Options for choice questions */
+                                <div className="mb-4">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                      Opciones:
+                                    </h4>
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => addOption(index)}
+                                      disabled={loading}
+                                      className="flex items-center gap-1 text-xs"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                      Agregar
+                                    </Button>
+                                  </div>
+                                  <div className="space-y-2">
+                                    {questionOptions.length === 0 ? (
+                                      <p className="text-xs text-muted-foreground">
+                                        No hay opciones definidas
+                                      </p>
+                                    ) : (
+                                      questionOptions.map((option, optionIndex) => {
+                                        const isCorrect = correctAnswers.includes(
+                                          option.value
+                                        );
 
-                          {/* Tags */}
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                                <Tag className="w-4 h-4" />
-                                Etiquetas:
-                              </h4>
-                            </div>
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {questionTags.map((tag, tagIndex) => (
-                                <Badge
-                                  key={tagIndex}
-                                  variant="outline"
-                                  className="text-xs flex items-center gap-1"
-                                >
-                                  {tag}
+                                        return (
+                                          <div
+                                            key={optionIndex}
+                                            className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+                                              isCorrect
+                                                ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
+                                                : "bg-muted/30 border-border hover:bg-muted/50"
+                                            }`}
+                                          >
+                                            <div className="flex items-center gap-2">
+                                              <Checkbox
+                                                checked={isCorrect}
+                                                onCheckedChange={(checked) =>
+                                                  handleCorrectAnswerChange(
+                                                    index,
+                                                    option.value,
+                                                    checked as boolean
+                                                  )
+                                                }
+                                                disabled={loading}
+                                                className={`${
+                                                  isCorrect
+                                                    ? "border-emerald-500 bg-emerald-500 text-white"
+                                                    : "border-gray-300"
+                                                }`}
+                                              />
+                                              <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
+                                                {String.fromCharCode(
+                                                  65 + optionIndex
+                                                )}
+                                                .
+                                              </span>
+                                            </div>
+                                            <Input
+                                              value={option.label || option.value}
+                                              onChange={(e) =>
+                                                handleOptionChange(
+                                                  index,
+                                                  optionIndex,
+                                                  "label",
+                                                  e.target.value
+                                                )
+                                              }
+                                              placeholder={`Opción ${
+                                                optionIndex + 1
+                                              }`}
+                                              disabled={loading}
+                                              className={`text-sm flex-1 ${
+                                                isCorrect
+                                                  ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800"
+                                                  : ""
+                                              }`}
+                                            />
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() =>
+                                                removeOption(index, optionIndex)
+                                              }
+                                              disabled={loading}
+                                              className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                                            >
+                                              <X className="w-4 h-4" />
+                                            </Button>
+                                          </div>
+                                        );
+                                      })
+                                    )}
+                                  </div>
+                                </div>
+                              ) : needsTextInput(questionType) ? (
+                                /* Text input for writing/translation/fill_blank questions */
+                                <div className="mb-4">
+                                  <div className="space-y-2">
+                                    <Label className="text-sm font-medium text-muted-foreground">
+                                      Respuesta Correcta:
+                                    </Label>
+                                    <Textarea
+                                      value={correctAnswers[0] || ""}
+                                      onChange={(e) =>
+                                        handleTextAnswerChange(
+                                          index,
+                                          e.target.value
+                                        )
+                                      }
+                                      placeholder={
+                                        questionType === "fill_blank"
+                                          ? "Escribe la palabra o frase que completa el espacio en blanco"
+                                          : questionType === "translate"
+                                          ? "Escribe la traducción correcta"
+                                          : "Escribe la respuesta esperada"
+                                      }
+                                      disabled={loading}
+                                      className="text-sm"
+                                      rows={3}
+                                    />
+                                  </div>
+                                </div>
+                              ) : null}
+
+                              {/* Explanation */}
+                              {explanation && (
+                                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
+                                  <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                                    Explicación:
+                                  </h4>
+                                  <p className="text-sm text-blue-600 dark:text-blue-400">
+                                    {explanation}
+                                  </p>
+                                </div>
+                              )}
+
+                              {/* Tags */}
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                                    <Tag className="w-4 h-4" />
+                                    Etiquetas:
+                                  </h4>
+                                </div>
+                                <div className="flex flex-wrap gap-1 mb-2">
+                                  {questionTags.map((tag, tagIndex) => (
+                                    <Badge
+                                      key={tagIndex}
+                                      variant="outline"
+                                      className="text-xs flex items-center gap-1"
+                                    >
+                                      {tag}
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => removeTag(index, tagIndex)}
+                                        disabled={loading}
+                                        className="h-3 w-3 p-0 text-red-500 hover:text-red-700"
+                                      >
+                                        <X className="w-2 h-2" />
+                                      </Button>
+                                    </Badge>
+                                  ))}
+                                </div>
+                                <div className="flex gap-2">
+                                  <Input
+                                    value={newTag}
+                                    onChange={(e) => setNewTag(e.target.value)}
+                                    placeholder="Nueva etiqueta"
+                                    disabled={loading}
+                                    className="text-sm flex-1"
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        addTag(index);
+                                      }
+                                    }}
+                                  />
                                   <Button
                                     type="button"
-                                    variant="ghost"
+                                    variant="outline"
                                     size="sm"
-                                    onClick={() => removeTag(index, tagIndex)}
-                                    disabled={loading}
-                                    className="h-3 w-3 p-0 text-red-500 hover:text-red-700"
+                                    onClick={() => addTag(index)}
+                                    disabled={loading || !newTag.trim()}
+                                    className="text-xs"
                                   >
-                                    <X className="w-2 h-2" />
+                                    Agregar
                                   </Button>
-                                </Badge>
-                              ))}
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex gap-2">
-                              <Input
-                                value={newTag}
-                                onChange={(e) => setNewTag(e.target.value)}
-                                placeholder="Nueva etiqueta"
-                                disabled={loading}
-                                className="text-sm flex-1"
-                                onKeyPress={(e) => {
-                                  if (e.key === "Enter") {
-                                    e.preventDefault();
-                                    addTag(index);
-                                  }
-                                }}
-                              />
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => addTag(index)}
-                                disabled={loading || !newTag.trim()}
-                                className="text-xs"
-                              >
-                                Agregar
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </ScrollArea>
+                          );
+                        })
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          </TabsContent>
 
-        <div className="sticky bottom-0 z-10 bg-background pt-4 border-t flex justify-between items-center gap-2">
+          <TabsContent value="order" className="flex-1 flex flex-col">
+            <ScrollArea className="h-[80vh] pr-4 pb-32">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <ListOrdered className="w-5 h-5" />
+                      Ordenar Preguntas ({questions.length})
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Arrastra y suelta las preguntas para cambiar su orden
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    {questions.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <ListOrdered className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>No hay preguntas para ordenar</p>
+                        <p className="text-sm">
+                          Ve a la pestaña "Preguntas" para agregar preguntas
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        {questions.map((question, index) => {
+                          const questionText = getQuestionText(question);
+                          const questionType = getQuestionType(question);
+                          
+                          return (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 p-2 border rounded-md bg-muted/20 hover:bg-muted/30 transition-colors cursor-move"
+                            >
+                              {/* Drag Handle */}
+                              <div className="flex flex-col items-center justify-center w-6 h-6 text-muted-foreground">
+                                <div className="w-3 h-3 flex flex-col gap-0.5">
+                                  <div className="w-full h-0.5 bg-current rounded"></div>
+                                  <div className="w-full h-0.5 bg-current rounded"></div>
+                                  <div className="w-full h-0.5 bg-current rounded"></div>
+                                </div>
+                              </div>
+
+                              {/* Question Number */}
+                              <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-medium">
+                                {index + 1}
+                              </div>
+
+                              {/* Question Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                  <Badge variant="outline" className="text-xs px-1 py-0 h-4">
+                                    {getQuestionTypeLabel(questionType)}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground">
+                                    Peso: {question.weight || 1}
+                                  </span>
+                                </div>
+                                <p className="text-sm font-medium line-clamp-1">
+                                  {questionText || "Pregunta sin texto"}
+                                </p>
+                              </div>
+
+                              {/* Move Buttons */}
+                              <div className="flex flex-col gap-0.5">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => moveQuestion(index, 'up')}
+                                  disabled={index === 0 || loading}
+                                  className="h-5 w-5 p-0"
+                                >
+                                  <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
+                                    <path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => moveQuestion(index, 'down')}
+                                  disabled={index === questions.length - 1 || loading}
+                                  className="h-5 w-5 p-0"
+                                >
+                                  <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
+                                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+
+        <div className="sticky bottom-[-24px] z-10 bg-background py-4 border-t flex justify-between items-center gap-2">
           <div>
             <Button
               type="button"
