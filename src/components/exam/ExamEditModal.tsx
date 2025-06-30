@@ -544,6 +544,12 @@ export function ExamEditModal({
 
   useEffect(() => {
     if (exam) {
+      console.log("Exam data received:", {
+        title: exam.title,
+        language: exam.language,
+        level: exam.level,
+        source: exam.source
+      });
       setFormData({
         title: exam.title || "",
         description: exam.description || "",
@@ -924,17 +930,33 @@ export function ExamEditModal({
         weight: q.weight || 1,
         order: q.order ?? idx,
       }));
-      const updateData = {
+      // Solo incluir campos que no estén vacíos
+      const updateData: any = {
         title: formData.title.trim(),
         description: formData.description.trim(),
-        level: formData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
-        language: formData.language,
-        topic: formData.topic,
-        source: formData.source || "ai", // Default a "ai" si está vacío
         adaptive: formData.adaptive,
         version: exam.version || 1, // Mantener la versión actual
         questions: questionsForExam,
       };
+
+      // Solo agregar campos si tienen valor
+      if (formData.level) {
+        updateData.level = formData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+      }
+      if (formData.language) {
+        updateData.language = formData.language;
+      }
+      if (formData.topic) {
+        updateData.topic = formData.topic;
+      }
+      if (formData.source) {
+        updateData.source = formData.source;
+      }
+      if (formData.timeLimit !== undefined) {
+        updateData.timeLimit = formData.timeLimit;
+      }
+      
+      console.log("Sending update data:", updateData);
 
       const response = await examService.updateExam(exam._id, updateData);
 
@@ -950,7 +972,7 @@ export function ExamEditModal({
           const originalQuestion = originalQuestions[i];
           const questionId = typeof originalQuestion.question === 'string'
             ? originalQuestion.question
-            : originalQuestion.question?._id;
+            : (originalQuestion.question as any)?._id;
           if (questionId && typeof questionId === 'string') {
             const questionText = getQuestionText(question);
             const questionType = getQuestionType(question);
@@ -1176,14 +1198,12 @@ export function ExamEditModal({
                               <SelectValue placeholder="Selecciona el idioma" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="english">Inglés</SelectItem>
-                              <SelectItem value="spanish">Español</SelectItem>
-                              <SelectItem value="french">Francés</SelectItem>
-                              <SelectItem value="german">Alemán</SelectItem>
-                              <SelectItem value="italian">Italiano</SelectItem>
-                              <SelectItem value="portuguese">
-                                Portugués
-                              </SelectItem>
+                              <SelectItem value="en">English</SelectItem>
+                              <SelectItem value="es">Español</SelectItem>
+                              <SelectItem value="fr">Français</SelectItem>
+                              <SelectItem value="de">Deutsch</SelectItem>
+                              <SelectItem value="it">Italiano</SelectItem>
+                              <SelectItem value="pt">Português</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>

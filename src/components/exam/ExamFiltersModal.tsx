@@ -109,12 +109,12 @@ export default function ExamFiltersModal({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos los idiomas</SelectItem>
-                      <SelectItem value="english">Inglés</SelectItem>
-                      <SelectItem value="spanish">Español</SelectItem>
-                      <SelectItem value="french">Francés</SelectItem>
-                      <SelectItem value="german">Alemán</SelectItem>
-                      <SelectItem value="italian">Italiano</SelectItem>
-                      <SelectItem value="portuguese">Portugués</SelectItem>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                      <SelectItem value="it">Italiano</SelectItem>
+                      <SelectItem value="pt">Português</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
