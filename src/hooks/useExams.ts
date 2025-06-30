@@ -216,41 +216,15 @@ export function useExams(): UseExamsReturn {
     if (!examToDelete) return;
 
     try {
-      setLoading(true);
-      
-      // Call the delete API
-      const response = await examService.deleteExam(examToDelete._id);
-      
-      if (response && response.success) {
-        toast.success("Examen eliminado exitosamente", {
-          description: `"${examToDelete.title}" ha sido eliminado`,
-        });
-        
-        // Remove the exam from the local state
-        setExams(prevExams => prevExams.filter(exam => exam._id !== examToDelete._id));
-        
-        // Update pagination
-        setPagination(prev => ({
-          ...prev,
-          totalItems: prev.totalItems - 1,
-        }));
-        
-        // Close the dialog and reset state
-        setIsDeleteDialogOpen(false);
-        setExamToDelete(null);
-        
-        // Refresh the exams list to ensure consistency
-        await fetchExams();
-      } else {
-        throw new Error(response?.message || "Error al eliminar el examen");
-      }
+      toast.info("Función de eliminar examen en desarrollo", {
+        description: "Esta funcionalidad estará disponible próximamente",
+      });
+      setIsDeleteDialogOpen(false);
+      setExamToDelete(null);
     } catch (error: any) {
-      console.error('Error deleting exam:', error);
       toast.error("Error al eliminar examen", {
         description: error.message || "No se pudo eliminar el examen",
       });
-    } finally {
-      setLoading(false);
     }
   };
 

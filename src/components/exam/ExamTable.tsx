@@ -2,6 +2,7 @@ import React from 'react';
 import { Exam } from '@/services/examService';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -20,7 +21,9 @@ import {
   Calendar,
   User,
   Brain,
-  Settings
+  Settings,
+  Hash,
+  FileText
 } from 'lucide-react';
 import { 
   getLevelColor, 
@@ -57,13 +60,9 @@ export function ExamTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Título</TableHead>
-            <TableHead>Nivel</TableHead>
-            <TableHead>Idioma</TableHead>
-            <TableHead>Tema</TableHead>
+            <TableHead className="w-[400px]">Detalle</TableHead>
             <TableHead>Origen</TableHead>
             <TableHead>Preguntas</TableHead>
-            <TableHead>Fecha</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,28 +70,13 @@ export function ExamTable({
           {Array.from({ length: 7 }).map((_, i) => (
             <TableRow key={i}>
               <TableCell>
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-3 w-32" />
-                </div>
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-6 w-12 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-6 w-16 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-24 w-full rounded-lg" />
               </TableCell>
               <TableCell>
                 <Skeleton className="h-6 w-16 rounded" />
               </TableCell>
               <TableCell>
                 <Skeleton className="h-4 w-8" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-20" />
               </TableCell>
               <TableCell>
                 <div className="flex items-center justify-end gap-2">
@@ -113,13 +97,9 @@ export function ExamTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Título</TableHead>
-          <TableHead>Nivel</TableHead>
-          <TableHead>Idioma</TableHead>
-          <TableHead>Tema</TableHead>
+          <TableHead className="w-[400px]">Detalle</TableHead>
           <TableHead>Origen</TableHead>
           <TableHead>Preguntas</TableHead>
-          <TableHead>Fecha</TableHead>
           <TableHead className="text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
@@ -127,37 +107,67 @@ export function ExamTable({
         {exams.length > 0 ? (
           exams.map((exam) => (
             <TableRow key={exam._id} className="hover:bg-muted/50">
-              <TableCell>
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">
-                    {exam.title}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {truncateText(exam.description || 'Sin descripción')}
-                  </p>
-                  {exam.adaptive && (
-                    <Badge variant="outline" className="text-xs">
-                      <Settings className="w-3 h-3 mr-1" />
-                      Adaptativo
-                    </Badge>
-                  )}
-                </div>
+              {/* Detalle Card */}
+              <TableCell className="py-4">
+                <Card className="border-0 shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      {/* Título */}
+                      <div>
+                        <h3 className="font-semibold text-sm text-foreground leading-tight">
+                          {exam.title}
+                        </h3>
+                        {exam.description && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {truncateText(exam.description, 80)}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Tema */}
+                      <div className="flex items-center gap-2">
+                        <Hash className="w-3 h-3 text-muted-foreground" />
+                        {exam.topic ? (
+                          <Badge variant="secondary" className="text-xs">
+                            {exam.topic}
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">
+                            Sin tema
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Fecha */}
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          {formatDateShort(exam.createdAt)}
+                        </span>
+                      </div>
+
+                      {/* Idioma & Nivel */}
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-3 h-3 text-muted-foreground" />
+                        <Badge variant="outline" className="text-xs">
+                          {exam.language.toUpperCase()}
+                        </Badge>
+                        <Badge variant={getLevelColor(exam.level)} className="text-xs">
+                          {exam.level}
+                        </Badge>
+                        {exam.adaptive && (
+                          <Badge variant="outline" className="text-xs">
+                            <Settings className="w-3 h-3 mr-1" />
+                            Adaptativo
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TableCell>
-              <TableCell>
-                <Badge variant={getLevelColor(exam.level)} className="text-xs">
-                  {exam.level}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className="text-xs">
-                  {exam.language}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <span className="text-sm text-muted-foreground">
-                  {exam.topic || "Sin tema"}
-                </span>
-              </TableCell>
+
+              {/* Origen */}
               <TableCell>
                 <Badge variant={getSourceVariant(exam.source)} className="text-xs">
                   <div className="flex items-center gap-1">
@@ -166,29 +176,25 @@ export function ExamTable({
                   </div>
                 </Badge>
               </TableCell>
+
+              {/* Preguntas */}
               <TableCell>
-                <div className="flex items-center gap-1">
-                  <BookOpen className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm font-bold">
                     {exam.questions?.length || 0}
                   </span>
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    {formatDateShort(exam.createdAt)}
-                  </span>
-                </div>
-              </TableCell>
+
+              {/* Acciones */}
               <TableCell>
                 <div className="flex items-center justify-end gap-1">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => onView(exam)}
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
                     title="Ver examen"
                   >
                     <Eye className="h-4 w-4" />
@@ -197,7 +203,7 @@ export function ExamTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onEdit(exam)}
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
                     title="Editar examen"
                   >
                     <Edit className="h-4 w-4" />
@@ -206,7 +212,7 @@ export function ExamTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemove(exam)}
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
                     title="Eliminar examen"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -215,7 +221,7 @@ export function ExamTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onTake(exam)}
-                    className="h-8 w-8 p-0 text-green-600 hover:text-green-700"
+                    className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
                     title="Contestar examen"
                   >
                     <Play className="h-4 w-4" />
@@ -227,11 +233,11 @@ export function ExamTable({
         ) : (
           <TableRow className="hover:bg-transparent cursor-default">
             <TableCell
-              colSpan={8}
-              className="text-center h-24 text-muted-foreground"
+              colSpan={4}
+              className="text-center h-32 text-muted-foreground"
             >
               <div className="space-y-4">
-                <BookOpen className="w-12 h-12 mx-auto text-muted-foreground" />
+                <BookOpen className="w-16 h-16 mx-auto text-muted-foreground/50" />
                 <div>
                   <p className="text-lg font-medium">No se encontraron exámenes</p>
                   {searchQuery && (
@@ -239,6 +245,9 @@ export function ExamTable({
                       No hay exámenes que coincidan con "{searchQuery}"
                     </p>
                   )}
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Intenta ajustar los filtros o crear un nuevo examen
+                  </p>
                 </div>
               </div>
             </TableCell>

@@ -26,11 +26,11 @@ import {
 } from "lucide-react";
 import { Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
-import { 
-  getLevelLabel, 
-  getLanguageLabel, 
-  getLevelColor, 
-  getSourceVariant, 
+import {
+  getLevelLabel,
+  getLanguageLabel,
+  getLevelColor,
+  getSourceVariant,
   formatDate,
   getQuestionText,
   getQuestionType,
@@ -38,7 +38,7 @@ import {
   getQuestionOptions,
   getQuestionCorrectAnswers,
   getQuestionTags,
-  getQuestionExplanation
+  getQuestionExplanation,
 } from "./helpers/examUtils";
 
 interface ExamViewModalProps {
@@ -57,7 +57,11 @@ export default function ExamViewModal({
   if (!exam) return null;
 
   const getSourceIcon = (source?: string) => {
-    return source === 'ai' ? <Brain className="w-4 h-4" /> : <PenTool className="w-4 h-4" />;
+    return source === "ai" ? (
+      <Brain className="w-4 h-4" />
+    ) : (
+      <PenTool className="w-4 h-4" />
+    );
   };
 
   return (
@@ -109,39 +113,57 @@ export default function ExamViewModal({
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Idioma</p>
-                    <p className="text-sm font-medium">{getLanguageLabel(exam.language)}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Idioma
+                    </p>
+                    <p className="text-sm font-medium">
+                      {getLanguageLabel(exam.language)}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Nivel</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Nivel
+                    </p>
                     <Badge variant={getLevelColor(exam.level)}>
                       {getLevelLabel(exam.level)}
                     </Badge>
                   </div>
                   {exam.topic && (
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Tema</p>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Tema
+                      </p>
                       <p className="text-sm font-medium">{exam.topic}</p>
                     </div>
                   )}
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Tipo</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Tipo
+                    </p>
                     <div className="flex items-center gap-2">
                       {getSourceIcon(exam.source)}
                       <span className="text-sm font-medium">
-                        {exam.source === "ai" ? "Generado por IA" : "Creado manualmente"}
+                        {exam.source === "ai"
+                          ? "Generado por IA"
+                          : "Creado manualmente"}
                       </span>
                     </div>
                   </div>
                   {exam.attemptsAllowed && (
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Intentos permitidos</p>
-                      <p className="text-sm font-medium">{exam.attemptsAllowed}</p>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Intentos permitidos
+                      </p>
+                      <p className="text-sm font-medium">
+                        {exam.attemptsAllowed}
+                      </p>
                     </div>
                   )}
                   {exam.adaptive !== undefined && (
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Tipo de examen</p>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Tipo de examen
+                      </p>
                       <p className="text-sm font-medium">
                         {exam.adaptive ? "Adaptativo" : "No adaptativo"}
                       </p>
@@ -160,7 +182,9 @@ export default function ExamViewModal({
                           <p className="text-sm font-medium text-muted-foreground">
                             Dificultad
                           </p>
-                          <p className="text-sm font-medium">{exam.metadata.difficultyScore}/100</p>
+                          <p className="text-sm font-medium">
+                            {exam.metadata.difficultyScore}/100
+                          </p>
                         </div>
                       )}
                       {exam.metadata.estimatedDuration && (
@@ -168,7 +192,9 @@ export default function ExamViewModal({
                           <p className="text-sm font-medium text-muted-foreground">
                             Duración estimada
                           </p>
-                          <p className="text-sm font-medium">{exam.metadata.estimatedDuration} min</p>
+                          <p className="text-sm font-medium">
+                            {exam.metadata.estimatedDuration} min
+                          </p>
                         </div>
                       )}
                     </div>
@@ -192,12 +218,16 @@ export default function ExamViewModal({
                       const questionText = getQuestionText(question);
                       const questionType = getQuestionType(question);
                       const questionOptions = getQuestionOptions(question);
-                      const correctAnswers = getQuestionCorrectAnswers(question);
+                      const correctAnswers =
+                        getQuestionCorrectAnswers(question);
                       const questionTags = getQuestionTags(question);
                       const explanation = getQuestionExplanation(question);
 
                       return (
-                        <div key={index} className="border rounded-lg p-6 bg-muted/20">
+                        <div
+                          key={index}
+                          className="border rounded-lg p-6 bg-muted/20"
+                        >
                           {/* Question Header */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-2">
@@ -240,9 +270,9 @@ export default function ExamViewModal({
                                   <div
                                     key={optionIndex}
                                     className={`flex items-center gap-2 p-2 rounded border ${
-                                      option.isCorrect 
-                                        ? 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800' 
-                                        : 'bg-muted/30 border-border'
+                                      option.isCorrect
+                                        ? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+                                        : "bg-muted/30 border-border"
                                     }`}
                                   >
                                     <span className="text-xs font-medium text-muted-foreground min-w-[20px]">
@@ -261,24 +291,25 @@ export default function ExamViewModal({
                           )}
 
                           {/* Correct Answers */}
-                          {correctAnswers.length > 0 && questionOptions.length === 0 && (
-                            <div className="mb-4">
-                              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                                Respuestas correctas:
-                              </h4>
-                              <div className="space-y-1">
-                                {correctAnswers.map((answer, answerIndex) => (
-                                  <div
-                                    key={answerIndex}
-                                    className="flex items-center gap-2 p-2 rounded bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800"
-                                  >
-                                    <CheckCircle className="w-4 h-4 text-green-600" />
-                                    <span className="text-sm">{answer}</span>
-                                  </div>
-                                ))}
+                          {correctAnswers.length > 0 &&
+                            questionOptions.length === 0 && (
+                              <div className="mb-4">
+                                <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                                  Respuestas correctas:
+                                </h4>
+                                <div className="space-y-1">
+                                  {correctAnswers.map((answer, answerIndex) => (
+                                    <div
+                                      key={answerIndex}
+                                      className="flex items-center gap-2 p-2 rounded bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800"
+                                    >
+                                      <CheckCircle className="w-4 h-4 text-green-600" />
+                                      <span className="text-sm">{answer}</span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
                           {/* Explanation */}
                           {explanation && (
@@ -298,7 +329,11 @@ export default function ExamViewModal({
                               <Tag className="w-4 h-4 text-muted-foreground" />
                               <div className="flex flex-wrap gap-1">
                                 {questionTags.map((tag, tagIndex) => (
-                                  <Badge key={tagIndex} variant="outline" className="text-xs">
+                                  <Badge
+                                    key={tagIndex}
+                                    variant="outline"
+                                    className="text-xs"
+                                  >
                                     {tag}
                                   </Badge>
                                 ))}
@@ -317,9 +352,7 @@ export default function ExamViewModal({
 
         <div className="flex justify-end gap-2 pt-4 border-t">
           {onEditExam && (
-            <Button onClick={() => onEditExam(exam)}>
-              Editar Examen
-            </Button>
+            <Button onClick={() => onEditExam(exam)}>Editar Examen</Button>
           )}
           <Button variant="outline" onClick={onClose}>
             Cerrar
@@ -328,4 +361,4 @@ export default function ExamViewModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}
