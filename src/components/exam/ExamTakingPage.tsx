@@ -315,25 +315,9 @@ export function ExamTakingPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-2xl font-bold">{exam.title}</h1>
-            <p className="text-muted-foreground">
-              Pregunta {currentQuestionIndex + 1} de {totalQuestions}
-            </p>
           </div>
           <div className="flex items-center gap-4">
-            {exam.timeLimit && (
-              <ExamTimer
-                timeRemaining={timeRemaining}
-                isRunning={isTimerRunning}
-                formatTime={formatTimeRemaining}
-              />
-            )}
-            <Button
-              variant="outline"
-              onClick={handleExitExam}
-              disabled={isFinishing}
-            >
-              Salir
-            </Button>
+            {/* Eliminar el temporizador de aquí */}
           </div>
         </div>
 
@@ -364,6 +348,11 @@ export function ExamTakingPage() {
           answeredQuestions={Object.keys(answers).map((_, index) => index + 1)}
           isFullScreen={isFullScreen}
           onToggleFullScreen={() => setIsFullScreen(!isFullScreen)}
+          onExit={handleExitExam}
+          examTimeLimit={exam.timeLimit}
+          timeRemaining={timeRemaining}
+          isTimerRunning={isTimerRunning}
+          formatTimeRemaining={formatTimeRemaining}
         />
       )}
 

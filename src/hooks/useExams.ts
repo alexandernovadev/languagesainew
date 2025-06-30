@@ -211,8 +211,8 @@ export function useExams(): UseExamsReturn {
   };
 
   const handleTakeExam = (exam: Exam) => {
-    // Navigate to exam taking page using React Router
-    navigate(`/exams/take/${exam._id}`);
+    // Navegación correcta: /exams/:examId/take
+    navigate(`/exams/${exam._id}/take`);
   };
 
   const handleEditExam = (exam: Exam) => {
