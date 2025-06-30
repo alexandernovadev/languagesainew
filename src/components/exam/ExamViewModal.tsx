@@ -74,7 +74,7 @@ export default function ExamViewModal({
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="h-[80vh] pr-4 bg-white">
+        <ScrollArea className="h-[80vh] pr-4">
           <div className="space-y-6">
             {/* Reutilizando ExamHeader */}
             <ExamHeader exam={exam} showStats={true} showEditButton={false} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -76,6 +76,377 @@ interface ExamEditModalProps {
   onExamUpdated: () => void;
 }
 
+interface QuestionItemProps {
+  question: any;
+  index: number;
+  loading: boolean;
+  questionRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  onQuestionChange: (index: number, field: string, value: any) => void;
+  onQuestionTextChange: (index: number, value: string) => void;
+  onOptionChange: (questionIndex: number, optionIndex: number, field: string, value: any) => void;
+  onCorrectAnswerChange: (questionIndex: number, optionValue: string, isChecked: boolean) => void;
+  onQuestionTypeChange: (questionIndex: number, type: any) => void;
+  onAddOption: (questionIndex: number) => void;
+  onRemoveOption: (questionIndex: number, optionIndex: number) => void;
+  onAddTag: (questionIndex: number, tag: string) => void;
+  onRemoveTag: (questionIndex: number, tagIndex: number) => void;
+  onRemoveQuestion: (index: number) => void;
+  getQuestionTypeIcon: (type: string) => React.ReactNode;
+  needsOptions: (type: string) => boolean;
+  needsTextInput: (type: string) => boolean;
+}
+
+const QuestionItem = React.memo(function QuestionItem({
+  question,
+  index,
+  loading,
+  questionRefs,
+  onQuestionChange,
+  onQuestionTextChange,
+  onOptionChange,
+  onCorrectAnswerChange,
+  onQuestionTypeChange,
+  onAddOption,
+  onRemoveOption,
+  onAddTag,
+  onRemoveTag,
+  onRemoveQuestion,
+  getQuestionTypeIcon,
+  needsOptions,
+  needsTextInput,
+}: QuestionItemProps) {
+  const [newTag, setNewTag] = useState("");
+  const questionText = getQuestionText(question);
+  const questionType = getQuestionType(question);
+  const questionOptions = getQuestionOptions(question);
+  const correctAnswers = getQuestionCorrectAnswers(question);
+  const questionTags = getQuestionTags(question);
+  const explanation = getQuestionExplanation(question);
+
+  const handleAddTag = () => {
+    if (newTag.trim()) {
+      onAddTag(index, newTag.trim());
+      setNewTag("");
+    }
+  };
+
+  return (
+    <div
+      ref={(el) => {
+        if (questionRefs.current) {
+          questionRefs.current[index] = el;
+        }
+      }}
+      className="border rounded-lg p-6 bg-muted/20"
+    >
+      {/* Question Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="text-xs">
+            #{index + 1}
+          </Badge>
+          <Select
+            value={questionType}
+            onValueChange={(value) =>
+              onQuestionTypeChange(
+                index,
+                value as any
+              )
+            }
+            disabled={loading}
+          >
+            <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
+              {getQuestionTypeIcon(questionType)}
+              <span className="text-xs">
+                {questionTypes.find((t) => t.value === questionType)?.label}
+              </span>
+              <span className="ml-auto">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
+            </SelectTrigger>
+            <SelectContent>
+              {questionTypes.map((type) => (
+                <SelectItem
+                  key={type.value}
+                  value={type.value}
+                  className={`rounded-md hover:bg-muted/40 transition-all cursor-pointer`}
+                >
+                  <div className="flex flex-row items-center gap-2">
+                    <span>{getQuestionTypeIcon(type.value)}</span>
+                    <span className="text-xs ">{type.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex items-center gap-1 ml-2">
+            <span className="text-xs text-muted-foreground">Peso:</span>
+            <Input
+              type="number"
+              min="1"
+              max="10"
+              value={question.weight || 1}
+              onChange={(e) =>
+                onQuestionChange(
+                  index,
+                  "weight",
+                  parseInt(e.target.value) || 1
+                )
+              }
+              disabled={loading}
+              className="w-12 h-7 text-xs px-1 py-0"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemoveQuestion(index)}
+            disabled={loading}
+            className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Question Text */}
+      <div className="mb-4">
+        <Label className="text-sm font-medium text-muted-foreground mb-2 block">
+          Texto de la Pregunta *
+        </Label>
+        <Textarea
+          value={questionText}
+          onChange={(e) => onQuestionTextChange(index, e.target.value)}
+          placeholder="Ingresa el texto de la pregunta"
+          disabled={loading}
+          className="text-sm"
+          rows={3}
+        />
+      </div>
+
+      {/* Dynamic Content Based on Question Type */}
+      {needsOptions(questionType) ? (
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-medium text-muted-foreground">Opciones:</h4>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onAddOption(index)}
+              disabled={loading}
+              className="flex items-center gap-1 text-xs"
+            >
+              <Plus className="w-3 h-3" />
+              Agregar
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {questionOptions.map((option, optionIndex) => (
+              <div
+                key={optionIndex}
+                className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+                  correctAnswers.includes(option.value)
+                    ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
+                    : "bg-muted/30 border-border hover:bg-muted/50"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={correctAnswers.includes(option.value)}
+                    onCheckedChange={(checked) =>
+                      onCorrectAnswerChange(index, option.value, checked as boolean)
+                    }
+                    disabled={loading}
+                  />
+                  <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
+                    {String.fromCharCode(65 + optionIndex)}.
+                  </span>
+                </div>
+                <Input
+                  value={option.label || option.value}
+                  onChange={(e) => onOptionChange(index, optionIndex, "label", e.target.value)}
+                  placeholder={`Opción ${optionIndex + 1}`}
+                  disabled={loading}
+                  className={`text-sm flex-1`}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onRemoveOption(index, optionIndex)}
+                  disabled={loading}
+                  className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : needsTextInput(questionType) ? (
+        <div className="mb-4">
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">Respuesta Correcta:</Label>
+            <Textarea
+              value={correctAnswers[0] || ""}
+              onChange={(e) => onCorrectAnswerChange(index, e.target.value, true)}
+              placeholder={
+                questionType === "fill_blank" ? "Escribe la palabra o frase..."
+                : questionType === "translate" ? "Escribe la traducción correcta"
+                : "Escribe la respuesta esperada"
+              }
+              disabled={loading}
+              className="text-sm"
+              rows={3}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {/* Explanation */}
+      {explanation && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
+          <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">Explicación:</h4>
+          <p className="text-sm text-blue-600 dark:text-blue-400">{explanation}</p>
+        </div>
+      )}
+
+      {/* Tags */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1"><Tag className="w-4 h-4" />Etiquetas:</h4>
+        <div className="flex flex-wrap gap-1 mb-2">
+          {questionTags.map((tag, tagIndex) => (
+            <Badge key={tagIndex} variant="outline" className="text-xs flex items-center gap-1">
+              {tag}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemoveTag(index, tagIndex)}
+                disabled={loading}
+                className="h-3 w-3 p-0 text-red-500 hover:text-red-700"
+              >
+                <X className="w-2 h-2" />
+              </Button>
+            </Badge>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <Input
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
+            placeholder="Nueva etiqueta"
+            disabled={loading}
+            className="text-sm flex-1"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddTag}
+            disabled={loading || !newTag.trim()}
+            className="text-xs"
+          >
+            Agregar
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+interface QuestionOrderItemProps {
+  question: any;
+  index: number;
+  loading: boolean;
+  questionCount: number;
+  onMoveQuestion: (index: number, direction: 'up' | 'down') => void;
+}
+
+const QuestionOrderItem = React.memo(function QuestionOrderItem({
+  question,
+  index,
+  loading,
+  questionCount,
+  onMoveQuestion,
+}: QuestionOrderItemProps) {
+  const questionText = getQuestionText(question);
+  const questionType = getQuestionType(question);
+
+  return (
+    <div
+      className="flex items-center gap-2 p-2 border rounded-md bg-muted/20 hover:bg-muted/30 transition-colors cursor-move"
+    >
+      {/* Drag Handle */}
+      <div className="flex flex-col items-center justify-center w-6 h-6 text-muted-foreground">
+        <div className="w-3 h-3 flex flex-col gap-0.5">
+          <div className="w-full h-0.5 bg-current rounded"></div>
+          <div className="w-full h-0.5 bg-current rounded"></div>
+          <div className="w-full h-0.5 bg-current rounded"></div>
+        </div>
+      </div>
+
+      {/* Question Number */}
+      <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-medium">
+        {index + 1}
+      </div>
+
+      {/* Question Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <Badge variant="outline" className="text-xs px-1 py-0 h-4">
+            {getQuestionTypeLabel(questionType)}
+          </Badge>
+          <span className="text-xs text-muted-foreground">
+            Peso: {question.weight || 1}
+          </span>
+        </div>
+        <p className="text-sm font-medium line-clamp-1">
+          {questionText || "Pregunta sin texto"}
+        </p>
+      </div>
+
+      {/* Move Buttons */}
+      <div className="flex flex-col gap-0.5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => onMoveQuestion(index, 'up')}
+          disabled={index === 0 || loading}
+          className="h-5 w-5 p-0"
+        >
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
+            <path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => onMoveQuestion(index, 'down')}
+          disabled={index === questionCount - 1 || loading}
+          className="h-5 w-5 p-0"
+        >
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </Button>
+      </div>
+    </div>
+  );
+});
+
 export function ExamEditModal({
   isOpen,
   onClose,
@@ -120,231 +491,170 @@ export function ExamEditModal({
     }
   }, [exam]);
 
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  // Memoized Handlers for Performance
+  const handleInputChange = useCallback((field: string, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
 
-  const handleQuestionChange = (index: number, field: string, value: any) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      [field]: value,
-    };
-    setQuestions(updatedQuestions);
-  };
+  const handleQuestionChange = useCallback((index: number, field: string, value: any) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
+    );
+  }, []);
 
-  const handleQuestionTextChange = (index: number, value: string) => {
-    const updatedQuestions = [...questions];
-    if (typeof updatedQuestions[index] === "string") {
-      updatedQuestions[index] = value;
-    } else if (
-      updatedQuestions[index] &&
-      typeof updatedQuestions[index] === "object"
-    ) {
-      updatedQuestions[index] = {
-        ...updatedQuestions[index],
-        question: value,
-      };
-    }
-    setQuestions(updatedQuestions);
-  };
+  const handleQuestionTextChange = useCallback((index: number, value: string) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== index) return q;
+        if (typeof q === "string") return value;
+        return { ...q, question: value };
+      })
+    );
+  }, []);
 
-  const handleOptionChange = (
-    questionIndex: number,
-    optionIndex: number,
-    field: string,
-    value: any
-  ) => {
-    const updatedQuestions = [...questions];
-    if (!updatedQuestions[questionIndex].options) {
-      updatedQuestions[questionIndex].options = [];
-    }
-    updatedQuestions[questionIndex].options[optionIndex] = {
-      ...updatedQuestions[questionIndex].options[optionIndex],
-      [field]: value,
-    };
-    setQuestions(updatedQuestions);
-  };
+  const handleOptionChange = useCallback((questionIndex: number, optionIndex: number, field: string, value: any) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const newOptions = [...(q.options || [])];
+        newOptions[optionIndex] = { ...newOptions[optionIndex], [field]: value };
+        return { ...q, options: newOptions };
+      })
+    );
+  }, []);
 
-  const addOption = (questionIndex: number) => {
-    const updatedQuestions = [...questions];
-    if (!updatedQuestions[questionIndex].options) {
-      updatedQuestions[questionIndex].options = [];
-    }
-    const newOption = {
-      value: `option_${updatedQuestions[questionIndex].options.length + 1}`,
-      label: "",
-      isCorrect: false,
-    };
-    updatedQuestions[questionIndex].options.push(newOption);
-    setQuestions(updatedQuestions);
-  };
+  const addOption = useCallback((questionIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const options = q.options || [];
+        const newOption = {
+          value: `option_${options.length + 1}`,
+          label: "",
+          isCorrect: false,
+        };
+        return { ...q, options: [...options, newOption] };
+      })
+    );
+  }, []);
 
-  const removeOption = (questionIndex: number, optionIndex: number) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].options.splice(optionIndex, 1);
-    setQuestions(updatedQuestions);
-  };
+  const removeOption = useCallback((questionIndex: number, optionIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const newOptions = [...(q.options || [])];
+        newOptions.splice(optionIndex, 1);
+        return { ...q, options: newOptions };
+      })
+    );
+  }, []);
 
-  const needsOptions = (type: string) => {
-    return [
-      "single_choice",
-      "multiple_choice",
-      "true_false",
-      "fill_blank",
-    ].includes(type);
-  };
-
-  const needsTextInput = (type: string) => {
-    return ["translate", "writing"].includes(type);
-  };
-
-  const getDefaultOptions = (type: string) => {
-    if (type === "true_false") {
-      return [
-        { value: "true", label: "Verdadero", isCorrect: false },
-        { value: "false", label: "Falso", isCorrect: false },
-      ];
-    }
-    return [];
-  };
-
-  const handleQuestionTypeChange = (
-    questionIndex: number,
-    type:
-      | "single_choice"
-      | "multiple_choice"
-      | "fill_blank"
-      | "translate"
-      | "true_false"
-      | "writing"
-  ) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex] = {
-      ...updatedQuestions[questionIndex],
-      type: type,
-      // Clear correct answers when switching types
-      correctAnswers: [],
-      // Set default options for certain types
-      options: needsOptions(type) ? getDefaultOptions(type) : [],
-    };
-    setQuestions(updatedQuestions);
-  };
-
-  const handleTextAnswerChange = (questionIndex: number, value: string) => {
-    const updatedQuestions = [...questions];
-    if (!updatedQuestions[questionIndex].correctAnswers) {
-      updatedQuestions[questionIndex].correctAnswers = [];
-    }
-    // For text-based questions, store the answer directly
-    updatedQuestions[questionIndex].correctAnswers = [value];
-    setQuestions(updatedQuestions);
-  };
-
-  const handleCorrectAnswerChange = (
-    questionIndex: number,
-    optionValue: string,
-    isChecked: boolean
-  ) => {
-    const updatedQuestions = [...questions];
-    const question = updatedQuestions[questionIndex];
-
-    if (!question.correctAnswers) {
-      question.correctAnswers = [];
-    }
-
-    if (
-      question.type === "single_choice" ||
-      question.type === "true_false" ||
-      question.type === "fill_blank"
-    ) {
-      // For single choice, true/false, and fill_blank, replace the correct answer
-      question.correctAnswers = isChecked ? [optionValue] : [];
-    } else {
-      // For multiple choice and others, add/remove from the array
-      if (isChecked) {
-        if (!question.correctAnswers.includes(optionValue)) {
-          question.correctAnswers.push(optionValue);
-        }
-      } else {
-        question.correctAnswers = question.correctAnswers.filter(
-          (answer: string) => answer !== optionValue
-        );
+  const handleQuestionTypeChange = useCallback((questionIndex: number, type: any) => {
+    const defaultOptions = (t: string) => {
+      if (t === "true_false") {
+        return [
+          { value: "true", label: "Verdadero", isCorrect: false },
+          { value: "false", label: "Falso", isCorrect: false },
+        ];
       }
-    }
+      return [];
+    };
 
-    setQuestions(updatedQuestions);
-  };
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        return {
+          ...q,
+          type: type,
+          correctAnswers: [],
+          options: needsOptions(type) ? defaultOptions(type) : [],
+        };
+      })
+    );
+  }, []);
 
-  const addTag = (questionIndex: number) => {
-    if (!newTag.trim()) return;
+  const handleCorrectAnswerChange = useCallback((questionIndex: number, optionValue: string, isChecked: boolean) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        let newCorrectAnswers = [...(q.correctAnswers || [])];
+        if (q.type === "single_choice" || q.type === "true_false" || q.type === "fill_blank") {
+          newCorrectAnswers = isChecked ? [optionValue] : [];
+        } else {
+          if (isChecked) {
+            if (!newCorrectAnswers.includes(optionValue)) {
+              newCorrectAnswers.push(optionValue);
+            }
+          } else {
+            newCorrectAnswers = newCorrectAnswers.filter((answer) => answer !== optionValue);
+          }
+        }
+        return { ...q, correctAnswers: newCorrectAnswers };
+      })
+    );
+  }, []);
 
-    const updatedQuestions = [...questions];
-    if (!updatedQuestions[questionIndex].tags) {
-      updatedQuestions[questionIndex].tags = [];
-    }
+  const addTag = useCallback((questionIndex: number, tag: string) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const tags = q.tags || [];
+        if (!tags.includes(tag)) {
+          return { ...q, tags: [...tags, tag] };
+        }
+        return q;
+      })
+    );
+  }, []);
 
-    if (!updatedQuestions[questionIndex].tags.includes(newTag.trim())) {
-      updatedQuestions[questionIndex].tags.push(newTag.trim());
-    }
+  const removeTag = useCallback((questionIndex: number, tagIndex: number) => {
+    setQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== questionIndex) return q;
+        const newTags = [...(q.tags || [])];
+        newTags.splice(tagIndex, 1);
+        return { ...q, tags: newTags };
+      })
+    );
+  }, []);
 
-    setQuestions(updatedQuestions);
-    setNewTag("");
-  };
-
-  const removeTag = (questionIndex: number, tagIndex: number) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].tags.splice(tagIndex, 1);
-    setQuestions(updatedQuestions);
-  };
-
-  const addQuestion = () => {
+  const addQuestion = useCallback(() => {
     const newQuestion = {
       question: "",
       weight: 1,
       order: questions.length + 1,
-      type: "single_choice" as
-        | "single_choice"
-        | "multiple_choice"
-        | "fill_blank"
-        | "translate"
-        | "true_false"
-        | "writing",
+      type: "single_choice",
       options: [],
       correctAnswers: [],
       tags: [],
     };
-    const newQuestions = [...questions, newQuestion];
-    setQuestions(newQuestions);
+    setQuestions((prev) => [...prev, newQuestion]);
 
-    // Scroll to the new question after it's added
     setTimeout(() => {
-      const newQuestionIndex = newQuestions.length - 1;
+      const newQuestionIndex = questions.length;
       const questionElement = questionRefs.current[newQuestionIndex];
-      if (questionElement && scrollAreaRef.current) {
-        questionElement.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+      if (questionElement) {
+        questionElement.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
-  };
+  }, [questions.length]);
 
-  const removeQuestion = (index: number) => {
-    const updatedQuestions = questions.filter((_, i) => i !== index);
-    
-    // Update the order field for remaining questions
-    updatedQuestions.forEach((question, idx) => {
-      if (typeof question === 'object' && question !== null) {
-        question.order = idx + 1;
-      }
+  const removeQuestion = useCallback((index: number) => {
+    setQuestions((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.map((q, idx) => ({ ...q, order: idx + 1 }));
     });
-    
-    setQuestions(updatedQuestions);
-  };
+  }, []);
+
+  const moveQuestion = useCallback((index: number, direction: 'up' | 'down') => {
+    setQuestions((prev) => {
+      const updated = [...prev];
+      const [movedItem] = updated.splice(index, 1);
+      const newIndex = direction === 'up' ? index - 1 : index + 1;
+      updated.splice(newIndex, 0, movedItem);
+      return updated.map((q, idx) => ({ ...q, order: idx + 1 }));
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -442,25 +752,17 @@ export function ExamEditModal({
     }
   };
 
-  const moveQuestion = (index: number, direction: 'up' | 'down') => {
-    const updatedQuestions = [...questions];
-    const temp = updatedQuestions[index];
-    if (direction === 'up') {
-      updatedQuestions[index] = updatedQuestions[index - 1];
-      updatedQuestions[index - 1] = temp;
-    } else {
-      updatedQuestions[index] = updatedQuestions[index + 1];
-      updatedQuestions[index + 1] = temp;
-    }
-    
-    // Update the order field for all questions to maintain consistency
-    updatedQuestions.forEach((question, idx) => {
-      if (typeof question === 'object' && question !== null) {
-        question.order = idx + 1;
-      }
-    });
-    
-    setQuestions(updatedQuestions);
+  const needsOptions = (type: string) => {
+    return [
+      "single_choice",
+      "multiple_choice",
+      "true_false",
+      "fill_blank",
+    ].includes(type);
+  };
+
+  const needsTextInput = (type: string) => {
+    return ["translate", "writing"].includes(type);
   };
 
   if (!exam) return null;
@@ -753,325 +1055,27 @@ export function ExamEditModal({
                         </div>
                       ) : (
                         questions.map((question, index) => {
-                          const questionText = getQuestionText(question);
-                          const questionType = getQuestionType(question);
-                          const questionOptions = getQuestionOptions(question);
-                          const correctAnswers =
-                            getQuestionCorrectAnswers(question);
-                          const questionTags = getQuestionTags(question);
-                          const explanation = getQuestionExplanation(question);
-
                           return (
-                            <div
-                              key={index}
-                              ref={(el) => {
-                                questionRefs.current[index] = el;
-                              }}
-                              className="border rounded-lg p-6 bg-muted/20"
-                            >
-                              {/* Question Header */}
-                              <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className="text-xs">
-                                    #{index + 1}
-                                  </Badge>
-                                  <Select
-                                    value={questionType}
-                                    onValueChange={(value) =>
-                                      handleQuestionTypeChange(
-                                        index,
-                                        value as
-                                          | "single_choice"
-                                          | "multiple_choice"
-                                          | "fill_blank"
-                                          | "translate"
-                                          | "true_false"
-                                          | "writing"
-                                      )
-                                    }
-                                    disabled={loading}
-                                  >
-                                    <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[120px]">
-                                      {getQuestionTypeIcon(questionType)}
-                                      <span className="text-xs">
-                                        {
-                                          questionTypes.find(
-                                            (t) =>
-                                              t.value === questionType
-                                          )?.label
-                                        }
-                                      </span>
-                                      <span className="ml-auto">
-                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                      </span>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {questionTypes.map((type) => (
-                                        <SelectItem
-                                          key={type.value}
-                                          value={type.value}
-                                          className={`rounded-md hover:bg-muted/40 transition-all cursor-pointer`}
-                                        >
-                                          <div className="flex flex-row items-center gap-2">
-                                            <span>
-                                              {getQuestionTypeIcon(type.value)}
-                                            </span>
-                                            <span className="text-xs ">{type.label}</span>
-                                          </div>
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <div className="flex items-center gap-1 ml-2">
-                                    <span className="text-xs text-muted-foreground">Peso:</span>
-                                    <Input
-                                      type="number"
-                                      min="1"
-                                      max="10"
-                                      value={question.weight || 1}
-                                      onChange={(e) =>
-                                        handleQuestionChange(
-                                          index,
-                                          "weight",
-                                          parseInt(e.target.value) || 1
-                                        )
-                                      }
-                                      disabled={loading}
-                                      className="w-12 h-7 text-xs px-1 py-0"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => removeQuestion(index)}
-                                    disabled={loading}
-                                    className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </div>
-
-                              {/* Question Text */}
-                              <div className="mb-4">
-                                <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                                  Texto de la Pregunta *
-                                </Label>
-                                <Textarea
-                                  value={questionText}
-                                  onChange={(e) =>
-                                    handleQuestionTextChange(index, e.target.value)
-                                  }
-                                  placeholder="Ingresa el texto de la pregunta"
-                                  disabled={loading}
-                                  className="text-sm"
-                                  rows={3}
-                                />
-                              </div>
-
-                              {/* Dynamic Content Based on Question Type */}
-                              {needsOptions(questionType) ? (
-                                /* Options for choice questions */
-                                <div className="mb-4">
-                                  <div className="flex items-center justify-between mb-2">
-                                    <h4 className="text-sm font-medium text-muted-foreground">
-                                      Opciones:
-                                    </h4>
-                                    <Button
-                                      type="button"
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => addOption(index)}
-                                      disabled={loading}
-                                      className="flex items-center gap-1 text-xs"
-                                    >
-                                      <Plus className="w-3 h-3" />
-                                      Agregar
-                                    </Button>
-                                  </div>
-                                  <div className="space-y-2">
-                                    {questionOptions.length === 0 ? (
-                                      <p className="text-xs text-muted-foreground">
-                                        No hay opciones definidas
-                                      </p>
-                                    ) : (
-                                      questionOptions.map((option, optionIndex) => {
-                                        const isCorrect = correctAnswers.includes(
-                                          option.value
-                                        );
-
-                                        return (
-                                          <div
-                                            key={optionIndex}
-                                            className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
-                                              isCorrect
-                                                ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
-                                                : "bg-muted/30 border-border hover:bg-muted/50"
-                                            }`}
-                                          >
-                                            <div className="flex items-center gap-2">
-                                              <Checkbox
-                                                checked={isCorrect}
-                                                onCheckedChange={(checked) =>
-                                                  handleCorrectAnswerChange(
-                                                    index,
-                                                    option.value,
-                                                    checked as boolean
-                                                  )
-                                                }
-                                                disabled={loading}
-                                                className={`${
-                                                  isCorrect
-                                                    ? "border-emerald-500 bg-emerald-500 text-white"
-                                                    : "border-gray-300"
-                                                }`}
-                                              />
-                                              <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
-                                                {String.fromCharCode(
-                                                  65 + optionIndex
-                                                )}
-                                                .
-                                              </span>
-                                            </div>
-                                            <Input
-                                              value={option.label || option.value}
-                                              onChange={(e) =>
-                                                handleOptionChange(
-                                                  index,
-                                                  optionIndex,
-                                                  "label",
-                                                  e.target.value
-                                                )
-                                              }
-                                              placeholder={`Opción ${
-                                                optionIndex + 1
-                                              }`}
-                                              disabled={loading}
-                                              className={`text-sm flex-1 ${
-                                                isCorrect
-                                                  ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800"
-                                                  : ""
-                                              }`}
-                                            />
-                                            <Button
-                                              type="button"
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={() =>
-                                                removeOption(index, optionIndex)
-                                              }
-                                              disabled={loading}
-                                              className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
-                                            >
-                                              <X className="w-4 h-4" />
-                                            </Button>
-                                          </div>
-                                        );
-                                      })
-                                    )}
-                                  </div>
-                                </div>
-                              ) : needsTextInput(questionType) ? (
-                                /* Text input for writing/translation/fill_blank questions */
-                                <div className="mb-4">
-                                  <div className="space-y-2">
-                                    <Label className="text-sm font-medium text-muted-foreground">
-                                      Respuesta Correcta:
-                                    </Label>
-                                    <Textarea
-                                      value={correctAnswers[0] || ""}
-                                      onChange={(e) =>
-                                        handleTextAnswerChange(
-                                          index,
-                                          e.target.value
-                                        )
-                                      }
-                                      placeholder={
-                                        questionType === "fill_blank"
-                                          ? "Escribe la palabra o frase que completa el espacio en blanco"
-                                          : questionType === "translate"
-                                          ? "Escribe la traducción correcta"
-                                          : "Escribe la respuesta esperada"
-                                      }
-                                      disabled={loading}
-                                      className="text-sm"
-                                      rows={3}
-                                    />
-                                  </div>
-                                </div>
-                              ) : null}
-
-                              {/* Explanation */}
-                              {explanation && (
-                                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
-                                  <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-                                    Explicación:
-                                  </h4>
-                                  <p className="text-sm text-blue-600 dark:text-blue-400">
-                                    {explanation}
-                                  </p>
-                                </div>
-                              )}
-
-                              {/* Tags */}
-                              <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                                    <Tag className="w-4 h-4" />
-                                    Etiquetas:
-                                  </h4>
-                                </div>
-                                <div className="flex flex-wrap gap-1 mb-2">
-                                  {questionTags.map((tag, tagIndex) => (
-                                    <Badge
-                                      key={tagIndex}
-                                      variant="outline"
-                                      className="text-xs flex items-center gap-1"
-                                    >
-                                      {tag}
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => removeTag(index, tagIndex)}
-                                        disabled={loading}
-                                        className="h-3 w-3 p-0 text-red-500 hover:text-red-700"
-                                      >
-                                        <X className="w-2 h-2" />
-                                      </Button>
-                                    </Badge>
-                                  ))}
-                                </div>
-                                <div className="flex gap-2">
-                                  <Input
-                                    value={newTag}
-                                    onChange={(e) => setNewTag(e.target.value)}
-                                    placeholder="Nueva etiqueta"
-                                    disabled={loading}
-                                    className="text-sm flex-1"
-                                    onKeyPress={(e) => {
-                                      if (e.key === "Enter") {
-                                        e.preventDefault();
-                                        addTag(index);
-                                      }
-                                    }}
-                                  />
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => addTag(index)}
-                                    disabled={loading || !newTag.trim()}
-                                    className="text-xs"
-                                  >
-                                    Agregar
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
+                            <QuestionItem
+                              key={question._id || index} // Use a stable key
+                              question={question}
+                              index={index}
+                              loading={loading}
+                              questionRefs={questionRefs}
+                              onQuestionChange={handleQuestionChange}
+                              onQuestionTextChange={handleQuestionTextChange}
+                              onOptionChange={handleOptionChange}
+                              onCorrectAnswerChange={handleCorrectAnswerChange}
+                              onQuestionTypeChange={handleQuestionTypeChange}
+                              onAddOption={addOption}
+                              onRemoveOption={removeOption}
+                              onAddTag={addTag}
+                              onRemoveTag={removeTag}
+                              onRemoveQuestion={removeQuestion}
+                              getQuestionTypeIcon={getQuestionTypeIcon}
+                              needsOptions={needsOptions}
+                              needsTextInput={needsTextInput}
+                            />
                           );
                         })
                       )}
@@ -1106,74 +1110,16 @@ export function ExamEditModal({
                       </div>
                     ) : (
                       <div className="space-y-1">
-                        {questions.map((question, index) => {
-                          const questionText = getQuestionText(question);
-                          const questionType = getQuestionType(question);
-                          
-                          return (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 p-2 border rounded-md bg-muted/20 hover:bg-muted/30 transition-colors cursor-move"
-                            >
-                              {/* Drag Handle */}
-                              <div className="flex flex-col items-center justify-center w-6 h-6 text-muted-foreground">
-                                <div className="w-3 h-3 flex flex-col gap-0.5">
-                                  <div className="w-full h-0.5 bg-current rounded"></div>
-                                  <div className="w-full h-0.5 bg-current rounded"></div>
-                                  <div className="w-full h-0.5 bg-current rounded"></div>
-                                </div>
-                              </div>
-
-                              {/* Question Number */}
-                              <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-medium">
-                                {index + 1}
-                              </div>
-
-                              {/* Question Content */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-0.5">
-                                  <Badge variant="outline" className="text-xs px-1 py-0 h-4">
-                                    {getQuestionTypeLabel(questionType)}
-                                  </Badge>
-                                  <span className="text-xs text-muted-foreground">
-                                    Peso: {question.weight || 1}
-                                  </span>
-                                </div>
-                                <p className="text-sm font-medium line-clamp-1">
-                                  {questionText || "Pregunta sin texto"}
-                                </p>
-                              </div>
-
-                              {/* Move Buttons */}
-                              <div className="flex flex-col gap-0.5">
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => moveQuestion(index, 'up')}
-                                  disabled={index === 0 || loading}
-                                  className="h-5 w-5 p-0"
-                                >
-                                  <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
-                                    <path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => moveQuestion(index, 'down')}
-                                  disabled={index === questions.length - 1 || loading}
-                                  className="h-5 w-5 p-0"
-                                >
-                                  <svg width="10" height="10" fill="none" viewBox="0 0 24 24">
-                                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
+                        {questions.map((question, index) => (
+                          <QuestionOrderItem
+                            key={question._id || index}
+                            question={question}
+                            index={index}
+                            loading={loading}
+                            questionCount={questions.length}
+                            onMoveQuestion={moveQuestion}
+                          />
+                        ))}
                       </div>
                     )}
                   </CardContent>
