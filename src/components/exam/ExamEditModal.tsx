@@ -918,11 +918,12 @@ export function ExamEditModal({
     try {
       setLoading(true);
 
-      // Solo actualizar campos básicos del examen, no las preguntas
-      // Las preguntas se manejan por separado para evitar conflictos de estructura
-      // El backend espera questions como Array<{question: ObjectId, weight: number, order: number}>
-      // pero el frontend maneja preguntas con estructura completa (text, type, options, etc.)
-      // Por ahora solo actualizamos los metadatos del examen
+      // 1. Actualizar metadatos y relación de preguntas del examen
+      const questionsForExam = questions.map((q, idx) => ({
+        question: typeof q.question === 'string' ? q.question : q.question?._id,
+        weight: q.weight || 1,
+        order: q.order ?? idx,
+      }));
       const updateData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -932,20 +933,55 @@ export function ExamEditModal({
         source: formData.source || "ai", // Default a "ai" si está vacío
         adaptive: formData.adaptive,
         version: exam.version || 1, // Mantener la versión actual
+        questions: questionsForExam,
       };
 
       const response = await examService.updateExam(exam._id, updateData);
 
-      if (response && response.success) {
-        toast.success("Examen actualizado exitosamente", {
-          description: `"${formData.title}" ha sido actualizado`,
-        });
-
-        onExamUpdated();
-        onClose();
-      } else {
+      if (!response || !response.success) {
         throw new Error(response?.message || "Error al actualizar el examen");
       }
+
+      // 2. Actualizar preguntas modificadas (PUT /questions/:id)
+      try {
+        const originalQuestions = exam.questions || [];
+        for (let i = 0; i < questions.length; i++) {
+          const question = questions[i];
+          const originalQuestion = originalQuestions[i];
+          const questionId = typeof originalQuestion.question === 'string'
+            ? originalQuestion.question
+            : originalQuestion.question?._id;
+          if (questionId && typeof questionId === 'string') {
+            const questionText = getQuestionText(question);
+            const questionType = getQuestionType(question);
+            const options = getQuestionOptions(question);
+            const correctAnswers = getQuestionCorrectAnswers(question);
+            const tags = getQuestionTags(question);
+            const explanation = getQuestionExplanation(question);
+            const questionUpdateData = {
+              text: questionText,
+              type: questionType,
+              options: options,
+              correctAnswers: correctAnswers,
+              tags: tags,
+              explanation: explanation,
+              level: formData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
+              topic: formData.topic,
+            };
+            await examService.updateQuestion(questionId, questionUpdateData);
+          }
+        }
+        toast.success("Examen y preguntas actualizados exitosamente", {
+          description: `"${formData.title}" ha sido actualizado completamente`,
+        });
+      } catch (questionError: any) {
+        console.error("Error updating questions:", questionError);
+        toast.warning("Examen actualizado parcialmente", {
+          description: "La información básica se guardó, pero hubo errores al actualizar las preguntas.",
+        });
+      }
+      onExamUpdated();
+      onClose();
     } catch (error: any) {
       console.error("Error updating exam:", error);
       toast.error("Error al actualizar examen", {

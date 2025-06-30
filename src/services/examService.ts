@@ -285,6 +285,15 @@ export const examService = {
     return response.data;
   },
 
+  // Update question
+  async updateQuestion(
+    questionId: string,
+    questionData: any
+  ): Promise<any> {
+    const response = await api.put(`/api/questions/${questionId}`, questionData);
+    return response.data;
+  },
+
   // Original methods for AI exam generation
   async generateExam(
     params: ExamGenerationParams
