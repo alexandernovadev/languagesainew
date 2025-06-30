@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +11,16 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   BookOpen,
   Clock,
@@ -33,10 +40,18 @@ import {
   CheckCircle,
   Tag,
   Radio,
+  Check,
+  CircleDot,
+  CheckSquare,
+  Type,
+  Languages,
+  HelpCircle,
+  Edit3,
 } from "lucide-react";
 import { toast } from "sonner";
 import { examService, Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
+import { questionTypes } from "@/data/questionTypes";
 import {
   getLevelLabel,
   getLanguageLabel,
@@ -59,7 +74,12 @@ interface ExamEditModalProps {
   onExamUpdated: () => void;
 }
 
-export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEditModalProps) {
+export function ExamEditModal({
+  isOpen,
+  onClose,
+  exam,
+  onExamUpdated,
+}: ExamEditModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -72,6 +92,8 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
   });
   const [questions, setQuestions] = useState<any[]>([]);
   const [newTag, setNewTag] = useState("");
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     if (exam) {
@@ -89,7 +111,7 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
   }, [exam]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -106,9 +128,12 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
 
   const handleQuestionTextChange = (index: number, value: string) => {
     const updatedQuestions = [...questions];
-    if (typeof updatedQuestions[index] === 'string') {
+    if (typeof updatedQuestions[index] === "string") {
       updatedQuestions[index] = value;
-    } else if (updatedQuestions[index] && typeof updatedQuestions[index] === 'object') {
+    } else if (
+      updatedQuestions[index] &&
+      typeof updatedQuestions[index] === "object"
+    ) {
       updatedQuestions[index] = {
         ...updatedQuestions[index],
         question: value,
@@ -117,7 +142,12 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
     setQuestions(updatedQuestions);
   };
 
-  const handleOptionChange = (questionIndex: number, optionIndex: number, field: string, value: any) => {
+  const handleOptionChange = (
+    questionIndex: number,
+    optionIndex: number,
+    field: string,
+    value: any
+  ) => {
     const updatedQuestions = [...questions];
     if (!updatedQuestions[questionIndex].options) {
       updatedQuestions[questionIndex].options = [];
@@ -149,27 +179,108 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
     setQuestions(updatedQuestions);
   };
 
-  const handleCorrectAnswerChange = (questionIndex: number, value: string) => {
+  const needsOptions = (type: string) => {
+    return [
+      "single_choice",
+      "multiple_choice",
+      "true_false",
+      "fill_blank",
+    ].includes(type);
+  };
+
+  const needsTextInput = (type: string) => {
+    return ["translate", "writing"].includes(type);
+  };
+
+  const getDefaultOptions = (type: string) => {
+    if (type === "true_false") {
+      return [
+        { value: "true", label: "Verdadero", isCorrect: false },
+        { value: "false", label: "Falso", isCorrect: false },
+      ];
+    }
+    return [];
+  };
+
+  const handleQuestionTypeChange = (
+    questionIndex: number,
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "fill_blank"
+      | "translate"
+      | "true_false"
+      | "writing"
+  ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex] = {
       ...updatedQuestions[questionIndex],
-      correctAnswers: [value],
+      type: type,
+      // Clear correct answers when switching types
+      correctAnswers: [],
+      // Set default options for certain types
+      options: needsOptions(type) ? getDefaultOptions(type) : [],
     };
+    setQuestions(updatedQuestions);
+  };
+
+  const handleTextAnswerChange = (questionIndex: number, value: string) => {
+    const updatedQuestions = [...questions];
+    if (!updatedQuestions[questionIndex].correctAnswers) {
+      updatedQuestions[questionIndex].correctAnswers = [];
+    }
+    // For text-based questions, store the answer directly
+    updatedQuestions[questionIndex].correctAnswers = [value];
+    setQuestions(updatedQuestions);
+  };
+
+  const handleCorrectAnswerChange = (
+    questionIndex: number,
+    optionValue: string,
+    isChecked: boolean
+  ) => {
+    const updatedQuestions = [...questions];
+    const question = updatedQuestions[questionIndex];
+
+    if (!question.correctAnswers) {
+      question.correctAnswers = [];
+    }
+
+    if (
+      question.type === "single_choice" ||
+      question.type === "true_false" ||
+      question.type === "fill_blank"
+    ) {
+      // For single choice, true/false, and fill_blank, replace the correct answer
+      question.correctAnswers = isChecked ? [optionValue] : [];
+    } else {
+      // For multiple choice and others, add/remove from the array
+      if (isChecked) {
+        if (!question.correctAnswers.includes(optionValue)) {
+          question.correctAnswers.push(optionValue);
+        }
+      } else {
+        question.correctAnswers = question.correctAnswers.filter(
+          (answer: string) => answer !== optionValue
+        );
+      }
+    }
+
     setQuestions(updatedQuestions);
   };
 
   const addTag = (questionIndex: number) => {
     if (!newTag.trim()) return;
-    
+
     const updatedQuestions = [...questions];
     if (!updatedQuestions[questionIndex].tags) {
       updatedQuestions[questionIndex].tags = [];
     }
-    
+
     if (!updatedQuestions[questionIndex].tags.includes(newTag.trim())) {
       updatedQuestions[questionIndex].tags.push(newTag.trim());
     }
-    
+
     setQuestions(updatedQuestions);
     setNewTag("");
   };
@@ -185,11 +296,31 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
       question: "",
       weight: 1,
       order: questions.length + 1,
+      type: "single_choice" as
+        | "single_choice"
+        | "multiple_choice"
+        | "fill_blank"
+        | "translate"
+        | "true_false"
+        | "writing",
       options: [],
       correctAnswers: [],
       tags: [],
     };
-    setQuestions([...questions, newQuestion]);
+    const newQuestions = [...questions, newQuestion];
+    setQuestions(newQuestions);
+
+    // Scroll to the new question after it's added
+    setTimeout(() => {
+      const newQuestionIndex = newQuestions.length - 1;
+      const questionElement = questionRefs.current[newQuestionIndex];
+      if (questionElement && scrollAreaRef.current) {
+        questionElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 100);
   };
 
   const removeQuestion = (index: number) => {
@@ -199,7 +330,7 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!exam) return;
 
     // Validation
@@ -252,14 +383,14 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
         toast.success("Examen actualizado exitosamente", {
           description: `"${formData.title}" ha sido actualizado`,
         });
-        
+
         onExamUpdated();
         onClose();
       } else {
         throw new Error(response?.message || "Error al actualizar el examen");
       }
     } catch (error: any) {
-      console.error('Error updating exam:', error);
+      console.error("Error updating exam:", error);
       toast.error("Error al actualizar examen", {
         description: error.message || "No se pudo actualizar el examen",
       });
@@ -271,6 +402,25 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
   const handleClose = () => {
     if (!loading) {
       onClose();
+    }
+  };
+
+  const getQuestionTypeIcon = (type: string) => {
+    switch (type) {
+      case "single_choice":
+        return <CircleDot className="w-4 h-4" />;
+      case "multiple_choice":
+        return <CheckSquare className="w-4 h-4" />;
+      case "fill_blank":
+        return <Type className="w-4 h-4" />;
+      case "translate":
+        return <Languages className="w-4 h-4" />;
+      case "true_false":
+        return <HelpCircle className="w-4 h-4" />;
+      case "writing":
+        return <Edit3 className="w-4 h-4" />;
+      default:
+        return <CircleDot className="w-4 h-4" />;
     }
   };
 
@@ -286,9 +436,8 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="h-[80vh] pr-4">
+        <ScrollArea ref={scrollAreaRef} className="h-[80vh] pr-4">
           <div className="space-y-6">
-
             {/* Compact Dates Section */}
             <Card>
               <CardContent className="pt-4">
@@ -324,44 +473,59 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Título */}
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-sm font-medium text-muted-foreground">
+                    <Label
+                      htmlFor="title"
+                      className="text-sm font-medium text-muted-foreground"
+                    >
                       Título del Examen *
                     </Label>
                     <Input
                       id="title"
                       value={formData.title}
-                      onChange={(e) => handleInputChange("title", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("title", e.target.value)
+                      }
                       placeholder="Ingresa el título del examen"
                       disabled={loading}
                       className="text-sm"
                     />
-        </div>
+                  </div>
 
                   {/* Descripción */}
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium text-muted-foreground">
+                    <Label
+                      htmlFor="description"
+                      className="text-sm font-medium text-muted-foreground"
+                    >
                       Descripción
                     </Label>
-                <Textarea
+                    <Textarea
                       id="description"
                       value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("description", e.target.value)
+                      }
                       placeholder="Ingresa una descripción del examen"
                       rows={3}
                       disabled={loading}
                       className="text-sm"
-                />
-              </div>
+                    />
+                  </div>
 
                   {/* Nivel y Idioma */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="level" className="text-sm font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="level"
+                        className="text-sm font-medium text-muted-foreground"
+                      >
                         Nivel *
                       </Label>
                       <Select
                         value={formData.level}
-                        onValueChange={(value) => handleInputChange("level", value)}
+                        onValueChange={(value) =>
+                          handleInputChange("level", value)
+                        }
                         disabled={loading}
                       >
                         <SelectTrigger className="text-sm">
@@ -371,7 +535,9 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                           <SelectItem value="A1">A1 - Principiante</SelectItem>
                           <SelectItem value="A2">A2 - Básico</SelectItem>
                           <SelectItem value="B1">B1 - Intermedio</SelectItem>
-                          <SelectItem value="B2">B2 - Intermedio Alto</SelectItem>
+                          <SelectItem value="B2">
+                            B2 - Intermedio Alto
+                          </SelectItem>
                           <SelectItem value="C1">C1 - Avanzado</SelectItem>
                           <SelectItem value="C2">C2 - Maestría</SelectItem>
                         </SelectContent>
@@ -379,12 +545,17 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="language" className="text-sm font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="language"
+                        className="text-sm font-medium text-muted-foreground"
+                      >
                         Idioma *
                       </Label>
                       <Select
                         value={formData.language}
-                        onValueChange={(value) => handleInputChange("language", value)}
+                        onValueChange={(value) =>
+                          handleInputChange("language", value)
+                        }
                         disabled={loading}
                       >
                         <SelectTrigger className="text-sm">
@@ -405,13 +576,18 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                   {/* Tema y Fuente */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="topic" className="text-sm font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="topic"
+                        className="text-sm font-medium text-muted-foreground"
+                      >
                         Tema
-                          </Label>
+                      </Label>
                       <Input
                         id="topic"
                         value={formData.topic}
-                        onChange={(e) => handleInputChange("topic", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("topic", e.target.value)
+                        }
                         placeholder="Ej: Gramática, Vocabulario, etc."
                         disabled={loading}
                         className="text-sm"
@@ -419,12 +595,17 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="source" className="text-sm font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="source"
+                        className="text-sm font-medium text-muted-foreground"
+                      >
                         Fuente
                       </Label>
                       <Select
                         value={formData.source}
-                        onValueChange={(value) => handleInputChange("source", value)}
+                        onValueChange={(value) =>
+                          handleInputChange("source", value)
+                        }
                         disabled={loading}
                       >
                         <SelectTrigger className="text-sm">
@@ -444,14 +625,17 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                       <input
                         type="checkbox"
                         checked={formData.adaptive}
-                        onChange={(e) => handleInputChange("adaptive", e.target.checked)}
+                        onChange={(e) =>
+                          handleInputChange("adaptive", e.target.checked)
+                        }
                         disabled={loading}
                         className="rounded border-gray-300"
                       />
                       Examen Adaptativo
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Los exámenes adaptativos ajustan la dificultad según el rendimiento del estudiante.
+                      Los exámenes adaptativos ajustan la dificultad según el
+                      rendimiento del estudiante.
                     </p>
                   </div>
 
@@ -493,17 +677,6 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                     <FileText className="w-5 h-5" />
                     Preguntas del Examen ({questions.length})
                   </h3>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addQuestion}
-                    disabled={loading}
-                    className="flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Agregar Pregunta
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
@@ -512,20 +685,26 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                     <div className="text-center py-8 text-muted-foreground">
                       <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p>No hay preguntas en este examen</p>
-                      <p className="text-sm">Haz clic en "Agregar Pregunta" para comenzar</p>
-              </div>
+                      <p className="text-sm">
+                        Haz clic en "Agregar Pregunta" para comenzar
+                      </p>
+                    </div>
                   ) : (
                     questions.map((question, index) => {
                       const questionText = getQuestionText(question);
                       const questionType = getQuestionType(question);
                       const questionOptions = getQuestionOptions(question);
-                      const correctAnswers = getQuestionCorrectAnswers(question);
+                      const correctAnswers =
+                        getQuestionCorrectAnswers(question);
                       const questionTags = getQuestionTags(question);
                       const explanation = getQuestionExplanation(question);
 
                       return (
                         <div
                           key={index}
+                          ref={(el) => {
+                            questionRefs.current[index] = el;
+                          }}
                           className="border rounded-lg p-6 bg-muted/20"
                         >
                           {/* Question Header */}
@@ -534,21 +713,67 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                               <Badge variant="outline" className="text-xs">
                                 #{index + 1}
                               </Badge>
-                              <Badge variant="secondary" className="text-xs">
-                                {getQuestionTypeLabel(questionType)}
-                              </Badge>
-              </div>
+                              <Select
+                                value={question.type || "single_choice"}
+                                onValueChange={(value) =>
+                                  handleQuestionTypeChange(
+                                    index,
+                                    value as
+                                      | "single_choice"
+                                      | "multiple_choice"
+                                      | "fill_blank"
+                                      | "translate"
+                                      | "true_false"
+                                      | "writing"
+                                  )
+                                }
+                                disabled={loading}
+                              >
+                                <SelectTrigger className="h-8 px-2 text-xs border-dashed flex flex-row items-center gap-2 min-w-[140px]">
+                                  {getQuestionTypeIcon(
+                                    question.type || "single_choice"
+                                  )}
+                                  <span className="text-xs">
+                                    {
+                                      questionTypes.find(
+                                        (t) =>
+                                          t.value ===
+                                          (question.type || "single_choice")
+                                      )?.label
+                                    }
+                                  </span>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {questionTypes.map((type) => (
+                                    <SelectItem
+                                      key={type.value}
+                                      value={type.value}
+                                      className={`rounded-md hover:bg-muted/40 transition-all cursor-pointer`}
+                                    >
+                                      <div className="flex flex-row items-center gap-2">
+                                        <span>
+                                          {getQuestionTypeIcon(type.value)}
+                                        </span>
+                                        <span className="text-xs ">
+                                          {type.label}
+                                        </span>
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
                             <div className="flex items-center gap-2">
-                        <Button
+                              <Button
                                 type="button"
-                          variant="ghost"
-                          size="sm"
+                                variant="ghost"
+                                size="sm"
                                 onClick={() => removeQuestion(index)}
                                 disabled={loading}
                                 className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
-                        >
+                              >
                                 <Trash2 className="w-4 h-4" />
-                        </Button>
+                              </Button>
                             </div>
                           </div>
 
@@ -559,7 +784,9 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                             </Label>
                             <Textarea
                               value={questionText}
-                              onChange={(e) => handleQuestionTextChange(index, e.target.value)}
+                              onChange={(e) =>
+                                handleQuestionTextChange(index, e.target.value)
+                              }
                               placeholder="Ingresa el texto de la pregunta"
                               disabled={loading}
                               className="text-sm"
@@ -578,111 +805,173 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                                 min="1"
                                 max="10"
                                 value={question.weight || 1}
-                                onChange={(e) => handleQuestionChange(index, "weight", parseInt(e.target.value) || 1)}
+                                onChange={(e) =>
+                                  handleQuestionChange(
+                                    index,
+                                    "weight",
+                                    parseInt(e.target.value) || 1
+                                  )
+                                }
                                 disabled={loading}
                                 className="text-sm"
                               />
-                  </div>
+                            </div>
                             <div className="space-y-2">
                               <Label className="text-sm font-medium text-muted-foreground">
                                 Orden
                               </Label>
-                    <Input
+                              <Input
                                 type="number"
                                 min="1"
                                 value={question.order || index + 1}
-                                onChange={(e) => handleQuestionChange(index, "order", parseInt(e.target.value) || index + 1)}
+                                onChange={(e) =>
+                                  handleQuestionChange(
+                                    index,
+                                    "order",
+                                    parseInt(e.target.value) || index + 1
+                                  )
+                                }
                                 disabled={loading}
                                 className="text-sm"
                               />
                             </div>
                           </div>
 
-                          {/* Options */}
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-sm font-medium text-muted-foreground">
-                                Opciones:
-                              </h4>
-                    <Button
-                                type="button"
-                      variant="outline"
-                      size="sm"
-                                onClick={() => addOption(index)}
-                                disabled={loading}
-                                className="flex items-center gap-1 text-xs"
-                    >
-                                <Plus className="w-3 h-3" />
-                      Agregar
-                    </Button>
-                  </div>
-                            <div className="space-y-2">
-                              {questionOptions.length === 0 ? (
-                                <p className="text-xs text-muted-foreground">No hay opciones definidas</p>
-                              ) : (
-                                questionOptions.map((option, optionIndex) => (
-                                  <div
-                                    key={optionIndex}
-                                    className={`flex items-center gap-2 p-2 rounded border ${
-                                      option.isCorrect
-                                        ? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-                                        : "bg-muted/30 border-border"
-                                    }`}
-                                  >
-                                    <input
-                                      type="radio"
-                                      name={`correct-${index}`}
-                            value={option.value}
-                                      checked={correctAnswers.includes(option.value)}
-                                      onChange={(e) => handleCorrectAnswerChange(index, e.target.value)}
-                                      disabled={loading}
-                                      className="text-green-600"
-                                    />
-                                    <span className="text-xs font-medium text-muted-foreground min-w-[20px]">
-                                      {String.fromCharCode(65 + optionIndex)}.
-                                    </span>
-                      <Input
-                                      value={option.label || option.value}
-                                      onChange={(e) => handleOptionChange(index, optionIndex, "label", e.target.value)}
-                                      placeholder={`Opción ${optionIndex + 1}`}
-                                      disabled={loading}
-                                      className="text-sm flex-1"
-                      />
-                      <Button
-                                      type="button"
-                        variant="ghost"
-                        size="sm"
-                                      onClick={() => removeOption(index, optionIndex)}
-                                      disabled={loading}
-                                      className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
-                      >
-                                      <X className="w-3 h-3" />
-                      </Button>
-                    </div>
-                                ))
-                              )}
-                </div>
-                          </div>
-
-                          {/* Correct Answers (for non-option questions) */}
-                          {correctAnswers.length > 0 && questionOptions.length === 0 && (
+                          {/* Dynamic Content Based on Question Type */}
+                          {needsOptions(question.type || "single_choice") ? (
+                            /* Options for choice questions */
                             <div className="mb-4">
-                              <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                                Respuestas correctas:
-                              </h4>
-                              <div className="space-y-1">
-                                {correctAnswers.map((answer, answerIndex) => (
-                                  <div
-                                    key={answerIndex}
-                                    className="flex items-center gap-2 p-2 rounded bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800"
-                                  >
-                                    <CheckCircle className="w-4 h-4 text-green-600" />
-                                    <span className="text-sm">{answer}</span>
-                                  </div>
-                                ))}
-              </div>
-            </div>
-          )}
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="text-sm font-medium text-muted-foreground">
+                                  Opciones:
+                                </h4>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addOption(index)}
+                                  disabled={loading}
+                                  className="flex items-center gap-1 text-xs"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                  Agregar
+                                </Button>
+                              </div>
+                              <div className="space-y-2">
+                                {questionOptions.length === 0 ? (
+                                  <p className="text-xs text-muted-foreground">
+                                    No hay opciones definidas
+                                  </p>
+                                ) : (
+                                  questionOptions.map((option, optionIndex) => {
+                                    const isCorrect = correctAnswers.includes(
+                                      option.value
+                                    );
+                                    const questionType =
+                                      question.type || "single_choice";
+
+                                    return (
+                                      <div
+                                        key={optionIndex}
+                                        className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+                                          isCorrect
+                                            ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800 shadow-sm"
+                                            : "bg-muted/30 border-border hover:bg-muted/50"
+                                        }`}
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <Checkbox
+                                            checked={isCorrect}
+                                            onCheckedChange={(checked) =>
+                                              handleCorrectAnswerChange(
+                                                index,
+                                                option.value,
+                                                checked as boolean
+                                              )
+                                            }
+                                            disabled={loading}
+                                            className={`${
+                                              isCorrect
+                                                ? "border-emerald-500 bg-emerald-500 text-white"
+                                                : "border-gray-300"
+                                            }`}
+                                          />
+                                          <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
+                                            {String.fromCharCode(
+                                              65 + optionIndex
+                                            )}
+                                            .
+                                          </span>
+                                        </div>
+                                        <Input
+                                          value={option.label || option.value}
+                                          onChange={(e) =>
+                                            handleOptionChange(
+                                              index,
+                                              optionIndex,
+                                              "label",
+                                              e.target.value
+                                            )
+                                          }
+                                          placeholder={`Opción ${
+                                            optionIndex + 1
+                                          }`}
+                                          disabled={loading}
+                                          className={`text-sm flex-1 ${
+                                            isCorrect
+                                              ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800"
+                                              : ""
+                                          }`}
+                                        />
+                                        <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() =>
+                                            removeOption(index, optionIndex)
+                                          }
+                                          disabled={loading}
+                                          className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                                        >
+                                          <X className="w-4 h-4" />
+                                        </Button>
+                                      </div>
+                                    );
+                                  })
+                                )}
+                              </div>
+                            </div>
+                          ) : needsTextInput(
+                              question.type || "single_choice"
+                            ) ? (
+                            /* Text input for writing/translation/fill_blank questions */
+                            <div className="mb-4">
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium text-muted-foreground">
+                                  Respuesta Correcta:
+                                </Label>
+                                <Textarea
+                                  value={correctAnswers[0] || ""}
+                                  onChange={(e) =>
+                                    handleTextAnswerChange(
+                                      index,
+                                      e.target.value
+                                    )
+                                  }
+                                  placeholder={
+                                    question.type === "fill_blank"
+                                      ? "Escribe la palabra o frase que completa el espacio en blanco"
+                                      : question.type === "translate"
+                                      ? "Escribe la traducción correcta"
+                                      : "Escribe la respuesta esperada"
+                                  }
+                                  disabled={loading}
+                                  className="text-sm"
+                                  rows={3}
+                                />
+                              </div>
+                            </div>
+                          ) : null}
 
                           {/* Explanation */}
                           {explanation && (
@@ -693,8 +982,8 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                               <p className="text-sm text-blue-600 dark:text-blue-400">
                                 {explanation}
                               </p>
-            </div>
-          )}
+                            </div>
+                          )}
 
                           {/* Tags */}
                           <div className="space-y-2">
@@ -711,78 +1000,94 @@ export function ExamEditModal({ isOpen, onClose, exam, onExamUpdated }: ExamEdit
                                   variant="outline"
                                   className="text-xs flex items-center gap-1"
                                 >
-                        {tag}
-                        <Button
+                                  {tag}
+                                  <Button
                                     type="button"
-                          variant="ghost"
-                          size="sm"
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => removeTag(index, tagIndex)}
                                     disabled={loading}
                                     className="h-3 w-3 p-0 text-red-500 hover:text-red-700"
-                        >
+                                  >
                                     <X className="w-2 h-2" />
-                        </Button>
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      placeholder="Nueva etiqueta"
+                                  </Button>
+                                </Badge>
+                              ))}
+                            </div>
+                            <div className="flex gap-2">
+                              <Input
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                                placeholder="Nueva etiqueta"
                                 disabled={loading}
                                 className="text-sm flex-1"
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
+                                onKeyPress={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
                                     addTag(index);
-                        }
-                      }}
-                    />
-                    <Button
+                                  }
+                                }}
+                              />
+                              <Button
                                 type="button"
-                      variant="outline"
-                      size="sm"
+                                variant="outline"
+                                size="sm"
                                 onClick={() => addTag(index)}
                                 disabled={loading || !newTag.trim()}
                                 className="text-xs"
-                    >
-                      Agregar
-                    </Button>
-                  </div>
-                </div>
-              </div>
+                              >
+                                Agregar
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
                       );
                     })
-          )}
-        </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
         </ScrollArea>
 
-        <div className="sticky bottom-0 z-10 bg-background pt-4 border-t flex justify-end gap-2">
-          <Button variant="outline" onClick={handleClose} disabled={loading}>
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            disabled={loading}
-            className="min-w-[100px]"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-            Guardar
-              </>
-            )}
-          </Button>
+        <div className="sticky bottom-0 z-10 bg-background pt-4 border-t flex justify-between items-center gap-2">
+          <div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addQuestion}
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Agregar Pregunta
+            </Button>
+          </div>
+
+          <div className="flex gap-2 justify-center items-center">
+            <Button variant="outline" onClick={handleClose} disabled={loading}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="min-w-[100px]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Guardar
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
