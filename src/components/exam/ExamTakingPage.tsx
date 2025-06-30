@@ -353,6 +353,7 @@ export function ExamTakingPage() {
           timeRemaining={timeRemaining}
           isTimerRunning={isTimerRunning}
           formatTimeRemaining={formatTimeRemaining}
+          onFinish={currentQuestionIndex + 1 === totalQuestions ? () => setShowSubmissionModal(true) : undefined}
         />
       )}
 

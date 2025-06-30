@@ -86,9 +86,10 @@ export default function ExamResultsViewModal({
 }: ExamResultsViewModalProps) {
   if (!result) return null;
 
+  const answers = result.answers ?? [];
   const scorePercentage = Math.round((result.score / result.maxScore) * 100);
-  const correctAnswers = result.answers.filter(answer => answer.isCorrect).length;
-  const incorrectAnswers = result.answers.length - correctAnswers;
+  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  const incorrectAnswers = answers.length - correctAnswers;
   const timeTaken = new Date(result.submittedAt).getTime() - new Date(result.startTime).getTime();
   const timeTakenMinutes = Math.round(timeTaken / (1000 * 60));
 
@@ -243,15 +244,15 @@ export default function ExamResultsViewModal({
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Preguntas respondidas:</span>
-                        <span className="font-medium">{result.answers.length}</span>
+                        <span className="font-medium">{answers.length}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Precisión:</span>
-                        <span className="font-medium">{Math.round((correctAnswers / result.answers.length) * 100)}%</span>
+                        <span className="font-medium">{Math.round((correctAnswers / answers.length) * 100)}%</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Tiempo promedio por pregunta:</span>
-                        <span className="font-medium">{Math.round(timeTakenMinutes / result.answers.length)} min</span>
+                        <span className="font-medium">{Math.round(timeTakenMinutes / answers.length)} min</span>
                       </div>
                     </div>
                   </div>
@@ -282,7 +283,7 @@ export default function ExamResultsViewModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {result.answers.map((answer, index) => (
+                  {answers.map((answer, index) => (
                     <div
                       key={answer.questionId}
                       className={cn(

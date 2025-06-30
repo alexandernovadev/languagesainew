@@ -48,6 +48,7 @@ interface ExamQuestionTakingProps {
   timeRemaining?: number;
   isTimerRunning?: boolean;
   formatTimeRemaining?: (seconds: number) => string;
+  onFinish?: () => void;
 }
 
 // Componente reutilizable para opciones tipo tarjeta con radio
@@ -100,6 +101,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
   timeRemaining,
   isTimerRunning,
   formatTimeRemaining,
+  onFinish,
 }) => {
   const [showNavigation, setShowNavigation] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
@@ -403,15 +405,22 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
-
         <div className="flex justify-end">
-          <Button
-            onClick={handleNext}
-            disabled={questionNumber === totalQuestions}
-            className="flex items-center gap-2"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          {questionNumber === totalQuestions ? (
+            <Button
+              onClick={onFinish}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-base font-semibold rounded-md shadow"
+            >
+              Finalizar Examen
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              className="flex items-center gap-2"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
