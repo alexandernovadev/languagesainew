@@ -108,9 +108,9 @@ export function ExamTable({
           exams.map((exam) => (
             <TableRow key={exam._id} className="hover:bg-muted/50">
               {/* Detalle Card */}
-              <TableCell className="py-4">
+              <TableCell className="">
                 <Card className="border-0 shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
+                  <CardContent className="">
                     <div className="space-y-3">
                       {/* Título */}
                       <div>

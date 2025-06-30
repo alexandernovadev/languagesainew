@@ -8,6 +8,7 @@ import { ExamPagination } from '@/components/exam/ExamPagination';
 import { ExamPageSkeleton } from '@/components/exam/ExamPageSkeleton';
 import ExamFiltersModal from '@/components/exam/ExamFiltersModal';
 import ExamViewModal from '@/components/exam/ExamViewModal';
+import { ExamEditModal } from '@/components/exam/ExamEditModal';
 import { ExamDeleteDialog } from '@/components/exam/ExamDeleteDialog';
 
 export default function ExamsPage() {
@@ -21,6 +22,7 @@ export default function ExamsPage() {
     selectedExam,
     isViewModalOpen,
     isFiltersModalOpen,
+    isEditModalOpen,
     examToDelete,
     isDeleteDialogOpen,
     hasActiveFilters,
@@ -29,6 +31,7 @@ export default function ExamsPage() {
     setSearchTerm,
     setIsViewModalOpen,
     setIsFiltersModalOpen,
+    setIsEditModalOpen,
     setIsDeleteDialogOpen,
 
     // Handlers
@@ -42,6 +45,7 @@ export default function ExamsPage() {
     handleRemoveExam,
     handleConfirmDelete,
     handleCloseViewModal,
+    handleCloseEditModal,
     fetchExams,
     goToPage,
   } = useExams();
@@ -110,6 +114,13 @@ export default function ExamsPage() {
         isOpen={isViewModalOpen}
         onClose={handleCloseViewModal}
         onEditExam={handleEditExam}
+      />
+
+      <ExamEditModal
+        exam={selectedExam}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onExamUpdated={fetchExams}
       />
 
       <ExamDeleteDialog

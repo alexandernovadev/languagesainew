@@ -34,6 +34,7 @@ interface UseExamsReturn {
   isFiltersModalOpen: boolean;
   examToDelete: Exam | null;
   isDeleteDialogOpen: boolean;
+  isEditModalOpen: boolean;
   hasActiveFilters: boolean;
 
   // Actions
@@ -44,6 +45,7 @@ interface UseExamsReturn {
   setIsViewModalOpen: (open: boolean) => void;
   setIsFiltersModalOpen: (open: boolean) => void;
   setIsDeleteDialogOpen: (open: boolean) => void;
+  setIsEditModalOpen: (open: boolean) => void;
 
   // Handlers
   handleFilterChange: (newFilters: ExamFilters) => void;
@@ -56,6 +58,7 @@ interface UseExamsReturn {
   handleRemoveExam: (exam: Exam) => void;
   handleConfirmDelete: () => Promise<void>;
   handleCloseViewModal: () => void;
+  handleCloseEditModal: () => void;
   fetchExams: () => Promise<void>;
   goToPage: (page: number) => void;
 }
@@ -66,7 +69,7 @@ const defaultFilters: ExamFilters = {
   topic: 'all',
   source: 'all',
   adaptive: 'all',
-  createdBy: '',
+  createdBy: 'all',
   sortBy: 'createdAt',
   sortOrder: 'desc',
   createdAfter: '',
@@ -75,7 +78,7 @@ const defaultFilters: ExamFilters = {
 
 export function useExams(): UseExamsReturn {
   const [exams, setExams] = useState<Exam[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<ExamFilters>(defaultFilters);
   const [pagination, setPagination] = useState<Pagination>({
@@ -89,27 +92,37 @@ export function useExams(): UseExamsReturn {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [examToDelete, setExamToDelete] = useState<Exam | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  // Evitar fetch duplicado por filtros/paginación al montar
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
   const filtersFirstRender = useRef(true);
 
   const fetchExams = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const params = new URLSearchParams({
-        page: pagination.currentPage.toString(),
-        limit: pagination.itemsPerPage.toString(),
-        sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder,
-      });
-
-      // Agregar filtros solo si no son 'all' o están vacíos
-      if (filters.level && filters.level !== 'all') params.append('level', filters.level);
-      if (filters.language && filters.language !== 'all') params.append('language', filters.language);
-      if (filters.topic && filters.topic !== 'all') params.append('topic', filters.topic);
-      if (filters.source && filters.source !== 'all') params.append('source', filters.source);
-      if (filters.adaptive && filters.adaptive !== 'all') params.append('adaptive', filters.adaptive);
-      if (filters.createdBy) params.append('createdBy', filters.createdBy);
+      const params = new URLSearchParams();
+      
+      // Pagination
+      params.append('page', pagination.currentPage.toString());
+      params.append('limit', pagination.itemsPerPage.toString());
+      
+      // Search
+      if (searchTerm.trim()) {
+        params.append('search', searchTerm.trim());
+      }
+      
+      // Filters
+      if (filters.level !== 'all') params.append('level', filters.level);
+      if (filters.language !== 'all') params.append('language', filters.language);
+      if (filters.topic !== 'all') params.append('topic', filters.topic);
+      if (filters.source !== 'all') params.append('source', filters.source);
+      if (filters.adaptive !== 'all') params.append('adaptive', filters.adaptive);
+      if (filters.createdBy !== 'all') params.append('createdBy', filters.createdBy);
+      
+      // Sorting
+      params.append('sortBy', filters.sortBy);
+      params.append('sortOrder', filters.sortOrder);
+      
+      // Date filters
       if (filters.createdAfter) params.append('createdAfter', filters.createdAfter);
       if (filters.createdBefore) params.append('createdBefore', filters.createdBefore);
 
@@ -202,9 +215,8 @@ export function useExams(): UseExamsReturn {
   };
 
   const handleEditExam = (exam: Exam) => {
-    toast.info("Función de editar examen en desarrollo", {
-      description: "Esta funcionalidad estará disponible próximamente",
-    });
+    setSelectedExam(exam);
+    setIsEditModalOpen(true);
   };
 
   const handleRemoveExam = (exam: Exam) => {
@@ -216,20 +228,51 @@ export function useExams(): UseExamsReturn {
     if (!examToDelete) return;
 
     try {
-      toast.info("Función de eliminar examen en desarrollo", {
-        description: "Esta funcionalidad estará disponible próximamente",
-      });
-      setIsDeleteDialogOpen(false);
-      setExamToDelete(null);
+      setLoading(true);
+      
+      // Call the delete API
+      const response = await examService.deleteExam(examToDelete._id);
+      
+      if (response && response.success) {
+        toast.success("Examen eliminado exitosamente", {
+          description: `"${examToDelete.title}" ha sido eliminado`,
+        });
+        
+        // Remove the exam from the local state
+        setExams(prevExams => prevExams.filter(exam => exam._id !== examToDelete._id));
+        
+        // Update pagination
+        setPagination(prev => ({
+          ...prev,
+          totalItems: prev.totalItems - 1,
+        }));
+        
+        // Close the dialog and reset state
+        setIsDeleteDialogOpen(false);
+        setExamToDelete(null);
+        
+        // Refresh the exams list to ensure consistency
+        await fetchExams();
+      } else {
+        throw new Error(response?.message || "Error al eliminar el examen");
+      }
     } catch (error: any) {
+      console.error('Error deleting exam:', error);
       toast.error("Error al eliminar examen", {
         description: error.message || "No se pudo eliminar el examen",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCloseViewModal = () => {
     setIsViewModalOpen(false);
+    setSelectedExam(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
     setSelectedExam(null);
   };
 
@@ -284,6 +327,7 @@ export function useExams(): UseExamsReturn {
     isFiltersModalOpen,
     examToDelete,
     isDeleteDialogOpen,
+    isEditModalOpen,
     hasActiveFilters,
 
     // Actions
@@ -294,6 +338,7 @@ export function useExams(): UseExamsReturn {
     setIsViewModalOpen,
     setIsFiltersModalOpen,
     setIsDeleteDialogOpen,
+    setIsEditModalOpen,
 
     // Handlers
     handleFilterChange,
@@ -306,6 +351,7 @@ export function useExams(): UseExamsReturn {
     handleRemoveExam,
     handleConfirmDelete,
     handleCloseViewModal,
+    handleCloseEditModal,
     fetchExams,
     goToPage,
   };
