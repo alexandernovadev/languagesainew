@@ -22,6 +22,12 @@ import {
   Brain,
   Settings
 } from 'lucide-react';
+import { 
+  getLevelColor, 
+  getSourceVariant, 
+  formatDateShort, 
+  truncateText 
+} from './helpers/examUtils';
 
 interface ExamTableProps {
   exams: Exam[];
@@ -42,38 +48,8 @@ export function ExamTable({
   loading = false,
   searchQuery = ""
 }: ExamTableProps) {
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'A1': return 'default';
-      case 'A2': return 'secondary';
-      case 'B1': return 'outline';
-      case 'B2': return 'destructive';
-      case 'C1': return 'default';
-      case 'C2': return 'secondary';
-      default: return 'outline';
-    }
-  };
-
   const getSourceIcon = (source: string | undefined) => {
     return source === 'ai' ? <Brain className="w-4 h-4" /> : <User className="w-4 h-4" />;
-  };
-
-  const getSourceVariant = (source: string | undefined) => {
-    return source === 'ai' ? 'default' : 'secondary';
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const truncateText = (text: string, maxLength: number = 50) => {
-    if (!text) return 'Sin descripción';
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
   };
 
   if (loading && exams.length === 0) {
@@ -202,7 +178,7 @@ export function ExamTable({
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">
-                    {formatDate(exam.createdAt)}
+                    {formatDateShort(exam.createdAt)}
                   </span>
                 </div>
               </TableCell>

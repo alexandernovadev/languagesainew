@@ -22,6 +22,117 @@ export const getLevelDescription = (level: string): string => {
   return levelData?.description || "";
 };
 
+// Shared Level Color Helper
+export const getLevelColor = (level: string) => {
+  switch (level) {
+    case 'A1': return 'default';
+    case 'A2': return 'secondary';
+    case 'B1': return 'outline';
+    case 'B2': return 'destructive';
+    case 'C1': return 'default';
+    case 'C2': return 'secondary';
+    default: return 'outline';
+  }
+};
+
+// Shared Source Helpers
+export const getSourceIcon = (source?: string) => {
+  return source === 'ai' ? 'Brain' : 'PenTool';
+};
+
+export const getSourceVariant = (source?: string) => {
+  return source === 'ai' ? 'default' : 'secondary';
+};
+
+// Question Text Extraction Helper
+export const getQuestionText = (question: any): string => {
+  // Handle different question structures
+  if (typeof question === 'string') {
+    return question;
+  }
+  
+  if (typeof question === 'object' && question !== null) {
+    // Try different possible field names
+    if (question.text) return question.text;
+    if (question.question) {
+      // If question.question is a string, return it
+      if (typeof question.question === 'string') {
+        return question.question;
+      }
+      // If question.question is an object, try to get text from it
+      if (typeof question.question === 'object' && question.question.text) {
+        return question.question.text;
+      }
+    }
+    if (question.content) return question.content;
+    if (question.title) return question.title;
+  }
+  
+  // Fallback
+  return 'Pregunta sin texto';
+};
+
+// Question Type Extraction Helper
+export const getQuestionType = (question: any): string => {
+  if (typeof question === 'object' && question !== null) {
+    if (question.type) return question.type;
+    if (question.question && typeof question.question === 'object' && question.question.type) {
+      return question.question.type;
+    }
+  }
+  return 'multiple_choice'; // Default fallback
+};
+
+// Question Options Extraction Helper
+export const getQuestionOptions = (question: any): Array<{value: string; label: string; isCorrect: boolean}> => {
+  if (typeof question === 'object' && question !== null) {
+    if (question.options && Array.isArray(question.options)) {
+      return question.options;
+    }
+    if (question.question && typeof question.question === 'object' && question.question.options) {
+      return question.question.options;
+    }
+  }
+  return [];
+};
+
+// Question Correct Answers Extraction Helper
+export const getQuestionCorrectAnswers = (question: any): string[] => {
+  if (typeof question === 'object' && question !== null) {
+    if (question.correctAnswers && Array.isArray(question.correctAnswers)) {
+      return question.correctAnswers;
+    }
+    if (question.question && typeof question.question === 'object' && question.question.correctAnswers) {
+      return question.question.correctAnswers;
+    }
+  }
+  return [];
+};
+
+// Question Tags Extraction Helper
+export const getQuestionTags = (question: any): string[] => {
+  if (typeof question === 'object' && question !== null) {
+    if (question.tags && Array.isArray(question.tags)) {
+      return question.tags;
+    }
+    if (question.question && typeof question.question === 'object' && question.question.tags) {
+      return question.question.tags;
+    }
+  }
+  return [];
+};
+
+// Question Explanation Extraction Helper
+export const getQuestionExplanation = (question: any): string => {
+  if (typeof question === 'object' && question !== null) {
+    if (question.explanation) return question.explanation;
+    if (question.question && typeof question.question === 'object' && question.question.explanation) {
+      return question.question.explanation;
+    }
+  }
+  return '';
+};
+
 // Difficulty Helpers
 export const getDifficultyLabel = (difficulty: number): string => {
   const difficultyData = questionDifficulties.find(
@@ -41,6 +152,30 @@ export const getLanguageLabel = (lang: string): string => {
     pt: "Português",
   };
   return languages[lang] || lang;
+};
+
+// Date Formatting Helper
+export const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+export const formatDateShort = (date: string) => {
+  return new Date(date).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+// Text Truncation Helper
+export const truncateText = (text: string, maxLength: number = 50) => {
+  if (!text) return 'Sin descripción';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + "...";
 };
 
 // Statistics Helpers
