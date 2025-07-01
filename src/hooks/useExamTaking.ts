@@ -122,8 +122,6 @@ export const useExamTaking = (examId?: string) => {
     try {
       const answersArray = Object.entries(answers).map(([questionId, userAnswer]) => ({
         questionId,
-        questionText: '', // Will be filled by backend
-        options: [], // Will be filled by backend
         userAnswer,
       }));
 
@@ -147,8 +145,6 @@ export const useExamTaking = (examId?: string) => {
     try {
       const answersArray = Object.entries(answers).map(([questionId, userAnswer]) => ({
         questionId,
-        questionText: '', // Will be filled by backend
-        options: [], // Will be filled by backend
         userAnswer,
       }));
 

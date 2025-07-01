@@ -2,8 +2,8 @@ import { api } from './api';
 
 export interface ExamAnswer {
   questionId: string;
-  questionText: string;
-  options: {
+  questionText?: string;
+  options?: {
     value: string;
     label: string;
     isCorrect: boolean;
