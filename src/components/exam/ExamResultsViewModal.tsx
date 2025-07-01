@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Trophy,
   CheckCircle,
@@ -28,9 +28,10 @@ import {
   Award,
   TrendingUp,
   BookOpen,
-} from 'lucide-react';
-import { cn } from '@/utils/common/classnames/cn';
-import { getQuestionTypeLabel } from '@/components/exam/helpers/examUtils';
+} from "lucide-react";
+import { cn } from "@/utils/common/classnames/cn";
+import { getQuestionTypeLabel } from "@/components/exam/helpers/examUtils";
+import { getLanguageInfo } from "@/utils/common/language";
 
 interface ExamResult {
   _id: string;
@@ -46,7 +47,7 @@ interface ExamResult {
     name: string;
     email: string;
   };
-  status: 'submitted' | 'graded' | 'abandoned';
+  status: "submitted" | "graded" | "abandoned";
   startTime: string;
   submittedAt: string;
   gradedAt?: string;
@@ -89,25 +90,29 @@ export default function ExamResultsViewModal({
 
   const answers = result.answers ?? [];
   const scorePercentage = Math.round((result.score / result.maxScore) * 100);
-  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  const correctAnswers = answers.filter((answer) => answer.isCorrect).length;
   const incorrectAnswers = answers.length - correctAnswers;
-  const timeTaken = new Date(result.submittedAt).getTime() - new Date(result.startTime).getTime();
+  const timeTaken =
+    new Date(result.submittedAt).getTime() -
+    new Date(result.startTime).getTime();
   const timeTakenMinutes = Math.round(timeTaken / (1000 * 60));
 
   const getScoreColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600 bg-green-100 dark:bg-green-900/30';
-    if (percentage >= 80) return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30';
-    if (percentage >= 70) return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30';
-    if (percentage >= 60) return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30';
-    return 'text-red-600 bg-red-100 dark:bg-red-900/30';
+    if (percentage >= 90) return "text-green-600 bg-green-100 bg-green-900/30";
+    if (percentage >= 80) return "text-blue-600 bg-blue-100 bg-blue-900/30";
+    if (percentage >= 70)
+      return "text-yellow-600 bg-yellow-100 bg-yellow-900/30";
+    if (percentage >= 60)
+      return "text-orange-600 bg-orange-100 bg-orange-900/30";
+    return "text-red-600 bg-red-100 bg-red-900/30";
   };
 
   const getScoreLabel = (percentage: number) => {
-    if (percentage >= 90) return 'Excelente';
-    if (percentage >= 80) return 'Muy Bueno';
-    if (percentage >= 70) return 'Bueno';
-    if (percentage >= 60) return 'Aceptable';
-    return 'Necesita Mejora';
+    if (percentage >= 90) return "Excelente";
+    if (percentage >= 80) return "Muy Bueno";
+    if (percentage >= 70) return "Bueno";
+    if (percentage >= 60) return "Aceptable";
+    return "Necesita Mejora";
   };
 
   const getScoreIcon = (percentage: number) => {
@@ -119,14 +124,16 @@ export default function ExamResultsViewModal({
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
+
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -149,7 +156,7 @@ export default function ExamResultsViewModal({
                 <CardTitle className="flex items-center justify-between">
                   <span>Puntuación Final</span>
                   <Badge variant="outline" className="text-sm">
-                    {result.exam.level} • {result.exam.language}
+                    {result.exam.level} • {getLanguageInfo(result.exam.language).flag} {getLanguageInfo(result.exam.language).name}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -157,10 +164,12 @@ export default function ExamResultsViewModal({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Main Score */}
                   <div className="text-center">
-                    <div className={cn(
-                      "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-lg mb-2",
-                      getScoreColor(scorePercentage)
-                    )}>
+                    <div
+                      className={cn(
+                        "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-lg mb-2",
+                        getScoreColor(scorePercentage)
+                      )}
+                    >
                       {getScoreIcon(scorePercentage)}
                       {scorePercentage}%
                     </div>
@@ -186,24 +195,32 @@ export default function ExamResultsViewModal({
                   {/* Stats */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Correctas:</span>
+                      <span className="text-sm text-muted-foreground">
+                        Correctas:
+                      </span>
                       <div className="flex items-center gap-1">
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         <span className="font-medium">{correctAnswers}</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Incorrectas:</span>
+                      <span className="text-sm text-muted-foreground">
+                        Incorrectas:
+                      </span>
                       <div className="flex items-center gap-1">
                         <XCircle className="h-4 w-4 text-red-500" />
                         <span className="font-medium">{incorrectAnswers}</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Tiempo:</span>
+                      <span className="text-sm text-muted-foreground">
+                        Tiempo:
+                      </span>
                       <div className="flex items-center gap-1">
                         <Timer className="h-4 w-4 text-blue-500" />
-                        <span className="font-medium">{timeTakenMinutes} min</span>
+                        <span className="font-medium">
+                          {timeTakenMinutes} min
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -221,8 +238,8 @@ export default function ExamResultsViewModal({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg">
-                    <p className="text-sm leading-relaxed text-purple-800 dark:text-purple-200">
+                  <div className="p-4 bg-purple-50 bg-purple-950/30 border border-purple-800 rounded-lg">
+                    <p className="text-sm leading-relaxed text-purple-200">
                       {result.aiFeedback}
                     </p>
                   </div>
@@ -241,7 +258,9 @@ export default function ExamResultsViewModal({
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
-                    <h4 className="font-medium text-sm text-muted-foreground">Estadísticas Generales</h4>
+                    <h4 className="font-medium text-sm text-muted-foreground">
+                      Estadísticas Generales
+                    </h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Preguntas respondidas:</span>
@@ -249,20 +268,34 @@ export default function ExamResultsViewModal({
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Precisión:</span>
-                        <span className="font-medium">{Math.round((correctAnswers / answers.length) * 100)}%</span>
+                        <span className="font-medium">
+                          {Math.round((correctAnswers / answers.length) * 100)}%
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Tiempo promedio por pregunta:</span>
-                        <span className="font-medium">{Math.round(timeTakenMinutes / answers.length)} min</span>
+                        <span className="font-medium">
+                          {Math.round(timeTakenMinutes / answers.length)} min
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="font-medium text-sm text-muted-foreground">Comparación</h4>
+                    <h4 className="font-medium text-sm text-muted-foreground">
+                      Comparación
+                    </h4>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <TrendingUp className="h-4 w-4 text-green-500" />
-                        <span>Rendimiento {scorePercentage >= 80 ? 'superior' : scorePercentage >= 60 ? 'promedio' : 'inferior'} al promedio</span>
+                        <span>
+                          Rendimiento{" "}
+                          {scorePercentage >= 80
+                            ? "superior"
+                            : scorePercentage >= 60
+                            ? "promedio"
+                            : "inferior"}{" "}
+                          al promedio
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <BookOpen className="h-4 w-4 text-blue-500" />
@@ -286,12 +319,18 @@ export default function ExamResultsViewModal({
                 <div className="space-y-4">
                   {answers.map((answer, index) => {
                     // Detectar tipo de pregunta
-                    const type = answer.options && answer.options.length > 0
-                      ? (answer.options.length === 2 && answer.options.some(opt => opt.value === 'true' || opt.value === 'false'))
-                        ? 'true_false'
-                        : answer.options.length > 2 ? 'multiple_choice' : 'single_choice'
-                      : 'writing';
-        
+                    const type =
+                      answer.options && answer.options.length > 0
+                        ? answer.options.length === 2 &&
+                          answer.options.some(
+                            (opt) =>
+                              opt.value === "true" || opt.value === "false"
+                          )
+                          ? "true_false"
+                          : answer.options.length > 2
+                          ? "multiple_choice"
+                          : "single_choice"
+                        : "writing";
 
                     // Mostrar peso
                     const points = answer.points ?? 1;
@@ -300,48 +339,79 @@ export default function ExamResultsViewModal({
                       <div
                         key={answer.questionId}
                         className={cn(
-                          'p-4 rounded-lg border',
-                          'dark:bg-gray-900 dark:border-gray-700'
+                          "p-4 rounded-lg border",
+                          "bg-gray-900 border-gray-700"
                         )}
-                        style={{ backgroundColor: '#18181b' }}
+                        style={{ backgroundColor: "#18181b" }}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">#{index + 1}</Badge>
-                            <Badge variant="yellow">{getQuestionTypeLabel ? getQuestionTypeLabel(type) : type}</Badge>
+                            <Badge
+                              variant="outline"
+                              className="text-xs border-gray-600 text-gray-300"
+                            >
+                              #{index + 1}
+                            </Badge>
+                            <Badge variant="yellow">
+                              {getQuestionTypeLabel
+                                ? getQuestionTypeLabel(type)
+                                : type}
+                            </Badge>
                           </div>
-                          <Badge variant="secondary" className="text-xs dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600">{points} pts</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="text-xs bg-gray-800 text-gray-200 border-gray-600"
+                          >
+                            {points} pts
+                          </Badge>
                         </div>
                         <div className="space-y-3">
-                          <p className="text-sm font-medium text-gray-200">{answer.questionText}</p>
+                          <p className="text-sm font-medium text-gray-200">
+                            {answer.questionText}
+                          </p>
                           {/* Opciones para preguntas de opción múltiple/true_false */}
                           {answer.options && answer.options.length > 0 ? (
                             <div className="flex flex-col gap-2 mt-2">
                               {answer.options.map((option, optIdx) => {
-                                const isSelected = answer.userAnswer.includes(option.value);
+                                const isSelected = answer.userAnswer.includes(
+                                  option.value
+                                );
                                 const isCorrect = option.isCorrect;
-                                let optionStyle = 'border dark:border-gray-700 bg-transparent';
-                                if (isSelected && isCorrect) optionStyle = 'border dark:border-green-500 bg-transparent';
-                                else if (isSelected && !isCorrect) optionStyle = 'border dark:border-red-500 bg-transparent';
-                                else if (!isSelected && isCorrect) optionStyle = 'border dark:border-green-700 bg-transparent';
-                                else if (isSelected) optionStyle = 'border dark:border-blue-500 bg-transparent';
+                                let optionStyle =
+                                  "border border-gray-700 bg-transparent";
+                                if (isSelected && isCorrect)
+                                  optionStyle =
+                                    "border border-green-500 bg-transparent";
+                                else if (isSelected && !isCorrect)
+                                  optionStyle =
+                                    "border border-red-500 bg-transparent";
+                                else if (!isSelected && isCorrect)
+                                  optionStyle =
+                                    "border border-green-700 bg-transparent";
+                                else if (isSelected)
+                                  optionStyle =
+                                    "border border-blue-500 bg-transparent";
                                 return (
                                   <div
                                     key={optIdx}
                                     className={cn(
-                                      'flex items-center gap-2 px-3 py-2 rounded transition-all',
+                                      "flex items-center gap-2 px-3 py-2 rounded transition-all",
                                       optionStyle
                                     )}
                                   >
                                     <span className="font-semibold text-xs text-gray-400">
                                       {String.fromCharCode(65 + optIdx)}
                                     </span>
-                                    <span className="flex-1 text-sm text-gray-200">{option.label || option.value}</span>
+                                    <span className="flex-1 text-sm text-gray-200">
+                                      {option.label || option.value}
+                                    </span>
                                     {isSelected && (
                                       <Badge variant="blue">Tu selección</Badge>
                                     )}
                                     {isCorrect && (
-                                      <Badge variant="default" className="ml-2">Correcta</Badge>
+                                      <Badge variant="default" className="ml-2">
+                                        Correcta
+                                      </Badge>
                                     )}
                                   </div>
                                 );
@@ -350,17 +420,19 @@ export default function ExamResultsViewModal({
                           ) : (
                             // Para preguntas de texto libre/traducción
                             <div>
-                              <p className="text-xs font-medium text-gray-400 mb-1">Tu respuesta:</p>
+                              <p className="text-xs font-medium text-gray-400 mb-1">
+                                Tu respuesta:
+                              </p>
                               <div className="flex flex-wrap gap-1">
                                 {answer.userAnswer.map((ans, ansIndex) => (
                                   <Badge
                                     key={ansIndex}
                                     variant="outline"
                                     className={cn(
-                                      'text-xs',
+                                      "text-xs",
                                       answer.isCorrect
-                                        ? 'dark:border-green-700 dark:text-green-200 dark:bg-green-900/60'
-                                        : 'dark:border-red-700 dark:text-red-200 dark:bg-red-900/60'
+                                        ? "border-green-700 text-green-200 bg-green-900/60"
+                                        : "border-red-700 text-red-200 bg-red-900/60"
                                     )}
                                   >
                                     {ans}
@@ -371,9 +443,16 @@ export default function ExamResultsViewModal({
                           )}
                           {/* Comentario de IA */}
                           {answer.aiComment && (
-                            <div className="mt-3 p-3 dark:bg-blue-900/60 dark:border-blue-700 rounded">
-                              <p className="text-xs font-medium dark:text-blue-300 mb-1">Comentario de IA:</p>
-                              <p className="text-xs dark:text-blue-200">{answer.aiComment}</p>
+                            <div className="mt-3 p-3 bg-blue-900/30 border-blue-700 rounded">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Brain className="h-4 w-4 text-blue-300" />
+                                <p className="text-sm font-medium text-blue-300">
+                                  Comentario de IA:
+                                </p>
+                              </div>
+                              <p className="text-sm text-blue-200 leading-relaxed">
+                                {answer.aiComment}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -419,4 +498,4 @@ export default function ExamResultsViewModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}
