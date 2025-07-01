@@ -56,7 +56,11 @@ import { examService, Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
 import { questionTypes } from "@/data/questionTypes";
 import { getAllLanguages } from "@/utils/common/language";
-import { getAllExamLevels, getExamTypeIcon, getExamTypeLabel } from "@/utils/common/examTypes";
+import {
+  getAllExamLevels,
+  getExamTypeIcon,
+  getExamTypeLabel,
+} from "@/utils/common/examTypes";
 import {
   getLevelLabel,
   getLanguageLabel,
@@ -65,7 +69,6 @@ import {
   formatDate,
   getQuestionText,
   getQuestionType,
-
   getQuestionOptions,
   getQuestionCorrectAnswers,
   getQuestionTags,
@@ -361,18 +364,6 @@ const QuestionItem = React.memo(function QuestionItem({
         </div>
       ) : null}
 
-      {/* Explanation */}
-      {explanation && (
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
-          <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-            Explicación:
-          </h4>
-          <p className="text-sm text-blue-600 dark:text-blue-400">
-            {explanation}
-          </p>
-        </div>
-      )}
-
       {/* Tags */}
       <div className="space-y-2">
         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
@@ -550,7 +541,7 @@ export function ExamEditModal({
         title: exam.title,
         language: exam.language,
         level: exam.level,
-        source: exam.source
+        source: exam.source,
       });
       setFormData({
         title: exam.title || "",
@@ -928,7 +919,7 @@ export function ExamEditModal({
     try {
       // 1. Actualizar metadatos y relación de preguntas del examen
       const questionsForExam = questions.map((q, idx) => ({
-        question: typeof q.question === 'string' ? q.question : q.question?._id,
+        question: typeof q.question === "string" ? q.question : q.question?._id,
         weight: q.weight || 1,
         order: q.order ?? idx,
       }));
@@ -943,7 +934,13 @@ export function ExamEditModal({
 
       // Solo agregar campos si tienen valor
       if (formData.level) {
-        updateData.level = formData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+        updateData.level = formData.level as
+          | "A1"
+          | "A2"
+          | "B1"
+          | "B2"
+          | "C1"
+          | "C2";
       }
       if (formData.language) {
         updateData.language = formData.language;
@@ -957,7 +954,7 @@ export function ExamEditModal({
       if (formData.timeLimit !== undefined) {
         updateData.timeLimit = formData.timeLimit;
       }
-      
+
       console.log("Sending update data:", updateData);
 
       const response = await examService.updateExam(exam._id, updateData);
@@ -972,10 +969,11 @@ export function ExamEditModal({
         for (let i = 0; i < questions.length; i++) {
           const question = questions[i];
           const originalQuestion = originalQuestions[i];
-          const questionId = typeof originalQuestion.question === 'string'
-            ? originalQuestion.question
-            : (originalQuestion.question as any)?._id;
-          if (questionId && typeof questionId === 'string') {
+          const questionId =
+            typeof originalQuestion.question === "string"
+              ? originalQuestion.question
+              : (originalQuestion.question as any)?._id;
+          if (questionId && typeof questionId === "string") {
             const questionText = getQuestionText(question);
             const questionType = getQuestionType(question);
             const options = getQuestionOptions(question);
@@ -1001,7 +999,8 @@ export function ExamEditModal({
       } catch (questionError: any) {
         console.error("Error updating questions:", questionError);
         toast.warning("Examen actualizado parcialmente", {
-          description: "La información básica se guardó, pero hubo errores al actualizar las preguntas.",
+          description:
+            "La información básica se guardó, pero hubo errores al actualizar las preguntas.",
         });
       }
       onExamUpdated();
@@ -1153,7 +1152,10 @@ export function ExamEditModal({
                             </SelectTrigger>
                             <SelectContent>
                               {getAllExamLevels().map((level) => (
-                                <SelectItem key={level.value} value={level.value}>
+                                <SelectItem
+                                  key={level.value}
+                                  value={level.value}
+                                >
                                   {level.label}
                                 </SelectItem>
                               ))}

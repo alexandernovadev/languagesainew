@@ -10,6 +10,7 @@ import {
 } from "./helpers/examUtils";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
 import { useExamStore } from "@/lib/store/useExamStore";
+import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
 interface ExamQuestionDisplayProps {
   question: ExamQuestion;
@@ -158,9 +159,11 @@ export function ExamQuestionDisplay({
               </Badge>
             </div>
             <div className="flex items-start justify-between">
-              <CardTitle className="text-lg leading-relaxed flex-1">
-                {question.text}
-              </CardTitle>
+              <GrammarExplanationTooltip explanation={question.explanation}>
+                <CardTitle className="text-lg leading-relaxed flex-1">
+                  {question.text}
+                </CardTitle>
+              </GrammarExplanationTooltip>
               <Button
                 variant="ghost"
                 size="sm"

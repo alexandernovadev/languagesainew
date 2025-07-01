@@ -6,6 +6,7 @@ import { ExamOptionCard } from "./ExamOptionCard";
 import {
 } from "./helpers/examUtils";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
+import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
 interface ExamQuestionViewProps {
   question: {
@@ -180,9 +181,11 @@ export function ExamQuestionView({
                 {getExamTypeLabel(question.type)}
               </Badge>
             </div>
-            <CardTitle className="text-lg leading-relaxed flex-1">
-              {question.text}
-            </CardTitle>
+            <GrammarExplanationTooltip explanation={question.explanation}>
+              <CardTitle className="text-lg leading-relaxed flex-1">
+                {question.text}
+              </CardTitle>
+            </GrammarExplanationTooltip>
           </div>
         </div>
       </CardHeader>

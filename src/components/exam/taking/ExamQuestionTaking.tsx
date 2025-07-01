@@ -30,6 +30,7 @@ import { Question, QuestionOption } from "./types";
 import { cn } from "@/utils/common/classnames/cn";
 import { ExamTimer } from "@/components/exam/ExamTimer";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
+import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
 interface ExamQuestionTakingProps {
   question: Question;
@@ -367,9 +368,11 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
       {/* Question Card */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg leading-relaxed">
-            {question.text}
-          </CardTitle>
+          <GrammarExplanationTooltip explanation={question.explanation}>
+            <CardTitle className="text-lg leading-relaxed">
+              {question.text}
+            </CardTitle>
+          </GrammarExplanationTooltip>
         </CardHeader>
         <CardContent className="space-y-6">
           {renderQuestionContent()}

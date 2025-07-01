@@ -41,6 +41,7 @@ import {
 } from "./helpers/examUtils";
 import { getLanguageInfo } from "@/utils/common/language";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
+import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
 interface ExamViewModalProps {
   exam: Exam | null;
@@ -255,9 +256,11 @@ export default function ExamViewModal({
 
                           {/* Question Text */}
                           <div className="mb-4">
-                            <p className="text-sm font-medium text-foreground leading-relaxed">
-                              {questionText}
-                            </p>
+                            <GrammarExplanationTooltip explanation={explanation}>
+                              <p className="text-sm font-medium text-foreground leading-relaxed">
+                                {questionText}
+                              </p>
+                            </GrammarExplanationTooltip>
                           </div>
 
                           {/* Options */}
@@ -311,18 +314,6 @@ export default function ExamViewModal({
                                 </div>
                               </div>
                             )}
-
-                          {/* Explanation */}
-                          {explanation && (
-                            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded dark:bg-blue-950/20 dark:border-blue-800">
-                              <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-                                Explicación:
-                              </h4>
-                              <p className="text-sm text-blue-600 dark:text-blue-400">
-                                {explanation}
-                              </p>
-                            </div>
-                          )}
 
                           {/* Tags */}
                           {questionTags.length > 0 && (

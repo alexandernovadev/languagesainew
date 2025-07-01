@@ -33,6 +33,7 @@ import { cn } from "@/utils/common/classnames/cn";
 
 import { getLanguageInfo } from "@/utils/common/language";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
+import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
 interface ExamResult {
   _id: string;
@@ -366,9 +367,11 @@ export default function ExamResultsViewModal({
                           </Badge>
                         </div>
                         <div className="space-y-3">
-                          <p className="text-sm font-medium text-gray-200">
-                            {answer.questionText}
-                          </p>
+                          <GrammarExplanationTooltip explanation={answer.aiComment}>
+                            <p className="text-sm font-medium text-gray-200">
+                              {answer.questionText}
+                            </p>
+                          </GrammarExplanationTooltip>
                           {/* Opciones para preguntas de opción múltiple/true_false */}
                           {answer.options && answer.options.length > 0 ? (
                             <div className="flex flex-col gap-2 mt-2">
