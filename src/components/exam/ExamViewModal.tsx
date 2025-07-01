@@ -33,13 +33,14 @@ import {
   formatDate,
   getQuestionText,
   getQuestionType,
-  getQuestionTypeLabel,
+
   getQuestionOptions,
   getQuestionCorrectAnswers,
   getQuestionTags,
   getQuestionExplanation,
 } from "./helpers/examUtils";
 import { getLanguageInfo } from "@/utils/common/language";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 
 interface ExamViewModalProps {
   exam: Exam | null;
@@ -235,7 +236,7 @@ export default function ExamViewModal({
                                 #{index + 1}
                               </Badge>
                               <Badge variant="secondary" className="text-xs">
-                                {getQuestionTypeLabel(questionType)}
+                                {getExamTypeLabel(questionType)}
                               </Badge>
                             </div>
                             <div className="flex items-center gap-2">

@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Filter, X } from 'lucide-react';
 import { getAllLanguages } from '@/utils/common/language';
+import { getAllExamLevels, getAllExamTypes } from '@/utils/common/examTypes';
 
 interface ExamFilters {
   level: string;
@@ -92,12 +93,11 @@ export default function ExamFiltersModal({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos los niveles</SelectItem>
-                      <SelectItem value="A1">A1 - Principiante</SelectItem>
-                      <SelectItem value="A2">A2 - Básico</SelectItem>
-                      <SelectItem value="B1">B1 - Intermedio</SelectItem>
-                      <SelectItem value="B2">B2 - Intermedio Alto</SelectItem>
-                      <SelectItem value="C1">C1 - Avanzado</SelectItem>
-                      <SelectItem value="C2">C2 - Maestría</SelectItem>
+                      {getAllExamLevels().map((level) => (
+                        <SelectItem key={level.value} value={level.value}>
+                          {level.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

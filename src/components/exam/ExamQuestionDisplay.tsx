@@ -7,8 +7,8 @@ import { Edit } from "lucide-react";
 import { ExamQuestion } from "@/services/examService";
 import { ExamOptionCard } from "./ExamOptionCard";
 import {
-  getQuestionTypeLabel,
 } from "./helpers/examUtils";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 import { useExamStore } from "@/lib/store/useExamStore";
 
 interface ExamQuestionDisplayProps {
@@ -154,7 +154,7 @@ export function ExamQuestionDisplay({
                 Pregunta {questionNumber}
               </span>
               <Badge variant="yellow">
-                {getQuestionTypeLabel(question.type)}
+                {getExamTypeLabel(question.type)}
               </Badge>
             </div>
             <div className="flex items-start justify-between">

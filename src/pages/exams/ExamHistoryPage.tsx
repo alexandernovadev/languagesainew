@@ -24,6 +24,7 @@ import { useExamAttempts } from '@/hooks/useExamAttempts';
 import { ExamAttemptCard } from '@/components/exam/ExamAttemptCard';
 import { ExamAttempt, AttemptStats } from '@/services/examAttemptService';
 import { formatDateShort } from '@/utils/common/time/formatDate';
+import { getAllExamLevels } from '@/utils/common/examTypes';
 import { toast } from 'sonner';
 
 interface ExamHistoryFilters {
@@ -254,12 +255,11 @@ export default function ExamHistoryPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="A1">A1</SelectItem>
-                  <SelectItem value="A2">A2</SelectItem>
-                  <SelectItem value="B1">B1</SelectItem>
-                  <SelectItem value="B2">B2</SelectItem>
-                  <SelectItem value="C1">C1</SelectItem>
-                  <SelectItem value="C2">C2</SelectItem>
+                  {getAllExamLevels().map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 

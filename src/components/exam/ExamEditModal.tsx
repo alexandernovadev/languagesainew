@@ -56,6 +56,7 @@ import { examService, Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
 import { questionTypes } from "@/data/questionTypes";
 import { getAllLanguages } from "@/utils/common/language";
+import { getAllExamLevels, getExamTypeIcon, getExamTypeLabel } from "@/utils/common/examTypes";
 import {
   getLevelLabel,
   getLanguageLabel,
@@ -64,7 +65,7 @@ import {
   formatDate,
   getQuestionText,
   getQuestionType,
-  getQuestionTypeLabel,
+
   getQuestionOptions,
   getQuestionCorrectAnswers,
   getQuestionTags,
@@ -467,7 +468,7 @@ const QuestionOrderItem = React.memo(function QuestionOrderItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
           <Badge variant="outline" className="text-xs px-1 py-0 h-4">
-            {getQuestionTypeLabel(questionType)}
+            {getExamTypeLabel(questionType)}
           </Badge>
           <span className="text-xs text-muted-foreground">
             Peso: {question.weight || 1}
@@ -1022,22 +1023,8 @@ export function ExamEditModal({
   };
 
   const getQuestionTypeIcon = (type: string) => {
-    switch (type) {
-      case "single_choice":
-        return <CircleDot className="w-4 h-4" />;
-      case "multiple_choice":
-        return <CheckSquare className="w-4 h-4" />;
-      case "fill_blank":
-        return <Type className="w-4 h-4" />;
-      case "translate":
-        return <Languages className="w-4 h-4" />;
-      case "true_false":
-        return <HelpCircle className="w-4 h-4" />;
-      case "writing":
-        return <Edit3 className="w-4 h-4" />;
-      default:
-        return <CircleDot className="w-4 h-4" />;
-    }
+    const icon = getExamTypeIcon(type);
+    return <span className="text-lg">{icon}</span>;
   };
 
   if (!exam) return null;
@@ -1165,18 +1152,11 @@ export function ExamEditModal({
                               <SelectValue placeholder="Selecciona el nivel" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="A1">
-                                A1 - Principiante
-                              </SelectItem>
-                              <SelectItem value="A2">A2 - Básico</SelectItem>
-                              <SelectItem value="B1">
-                                B1 - Intermedio
-                              </SelectItem>
-                              <SelectItem value="B2">
-                                B2 - Intermedio Alto
-                              </SelectItem>
-                              <SelectItem value="C1">C1 - Avanzado</SelectItem>
-                              <SelectItem value="C2">C2 - Maestría</SelectItem>
+                              {getAllExamLevels().map((level) => (
+                                <SelectItem key={level.value} value={level.value}>
+                                  {level.label}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>

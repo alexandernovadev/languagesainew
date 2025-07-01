@@ -1,68 +1,17 @@
-export const questionTypes = [
-  {
-    value: "single_choice",
-    label: "Selección Única",
-    description: "Pregunta con una sola opción correcta"
-  },
-  {
-    value: "multiple_choice",
-    label: "Selección Múltiple",
-    description: "Pregunta con varias opciones de respuesta"
-  },
-  {
-    value: "fill_blank",
-    label: "Completar Espacios",
-    description: "Completar espacios en blanco en un texto"
-  },
-  {
-    value: "translate",
-    label: "Traducción",
-    description: "Traducir palabras o frases"
-  },
-  {
-    value: "true_false",
-    label: "Verdadero/Falso",
-    description: "Pregunta de verdadero o falso"
-  },
-  {
-    value: "writing",
-    label: "Escritura",
-    description: "Ejercicio de escritura libre"
-  }
-];
+import { 
+  getAllExamTypes, 
+  getAllExamLevels, 
+  getExamTypeInfo, 
+  getExamLevelInfo 
+} from "@/utils/common/examTypes";
 
-export const questionLevels = [
-  {
-    value: "A1",
-    label: "A1 - Principiante",
-    description: "Nivel básico de principiante"
-  },
-  {
-    value: "A2",
-    label: "A2 - Elemental",
-    description: "Nivel elemental"
-  },
-  {
-    value: "B1",
-    label: "B1 - Intermedio",
-    description: "Nivel intermedio"
-  },
-  {
-    value: "B2",
-    label: "B2 - Intermedio Alto",
-    description: "Nivel intermedio alto"
-  },
-  {
-    value: "C1",
-    label: "C1 - Avanzado",
-    description: "Nivel avanzado"
-  },
-  {
-    value: "C2",
-    label: "C2 - Maestría",
-    description: "Nivel de maestría"
-  }
-];
+// Re-exportar las utilidades para mantener compatibilidad
+export const questionTypes = getAllExamTypes();
+export const questionLevels = getAllExamLevels();
+
+// Funciones helper para mantener compatibilidad
+export const getQuestionTypeInfo = getExamTypeInfo;
+export const getQuestionLevelInfo = getExamLevelInfo;
 
 export const questionDifficulties = [
   {

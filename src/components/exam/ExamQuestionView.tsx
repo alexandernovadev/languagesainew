@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ExamOptionCard } from "./ExamOptionCard";
 import {
-  getQuestionTypeLabel,
 } from "./helpers/examUtils";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 
 interface ExamQuestionViewProps {
   question: {
@@ -177,7 +177,7 @@ export function ExamQuestionView({
                 Pregunta {questionNumber}
               </span>
               <Badge variant="yellow">
-                {getQuestionTypeLabel(question.type)}
+                {getExamTypeLabel(question.type)}
               </Badge>
             </div>
             <CardTitle className="text-lg leading-relaxed flex-1">

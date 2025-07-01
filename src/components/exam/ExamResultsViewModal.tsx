@@ -30,8 +30,9 @@ import {
   BookOpen,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames/cn";
-import { getQuestionTypeLabel } from "@/components/exam/helpers/examUtils";
+
 import { getLanguageInfo } from "@/utils/common/language";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 
 interface ExamResult {
   _id: string;
@@ -353,9 +354,7 @@ export default function ExamResultsViewModal({
                               #{index + 1}
                             </Badge>
                             <Badge variant="yellow">
-                              {getQuestionTypeLabel
-                                ? getQuestionTypeLabel(type)
-                                : type}
+                              {getExamTypeLabel(type)}
                             </Badge>
                           </div>
                           <Badge

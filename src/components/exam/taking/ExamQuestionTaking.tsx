@@ -29,6 +29,7 @@ import {
 import { Question, QuestionOption } from "./types";
 import { cn } from "@/utils/common/classnames/cn";
 import { ExamTimer } from "@/components/exam/ExamTimer";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 
 interface ExamQuestionTakingProps {
   question: Question;
@@ -144,15 +145,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
   };
 
   const getQuestionTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      single_choice: "Opción Única",
-      multiple_choice: "Opción Múltiple",
-      true_false: "Verdadero/Falso",
-      fill_blank: "Completar",
-      translate: "Traducción",
-      writing: "Escritura",
-    };
-    return labels[type] || type;
+    return getExamTypeLabel(type);
   };
 
   const renderQuestionContent = () => {
@@ -335,7 +328,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
                 />
               </span>
             )}
-          <Badge variant="yellow">{getQuestionTypeLabel(question.type)}</Badge>
+          <Badge variant="yellow">{getExamTypeLabel(question.type)}</Badge>
 
           {isAnswered && (
             <Badge variant="default">

@@ -2,8 +2,8 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   calculateQuestionTypeStats,
-  getQuestionTypeLabel,
 } from "../helpers/examUtils";
+import { getExamTypeLabel } from "@/utils/common/examTypes";
 import { QuestionTypeStatsProps } from "../types/examTypes";
 
 export function QuestionTypeStats({
@@ -42,7 +42,7 @@ export function QuestionTypeStats({
               {questionTypeStats[type]}
             </div>
             <div className="text-xs text-muted-foreground">
-              {getQuestionTypeLabel(type)}
+              {getExamTypeLabel(type)}
             </div>
           </div>
         ))}
@@ -61,7 +61,7 @@ export function QuestionTypeStats({
                 <div key={type} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary" className="text-xs">
-                      {getQuestionTypeLabel(type)}
+                      {getExamTypeLabel(type)}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
                       {count} preguntas
