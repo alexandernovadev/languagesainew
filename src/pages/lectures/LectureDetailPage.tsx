@@ -20,6 +20,7 @@ import type { Lecture } from "@/models/Lecture";
 import { getMarkdownTitle, convertMarkdownToHtml } from "@/utils/common/string";
 import { lectureTypes } from "@/data/lectureTypes";
 import { SPEECH_RATES } from "../../speechRates";
+import { getLanguageInfo } from "@/utils/common/language";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -251,7 +252,7 @@ export default function LectureDetailPage() {
                 className="border-purple-400 text-purple-400 hover:bg-purple-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
               >
                 <Languages className="h-3.5 w-3.5" />
-                <span>{lecture.language.toUpperCase()}</span>
+                <span>{getLanguageInfo(lecture.language).flag} {getLanguageInfo(lecture.language).name}</span>
               </Badge>
             </div>
           </div>

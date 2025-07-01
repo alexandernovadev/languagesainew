@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Filter, X } from 'lucide-react';
+import { getAllLanguages } from '@/utils/common/language';
 
 interface ExamFilters {
   level: string;
@@ -109,12 +110,14 @@ export default function ExamFiltersModal({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos los idiomas</SelectItem>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="es">Español</SelectItem>
-                      <SelectItem value="fr">Français</SelectItem>
-                      <SelectItem value="de">Deutsch</SelectItem>
-                      <SelectItem value="it">Italiano</SelectItem>
-                      <SelectItem value="pt">Português</SelectItem>
+                      {getAllLanguages().map((lang) => (
+                        <SelectItem key={lang.code} value={lang.code}>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{lang.flag}</span>
+                            <span>{lang.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

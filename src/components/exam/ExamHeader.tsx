@@ -7,6 +7,7 @@ import { BookOpen, Clock, Users, FileText, Edit } from "lucide-react";
 import { Exam } from "@/services/examService";
 import { getLevelLabel } from "./helpers/examUtils";
 import { formatDateShort } from "@/utils/common/time";
+import { getLanguageInfo } from "@/utils/common/language";
 
 interface ExamHeaderProps {
   exam: Exam;
@@ -62,7 +63,9 @@ export function ExamHeader({
 
           <div className="space-y-2">
             <h4 className="font-medium text-foreground">Idioma</h4>
-            <Badge variant="outline">{exam.language.toUpperCase()}</Badge>
+            <Badge variant="outline">
+              {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+            </Badge>
           </div>
         </div>
 

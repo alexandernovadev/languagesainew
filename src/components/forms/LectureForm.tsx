@@ -21,7 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, FileText } from "lucide-react";
 import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
-import { languageData } from "@/data/languageData";
+import { getAllLanguages } from "@/utils/common/language";
 import type { Lecture } from "@/models/Lecture";
 
 interface LectureFormProps {
@@ -164,7 +164,7 @@ export function LectureForm({
                           <SelectValue placeholder="Selecciona un idioma" />
                         </SelectTrigger>
                         <SelectContent>
-                          {languageData.map((lang) => (
+                          {getAllLanguages().map((lang) => (
                             <SelectItem key={lang.code} value={lang.code}>
                               <div className="flex items-center gap-2">
                                 <span className="text-lg">{lang.flag}</span>

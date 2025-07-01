@@ -28,7 +28,6 @@ import { Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
 import {
   getLevelLabel,
-  getLanguageLabel,
   getLevelColor,
   getSourceVariant,
   formatDate,
@@ -40,6 +39,7 @@ import {
   getQuestionTags,
   getQuestionExplanation,
 } from "./helpers/examUtils";
+import { getLanguageInfo } from "@/utils/common/language";
 
 interface ExamViewModalProps {
   exam: Exam | null;
@@ -117,7 +117,7 @@ export default function ExamViewModal({
                       Idioma
                     </p>
                     <p className="text-sm font-medium">
-                      {getLanguageLabel(exam.language)}
+                      {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
                     </p>
                   </div>
                   <div>

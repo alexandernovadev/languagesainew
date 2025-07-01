@@ -31,6 +31,7 @@ import {
   formatDateShort, 
   truncateText 
 } from './helpers/examUtils';
+import { getLanguageInfo } from "@/utils/common/language";
 
 interface ExamTableProps {
   exams: Exam[];
@@ -150,7 +151,7 @@ export function ExamTable({
                       <div className="flex items-center gap-2">
                         <FileText className="w-3 h-3 text-muted-foreground" />
                         <Badge variant="outline" className="text-xs">
-                          {exam.language.toUpperCase()}
+                          {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
                         </Badge>
                         <Badge variant={getLevelColor(exam.level)} className="text-xs">
                           {exam.level}

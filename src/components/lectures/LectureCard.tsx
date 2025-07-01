@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Edit, Trash2, BookOpen, Calendar } from "lucide-react";
 import type { Lecture } from "@/models/Lecture";
 import { getMarkdownTitle } from "@/utils/common/string";
-import { languageData } from "@/data/languageData";
+import { getLanguageInfo } from "@/utils/common/language";
 import { lectureTypes } from "@/data/lectureTypes";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -34,7 +34,7 @@ export function LectureCard({
   const typeLabel =
     lectureTypes.find((type) => type.value === lecture.typeWrite)?.label ||
     lecture.typeWrite;
-  const lang = languageData.find((l) => l.code === lecture.language);
+  const lang = getLanguageInfo(lecture.language);
 
   const formattedDate = lecture.createdAt
     ? format(new Date(lecture.createdAt), "EEEE, d 'de' MMMM - yyyy", {

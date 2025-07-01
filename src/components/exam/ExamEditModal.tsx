@@ -55,6 +55,7 @@ import { toast } from "sonner";
 import { examService, Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
 import { questionTypes } from "@/data/questionTypes";
+import { getAllLanguages } from "@/utils/common/language";
 import {
   getLevelLabel,
   getLanguageLabel,
@@ -1198,12 +1199,14 @@ export function ExamEditModal({
                               <SelectValue placeholder="Selecciona el idioma" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="en">English</SelectItem>
-                              <SelectItem value="es">Español</SelectItem>
-                              <SelectItem value="fr">Français</SelectItem>
-                              <SelectItem value="de">Deutsch</SelectItem>
-                              <SelectItem value="it">Italiano</SelectItem>
-                              <SelectItem value="pt">Português</SelectItem>
+                              {getAllLanguages().map((lang) => (
+                                <SelectItem key={lang.code} value={lang.code}>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-lg">{lang.flag}</span>
+                                    <span>{lang.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>

@@ -21,6 +21,7 @@ import { ExamTimer } from "./ExamTimer";
 import { ExamProgress } from "./ExamProgress";
 import ExamResultsViewModal from "./ExamResultsViewModal";
 import { toast } from "sonner";
+import { getLanguageInfo } from "@/utils/common/language";
 
 export function ExamTakingPage() {
   const { examId } = useParams<{ examId: string }>();
@@ -241,7 +242,9 @@ export function ExamTakingPage() {
             <CardTitle className="text-2xl">{exam.title}</CardTitle>
             <div className="flex gap-2 flex-wrap">
               <Badge variant="outline">{exam.level}</Badge>
-              <Badge variant="outline">{exam.language}</Badge>
+                              <Badge variant="outline">
+                  {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+                </Badge>
               {exam.topic && <Badge variant="outline">{exam.topic}</Badge>}
             </div>
           </CardHeader>

@@ -1,4 +1,5 @@
 import { FilterGroup } from "./types";
+import { getAllLanguages } from "@/utils/common/language";
 
 export const WORD_LEVELS = [
   { value: "easy", label: "Fácil" },
@@ -6,14 +7,11 @@ export const WORD_LEVELS = [
   { value: "hard", label: "Difícil" },
 ];
 
-export const LANGUAGES = [
-  { value: "en", label: "Inglés", icon: "🇺🇸" },
-  { value: "es", label: "Español", icon: "🇪🇸" },
-  { value: "fr", label: "Francés", icon: "🇫🇷" },
-  { value: "de", label: "Alemán", icon: "🇩🇪" },
-  { value: "it", label: "Italiano", icon: "🇮🇹" },
-  { value: "pt", label: "Portugués", icon: "🇵🇹" },
-];
+export const LANGUAGES = getAllLanguages().map(lang => ({
+  value: lang.code,
+  label: lang.name,
+  icon: lang.flag
+}));
 
 export const WORD_TYPES = [
   { value: "noun", label: "Sustantivo" },
