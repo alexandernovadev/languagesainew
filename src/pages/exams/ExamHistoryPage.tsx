@@ -183,11 +183,11 @@ export default function ExamHistoryPage() {
     setSearchTerm('');
   };
 
-  const getScoreColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600';
-    if (percentage >= 80) return 'text-blue-600';
-    if (percentage >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+  const getScoreVariant = (percentage: number) => {
+    if (percentage >= 90) return 'default';
+    if (percentage >= 80) return 'blue';
+    if (percentage >= 60) return 'yellow';
+    return 'destructive';
   };
 
   const getImprovementIcon = (improvement: number) => {
@@ -342,8 +342,10 @@ export default function ExamHistoryPage() {
                 <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className={`text-2xl font-bold ${getScoreColor(currentStats?.averageScore || 0)}`}>
-                  {Math.round(currentStats?.averageScore || 0)}%
+                <div className="text-2xl font-bold">
+                  <Badge variant={getScoreVariant(currentStats?.averageScore || 0)}>
+                    {Math.round(currentStats?.averageScore || 0)}%
+                  </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {currentStats?.gradedAttempts || 0} exámenes calificados
@@ -406,7 +408,7 @@ export default function ExamHistoryPage() {
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{attempt.exam.level}</Badge>
                       {attempt.status === 'graded' && attempt.score !== undefined && (
-                        <Badge className={getScoreColor((attempt.score / (attempt.maxScore || 1)) * 100)}>
+                        <Badge variant={getScoreVariant((attempt.score / (attempt.maxScore || 1)) * 100)}>
                           {attempt.score}/{attempt.maxScore}
                         </Badge>
                       )}

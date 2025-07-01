@@ -87,7 +87,7 @@ export const ExamAttemptCard: React.FC<ExamAttemptCardProps> = ({
           <CardTitle className="text-lg font-semibold">
             Intento #{attempt._id.slice(-6)}
           </CardTitle>
-          <Badge className={`${getStatusColor(attempt.status)} border`}>
+          <Badge variant={'default'}>
             <div className="flex items-center gap-1">
               {getStatusIcon(attempt.status)}
               {getStatusText(attempt.status)}
@@ -119,9 +119,9 @@ export const ExamAttemptCard: React.FC<ExamAttemptCardProps> = ({
 
         {/* Puntuación */}
         {isGraded && attempt.score !== undefined && attempt.maxScore !== undefined && (
-          <div className="bg-gray-50 p-3 rounded-lg">
+          <div className="border border-border border-dashed p-3 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Puntuación:</span>
+              <span className="text-gray-200">Puntuación:</span>
               <span className={`text-lg font-bold ${getScoreColor(attempt.score, attempt.maxScore)}`}>
                 {attempt.score}/{attempt.maxScore}
               </span>

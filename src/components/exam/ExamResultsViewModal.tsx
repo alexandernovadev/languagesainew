@@ -30,6 +30,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { cn } from '@/utils/common/classnames/cn';
+import { getQuestionTypeLabel } from '@/components/exam/helpers/examUtils';
 
 interface ExamResult {
   _id: string;
@@ -283,98 +284,102 @@ export default function ExamResultsViewModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {answers.map((answer, index) => (
-                    <div
-                      key={answer.questionId}
-                      className={cn(
-                        "p-4 rounded-lg border",
-                        answer.isCorrect
-                          ? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-                          : "bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800"
-                      )}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            #{index + 1}
-                          </Badge>
-                          {answer.isCorrect ? (
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <XCircle className="h-4 w-4 text-red-600" />
-                          )}
-                        </div>
-                        {answer.points && (
-                          <Badge variant="secondary" className="text-xs">
-                            {answer.points} pts
-                          </Badge>
+                  {answers.map((answer, index) => {
+                    // Detectar tipo de pregunta
+                    const type = answer.options && answer.options.length > 0
+                      ? (answer.options.length === 2 && answer.options.some(opt => opt.value === 'true' || opt.value === 'false'))
+                        ? 'true_false'
+                        : answer.options.length > 2 ? 'multiple_choice' : 'single_choice'
+                      : 'writing';
+        
+
+                    // Mostrar peso
+                    const points = answer.points ?? 1;
+
+                    return (
+                      <div
+                        key={answer.questionId}
+                        className={cn(
+                          'p-4 rounded-lg border',
+                          'dark:bg-gray-900 dark:border-gray-700'
                         )}
-                      </div>
-
-                      <div className="space-y-3">
-                        <p className="text-sm font-medium">
-                          {answer.questionText}
-                        </p>
-
-                        {/* User Answer */}
-                        <div>
-                          <p className="text-xs font-medium text-muted-foreground mb-1">
-                            Tu respuesta:
-                          </p>
-                          <div className="flex flex-wrap gap-1">
-                            {answer.userAnswer.map((ans, ansIndex) => (
-                              <Badge
-                                key={ansIndex}
-                                variant="outline"
-                                className={cn(
-                                  "text-xs",
-                                  answer.isCorrect
-                                    ? "border-green-300 text-green-700 bg-green-100"
-                                    : "border-red-300 text-red-700 bg-red-100"
-                                )}
-                              >
-                                {ans}
-                              </Badge>
-                            ))}
+                        style={{ backgroundColor: '#18181b' }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">#{index + 1}</Badge>
+                            <Badge variant="yellow">{getQuestionTypeLabel ? getQuestionTypeLabel(type) : type}</Badge>
                           </div>
+                          <Badge variant="secondary" className="text-xs dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600">{points} pts</Badge>
                         </div>
-
-                        {/* Correct Answer */}
-                        {!answer.isCorrect && (
-                          <div>
-                            <p className="text-xs font-medium text-muted-foreground mb-1">
-                              Respuesta correcta:
-                            </p>
-                            <div className="flex flex-wrap gap-1">
-                              {answer.options
-                                .filter(option => option.isCorrect)
-                                .map((option, optIndex) => (
-                                  <Badge
-                                    key={optIndex}
-                                    variant="outline"
-                                    className="text-xs border-green-300 text-green-700 bg-green-100"
+                        <div className="space-y-3">
+                          <p className="text-sm font-medium text-gray-200">{answer.questionText}</p>
+                          {/* Opciones para preguntas de opción múltiple/true_false */}
+                          {answer.options && answer.options.length > 0 ? (
+                            <div className="flex flex-col gap-2 mt-2">
+                              {answer.options.map((option, optIdx) => {
+                                const isSelected = answer.userAnswer.includes(option.value);
+                                const isCorrect = option.isCorrect;
+                                let optionStyle = 'border dark:border-gray-700 bg-transparent';
+                                if (isSelected && isCorrect) optionStyle = 'border dark:border-green-500 bg-transparent';
+                                else if (isSelected && !isCorrect) optionStyle = 'border dark:border-red-500 bg-transparent';
+                                else if (!isSelected && isCorrect) optionStyle = 'border dark:border-green-700 bg-transparent';
+                                else if (isSelected) optionStyle = 'border dark:border-blue-500 bg-transparent';
+                                return (
+                                  <div
+                                    key={optIdx}
+                                    className={cn(
+                                      'flex items-center gap-2 px-3 py-2 rounded transition-all',
+                                      optionStyle
+                                    )}
                                   >
-                                    {option.label || option.value}
+                                    <span className="font-semibold text-xs text-gray-400">
+                                      {String.fromCharCode(65 + optIdx)}
+                                    </span>
+                                    <span className="flex-1 text-sm text-gray-200">{option.label || option.value}</span>
+                                    {isSelected && (
+                                      <Badge variant="blue">Tu selección</Badge>
+                                    )}
+                                    {isCorrect && (
+                                      <Badge variant="default" className="ml-2">Correcta</Badge>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            // Para preguntas de texto libre/traducción
+                            <div>
+                              <p className="text-xs font-medium text-gray-400 mb-1">Tu respuesta:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {answer.userAnswer.map((ans, ansIndex) => (
+                                  <Badge
+                                    key={ansIndex}
+                                    variant="outline"
+                                    className={cn(
+                                      'text-xs',
+                                      answer.isCorrect
+                                        ? 'dark:border-green-700 dark:text-green-200 dark:bg-green-900/60'
+                                        : 'dark:border-red-700 dark:text-red-200 dark:bg-red-900/60'
+                                    )}
+                                  >
+                                    {ans}
                                   </Badge>
                                 ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-
-                        {/* AI Comment */}
-                        {answer.aiComment && (
-                          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded">
-                            <p className="text-xs font-medium text-blue-700 dark:text-blue-300 mb-1">
-                              Comentario de IA:
-                            </p>
-                            <p className="text-xs text-blue-600 dark:text-blue-400">
-                              {answer.aiComment}
-                            </p>
-                          </div>
-                        )}
+                          )}
+                          {/* Comentario de IA */}
+                          {answer.aiComment && (
+                            <div className="mt-3 p-3 dark:bg-blue-900/60 dark:border-blue-700 rounded">
+                              <p className="text-xs font-medium dark:text-blue-300 mb-1">Comentario de IA:</p>
+                              <p className="text-xs dark:text-blue-200">{answer.aiComment}</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

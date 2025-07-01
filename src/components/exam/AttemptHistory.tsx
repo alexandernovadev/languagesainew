@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, RefreshCw, TrendingUp, Clock, CheckCircle } from 'lucide-react';
-import { ExamAttemptCard } from './ExamAttemptCard';
-import { useExamAttempts } from '@/hooks/useExamAttempts';
-import { ExamAttempt, AttemptStats } from '@/services/examAttemptService';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Loader2,
+  RefreshCw,
+  TrendingUp,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
+import { ExamAttemptCard } from "./ExamAttemptCard";
+import { useExamAttempts } from "@/hooks/useExamAttempts";
+import { ExamAttempt, AttemptStats } from "@/services/examAttemptService";
 
 interface AttemptHistoryProps {
   examId?: string; // Si se proporciona, filtra por examen específico
@@ -22,29 +28,30 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
   onContinue,
   onRetake,
 }) => {
-  const { getUserAttempts, getAttemptStats, loading, error, clearError } = useExamAttempts();
+  const { getUserAttempts, getAttemptStats, loading, error, clearError } =
+    useExamAttempts();
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
   const [stats, setStats] = useState<AttemptStats | null>(null);
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState("all");
 
   const loadData = async () => {
     clearError();
-    
+
     try {
       const [attemptsData, statsData] = await Promise.all([
         getUserAttempts(),
         getAttemptStats(examId),
       ]);
-      
+
       if (attemptsData) {
         setAttempts(attemptsData);
       }
-      
+
       if (statsData) {
         setStats(statsData);
       }
     } catch (error) {
-      console.error('Error loading attempt data:', error);
+      console.error("Error loading attempt data:", error);
     }
   };
 
@@ -52,32 +59,32 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
     loadData();
   }, [examId]);
 
-  const filteredAttempts = attempts.filter(attempt => {
+  const filteredAttempts = attempts.filter((attempt) => {
     if (examId && attempt.exam !== examId) return false;
-    
+
     switch (activeTab) {
-      case 'completed':
-        return attempt.status === 'graded';
-      case 'in_progress':
-        return attempt.status === 'in_progress';
-      case 'submitted':
-        return attempt.status === 'submitted';
-      case 'abandoned':
-        return attempt.status === 'abandoned';
+      case "completed":
+        return attempt.status === "graded";
+      case "in_progress":
+        return attempt.status === "in_progress";
+      case "submitted":
+        return attempt.status === "submitted";
+      case "abandoned":
+        return attempt.status === "abandoned";
       default:
         return true;
     }
   });
 
   const getTabCount = (status: string) => {
-    return attempts.filter(attempt => {
+    return attempts.filter((attempt) => {
       if (examId && attempt.exam !== examId) return false;
       return attempt.status === status;
     }).length;
   };
 
   const getTotalCount = () => {
-    return attempts.filter(attempt => {
+    return attempts.filter((attempt) => {
       if (examId && attempt.exam !== examId) return false;
       return true;
     }).length;
@@ -108,24 +115,32 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.totalAttempts}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {stats.totalAttempts}
+                </div>
                 <div className="text-sm text-gray-600">Total</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.completedAttempts}</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {stats.completedAttempts}
+                </div>
                 <div className="text-sm text-gray-600">Completados</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-600">{stats.inProgressAttempts}</div>
+                <div className="text-2xl font-bold text-yellow-600">
+                  {stats.inProgressAttempts}
+                </div>
                 <div className="text-sm text-gray-600">En progreso</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.averageScore.toFixed(1)}%</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {stats.averageScore.toFixed(1)}%
+                </div>
                 <div className="text-sm text-gray-600">Promedio</div>
               </div>
             </div>
             {stats.bestScore > 0 && (
-              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+              <div className="mt-4 p-3 rounded-lg">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <span className="text-sm font-medium text-green-800">
@@ -155,7 +170,12 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Historial de Intentos</CardTitle>
-            <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadData}
+              disabled={loading}
+            >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -173,30 +193,42 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
                   {getTotalCount()}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="completed" className="flex items-center gap-1">
+              <TabsTrigger
+                value="completed"
+                className="flex items-center gap-1"
+              >
                 <CheckCircle className="h-3 w-3" />
                 Completados
                 <Badge variant="secondary" className="ml-1">
-                  {getTabCount('graded')}
+                  {getTabCount("graded")}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="in_progress" className="flex items-center gap-1">
+              <TabsTrigger
+                value="in_progress"
+                className="flex items-center gap-1"
+              >
                 <Clock className="h-3 w-3" />
                 En progreso
                 <Badge variant="secondary" className="ml-1">
-                  {getTabCount('in_progress')}
+                  {getTabCount("in_progress")}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="submitted" className="flex items-center gap-1">
+              <TabsTrigger
+                value="submitted"
+                className="flex items-center gap-1"
+              >
                 Enviados
                 <Badge variant="secondary" className="ml-1">
-                  {getTabCount('submitted')}
+                  {getTabCount("submitted")}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="abandoned" className="flex items-center gap-1">
+              <TabsTrigger
+                value="abandoned"
+                className="flex items-center gap-1"
+              >
                 Abandonados
                 <Badge variant="secondary" className="ml-1">
-                  {getTabCount('abandoned')}
+                  {getTabCount("abandoned")}
                 </Badge>
               </TabsTrigger>
             </TabsList>
@@ -226,4 +258,4 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
       </Card>
     </div>
   );
-}; 
+};
