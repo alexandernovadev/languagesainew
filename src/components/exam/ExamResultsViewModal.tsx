@@ -240,9 +240,10 @@ export default function ExamResultsViewModal({
                 </CardHeader>
                 <CardContent>
                   <div className="p-4 bg-purple-50 bg-purple-950/30 border border-purple-800 rounded-lg">
-                    <p className="text-sm leading-relaxed text-purple-200">
-                      {result.aiFeedback}
-                    </p>
+                    <div 
+                      className="text-sm leading-relaxed text-purple-200 prose prose-invert max-w-none"
+                      dangerouslySetInnerHTML={{ __html: result.aiFeedback }}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -446,12 +447,13 @@ export default function ExamResultsViewModal({
                               <div className="flex items-center gap-2 mb-2">
                                 <Brain className="h-4 w-4 text-blue-300" />
                                 <p className="text-sm font-medium text-blue-300">
-                                  Comentario de IA:
+                                  Análisis Detallado:
                                 </p>
                               </div>
-                              <p className="text-sm text-blue-200 leading-relaxed">
-                                {answer.aiComment}
-                              </p>
+                              <div 
+                                className="text-sm text-blue-200 leading-relaxed prose prose-invert max-w-none"
+                                dangerouslySetInnerHTML={{ __html: answer.aiComment }}
+                              />
                             </div>
                           )}
                         </div>
