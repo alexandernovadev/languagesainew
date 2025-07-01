@@ -9,6 +9,7 @@ import {
   HelpCircle,
   ClipboardList,
   History,
+  Trash2,
 } from "lucide-react";
 
 export const menuItems = [
@@ -90,6 +91,11 @@ export const configSettingsItems = [
     title: "Exportar",
     url: "/settings/export",
     icon: RotateCcw,
+  },
+  {
+    title: "Cleaner",
+    url: "/settings/cleaner",
+    icon: Trash2,
   },
   {
     title: "Información del Sistema",

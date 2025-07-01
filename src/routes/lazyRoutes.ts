@@ -21,4 +21,5 @@ export const StatisticsPage = lazy(() => import("../pages/statistics/StatisticsP
 export const MyWordsPage = lazy(() => import("../pages/my-words/MyWordsPage"));
 export const QuestionsPage = lazy(() => import("../pages/questions/QuestionsPage"));
 export const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
-export const LogsSettingsPage = lazy(() => import("../pages/settings/LogsSettingsPage")); 
+export const LogsSettingsPage = lazy(() => import("../pages/settings/LogsSettingsPage"));
+export const CleanerPage = lazy(() => import("../pages/settings/CleanerPage")); 
