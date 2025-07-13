@@ -34,7 +34,7 @@ import { useWordStore } from "@/lib/store/useWordStore";
 import { Word } from "@/models/Word";
 import { WordForm } from "@/components/forms/WordForm";
 import { WordDetailsModal } from "@/components/WordDetailsModal";
-import { WordFilters } from "@/components/forms/word-filters/WordFilters";
+import { WordFiltersModal } from "@/components/forms/word-filters/WordFiltersModal";
 import {
   ChevronLeft,
   ChevronRight,
@@ -47,6 +47,7 @@ import {
   X as XIcon,
   Lightbulb,
   RotateCcw,
+  SlidersHorizontal,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -88,6 +89,7 @@ export default function MyWordsPage() {
 
   const [localSearch, setLocalSearch] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
   const dots = useAnimatedDots(generating);
 
@@ -399,6 +401,15 @@ export default function MyWordsPage() {
               )}
             </div>
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFiltersModalOpen(true)}
+              className="h-10"
+            >
+              <SlidersHorizontal className="h-4 w-4 mr-2" />
+              Filtros
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               onClick={() => openDialog()}
@@ -410,8 +421,7 @@ export default function MyWordsPage() {
         }
       />
 
-      {/* Filtros Avanzados */}
-      <WordFilters onFiltersChange={handleFiltersChange} />
+
 
       {/* Tabla de palabras */}
       <Card className="!p-0 !m-0 shadow-none border-none">
@@ -650,6 +660,13 @@ export default function MyWordsPage() {
           loadingTypes={actionLoading.updateTypes}
         />
       )}
+
+      {/* Modal de filtros */}
+      <WordFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        onFiltersChange={handleFiltersChange}
+      />
     </PageLayout>
   );
 }
