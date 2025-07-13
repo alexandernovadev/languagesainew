@@ -4,14 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Save, Download, BookOpen, Loader2 } from "lucide-react";
+import { Save, BookOpen, Loader2, Settings } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,8 +19,8 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import { Lecture } from "@/models/Lecture";
-import { calculateReadingTime } from "@/utils/common/time";
 import { getAuthHeaders } from "@/utils/services";
+import { LectureGeneratorConfigModal } from "@/components/forms/LectureGeneratorConfigModal";
 
 const generatorFormSchema = z.object({
   prompt: z
@@ -44,8 +39,12 @@ export default function LectureGeneratorPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
-  const [estimatedTime, setEstimatedTime] = useState(0);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+
+  // Añadir estados locales para language, rangeMin, rangeMax
+  const [language, setLanguage] = useState("es");
+  const [rangeMin, setRangeMin] = useState(5200);
+  const [rangeMax, setRangeMax] = useState(6500);
 
   const textRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -75,7 +74,6 @@ export default function LectureGeneratorPage() {
   const handleGenerateText = async (data: GeneratorFormData) => {
     setIsGenerating(true);
     setGeneratedText("");
-    setEstimatedTime(0);
 
     try {
       // Usar fetch para streaming ya que axios no maneja streaming fácilmente
@@ -89,7 +87,9 @@ export default function LectureGeneratorPage() {
             level: data.level,
             typeWrite: data.typeWrite,
             addEasyWords: data.addEasyWords,
-            difficulty: data.difficulty,
+            language,
+            rangeMin,
+            rangeMax,
           }),
         }
       );
@@ -116,7 +116,6 @@ export default function LectureGeneratorPage() {
         }
       }
 
-      setEstimatedTime(calculateReadingTime(currentText));
       toast.success("¡Lectura generada exitosamente!");
     } catch (error: any) {
       toast.error(error.message || "Error al generar la lectura");
@@ -135,7 +134,7 @@ export default function LectureGeneratorPage() {
     const data = getValues();
 
     const lecture = {
-      time: estimatedTime,
+      time: 0, // No se calcula aquí, se hace en el backend
       level: data.level,
       typeWrite: data.typeWrite,
       language: "es",
@@ -152,6 +151,40 @@ export default function LectureGeneratorPage() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Sincronizar config con valores actuales al abrir el modal
+  const openConfigModal = () => {
+    setIsConfigOpen(true);
+  };
+
+  // Guardar cambios del modal en el formulario principal
+  const handleSaveConfig = (config: {
+    level: string;
+    typeWrite: string;
+    difficulty: string;
+    addEasyWords: boolean;
+    language: string;
+    rangeMin: number;
+    rangeMax: number;
+  }) => {
+    setValue("level", config.level);
+    setValue("typeWrite", config.typeWrite);
+    setValue("difficulty", config.difficulty);
+    setValue("addEasyWords", config.addEasyWords);
+    setLanguage(config.language);
+    setRangeMin(config.rangeMin);
+    setRangeMax(config.rangeMax);
+  };
+
+  const initialConfig = {
+    level: getValues("level"),
+    typeWrite: getValues("typeWrite"),
+    difficulty: getValues("difficulty"),
+    addEasyWords: getValues("addEasyWords"),
+    language,
+    rangeMin,
+    rangeMax,
   };
 
   return (
@@ -174,24 +207,43 @@ export default function LectureGeneratorPage() {
                   >
                     Tema de la Lectura
                   </Label>
-                  <Button
-                    type="submit"
-                    disabled={isGenerating || !isValid}
-                    className={`gap-2`}
-                    style={{ minWidth: 140 }}
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="shimmer-text">Generando...</span>
-                      </>
-                    ) : (
-                      <>
-                        <BookOpen className="h-4 w-4" />
-                        Generar Lectura
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      aria-label="Configuración avanzada"
+                      onClick={openConfigModal}
+                    >
+                      <Settings className="w-5 h-5" />
+                    </Button>
+                    <LectureGeneratorConfigModal
+                      open={isConfigOpen}
+                      onOpenChange={setIsConfigOpen}
+                      initialConfig={initialConfig}
+                      onSave={handleSaveConfig}
+                      lectureLevels={lectureLevels}
+                      lectureTypes={lectureTypes}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={isGenerating || !isValid}
+                      className={`gap-2`}
+                      style={{ minWidth: 140 }}
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span className="shimmer-text">Generando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <BookOpen className="h-4 w-4" />
+                          Generar Lectura
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 <Textarea
                   id="mainPrompt"
@@ -212,39 +264,12 @@ export default function LectureGeneratorPage() {
         {generatedText && (
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                {estimatedTime > 0 && (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleSaveLecture}
-                      disabled={isSaving}
-                    >
-                      {isSaving ? (
-                        <>
-                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current mr-1" />
-                          Guardando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-1" />
-                          Guardar
-                        </>
-                      )}
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4 mr-1" />
-                      Descargar
-                    </Button>
-                  </div>
-                )}
-              </div>
+              <div className="flex items-center justify-between"></div>
 
               <>
                 <div className="flex flex-wrap gap-3 mt-3">
                   <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
-                    Nivel:{" "} 
+                    Nivel:{" "}
                     {lectureLevels.find((l) => l.value === watchedValues.level)
                       ?.label || watchedValues.level}
                   </span>
@@ -281,11 +306,6 @@ export default function LectureGeneratorPage() {
                     {watchedValues.addEasyWords ? "Sí" : "No"}
                   </span>
                 </div>
-                {estimatedTime > 0 && (
-                  <CardDescription>
-                    Tiempo de lectura estimado: {estimatedTime} minutos
-                  </CardDescription>
-                )}
               </>
             </CardHeader>
             <CardContent>
@@ -299,6 +319,21 @@ export default function LectureGeneratorPage() {
           </Card>
         )}
       </div>
+
+      {/* Botón flotante de guardar */}
+      <Button
+        variant="default"
+        size="icon"
+        onClick={handleSaveLecture}
+        disabled={isSaving || isGenerating || !generatedText.trim()}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-primary hover:bg-primary/90 text-primary-foreground"
+      >
+        {isSaving ? (
+          <Loader2 className="h-6 w-6 animate-spin" />
+        ) : (
+          <Save className="h-6 w-6" />
+        )}
+      </Button>
     </PageLayout>
   );
 }
