@@ -23,6 +23,12 @@ interface StatsWordMetricsProps {
   };
 }
 
+const wordBadgeVariant: Record<string, any> = {
+  easy: "default",
+  medium: "blue",
+  hard: "destructive",
+};
+
 export function StatsWordMetrics({ wordStats }: StatsWordMetricsProps) {
   const totalWords = wordStats.overview.total;
   const examplesPercentage = totalWords > 0 ? (wordStats.quality.withExamples / totalWords) * 100 : 0;
@@ -86,11 +92,7 @@ export function StatsWordMetrics({ wordStats }: StatsWordMetricsProps) {
           <div className="grid grid-cols-3 gap-4">
             {Object.entries(wordStats.metrics.averageSeenByLevel).map(([level, seen]) => (
               <div key={level} className="flex items-center justify-between p-3 border rounded-lg">
-                <Badge variant="outline" className={
-                  level === 'easy' ? 'bg-green-100 text-green-800' :
-                  level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }>
+                <Badge variant={wordBadgeVariant[level] || "default"}>
                   {level === 'easy' ? 'Fácil' : level === 'medium' ? 'Medio' : 'Difícil'}
                 </Badge>
                 <span className="font-medium">{Math.round(seen)}</span>

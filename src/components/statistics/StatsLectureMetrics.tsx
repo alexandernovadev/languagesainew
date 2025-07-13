@@ -23,6 +23,15 @@ interface StatsLectureMetricsProps {
   };
 }
 
+const levelBadgeVariant: Record<string, any> = {
+  A1: "blue",
+  A2: "silver",
+  B1: "secondary",
+  B2: "default",
+  C1: "yellow",
+  C2: "magenta",
+};
+
 export function StatsLectureMetrics({ lectureStats }: StatsLectureMetricsProps) {
   const totalLectures = lectureStats.overview.total;
   const audioPercentage = totalLectures > 0 ? (lectureStats.quality.withAudio / totalLectures) * 100 : 0;
@@ -86,7 +95,7 @@ export function StatsLectureMetrics({ lectureStats }: StatsLectureMetricsProps) 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Object.entries(lectureStats.metrics.averageTimeByLevel).map(([level, time]) => (
               <div key={level} className="flex items-center justify-between p-3 border rounded-lg">
-                <Badge variant="outline">{level}</Badge>
+                <Badge variant={levelBadgeVariant[level] || "default"}>{level}</Badge>
                 <span className="font-medium">{time} min</span>
               </div>
             ))}

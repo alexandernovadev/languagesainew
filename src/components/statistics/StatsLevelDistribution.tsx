@@ -33,8 +33,8 @@ const levelBadgeVariant: Record<string, any> = {
 };
 
 const wordBadgeVariant: Record<string, any> = {
-  "Fácil": "blue",
-  "Medio": "yellow",
+  "Fácil": "default",
+  "Medio": "blue",
   "Difícil": "destructive",
 };
 
