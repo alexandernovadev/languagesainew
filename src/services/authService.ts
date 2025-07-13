@@ -7,4 +7,9 @@ export const authService = {
     const res = await api.post("/api/auth/login", { username, password });
     return res.data;
   },
+
+  async refresh(refreshToken: string) {
+    const res = await api.post("/api/auth/refresh", { refreshToken });
+    return res.data;
+  },
 };

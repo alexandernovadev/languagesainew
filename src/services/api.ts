@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useUserStore } from "@/lib/store/user-store";
 
 export const api = axios.create({
   // baseURL: import.meta.env.VITE_BACK_URL,
@@ -48,7 +49,7 @@ api.interceptors.response.use(
 
     return response;
   },
-  (error) => {
+  async (error) => {
     // Log detallado del error
     console.error("💥 [RESPONSE ERROR]", {
       url: error.config?.url,
@@ -66,10 +67,33 @@ api.interceptors.response.use(
       
       switch (status) {
         case 401:
-          // No autorizado - limpiar token y redirigir a login
-          console.log("🔒 Acceso no autorizado");
-          localStorage.removeItem('user-storage');
-          // window.location.href = '/';
+          // No autorizado - intentar refresh token antes de limpiar
+          console.log("🔒 Token expirado - Intentando refresh...");
+          
+          const store = useUserStore.getState();
+          const refreshSuccess = await store.refreshAccessToken();
+          
+          if (refreshSuccess) {
+            // Reintentar la petición original con el nuevo token
+            console.log("🔄 Reintentando petición con nuevo token...");
+            const newToken = store.token;
+            if (newToken) {
+              error.config.headers.Authorization = `Bearer ${newToken}`;
+              return api.request(error.config);
+            }
+          } else {
+            // Refresh falló - limpiar sesión y abrir modal de login
+            console.log("🔒 Refresh falló - Limpiando sesión y abriendo modal de login");
+            store.clearSession();
+            
+            // Abrir modal de login usando query params
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('showLogin', 'true');
+            window.history.replaceState({}, '', currentUrl.toString());
+            
+            // Disparar evento personalizado para notificar que se debe abrir el modal
+            window.dispatchEvent(new CustomEvent('openLoginModal'));
+          }
           break;
           
         case 403:

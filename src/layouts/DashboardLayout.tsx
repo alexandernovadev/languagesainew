@@ -13,8 +13,8 @@ import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 import { useUserStore } from "@/lib/store/user-store";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
-import { useState } from "react";
 import { LoginModal } from "@/components/auth/LoginModal";
+import { useLoginModal } from "@/hooks/useLoginModal";
 
 export default function DashboardLayout({
   children,
@@ -25,7 +25,7 @@ export default function DashboardLayout({
   const noSidebarRoutes = ["/login", "/register"];
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
   const { isAuthenticated } = useUserStore();
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { isOpen, openLoginModal } = useLoginModal();
 
   return (
     <SidebarProvider>
@@ -47,7 +47,7 @@ export default function DashboardLayout({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setLoginModalOpen(true)}
+              onClick={openLoginModal}
               className="flex items-center gap-2"
             >
               <LogIn className="h-4 w-4" />
@@ -58,7 +58,7 @@ export default function DashboardLayout({
           <div className="container mx-auto">{children}</div>
         </main>
       </SidebarInset>
-      <LoginModal open={loginModalOpen} setOpen={setLoginModalOpen} />
+      <LoginModal open={isOpen} setOpen={openLoginModal} />
     </SidebarProvider>
   );
 }
