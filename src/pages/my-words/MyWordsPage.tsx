@@ -404,10 +404,9 @@ export default function MyWordsPage() {
               variant="outline"
               size="sm"
               onClick={() => setFiltersModalOpen(true)}
-              className="h-10"
+              className="h-10 w-10 p-0"
             >
-              <SlidersHorizontal className="h-4 w-4 mr-2" />
-              Filtros
+              <SlidersHorizontal className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
