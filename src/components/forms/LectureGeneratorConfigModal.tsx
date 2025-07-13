@@ -284,7 +284,7 @@ export const LectureGeneratorConfigModal: React.FC<
             )}
           </div>
         </div>
-        <DialogFooter className="sticky z-10  px-8 py-6 border-t shadow-lg flex flex-row gap-4 justify-end">
+        <DialogFooter className="sticky z-10 px-8 py-6 border-t shadow-lg flex flex-row gap-4 justify-end">
           <Button
             type="button"
             variant="ghost"
