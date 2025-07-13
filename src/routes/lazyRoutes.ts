@@ -17,7 +17,7 @@ export const ImportSettingsPage = lazy(() => import("../pages/settings/ImportSet
 export const ExportSettingsPage = lazy(() => import("../pages/settings/ExportSettingsPage"));
 export const SystemInfoPage = lazy(() => import("../pages/settings/SystemInfoPage"));
 export const SettingsIndexRedirect = lazy(() => import("../pages/settings/index"));
-export const StatisticsPage = lazy(() => import("../pages/statistics/StatisticsPage"));
+
 export const MyWordsPage = lazy(() => import("../pages/my-words/MyWordsPage"));
 export const QuestionsPage = lazy(() => import("../pages/questions/QuestionsPage"));
 export const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));

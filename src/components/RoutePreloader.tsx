@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import {
   LecturesPage,
   ExamsPage,
-  StatisticsPage,
   MyWordsPage,
 } from "../routes/lazyRoutes";
 
@@ -10,7 +9,6 @@ import {
 const importantRoutes = [
   () => LecturesPage,
   () => ExamsPage,
-  () => StatisticsPage,
   () => MyWordsPage,
 ];
 

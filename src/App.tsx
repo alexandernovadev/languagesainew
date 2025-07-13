@@ -23,7 +23,6 @@ import {
   ExportSettingsPage,
   SystemInfoPage,
   SettingsIndexRedirect,
-  StatisticsPage,
   MyWordsPage,
   QuestionsPage,
   ProfilePage,
@@ -58,7 +57,7 @@ export default function App() {
                   <Route path="system" element={<SystemInfoPage />} />
                   <Route path="logs" element={<LogsSettingsPage />} />
                 </Route>
-                <Route path="/statistics" element={<StatisticsPage />} />
+
                 <Route path="/my-words" element={<MyWordsPage />} />
                 <Route path="/questions" element={<QuestionsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />

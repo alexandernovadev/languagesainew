@@ -2,7 +2,6 @@ import {
   Home,
   Settings,
   BookOpen,
-  BarChart3,
   FileText,
   RotateCcw,
   Gamepad2,
@@ -43,11 +42,7 @@ export const menuItems = [
     url: "/exam-history",
     icon: History,
   },
-  {
-    title: "Estadísticas",
-    url: "/statistics",
-    icon: BarChart3,
-  },
+
 ];
 
 export const generatorItems = [
@@ -100,7 +95,7 @@ export const configSettingsItems = [
   {
     title: "Información del Sistema",
     url: "/settings/system",
-    icon: BarChart3,
+    icon: Settings,
   },
   {
     title: "Registros",
