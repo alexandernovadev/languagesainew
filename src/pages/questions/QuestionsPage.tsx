@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useQuestionStore } from "@/lib/store/useQuestionStore";
 import { Question, QuestionInput } from "@/models/Question";
-import { QuestionFilters } from "@/components/forms/question-filters/QuestionFilters";
+import { QuestionFiltersModal } from "@/components/forms/question-filters/QuestionFiltersModal";
 import { QuestionTable } from "@/components/questions/QuestionTable";
 import { QuestionPagination } from "@/components/questions/QuestionPagination";
 import { QuestionForm } from "@/components/forms/QuestionForm";
@@ -33,6 +33,7 @@ import {
   Plus,
   Search,
   X as XIcon,
+  SlidersHorizontal,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,6 +63,7 @@ export default function QuestionsPage() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [localSearch, setLocalSearch] = useState("");
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
   // Evitar fetch duplicado por filtros al montar
   const filtersFirstRender = useRef(true);
@@ -250,10 +252,20 @@ export default function QuestionsPage() {
         title="Questions"
         description="Manage and create questions for language learning exercises and assessments."
         actions={
-          <Button onClick={() => openDialog()} className="sm:w-auto">
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Pregunta
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFiltersModalOpen(true)}
+              className="h-10 w-10 p-0"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
+            <Button onClick={() => openDialog()} className="sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              Nueva Pregunta
+            </Button>
+          </div>
         }
       />
 
@@ -280,8 +292,7 @@ export default function QuestionsPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <QuestionFilters onFiltersChange={handleFiltersChange} />
+
 
       {/* Questions Table */}
       <Card>
@@ -362,6 +373,13 @@ export default function QuestionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Modal de filtros */}
+      <QuestionFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        onFiltersChange={handleFiltersChange}
+      />
     </PageLayout>
   );
 } 
