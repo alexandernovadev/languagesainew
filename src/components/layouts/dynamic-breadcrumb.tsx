@@ -16,6 +16,8 @@ const routeNameMapping: { [key: string]: string } = {
   "/my-words": "Mis Palabras",
 
   "/settings": "Configuración",
+  "/generator": "Generador",
+  "/games": "Juegos",
   "/lectures/:id": "Detalle de Lectura",
   "/games/anki": "Juego Anki",
   "/games/verbs": "Juego de Verbos",
@@ -34,6 +36,14 @@ const routeNameMapping: { [key: string]: string } = {
   "/admin": "Admin",
   "/admin/users": "Usuarios",
 };
+
+// Rutas que no deberían ser clickeables (solo grupos de navegación)
+const nonClickableRoutes = [
+  "/admin",
+  "/settings",
+  "/generator",
+  "/games",
+];
 
 export function DynamicBreadcrumb() {
   const location = useLocation();
@@ -55,12 +65,13 @@ export function DynamicBreadcrumb() {
           const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === pathSegments.length - 1;
           const name = routeNameMapping[path] || segment;
+          const isNonClickable = nonClickableRoutes.includes(path);
 
           return (
             <React.Fragment key={path}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                {isLast ? (
+                {isLast || isNonClickable ? (
                   <BreadcrumbPage>{name}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
