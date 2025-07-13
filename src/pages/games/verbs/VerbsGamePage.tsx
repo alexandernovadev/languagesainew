@@ -164,7 +164,7 @@ export default function VerbsGamePage() {
     return (
       <PageLayout>
         <PageHeader
-          title="Verbs Participios"
+          title="Juego de Verbos"
           description="Practica los verbos irregulares y sus participios."
           actions={
             <div className="flex items-center justify-between">
@@ -229,7 +229,7 @@ export default function VerbsGamePage() {
   return (
     <PageLayout>
       <PageHeader
-        title="Verbs Participios"
+        title="Juego de Verbos"
         description="Practica los verbos irregulares y sus participios."
         actions={
           <div className="flex items-center justify-between">

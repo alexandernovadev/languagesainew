@@ -87,7 +87,7 @@ export function AppSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Generator</SidebarGroupLabel>
+            <SidebarGroupLabel>Generadores</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {generatorItems.map((item) => (
@@ -113,7 +113,7 @@ export function AppSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Games</SidebarGroupLabel>
+            <SidebarGroupLabel>Juegos</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {gamesItems.map((item) => (
@@ -139,7 +139,7 @@ export function AppSidebar() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Configuraciones</SidebarGroupLabel>
+            <SidebarGroupLabel>Configuración</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {configSettingsItems.map((item) => (

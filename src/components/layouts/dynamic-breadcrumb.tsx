@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
+import { Home } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,17 +11,26 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const routeNameMapping: { [key: string]: string } = {
-  "/dashboard": "Dashboard",
-  "/lectures": "Lectures",
-  "/my-words": "My Words",
-  "/statistics": "Statistics",
-  "/settings": "Settings",
-  "/lectures/:id": "Lecture Detail",
-  "/games/anki": "Anki Game",
-  "/games/verbs": "Verbs Game",
-  "/generator/lecture": "Lecture Generator",
-  "/generator/exam": "Exam Generator",
+  "/dashboard": "Inicio",
+  "/lectures": "Lecturas",
+  "/my-words": "Mis Palabras",
+  "/statistics": "Estadísticas",
+  "/settings": "Configuración",
+  "/lectures/:id": "Detalle de Lectura",
+  "/games/anki": "Juego Anki",
+  "/games/verbs": "Juego de Verbos",
+  "/generator/lecture": "Generador de Lecturas",
+  "/generator/exam": "Generador de Exámenes",
   "/exam-history": "Historial de Exámenes",
+  "/questions": "Preguntas",
+  "/exams": "Exámenes",
+  "/profile": "Mi Perfil",
+  "/settings/general": "Configuración General",
+  "/settings/import": "Importar",
+  "/settings/export": "Exportar",
+  "/settings/cleaner": "Limpiador",
+  "/settings/system": "Información del Sistema",
+  "/settings/logs": "Registros",
 };
 
 export function DynamicBreadcrumb() {
@@ -34,7 +44,9 @@ export function DynamicBreadcrumb() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link to="/">Home</Link>
+            <Link to="/" className="flex items-center gap-1">
+              <Home className="h-4 w-4" />
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {pathSegments.map((segment, index) => {

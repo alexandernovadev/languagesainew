@@ -246,7 +246,7 @@ export default function AnkiGamePage() {
   return (
     <PageLayout>
       <PageHeader
-        title="Anki Game"
+        title="Juego Anki"
         description="Practica vocabulario con tarjetas interactivas"
         actions={actions}
       />

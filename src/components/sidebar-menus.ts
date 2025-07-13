@@ -14,22 +14,22 @@ import {
 
 export const menuItems = [
   {
-    title: "Dashboard",
+    title: "Inicio",
     url: "/",
     icon: Home,
   },
   {
-    title: "Lectures",
+    title: "Lecturas",
     url: "/lectures",
     icon: BookOpen,
   },
   {
-    title: "My Words",
+    title: "Mis Palabras",
     url: "/my-words",
     icon: BookOpen,
   },
   {
-    title: "Questions",
+    title: "Preguntas",
     url: "/questions",
     icon: HelpCircle,
   },
@@ -52,12 +52,12 @@ export const menuItems = [
 
 export const generatorItems = [
   {
-    title: "Exam Generator",
+    title: "Generador de Exámenes",
     url: "/generator/exam",
     icon: FileText,
   },
   {
-    title: "Lecture Generator",
+    title: "Generador de Lecturas",
     url: "/generator/lecture",
     icon: BookOpen,
   },
@@ -65,12 +65,12 @@ export const generatorItems = [
 
 export const gamesItems = [
   {
-    title: "Anki Game",
+    title: "Juego Anki",
     url: "/games/anki",
     icon: RotateCcw,
   },
   {
-    title: "Verbs Participios",
+    title: "Juego de Verbos",
     url: "/games/verbs",
     icon: Gamepad2,
   },
@@ -93,7 +93,7 @@ export const configSettingsItems = [
     icon: RotateCcw,
   },
   {
-    title: "Cleaner",
+    title: "Limpiador",
     url: "/settings/cleaner",
     icon: Trash2,
   },
@@ -103,7 +103,7 @@ export const configSettingsItems = [
     icon: BarChart3,
   },
   {
-    title: "Logs",
+    title: "Registros",
     url: "/settings/logs",
     icon: FileText,
   },
