@@ -95,13 +95,13 @@ export const configSettingsItems = [
     icon: Trash2,
   },
   {
-    title: "Información del Sistema",
-    url: "/settings/system",
-    icon: Settings,
-  },
-  {
     title: "Registros",
     url: "/settings/logs",
     icon: FileText,
+  },
+  {
+    title: "Información del Sistema",
+    url: "/settings/system",
+    icon: Settings,
   },
 ];
