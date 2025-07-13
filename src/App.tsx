@@ -1,9 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, useEffect } from "react";
+import React from "react";
 import DashboardLayout from "./layouts/DashboardLayout";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import LoadingSpinner from "./components/LoadingSpinner";
 import LazyRouteErrorBoundary from "./components/LazyRouteErrorBoundary";
+import { toast } from "sonner";
 
 // Importar todas las rutas lazy load
 import {
@@ -31,6 +33,18 @@ import {
   CleanerPage,
   UsersPage,
 } from "./routes";
+
+// Componente para manejar rutas desconocidas
+function NotFoundRedirect() {
+  // Mostrar toast cuando se ejecute este componente
+  useEffect(() => {
+    toast.error("Página no encontrada", {
+      description: "Has sido redirigido a la página principal",
+    });
+  }, []);
+
+  return <Navigate to="/" replace />;
+}
 
 export default function App() {
   return (
@@ -65,6 +79,9 @@ export default function App() {
                 <Route path="/questions" element={<QuestionsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin/users" element={<UsersPage />} />
+                
+                {/* Catch-all route para rutas desconocidas */}
+                <Route path="*" element={<NotFoundRedirect />} />
               </Routes>
             </Suspense>
           </LazyRouteErrorBoundary>
