@@ -1,10 +1,8 @@
 import type * as React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { useUserStore } from "@/lib/store/user-store";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSidebar } from "@/components/ui/sidebar";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import packageJson from "../../package.json";
 
 import {
