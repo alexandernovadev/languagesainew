@@ -3,13 +3,16 @@ import { StatsKPIs } from "./StatsKPIs";
 import { StatsLevelChart } from "./StatsLevelChart";
 import { StatsQualityChart } from "./StatsQualityChart";
 import { StatsLanguageChart } from "./StatsLanguageChart";
+import { StatsLevelDistribution } from "./StatsLevelDistribution";
+import { StatsLectureMetrics } from "./StatsLectureMetrics";
+import { StatsWordMetrics } from "./StatsWordMetrics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { RefreshCw } from "lucide-react";
 
 export function StatisticsDashboard() {
-  const { stats, loading, error, refetch } = useStatistics();
+  const { stats, lectureStats, wordStats, loading, error, refetch } = useStatistics();
 
   if (loading) {
     return (
@@ -48,7 +51,7 @@ export function StatisticsDashboard() {
   }
 
   // Validar que stats tenga la estructura esperada
-  if (!stats.overview || !stats.overview.totalContent) {
+  if (!stats?.overview || !stats?.overview.totalContent) {
     console.error("Invalid stats structure:", stats);
     return (
       <Alert>
@@ -58,6 +61,11 @@ export function StatisticsDashboard() {
         </AlertDescription>
       </Alert>
     );
+  }
+
+  // Validar que los stats detallados estén disponibles
+  if (!lectureStats || !wordStats) {
+    console.error("Missing detailed stats:", { lectureStats, wordStats });
   }
 
   return (
@@ -73,12 +81,30 @@ export function StatisticsDashboard() {
 
       <StatsKPIs stats={stats} />
       
+      <StatsLevelDistribution stats={stats} />
+      
       <div className="grid gap-4 md:grid-cols-2">
         <StatsLevelChart stats={stats} />
         <StatsLanguageChart stats={stats} />
       </div>
 
       <StatsQualityChart stats={stats} />
+
+      {/* Métricas Detalladas de Lecturas */}
+      {lectureStats && (
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">Métricas Detalladas de Lecturas</h3>
+          <StatsLectureMetrics lectureStats={lectureStats} />
+        </div>
+      )}
+
+      {/* Métricas Detalladas de Palabras */}
+      {wordStats && (
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">Métricas Detalladas de Palabras</h3>
+          <StatsWordMetrics wordStats={wordStats} />
+        </div>
+      )}
     </div>
   );
 } 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 interface StatsLevelChartProps {
   stats: {
@@ -29,7 +29,7 @@ export function StatsLevelChart({ stats }: StatsLevelChartProps) {
     },
     count: {
       label: "Cantidad",
-      color: "hsl(var(--chart-1))",
+      color: "#6366f1", // Azul Tailwind
     },
   };
 
@@ -41,14 +41,14 @@ export function StatsLevelChart({ stats }: StatsLevelChartProps) {
           Lecturas disponibles por nivel de dificultad
         </p>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={config} className="h-[300px]">
+      <CardContent className="w-full min-w-0">
+        <ChartContainer config={config} className="h-[300px] w-full min-w-0">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="level" />
-            <YAxis />
-            <Bar dataKey="count" fill="hsl(var(--chart-1))" />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis allowDecimals={false} />
+            <Bar dataKey="count" fill="#6366f1" />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
           </BarChart>
         </ChartContainer>
       </CardContent>

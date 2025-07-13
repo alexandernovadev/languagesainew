@@ -53,8 +53,65 @@ interface DashboardStats {
   };
 }
 
+interface LectureStats {
+  overview: {
+    total: number;
+    recent: number;
+    qualityScore: number;
+  };
+  distribution: {
+    byLevel: {
+      A1: number;
+      A2: number;
+      B1: number;
+      B2: number;
+      C1: number;
+      C2: number;
+    };
+    byLanguage: Record<string, number>;
+  };
+  quality: {
+    withAudio: number;
+    withImages: number;
+    withoutAudio: number;
+    withoutImages: number;
+  };
+  metrics: {
+    averageTimeByLevel: Record<string, number>;
+    averageTimeOverall: number;
+  };
+}
+
+interface WordStats {
+  overview: {
+    total: number;
+    recent: number;
+    qualityScore: number;
+  };
+  distribution: {
+    byLevel: {
+      easy: number;
+      medium: number;
+      hard: number;
+    };
+    byLanguage: Record<string, number>;
+  };
+  quality: {
+    withExamples: number;
+    withImages: number;
+    withoutExamples: number;
+    withoutImages: number;
+  };
+  metrics: {
+    averageSeenByLevel: Record<string, number>;
+    averageSeenOverall: number;
+  };
+}
+
 export function useStatistics() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [lectureStats, setLectureStats] = useState<LectureStats | null>(null);
+  const [wordStats, setWordStats] = useState<WordStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,9 +119,21 @@ export function useStatistics() {
     try {
       setLoading(true);
       setError(null);
-      const response = await statisticsService.getDashboardStats();
-      console.log("API Response:", response);
-      setStats(response);
+      
+      // Cargar todos los datos en paralelo
+      const [dashboardResponse, lectureResponse, wordResponse] = await Promise.all([
+        statisticsService.getDashboardStats(),
+        statisticsService.getLectureStats(),
+        statisticsService.getWordStats()
+      ]);
+      
+      console.log("Dashboard Response:", dashboardResponse);
+      console.log("Lecture Response:", lectureResponse);
+      console.log("Word Response:", wordResponse);
+      
+      setStats(dashboardResponse);
+      setLectureStats(lectureResponse);
+      setWordStats(wordResponse);
     } catch (err: any) {
       console.error("Error loading statistics:", err);
       
@@ -90,6 +159,8 @@ export function useStatistics() {
 
   return {
     stats,
+    lectureStats,
+    wordStats,
     loading,
     error,
     refetch: loadStats

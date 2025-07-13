@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 interface StatsLanguageChartProps {
   stats: {
@@ -24,11 +24,11 @@ export function StatsLanguageChart({ stats }: StatsLanguageChartProps) {
     },
     lectures: {
       label: "Lecturas",
-      color: "hsl(var(--chart-1))",
+      color: "#6366f1",
     },
     words: {
       label: "Palabras",
-      color: "hsl(var(--chart-2))",
+      color: "#34d399",
     },
   };
 
@@ -40,15 +40,15 @@ export function StatsLanguageChart({ stats }: StatsLanguageChartProps) {
           Distribución de lecturas y palabras por idioma
         </p>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={config} className="h-[300px]">
+      <CardContent className="w-full min-w-0">
+        <ChartContainer config={config} className="h-[300px] w-full min-w-0">
           <BarChart data={languageData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="language" />
             <YAxis />
-            <Bar dataKey="lectures" fill="hsl(var(--chart-1))" name="Lecturas" />
-            <Bar dataKey="words" fill="hsl(var(--chart-2))" name="Palabras" />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <Bar dataKey="lectures" fill="#6366f1" name="Lecturas" />
+            <Bar dataKey="words" fill="#34d399" name="Palabras" />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
           </BarChart>
         </ChartContainer>
       </CardContent>
