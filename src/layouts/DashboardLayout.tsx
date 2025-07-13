@@ -25,7 +25,7 @@ export default function DashboardLayout({
   const noSidebarRoutes = ["/login", "/register"];
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
   const { isAuthenticated } = useUserStore();
-  const { isOpen, openLoginModal } = useLoginModal();
+  const { isOpen, openLoginModal, closeLoginModal } = useLoginModal();
 
   return (
     <SidebarProvider>
@@ -58,7 +58,7 @@ export default function DashboardLayout({
           <div className="container mx-auto">{children}</div>
         </main>
       </SidebarInset>
-      <LoginModal open={isOpen} setOpen={openLoginModal} />
+      <LoginModal open={isOpen} setOpen={closeLoginModal} />
     </SidebarProvider>
   );
 }
