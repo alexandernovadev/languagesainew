@@ -10,6 +10,8 @@ import ExamFiltersModal from '@/components/exam/ExamFiltersModal';
 import ExamViewModal from '@/components/exam/ExamViewModal';
 import { ExamEditModal } from '@/components/exam/ExamEditModal';
 import { ExamDeleteDialog } from '@/components/exam/ExamDeleteDialog';
+import { PageHeader } from '@/components/ui/page-header';
+import { PageLayout } from '@/components/layouts/page-layout';
 
 export default function ExamsPage() {
   const {
@@ -55,8 +57,11 @@ export default function ExamsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <ExamPageHeader />
+    <PageLayout>
+      <PageHeader
+        title="Exámenes"
+        description="Gestiona y crea exámenes personalizados para evaluar tu progreso."
+      />
 
       <ExamSearchAndFilters
         searchTerm={searchTerm}
@@ -129,6 +134,6 @@ export default function ExamsPage() {
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleConfirmDelete}
       />
-    </div>
+    </PageLayout>
   );
 }

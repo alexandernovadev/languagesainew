@@ -52,6 +52,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 import { SPEECH_RATES } from "../../speechRates";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export default function MyWordsPage() {
   const {
@@ -371,44 +373,42 @@ export default function MyWordsPage() {
   };
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 md:px-8 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Mis Palabras</h1>
-          <p className="text-muted-foreground">
-            Gestiona tu vocabulario personal.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1 max-w-2xl">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar palabra..."
-              value={localSearch}
-              onChange={(e) => setLocalSearch(e.target.value)}
-              className="pl-10 w-full pr-10"
-            />
-            {localSearch && (
-              <button
-                type="button"
-                onClick={() => setLocalSearch("")}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-foreground focus:outline-none"
-                aria-label="Limpiar búsqueda"
-              >
-                <XIcon className="h-5 w-5" />
-              </button>
-            )}
+    <PageLayout>
+      <PageHeader
+        title="Mis Palabras"
+        description="Gestiona tu vocabulario personal."
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1 max-w-2xl">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar palabra..."
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
+                className="pl-10 w-full pr-10"
+              />
+              {localSearch && (
+                <button
+                  type="button"
+                  onClick={() => setLocalSearch("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-foreground focus:outline-none"
+                  aria-label="Limpiar búsqueda"
+                >
+                  <XIcon className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => openDialog()}
+              className="h-12 w-12 rounded-full"
+            >
+              <Plus className="h-6 w-6" />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => openDialog()}
-            className="h-12 w-12 rounded-full"
-          >
-            <Plus className="h-6 w-6" />
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filtros Avanzados */}
       <WordFilters onFiltersChange={handleFiltersChange} />
@@ -650,6 +650,6 @@ export default function MyWordsPage() {
           loadingTypes={actionLoading.updateTypes}
         />
       )}
-    </div>
+    </PageLayout>
   );
 }

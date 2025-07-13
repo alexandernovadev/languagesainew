@@ -26,6 +26,8 @@ import { ExamAttempt, AttemptStats } from '@/services/examAttemptService';
 import { formatDateShort } from '@/utils/common/time/formatDate';
 import { getAllExamLevels } from '@/utils/common/examTypes';
 import { toast } from 'sonner';
+import { PageHeader } from '@/components/ui/page-header';
+import { PageLayout } from '@/components/layouts/page-layout';
 
 interface ExamHistoryFilters {
   status: string;
@@ -198,21 +200,17 @@ export default function ExamHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-bold">Historial de Exámenes</h1>
-            <p className="text-muted-foreground">
-              Revisa tu progreso y rendimiento en todos los exámenes
-            </p>
-          </div>
+    <PageLayout>
+      <PageHeader
+        title="Historial de Exámenes"
+        description="Revisa tu progreso y rendimiento en todos los exámenes"
+        actions={
           <Button onClick={loadData} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Actualizar
           </Button>
-        </div>
+        }
+      />
 
         {/* Search and Filters */}
         <Card>
@@ -300,7 +298,6 @@ export default function ExamHistoryPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -529,6 +526,6 @@ export default function ExamHistoryPage() {
           )}
         </TabsContent>
       </Tabs>
-    </div>
+    </PageLayout>
   );
 }

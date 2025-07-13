@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/services/api";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 interface CleanerPageProps {}
 
@@ -103,13 +105,11 @@ export default function CleanerPage({}: CleanerPageProps) {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Cleaner</h1>
-        <p className="text-muted-foreground">
-          Elimina datos masivamente de tu cuenta. Esta acción es irreversible.
-        </p>
-      </div>
+    <PageLayout>
+      <PageHeader
+        title="Cleaner"
+        description="Elimina datos masivamente de tu cuenta. Esta acción es irreversible."
+      />
 
       {message && (
         <Alert
@@ -360,6 +360,6 @@ export default function CleanerPage({}: CleanerPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageLayout>
   );
 }
