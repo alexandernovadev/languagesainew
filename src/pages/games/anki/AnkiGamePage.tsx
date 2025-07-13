@@ -17,6 +17,7 @@ import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnkiStats } from "@/components/games/anki/AnkiStats";
 
 // Declaraciones de tipos para Web Speech API
 declare global {
@@ -76,9 +77,11 @@ const AudioButtons = ({ word, size = "md", className = "" }: AudioButtonsProps) 
 export default function AnkiGamePage() {
   const {
     words,
-    getRecentHardOrMediumWords,
+    getWordsForReview,
     loading,
     updateWordLevel,
+    updateWordReview,
+    incrementWordSeen,
     actionLoading,
   } = useWordStore();
 
@@ -88,14 +91,14 @@ export default function AnkiGamePage() {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        await getRecentHardOrMediumWords();
+        await getWordsForReview(20); // Usar el nuevo método de repaso inteligente
         toast.success("Tarjetas de Anki cargadas exitosamente");
       } catch (error: any) {
         toast.error(error.message || "Error al cargar tarjetas");
       }
     };
     fetchWords();
-  }, [getRecentHardOrMediumWords]);
+  }, [getWordsForReview]);
 
   // Sincroniza shuffledWords cuando words cambia
   useEffect(() => {
@@ -104,6 +107,17 @@ export default function AnkiGamePage() {
 
   const [isFlipped, setIsFlipped] = useState(false);
   const gameStats = useGameStats(shuffledWords.length);
+
+  // Actualizar contador "seen" cuando el usuario ve una tarjeta
+  useEffect(() => {
+    const currentCard = shuffledWords[gameStats.currentIndex];
+    if (currentCard?._id) {
+      // Incrementar contador de vistas sin afectar el algoritmo de repaso
+      incrementWordSeen(currentCard._id).catch(error => {
+        console.error('Error incrementing word seen:', error);
+      });
+    }
+  }, [gameStats.currentIndex, shuffledWords, incrementWordSeen]);
 
   // Estados para reconocimiento de voz
   const [isRecording, setIsRecording] = useState(false);
@@ -187,7 +201,31 @@ export default function AnkiGamePage() {
   const handleSetLevel = async (level: "easy" | "medium" | "hard") => {
     if (shuffledWords[gameStats.currentIndex]?._id) {
       try {
+        // Convertir el nivel a dificultad y calidad para el sistema de repaso
+        let difficulty = 3;
+        let quality = 3;
+        
+        switch (level) {
+          case "easy":
+            difficulty = 1;
+            quality = 5; // Muy fácil
+            break;
+          case "medium":
+            difficulty = 3;
+            quality = 3; // Normal
+            break;
+          case "hard":
+            difficulty = 5;
+            quality = 1; // Muy difícil
+            break;
+        }
+
+        // Actualizar usando el nuevo sistema de repaso
+        await updateWordReview(shuffledWords[gameStats.currentIndex]._id, difficulty, quality);
+        
+        // También actualizar el nivel tradicional para compatibilidad
         await updateWordLevel(shuffledWords[gameStats.currentIndex]._id, level);
+        
         toast.success(`Palabra marcada como '${level}'`);
         gameStats.next();
         setIsFlipped(false);
@@ -250,6 +288,10 @@ export default function AnkiGamePage() {
         description="Practica vocabulario con tarjetas interactivas"
         actions={actions}
       />
+      
+      {/* Estadísticas de repaso */}
+      <AnkiStats />
+      
       <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-230px)] items-center w-full">
         {/* Indicador de progreso compacto */}
         <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-2 mb-2">

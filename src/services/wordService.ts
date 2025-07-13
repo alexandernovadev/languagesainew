@@ -71,6 +71,25 @@ export const wordService = {
     return res.data;
   },
 
+  // Nuevos métodos para sistema de repaso inteligente
+  async getWordsForReview(limit: number = 20) {
+    const res = await api.get(`/api/words/get-words-for-review?limit=${limit}`);
+    return res.data;
+  },
+
+  async updateWordReview(wordId: string, difficulty: number, quality: number) {
+    const res = await api.post(`/api/words/${wordId}/update-review`, {
+      difficulty,
+      quality
+    });
+    return res.data;
+  },
+
+  async getReviewStats() {
+    const res = await api.get(`/api/words/get-review-stats`);
+    return res.data;
+  },
+
   async generateWordJSON(prompt: string, language = "en") {
     const res = await api.post(
       `/api/ai/generate-wordJson`,

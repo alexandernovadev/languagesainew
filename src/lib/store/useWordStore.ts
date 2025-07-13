@@ -32,6 +32,10 @@ interface WordStore {
   incrementWordSeen: (id: string) => Promise<boolean>;
   deleteWord: (id: string) => Promise<boolean>;
   getRecentHardOrMediumWords: () => Promise<void>;
+  // Nuevos métodos para sistema de repaso inteligente
+  getWordsForReview: (limit?: number) => Promise<void>;
+  updateWordReview: (wordId: string, difficulty: number, quality: number) => Promise<any>;
+  getReviewStats: () => Promise<any>;
   clearErrors: () => void;
   setActiveWord: (word: Word | null) => void;
 
@@ -296,6 +300,54 @@ export const useWordStore = create<WordStore>((set, get) => ({
       set({ words: data, loading: false });
     } catch (error: any) {
       set({ errors: error.message, loading: false });
+    }
+  },
+
+  // Nuevos métodos para sistema de repaso inteligente
+  getWordsForReview: async (limit?: number) => {
+    set({ loading: true, errors: null });
+    try {
+      const { data } = await wordService.getWordsForReview(limit);
+      set({ words: data, loading: false });
+    } catch (error: any) {
+      set({ errors: error.message, loading: false });
+    }
+  },
+  updateWordReview: async (wordId: string, difficulty: number, quality: number) => {
+    set({
+      actionLoading: { ...get().actionLoading, updateReview: true },
+      errors: null,
+    });
+    try {
+      const { data } = await wordService.updateWordReview(wordId, difficulty, quality);
+      set((state) => ({
+        words: state.words.map((word) =>
+          word._id === wordId ? { ...word, review: data.review, updatedAt: data.updatedAt } : word
+        ),
+        activeWord:
+          state.activeWord && state.activeWord._id === wordId
+            ? { ...state.activeWord, review: data.review, updatedAt: data.updatedAt }
+            : state.activeWord,
+        actionLoading: { ...state.actionLoading, updateReview: false },
+      }));
+      return data;
+    } catch (error: any) {
+      set({
+        errors: error.message,
+        actionLoading: { ...get().actionLoading, updateReview: false },
+      });
+      throw error;
+    }
+  },
+  getReviewStats: async () => {
+    set({ loading: true, errors: null });
+    try {
+      const { data } = await wordService.getReviewStats();
+      set({ words: data, loading: false });
+      return data;
+    } catch (error: any) {
+      set({ errors: error.message, loading: false });
+      throw error;
     }
   },
 
