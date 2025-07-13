@@ -29,6 +29,7 @@ import {
   ProfilePage,
   LogsSettingsPage,
   CleanerPage,
+  UsersPage,
 } from "./routes";
 
 export default function App() {
@@ -63,6 +64,7 @@ export default function App() {
                 <Route path="/my-words" element={<MyWordsPage />} />
                 <Route path="/questions" element={<QuestionsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/admin/users" element={<UsersPage />} />
               </Routes>
             </Suspense>
           </LazyRouteErrorBoundary>

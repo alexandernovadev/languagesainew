@@ -9,7 +9,7 @@ import {
   ClipboardList,
   History,
   Trash2,
-
+  Users,
 } from "lucide-react";
 
 export const menuItems = [
@@ -74,6 +74,11 @@ export const gamesItems = [
 ];
 
 export const configSettingsItems = [
+  {
+    title: "Usuarios",
+    url: "/admin/users",
+    icon: Users,
+  },
   {
     title: "General",
     url: "/settings/general",

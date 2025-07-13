@@ -31,6 +31,8 @@ const routeNameMapping: { [key: string]: string } = {
   "/settings/cleaner": "Limpiador",
   "/settings/system": "Información del Sistema",
   "/settings/logs": "Registros",
+  "/admin": "Admin",
+  "/admin/users": "Usuarios",
 };
 
 export function DynamicBreadcrumb() {
