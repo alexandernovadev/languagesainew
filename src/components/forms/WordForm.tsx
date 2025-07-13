@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,9 @@ import {
 import { Word } from "@/models/Word";
 import { wordLevels } from "@/data/wordLevels";
 import { EditableList } from "./EditableList";
-import { Book, Sparkles, ListPlus } from "lucide-react";
+import { Book, Sparkles, ListPlus, Wand2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "@/services/api";
 
 interface WordFormProps {
   initialData?: Partial<Word>;
@@ -37,6 +39,9 @@ export function WordForm({
   onCancel,
   loading = false,
 }: WordFormProps) {
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [imageProgress, setImageProgress] = useState(0);
+
   const {
     register,
     handleSubmit,
@@ -55,6 +60,7 @@ export function WordForm({
       level: "easy",
       language: "en",
       spanish: { word: "", definition: "" },
+      img: "",
       ...initialData,
     },
   });
@@ -68,6 +74,7 @@ export function WordForm({
       examples: initialData.examples || [],
       sinonyms: initialData.sinonyms || [],
       codeSwitching: initialData.codeSwitching || [],
+      img: initialData.img || "",
     };
     reset(dataWithArrays);
   }, [initialData, reset]);
@@ -86,6 +93,53 @@ export function WordForm({
 
   const handleSpanishChange = (field: "word" | "definition", value: string) => {
     setValue(`spanish.${field}`, value);
+  };
+
+  // Función para generar imagen con AI
+  const handleGenerateImage = async () => {
+    if (!formData.word) {
+      toast.error("Necesitas una palabra para generar una imagen");
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    setImageProgress(0);
+
+    try {
+      // Simular progreso
+      const progressInterval = setInterval(() => {
+        setImageProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + 10;
+        });
+      }, 500);
+
+      // Llamar al endpoint de generación de imagen para palabras
+      const response = await api.post(`/api/ai/generate-image/${initialData._id || 'temp'}`, {
+        word: formData.word,
+        imgOld: formData.img || "",
+      });
+
+      clearInterval(progressInterval);
+      setImageProgress(100);
+
+      if (response.data.success) {
+        // Actualizar el input con la nueva URL
+        setValue("img", response.data.data.img);
+        toast.success("Imagen generada exitosamente");
+      } else {
+        throw new Error("Error al generar imagen");
+      }
+    } catch (error: any) {
+      console.error("Error generating image:", error);
+      toast.error(error.response?.data?.message || "Error al generar imagen");
+    } finally {
+      setIsGeneratingImage(false);
+      setImageProgress(0);
+    }
   };
 
   return (
@@ -232,6 +286,92 @@ export function WordForm({
                   onChange={(items) => handleChange("codeSwitching", items)}
                   placeholder="Añadir expresión..."
                 />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Imagen</CardTitle>
+                <CardDescription>
+                  Añade una imagen representativa para la palabra (URL).
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+                  <div className="md:col-span-1">
+                    <Label>Vista Previa</Label>
+                    <div className="mt-2 w-full aspect-video rounded-md border flex items-center justify-center bg-muted relative overflow-hidden">
+                      {isGeneratingImage ? (
+                        // Skeleton durante generación
+                        <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
+                          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                          <p className="text-sm text-muted-foreground">Generando imagen...</p>
+                          {imageProgress > 0 && (
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${imageProgress}%` }}
+                              ></div>
+                            </div>
+                          )}
+                        </div>
+                      ) : formData.img ? (
+                        <img
+                          src={formData.img}
+                          alt={formData.word || "Word image"}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-muted-foreground">
+                          <img
+                            src="/placeholder.svg"
+                            alt="No image available"
+                            className="w-20 h-20 opacity-50"
+                          />
+                          <p className="text-sm mt-2">Sin imagen</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="md:col-span-2 space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="img">URL de la Imagen</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="img"
+                          {...register("img")}
+                          placeholder="https://ejemplo.com/imagen.jpg"
+                          disabled={isGeneratingImage}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleGenerateImage}
+                          disabled={isGeneratingImage || !formData.word}
+                          className="whitespace-nowrap"
+                        >
+                          {isGeneratingImage ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Generando...
+                            </>
+                          ) : (
+                            <>
+                              <Wand2 className="h-4 w-4 mr-2" />
+                              Generar con AI
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      {!formData.word && (
+                        <p className="text-xs text-muted-foreground">
+                          Necesitas una palabra para generar una imagen
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

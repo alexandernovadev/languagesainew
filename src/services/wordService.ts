@@ -166,9 +166,9 @@ export const wordService = {
   },
 
   async updateWordImage(wordId: string, word: string, imgOld: string = "") {
-    const res = await api.put(
-      `/api/ai/update-word-image`,
-      { wordId, word, imgOld }
+    const res = await api.post(
+      `/api/ai/generate-image/${wordId}`,
+      { word, imgOld }
     );
     return res.data;
   },

@@ -429,6 +429,7 @@ export default function MyWordsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Palabra</TableHead>
+                <TableHead>Imagen</TableHead>
                 <TableHead>IPA</TableHead>
                 <TableHead>Traducción</TableHead>
                 <TableHead>Nivel</TableHead>
@@ -440,7 +441,7 @@ export default function MyWordsPage() {
               {loading && words.length === 0 ? (
                 Array.from({ length: 7 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
@@ -466,6 +467,28 @@ export default function MyWordsPage() {
                         🐢
                       </Button>
                       {word.word}
+                    </TableCell>
+                    <TableCell>
+                      <div className="w-12 h-12 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
+                        {word.img ? (
+                          <img
+                            src={word.img}
+                            alt={word.word}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        {!word.img && (
+                          <div className="flex flex-col items-center justify-center text-muted-foreground">
+                            <span className="text-xs">NO</span>
+                            <span className="text-xs">IMAGE</span>
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <span className="text-yellow-600 font-mono font-semibold">
