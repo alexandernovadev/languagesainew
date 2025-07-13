@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import {
   LecturesPage,
   ExamsPage,
+
   MyWordsPage,
 } from "../routes/lazyRoutes";
 
@@ -9,6 +10,7 @@ import {
 const importantRoutes = [
   () => LecturesPage,
   () => ExamsPage,
+
   () => MyWordsPage,
 ];
 
