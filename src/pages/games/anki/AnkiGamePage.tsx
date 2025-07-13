@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
+import { wordService } from "@/services/wordService";
 import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
@@ -103,21 +104,29 @@ export default function AnkiGamePage() {
   // Sincroniza shuffledWords cuando words cambia
   useEffect(() => {
     setShuffledWords(words);
+    // Limpiar palabras vistas cuando se cargan nuevas palabras
+    viewedWordsRef.current.clear();
   }, [words]);
 
   const [isFlipped, setIsFlipped] = useState(false);
   const gameStats = useGameStats(shuffledWords.length);
 
+  // Trackear palabras ya vistas para evitar bucles
+  const viewedWordsRef = useRef<Set<string>>(new Set());
+
   // Actualizar contador "seen" cuando el usuario ve una tarjeta
   useEffect(() => {
     const currentCard = shuffledWords[gameStats.currentIndex];
-    if (currentCard?._id) {
-      // Incrementar contador de vistas sin afectar el algoritmo de repaso
-      incrementWordSeen(currentCard._id).catch(error => {
+    if (currentCard?._id && !viewedWordsRef.current.has(currentCard._id)) {
+      // Marcar como vista para evitar bucles
+      viewedWordsRef.current.add(currentCard._id);
+      
+      // Llamar directamente al servicio sin usar el store para evitar bucles
+      wordService.incrementWordSeen(currentCard._id).catch((error: any) => {
         console.error('Error incrementing word seen:', error);
       });
     }
-  }, [gameStats.currentIndex, shuffledWords, incrementWordSeen]);
+  }, [gameStats.currentIndex, shuffledWords]);
 
   // Estados para reconocimiento de voz
   const [isRecording, setIsRecording] = useState(false);
