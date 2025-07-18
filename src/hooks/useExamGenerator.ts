@@ -35,7 +35,7 @@ export function useExamGenerator() {
     isGenerating: false,
     generatedExam: null,
     error: null,
-    progress: 0,
+    progress: 0, // Mantenemos para compatibilidad pero no lo usamos
   });
 
   const [filters, setFilters] = useState<ExamGeneratorFilters>({
@@ -69,7 +69,6 @@ export function useExamGenerator() {
       ...prev,
       isGenerating: true,
       error: null,
-      progress: 0,
       generatedExam: null,
     }));
 
@@ -84,12 +83,7 @@ export function useExamGenerator() {
         userLang: filters.userLang,
       };
 
-      const examData = await examService.generateExamWithProgress(
-        params,
-        (data) => {
-          setState((prev) => ({ ...prev, progress: 50 }));
-        }
-      );
+      const examData = await examService.generateExamWithProgress(params);
 
       setState((prev) => ({
         ...prev,

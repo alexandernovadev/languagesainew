@@ -11,12 +11,7 @@ export interface ExamGenerationParams {
 }
 
 export interface ExamGenerationResponse {
-  success: boolean;
-  message: string;
-  data: {
-    exam: any;
-    questions: any[];
-  };
+  questions: UnifiedExamQuestion[];
 }
 
 export interface Exam {
@@ -32,7 +27,8 @@ export interface Exam {
   adaptive?: boolean;
   version?: number;
   questions?: Array<{
-    question: string;
+    _id?: string;
+    question: any; // Puede ser string o objeto complejo
     weight?: number;
     order?: number;
   }>;
@@ -348,11 +344,10 @@ export const examService = {
     return response.data;
   },
 
-  // Generate exam with progress tracking
+  // Generate exam (sin progreso falso)
   async generateExamWithProgress(
-    params: ExamGenerationParams,
-    onProgress?: (data: any) => void
-  ): Promise<any> {
+    params: ExamGenerationParams
+  ): Promise<ExamGenerationResponse> {
     const response = await api.post(
       "/api/ai/generate-exam",
       {
@@ -363,13 +358,6 @@ export const examService = {
         types: params.types || ["multiple_choice", "fill_blank", "true_false"],
         difficulty: params.difficulty || 3,
         userLang: params.userLang || "es",
-      },
-      {
-        onDownloadProgress: (progressEvent) => {
-          if (onProgress) {
-            onProgress(progressEvent);
-          }
-        },
       }
     );
 

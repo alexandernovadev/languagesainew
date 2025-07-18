@@ -19,6 +19,7 @@ import { useExamStore } from "@/lib/store/useExamStore";
 import { examService } from "@/services/examService";
 import { ExamConfigForm } from "@/components/exam/ExamConfigForm";
 import { ExamGenerationProgress } from "@/components/exam/ExamGenerationProgress";
+import { ExamGenerationSummary } from "@/components/exam/ExamGenerationSummary";
 import { ExamSummary } from "@/components/exam/ExamSummary";
 import { ExamQuestionDisplay } from "@/components/exam/ExamQuestionDisplay";
 import { ExamEditModal } from "@/components/exam/ExamEditModal";
@@ -102,7 +103,7 @@ export default function ExamGeneratorPage() {
               questions: [],
             };
 
-            loadExistingExam(mockGeneratedExam, examData.topic, examData.level);
+            loadExistingExam(mockGeneratedExam, examData.topic || '', examData.level || 'B1');
 
             // Navigate to questions tab
             setActiveTab("questions");
@@ -297,10 +298,13 @@ export default function ExamGeneratorPage() {
                 isSaving={isSaving}
               />
             ) : (
-              <ExamGenerationProgress
-                progress={state.progress}
-                isGenerating={state.isGenerating}
-              />
+              <div className="space-y-6">
+                <ExamGenerationSummary filters={filters} />
+                <ExamGenerationProgress
+                  progress={state.progress}
+                  isGenerating={state.isGenerating}
+                />
+              </div>
             )}
           </TabsContent>
 
@@ -371,6 +375,8 @@ export default function ExamGeneratorPage() {
       <ExamEditModal
         isOpen={isEditing && editingField !== "title"}
         onClose={() => {}}
+        exam={null}
+        onExamUpdated={() => {}}
       />
     </PageLayout>
   );

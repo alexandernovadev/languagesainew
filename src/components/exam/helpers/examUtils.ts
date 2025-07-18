@@ -223,7 +223,22 @@ export const validateExamFilters = (
   };
 };
 
-// Progress Helpers
+// Progress Helpers - Mensajes divertidos sin progreso falso
+export const getFunnyProgressMessages = (): string[] => [
+  "🧠 Despertando a la IA...",
+  "📚 Consultando la biblioteca de conocimiento...",
+  "✍️ Escribiendo preguntas inteligentes...",
+  "🎯 Creando opciones tramposas...",
+  "✨ Añadiendo explicaciones brillantes...",
+  "🎨 Coloreando las respuestas...",
+  "🚀 Preparando el lanzamiento...",
+  "🎉 ¡Casi listo!",
+  "🔍 Revisando la gramática...",
+  "💡 Generando ideas brillantes...",
+  "🎪 Preparando el espectáculo...",
+  "🌟 Añadiendo el toque mágico..."
+];
+
 export const getProgressMessage = (progress: number): string => {
   if (progress === 0) return "Iniciando generación...";
   if (progress < 25) return "Analizando tema y configurando preguntas...";

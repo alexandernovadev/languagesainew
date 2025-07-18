@@ -1,20 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
 
-export function useAnimatedDots(active: boolean, intervalMs = 400, maxDots = 3) {
+export function useAnimatedDots() {
   const [dots, setDots] = useState('');
 
   useEffect(() => {
-    if (!active) {
-      setDots('');
-      return;
-    }
-    let count = 0;
     const interval = setInterval(() => {
-      count = (count + 1) % (maxDots + 1);
-      setDots('.'.repeat(count));
-    }, intervalMs);
+      setDots(prev => {
+        if (prev === '...') return '';
+        return prev + '.';
+      });
+    }, 500);
+
     return () => clearInterval(interval);
-  }, [active, intervalMs, maxDots]);
+  }, []);
 
   return dots;
 } 

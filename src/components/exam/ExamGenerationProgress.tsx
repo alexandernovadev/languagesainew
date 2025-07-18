@@ -2,7 +2,8 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Sparkles, CheckCircle } from "lucide-react";
-import { getProgressMessage } from "./helpers/examUtils";
+import { useAnimatedMessages } from "@/hooks/useAnimatedMessages";
+import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 
 interface ExamGenerationProgressProps {
   progress: number;
@@ -13,6 +14,9 @@ export function ExamGenerationProgress({
   progress,
   isGenerating,
 }: ExamGenerationProgressProps) {
+  const { currentMessage, currentMessageIndex, totalMessages } = useAnimatedMessages(isGenerating);
+  const dots = useAnimatedDots();
+
   if (!isGenerating && progress === 0) {
     return null;
   }
@@ -31,26 +35,34 @@ export function ExamGenerationProgress({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Progreso</span>
-            <span className="font-medium">{progress}%</span>
+        {/* Mensaje animado divertido */}
+        <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-lg">
+          <Sparkles className="h-5 w-5 text-blue-400 animate-pulse" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-blue-300">
+              {currentMessage}
+              <span className="text-blue-400">{dots}</span>
+            </p>
+            <div className="flex gap-1 mt-2">
+              {Array.from({ length: totalMessages }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1 w-1 rounded-full transition-all duration-300 ${
+                    index === currentMessageIndex 
+                      ? 'bg-blue-400 w-3' 
+                      : 'bg-blue-600'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          <Progress value={progress} className="h-2" />
         </div>
 
-        <div className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-          <Sparkles className="h-4 w-4 text-blue-500" />
-          <p className="text-sm text-blue-600 dark:text-blue-400">
-            {getProgressMessage(progress)}
-          </p>
-        </div>
-
+        {/* Mensaje de éxito */}
         {progress === 100 && (
-          <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-            <p className="text-sm text-green-600 dark:text-green-400 font-medium">
-              ✅ El examen ha sido generado exitosamente. Puedes revisar las
-              preguntas a continuación.
+          <div className="p-4 bg-green-900/20 border border-green-700/30 rounded-lg">
+            <p className="text-sm text-green-400 font-medium">
+              ✅ ¡Examen generado exitosamente! Puedes revisar las preguntas a continuación.
             </p>
           </div>
         )}
