@@ -391,6 +391,14 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
 
       {/* Navigation Buttons */}
       <div className="flex items-center mt-4 gap-4 justify-end">
+        {questionNumber === totalQuestions && (
+          <Button
+            onClick={onFinish}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-base font-semibold rounded-md shadow"
+          >
+            Finalizar Examen
+          </Button>
+        )}
         <div>
           <Button
             variant="outline"
@@ -401,22 +409,13 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex justify-end">
-          {questionNumber === totalQuestions ? (
-            <Button
-              onClick={onFinish}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-base font-semibold rounded-md shadow"
-            >
-              Finalizar Examen
-            </Button>
-          ) : (
-            <Button
-              onClick={handleNext}
-              className="flex items-center gap-2"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          )}
+        <div>
+          <Button
+            onClick={handleNext}
+            className="flex items-center gap-2"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>

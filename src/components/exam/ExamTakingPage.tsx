@@ -360,29 +360,7 @@ export function ExamTakingPage() {
         />
       )}
 
-      {/* Final Submit Button */}
-      {isLastQuestion && (
-        <div className="flex justify-center mt-6">
-          <Button
-            onClick={() => setShowSubmissionModal(true)}
-            disabled={isFinishing || !isExamCompleted(totalQuestions)}
-            size="lg"
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            {isFinishing ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              <>
-                <Send className="h-4 w-4 mr-2" />
-                Finalizar Examen
-              </>
-            )}
-          </Button>
-        </div>
-      )}
+
 
       {/* Submission Modal */}
       <ExamSubmissionModal
