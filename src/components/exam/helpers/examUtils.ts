@@ -239,6 +239,22 @@ export const getFunnyProgressMessages = (): string[] => [
   "🌟 Añadiendo el toque mágico..."
 ];
 
+// Mensajes para el proceso de calificación del examen
+export const getExamGradingMessages = (): string[] => [
+  "🔍 Analizando respuestas...",
+  "📝 Revisando gramática...",
+  "🧠 Evaluando comprensión...",
+  "📊 Calculando puntuación...",
+  "💬 Generando feedback...",
+  "⚙️ Procesando resultados...",
+  "📋 Preparando reporte...",
+  "✅ Finalizando calificación...",
+  "🎯 Completando evaluación...",
+  "🔎 Verificando detalles...",
+  "📈 Terminando análisis...",
+  "🎉 ¡Calificación lista!"
+];
+
 export const getProgressMessage = (progress: number): string => {
   if (progress === 0) return "Iniciando generación...";
   if (progress < 25) return "Analizando tema y configurando preguntas...";

@@ -20,6 +20,7 @@ import { ExamSubmissionModal } from "./ExamSubmissionModal";
 import { ExamTimer } from "./ExamTimer";
 import { ExamProgress } from "./ExamProgress";
 import ExamResultsViewModal from "./ExamResultsViewModal";
+import { ExamGradingProgress } from "./ExamGradingProgress";
 import { toast } from "sonner";
 import { getLanguageInfo } from "@/utils/common/language";
 
@@ -36,6 +37,7 @@ export function ExamTakingPage() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [examResult, setExamResult] = useState<any>(null);
+  const [showGradingErrorModal, setShowGradingErrorModal] = useState(false);
 
   const {
     exam: examData,
@@ -138,6 +140,12 @@ export function ExamTakingPage() {
     try {
       const result = await finishExam();
       if (result) {
+        // Check if AI couldn't grade automatically
+        if (result.aiFeedback && result.aiFeedback.includes("No se pudo calificar automáticamente")) {
+          setShowGradingErrorModal(true);
+          return;
+        }
+        
         setExamResult(result);
         setShowResultsModal(true);
       }
@@ -311,6 +319,23 @@ export function ExamTakingPage() {
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
 
+  // If exam is being graded, only show grading progress
+  if (isFinishing) {
+    return (
+      <div className="container mx-auto p-6 max-w-4xl">
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold">{exam.title}</h1>
+            </div>
+          </div>
+        </div>
+        
+        <ExamGradingProgress isGrading={isFinishing} />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       {/* Header */}
@@ -421,6 +446,60 @@ export function ExamTakingPage() {
           // Optionally navigate to exam view
         }}
       />
+
+      {/* Grading Error Modal */}
+      {showGradingErrorModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-96">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                Error en la Calificación
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  <strong>Problema detectado:</strong> La IA no pudo calificar automáticamente tu examen.
+                </p>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
+                  Esto puede deberse a un problema temporal con el sistema de calificación.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>¿Qué puedes hacer?</strong>
+                </p>
+                <ul className="text-sm text-blue-700 dark:text-blue-300 mt-2 space-y-1">
+                  <li>• Intentar de nuevo en unos minutos</li>
+                  <li>• Verificar tu conexión a internet</li>
+                  <li>• Contactar soporte si el problema persiste</li>
+                </ul>
+              </div>
+            </CardContent>
+            <div className="flex gap-3 p-6 pt-0">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowGradingErrorModal(false);
+                  navigate("/exams");
+                }}
+              >
+                Volver a Exámenes
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowGradingErrorModal(false);
+                  resetAttempt();
+                }}
+              >
+                Intentar de Nuevo
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
