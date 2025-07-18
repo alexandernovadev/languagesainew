@@ -319,6 +319,10 @@ export function ExamTakingPage() {
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
 
+  // Check if user can retake the exam
+  const canRetake = exam.attemptsAllowed === -1 || 
+    (exam.attemptsAllowed && exam.attemptsAllowed > 1);
+
   // If exam is being graded, only show grading progress
   if (isFinishing) {
     return (
@@ -488,14 +492,16 @@ export function ExamTakingPage() {
               >
                 Volver a Exámenes
               </Button>
-              <Button
-                onClick={() => {
-                  setShowGradingErrorModal(false);
-                  resetAttempt();
-                }}
-              >
-                Intentar de Nuevo
-              </Button>
+              {canRetake && (
+                <Button
+                  onClick={() => {
+                    setShowGradingErrorModal(false);
+                    resetAttempt();
+                  }}
+                >
+                  Intentar de Nuevo
+                </Button>
+              )}
             </div>
           </Card>
         </div>
