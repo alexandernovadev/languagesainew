@@ -324,7 +324,7 @@ export function ExamTakingPage() {
     (exam.attemptsAllowed && exam.attemptsAllowed > 1);
 
   // If exam is being graded, only show grading progress
-  if (isFinishing) {
+  if (!isFinishing) {
     return (
       <div className="container mx-auto p-6 max-w-4xl">
         <div className="mb-6">
@@ -335,7 +335,7 @@ export function ExamTakingPage() {
           </div>
         </div>
         
-        <ExamGradingProgress isGrading={isFinishing} />
+        <ExamGradingProgress isGrading={!isFinishing} />
       </div>
     );
   }

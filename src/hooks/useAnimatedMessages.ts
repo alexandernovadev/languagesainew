@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getFunnyProgressMessages, getExamGradingMessages } from '@/components/exam/helpers/examUtils';
 
 export function useAnimatedMessages(isGenerating: boolean) {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [currentMessage, setCurrentMessage] = useState('');
-  const messages = getFunnyProgressMessages();
+  const messages = useMemo(() => getFunnyProgressMessages(), []);
 
   useEffect(() => {
     if (!isGenerating) {
@@ -38,7 +38,7 @@ export function useAnimatedMessages(isGenerating: boolean) {
 export function useGradingMessages(isGrading: boolean) {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [currentMessage, setCurrentMessage] = useState('');
-  const messages = getExamGradingMessages();
+  const messages = useMemo(() => getExamGradingMessages(), []);
 
   useEffect(() => {
     if (!isGrading) {
