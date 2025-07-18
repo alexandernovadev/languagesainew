@@ -167,7 +167,7 @@ export function QuestionForm({
   });
 
   const watchedType = watch("type");
-  const shouldShowOptions = ["multiple_choice", "true_false"].includes(
+  const shouldShowOptions = ["multiple_choice", "true_false", "fill_blank"].includes(
     watchedType
   );
 

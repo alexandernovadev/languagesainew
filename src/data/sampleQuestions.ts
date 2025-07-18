@@ -21,13 +21,19 @@ export const sampleQuestions: Question[] = [
   },
   {
     _id: "2",
-    text: "Complete the sentence: 'I _____ to school every day.'",
+    text: "Complete the sentence: 'The new operational manual _____ (approve) by Peru last week.'",
     type: "fill_blank",
-    level: "A1",
-    difficulty: 1,
-    correctAnswers: ["go"],
-    explanation: "The correct verb form is 'go' in the present simple tense for regular activities.",
-    tags: ["grammar", "present_tense", "daily_routines"],
+    level: "B1",
+    difficulty: 2,
+    options: [
+      { value: "A", label: "approved", isCorrect: true },
+      { value: "B", label: "has approved", isCorrect: false },
+      { value: "C", label: "approves", isCorrect: false },
+      { value: "D", label: "will approve", isCorrect: false }
+    ],
+    correctAnswers: ["A"],
+    explanation: "The correct form is 'approved' in passive voice past tense. The sentence uses passive voice structure: subject + was/were + past participle.",
+    tags: ["grammar", "passive_voice", "past_tense"],
     createdAt: "2024-01-02T00:00:00.000Z",
     updatedAt: "2024-01-02T00:00:00.000Z"
   },
@@ -89,18 +95,7 @@ export const sampleQuestions: Question[] = [
     createdAt: "2024-01-06T00:00:00.000Z",
     updatedAt: "2024-01-06T00:00:00.000Z"
   },
-  {
-    _id: "7",
-    text: "Complete the sentence: 'If it rains tomorrow, I _____ at home.'",
-    type: "fill_blank",
-    level: "B1",
-    difficulty: 3,
-    correctAnswers: ["will stay", "stay"],
-    explanation: "This is a first conditional sentence. Both 'will stay' and 'stay' are acceptable in this context.",
-    tags: ["grammar", "conditionals", "future_tense"],
-    createdAt: "2024-01-07T00:00:00.000Z",
-    updatedAt: "2024-01-07T00:00:00.000Z"
-  },
+
   {
     _id: "8",
     text: "Are these sentences grammatically correct: 'I have been to Paris. I have gone to Paris.'",
@@ -121,6 +116,36 @@ export const sampleQuestions: Question[] = [
   },
   {
     _id: "9",
+    text: "Complete the sentence: 'If it rains tomorrow, I _____ at home.'",
+    type: "fill_blank",
+    level: "B1",
+    difficulty: 2,
+    correctAnswers: ["will stay", "stay"],
+    explanation: "This is a first conditional sentence. Both 'will stay' and 'stay' are acceptable in this context.",
+    tags: ["grammar", "conditionals", "future_tense"],
+    createdAt: "2024-01-09T00:00:00.000Z",
+    updatedAt: "2024-01-09T00:00:00.000Z"
+  },
+  {
+    _id: "10",
+    text: "Complete the sentence: 'I'm going _____ the store.'",
+    type: "fill_blank",
+    level: "A2",
+    difficulty: 2,
+    options: [
+      { value: "A", label: "to", isCorrect: true },
+      { value: "B", label: "at", isCorrect: false },
+      { value: "C", label: "in", isCorrect: false },
+      { value: "D", label: "on", isCorrect: false }
+    ],
+    correctAnswers: ["A"],
+    explanation: "The correct preposition is 'to' when indicating movement towards a destination.",
+    tags: ["grammar", "prepositions", "movement"],
+    createdAt: "2024-01-10T00:00:00.000Z",
+    updatedAt: "2024-01-10T00:00:00.000Z"
+  },
+  {
+    _id: "11",
     text: "Translate the phrase 'I would like to' to Spanish.",
     type: "translate",
     level: "A2",
@@ -128,8 +153,8 @@ export const sampleQuestions: Question[] = [
     correctAnswers: ["me gustaría", "quisiera"],
     explanation: "Both 'me gustaría' and 'quisiera' are correct translations of 'I would like to' in Spanish.",
     tags: ["vocabulary", "translation", "polite_expressions"],
-    createdAt: "2024-01-09T00:00:00.000Z",
-    updatedAt: "2024-01-09T00:00:00.000Z"
+    createdAt: "2024-01-11T00:00:00.000Z",
+    updatedAt: "2024-01-11T00:00:00.000Z"
   },
   {
     _id: "10",

@@ -67,7 +67,7 @@ export const examTypes: Record<string, ExamTypeInfo> = {
   'fill_blank': {
     value: 'fill_blank',
     label: 'Completar Espacios',
-    description: 'Completar espacios en blanco en un texto',
+    description: 'Completar espacios en blanco con opciones de palabras o verbos',
     icon: '📝'
   },
   'translate': {
