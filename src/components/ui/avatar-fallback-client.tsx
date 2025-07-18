@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AvatarFallback } from "./avatar";
-import type { User } from "@/models/User";
+import type { User } from "@/services/userService";
 
 export function AvatarFallbackClient({ user }: { user: User | null }) {
   const [mounted, setMounted] = useState(false);

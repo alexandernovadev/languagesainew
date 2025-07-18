@@ -1,18 +1,22 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authService } from '@/services/authService';
-import { User } from '@/models/User';
+import { User } from '@/services/userService';
 
-// Normalizar usuario para consistencia
+// Normalizar usuario para consistencia y valores por defecto
 const normalizeUser = (user: any): User => ({
-  _id: user.id || user._id,
-  username: user.username,
-  email: user.email,
-  role: user.role,
+  _id: user._id,
+  username: user.username || '',
+  email: user.email || '',
+  role: user.role || 'user',
   firstName: user.firstName,
   lastName: user.lastName,
   image: user.image,
-  isActive: user.isActive,
+  language: user.language || 'es',
+  isActive: user.isActive ?? true,
+  address: user.address,
+  phone: user.phone,
+  lastLogin: user.lastLogin,
   createdAt: user.createdAt,
   updatedAt: user.updatedAt,
 });
