@@ -11,12 +11,15 @@ export interface ExamGenerationParams {
 }
 
 export interface ExamGenerationResponse {
+  examTitle: string;
+  examSlug: string;
   questions: UnifiedExamQuestion[];
 }
 
 export interface Exam {
   _id: string;
   title: string;
+  slug: string;
   description?: string;
   language: string;
   level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
@@ -152,6 +155,12 @@ export const examService = {
   // Get exam by ID
   async getExam(id: string): Promise<ExamResponse> {
     const response = await api.get(`/api/exams/${id}`);
+    return response.data;
+  },
+
+  // Get exam by slug
+  async getExamBySlug(slug: string): Promise<ExamResponse> {
+    const response = await api.get(`/api/exams/slug/${slug}`);
     return response.data;
   },
 
@@ -314,6 +323,7 @@ export const examService = {
     difficulty: string;
     topic: string;
     questions: UnifiedExamQuestion[];
+    examSlug?: string; // Nuevo campo para el slug generado por la IA
   }): Promise<any> {
     // Transformar las preguntas al formato esperado por la API
     const questions = examData.questions.map((question) => ({
@@ -330,6 +340,7 @@ export const examService = {
 
     const response = await api.post("/api/exams/with-questions", {
       title: examData.title,
+      slug: examData.examSlug, // Incluir el slug generado por la IA
       language: "es", // Por defecto español
       level: examData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: examData.topic,

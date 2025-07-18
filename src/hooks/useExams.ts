@@ -211,8 +211,8 @@ export function useExams(): UseExamsReturn {
   };
 
   const handleTakeExam = (exam: Exam) => {
-    // Navegación correcta: /exams/:examId/take
-    navigate(`/exams/${exam._id}/take`);
+    // Navegación usando slug: /exams/:examSlug/take
+    navigate(`/exams/${exam.slug}/take`);
   };
 
   const handleEditExam = (exam: Exam) => {

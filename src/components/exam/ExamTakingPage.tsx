@@ -25,7 +25,7 @@ import { toast } from "sonner";
 import { getLanguageInfo } from "@/utils/common/language";
 
 export function ExamTakingPage() {
-  const { examId } = useParams<{ examId: string }>();
+  const { examSlug } = useParams<{ examSlug: string }>();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
 
@@ -63,16 +63,16 @@ export function ExamTakingPage() {
     getProgressPercentage,
     resetAttempt,
     checkCanStartExam,
-  } = useExamTaking(examId);
+  } = useExamTaking(examSlug);
 
   // Load exam data
   useEffect(() => {
     const loadExam = async () => {
-      if (!examId) return;
+      if (!examSlug) return;
 
       try {
         setLoading(true);
-        const response = await examService.getExam(examId);
+        const response = await examService.getExamBySlug(examSlug);
         if (response.success && response.data) {
           setExam(response.data);
         } else {
@@ -90,7 +90,7 @@ export function ExamTakingPage() {
     };
 
     loadExam();
-  }, [examId, navigate]);
+  }, [examSlug, navigate]);
 
   // Handle exam start
   const handleStartExam = async () => {

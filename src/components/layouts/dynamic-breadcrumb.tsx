@@ -26,6 +26,7 @@ const routeNameMapping: { [key: string]: string } = {
   "/exam-history": "Historial de Exámenes",
   "/questions": "Preguntas",
   "/exams": "Exámenes",
+  "/exams/:examSlug/take": "Tomar Examen",
   "/profile": "Mi Perfil",
   "/settings/general": "Configuración General",
   "/settings/import": "Importar",
@@ -51,6 +52,19 @@ export function DynamicBreadcrumb() {
     .split("/")
     .filter((segment) => segment);
 
+  // Función para obtener el nombre del segmento
+  const getSegmentName = (segment: string, index: number) => {
+    const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
+    
+    // Si es la ruta de tomar examen, intentar obtener el título del examen
+    if (path.includes('/exams/') && path.includes('/take')) {
+      // Por ahora, mostrar "Tomar Examen" - esto se puede mejorar para mostrar el título real
+      return "Tomar Examen";
+    }
+    
+    return routeNameMapping[path] || segment;
+  };
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -64,7 +78,7 @@ export function DynamicBreadcrumb() {
         {pathSegments.map((segment, index) => {
           const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === pathSegments.length - 1;
-          const name = routeNameMapping[path] || segment;
+          const name = getSegmentName(segment, index);
           const isNonClickable = nonClickableRoutes.includes(path);
 
           return (

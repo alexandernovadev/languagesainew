@@ -9,6 +9,7 @@ interface ExamStore {
     level: string;
     difficulty: string;
     questions: UnifiedExamQuestion[];
+    examSlug?: string; // Slug generado por la IA
   } | null;
   
   // Editing state
@@ -94,7 +95,10 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     
     try {
       console.log('Guardando examen:', exam);
-      const result = await examService.saveExamWithQuestions(exam);
+      const result = await examService.saveExamWithQuestions({
+        ...exam,
+        examSlug: exam.examSlug,
+      });
       console.log('Examen guardado exitosamente:', result);
       set({ isSaving: false, saveError: null });
       return result;

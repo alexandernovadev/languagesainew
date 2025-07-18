@@ -4,7 +4,7 @@ import { examService, Exam } from '@/services/examService';
 import { ExamAnswer } from '@/services/examAttemptService';
 import { toast } from 'sonner';
 
-export const useExamTaking = (examId?: string) => {
+export const useExamTaking = (examSlug?: string) => {
   const { startAttempt, getInProgressAttempt, submitAttempt, gradeAttempt, loading, error } = useExamAttempts();
   
   const [exam, setExam] = useState<Exam | null>(null);
@@ -19,10 +19,10 @@ export const useExamTaking = (examId?: string) => {
   // Load exam data
   useEffect(() => {
     const loadExam = async () => {
-      if (!examId) return;
+      if (!examSlug) return;
 
       try {
-        const response = await examService.getExam(examId);
+        const response = await examService.getExamBySlug(examSlug);
         if (response.success && response.data) {
           setExam(response.data);
         }
@@ -32,15 +32,15 @@ export const useExamTaking = (examId?: string) => {
     };
 
     loadExam();
-  }, [examId]);
+  }, [examSlug]);
 
   // Check for in-progress attempt
   useEffect(() => {
     const checkInProgressAttempt = async () => {
-      if (!examId) return;
+      if (!examSlug || !exam) return;
 
       try {
-        const attempt = await getInProgressAttempt(examId);
+        const attempt = await getInProgressAttempt(exam._id);
         if (attempt) {
           setCurrentAttempt(attempt);
           // Load existing answers if any
@@ -58,7 +58,7 @@ export const useExamTaking = (examId?: string) => {
     };
 
     checkInProgressAttempt();
-  }, [examId, getInProgressAttempt]);
+  }, [examSlug, exam, getInProgressAttempt]);
 
   // Timer effect
   useEffect(() => {
@@ -86,11 +86,11 @@ export const useExamTaking = (examId?: string) => {
   }, [isTimerRunning, timeRemaining]);
 
   const startExam = useCallback(async (examData: Exam) => {
-    if (!examId) return false;
+    if (!examSlug || !exam) return false;
 
     setIsStarting(true);
     try {
-      const attempt = await startAttempt(examId);
+      const attempt = await startAttempt(exam._id);
       if (attempt) {
         setCurrentAttempt(attempt);
         setCurrentQuestionIndex(0);
@@ -113,7 +113,7 @@ export const useExamTaking = (examId?: string) => {
     } finally {
       setIsStarting(false);
     }
-  }, [examId, startAttempt]);
+  }, [examSlug, exam, startAttempt]);
 
   const handleAutoSubmit = useCallback(async () => {
     if (!currentAttempt) return;
@@ -221,15 +221,15 @@ export const useExamTaking = (examId?: string) => {
   }, []);
 
   const checkCanStartExam = useCallback(async (): Promise<boolean> => {
-    if (!examId) return false;
+    if (!examSlug || !exam) return false;
     
     try {
-      const attempt = await getInProgressAttempt(examId);
+      const attempt = await getInProgressAttempt(exam._id);
       return !attempt; // Can start if no in-progress attempt
     } catch (error) {
       return true; // Assume can start if error
     }
-  }, [examId, getInProgressAttempt]);
+  }, [examSlug, exam, getInProgressAttempt]);
 
   return {
     exam,
