@@ -29,13 +29,20 @@ export function ExamFormField(props: ExamFormFieldProps) {
 
       case "textarea":
         return (
-          <Textarea
-            value={props.value}
-            onChange={(e) => props.onChange(e.target.value)}
-            placeholder={props.placeholder}
-            rows={props.rows || 3}
-            className="resize-none"
-          />
+          <div className="space-y-2">
+            <Textarea
+              value={props.value}
+              onChange={(e) => props.onChange(e.target.value)}
+              placeholder={props.placeholder}
+              rows={props.rows || 3}
+              className="resize-none"
+            />
+            {props.extraContent && (
+              <div className="flex items-center justify-between">
+                {props.extraContent}
+              </div>
+            )}
+          </div>
         );
 
       case "number":

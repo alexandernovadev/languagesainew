@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Sparkles, Settings } from "lucide-react";
+import { useTopicGenerator } from "@/hooks/useTopicGenerator";
+import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 import { questionTypes, questionLevels } from "@/data/questionTypes";
 import { ExamFormField } from "./components/ExamFormField";
@@ -36,6 +38,18 @@ export function ExamConfigForm({
   const validation = validateExamFilters(filters);
   const isFormValid = validation.isValid && !isGenerating;
 
+  // Topic generator hook
+  const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
+    type: "exam",
+    onTopicGenerated: (topic) => {
+      updateFilter("topic", topic);
+    },
+  });
+
+  const handleGenerateTopic = async () => {
+    await generateTopic(filters.topic);
+  };
+
   return (
     <div className="grid grid-cols-1 gap-6">
       {/* Main configuration */}
@@ -60,10 +74,22 @@ export function ExamConfigForm({
                   required
                   value={filters.topic}
                   onChange={(value) => updateFilter("topic", value)}
-                  placeholder="Describe el tema principal del examen (ej: gramática básica, vocabulario de viajes, comprensión lectora...)"
+                  placeholder="Escribe palabras clave o describe el tema (ej: 'verbos', 'vocabulario', 'comprensión'...). La IA te ayudará a expandir la idea."
                   description="Sé específico para obtener mejores resultados"
                   error={validation.errors.find((e) => e.includes("tema"))}
                   rows={5}
+                  extraContent={
+                    <div className="flex items-center justify-between">
+                      <TopicGeneratorButton
+                        onClick={handleGenerateTopic}
+                        isGenerating={isGeneratingTopic}
+                        disabled={isGenerating}
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        {filters.topic.length} / 220 caracteres
+                      </span>
+                    </div>
+                  }
                 />
 
                 <Separator />

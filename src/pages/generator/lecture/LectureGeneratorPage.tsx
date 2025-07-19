@@ -5,6 +5,8 @@ import { z } from "zod";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { Save, BookOpen, Loader2, Settings } from "lucide-react";
+import { useTopicGenerator } from "@/hooks/useTopicGenerator";
+import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +28,7 @@ const generatorFormSchema = z.object({
   prompt: z
     .string()
     .min(60, { message: "El tema debe tener al menos 60 caracteres." })
-    .max(500, { message: "El tema no debe exceder los 500 caracteres." }),
+    .max(220, { message: "El tema no debe exceder los 220 caracteres." }),
   typeWrite: z.string(),
   level: z.string(),
   difficulty: z.string(),
@@ -45,6 +47,14 @@ export default function LectureGeneratorPage() {
   const [language, setLanguage] = useState("es");
   const [rangeMin, setRangeMin] = useState(5200);
   const [rangeMax, setRangeMax] = useState(6500);
+
+  // Topic generator hook
+  const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
+    type: "lecture",
+    onTopicGenerated: (topic) => {
+      setValue("prompt", topic);
+    },
+  });
 
   const textRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -177,6 +187,11 @@ export default function LectureGeneratorPage() {
     setRangeMax(config.rangeMax);
   };
 
+  const handleGenerateTopic = async () => {
+    const currentPrompt = getValues("prompt");
+    await generateTopic(currentPrompt);
+  };
+
   const initialConfig = {
     level: getValues("level"),
     typeWrite: getValues("typeWrite"),
@@ -245,16 +260,25 @@ export default function LectureGeneratorPage() {
                     </Button>
                   </div>
                 </div>
-                <Textarea
+                <div className="space-y-2">
+                                  <Textarea
                   id="mainPrompt"
-                  placeholder="Describe el tema principal de la lectura..."
+                  placeholder="Escribe palabras clave o describe el tema (ej: 'gramática', 'viajes', 'tecnología'...). La IA te ayudará a expandir la idea."
                   {...register("prompt")}
                   rows={3}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isGeneratingTopic}
                 />
-                <p className={`text-xs text-right text-muted-foreground`}>
-                  {watchedValues.prompt.length} / 500 caracteres
-                </p>
+                  <div className="flex items-center justify-between">
+                    <TopicGeneratorButton
+                      onClick={handleGenerateTopic}
+                      isGenerating={isGeneratingTopic}
+                      disabled={isGenerating}
+                    />
+                    <p className={`text-xs text-muted-foreground`}>
+                      {watchedValues.prompt.length} / 220 caracteres
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -65,6 +65,7 @@ export interface TextFieldProps extends BaseFieldProps {
   onChange: (value: string) => void;
   placeholder?: string;
   rows?: number;
+  extraContent?: React.ReactNode;
 }
 
 export interface NumberFieldProps extends BaseFieldProps {
