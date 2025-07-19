@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   examService,
   ExamGenerationParams,
@@ -12,6 +12,7 @@ import {
   questionDifficulties,
 } from "@/data/questionTypes";
 import { toast } from "sonner";
+import { getCategoryKeys, getCategoryInfo } from "@/components/exam/constants/grammarTopics";
 
 export interface ExamGeneratorState {
   isGenerating: boolean;
@@ -39,12 +40,30 @@ export function useExamGenerator() {
   const [filters, setFilters] = useState<ExamGeneratorFilters>({
     topic: "",
     grammarTopics: [],
-    level: "B1",
-    numberOfQuestions: 10,
-    types: ["multiple_choice", "fill_blank", "true_false"],
-    difficulty: 3,
-    userLang: "es",
+    level: "B2",
+    numberOfQuestions: 8,
+    types: ["single_choice", "multiple_choice"],
+    difficulty: 4,
+    userLang: "pt",
   });
+
+  // Initialize with 4 random grammar topics
+  useEffect(() => {
+    const categoryKeys = getCategoryKeys();
+    const allTopics = categoryKeys.flatMap(categoryKey => {
+      const category = getCategoryInfo(categoryKey);
+      return category?.topics || [];
+    });
+    
+    // Select 4 random topics
+    const shuffled = [...allTopics].sort(() => 0.5 - Math.random());
+    const randomTopics = shuffled.slice(0, 4);
+    
+    setFilters(prev => ({
+      ...prev,
+      grammarTopics: randomTopics
+    }));
+  }, []);
 
   const updateFilter = useCallback(
     (key: keyof ExamGeneratorFilters, value: any) => {
@@ -118,14 +137,24 @@ export function useExamGenerator() {
   }, []);
 
   const resetFilters = useCallback(() => {
+    const categoryKeys = getCategoryKeys();
+    const allTopics = categoryKeys.flatMap(categoryKey => {
+      const category = getCategoryInfo(categoryKey);
+      return category?.topics || [];
+    });
+    
+    // Select 4 random topics for reset
+    const shuffled = [...allTopics].sort(() => 0.5 - Math.random());
+    const randomTopics = shuffled.slice(0, 4);
+    
     setFilters({
       topic: "",
-      grammarTopics: [],
-      level: "B1",
-      numberOfQuestions: 10,
-      types: ["multiple_choice", "fill_blank", "true_false"],
-      difficulty: 3,
-      userLang: "es",
+      grammarTopics: randomTopics,
+      level: "B2",
+      numberOfQuestions: 8,
+      types: ["single_choice", "multiple_choice"],
+      difficulty: 4,
+      userLang: "pt",
     });
   }, []);
 

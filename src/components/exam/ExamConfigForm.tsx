@@ -6,7 +6,7 @@ import { Loader2, Sparkles, Settings } from "lucide-react";
 import { useTopicGenerator } from "@/hooks/useTopicGenerator";
 import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
-import { questionTypes, questionLevels } from "@/data/questionTypes";
+import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
 import { ExamFormField } from "./components/ExamFormField";
 import { GrammarTopicsSelector } from "./components/GrammarTopicsSelector";
 import {
@@ -94,8 +94,8 @@ export function ExamConfigForm({
 
                 <Separator />
 
-                {/* Configuración en grid de 4 columnas */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {/* Configuración en grid de 2x2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <ExamFormField
                     type="select"
                     label="Nivel CEFR"
@@ -109,15 +109,16 @@ export function ExamConfigForm({
                   />
 
                   <ExamFormField
-                    type="slider"
+                    type="select"
                     label="Dificultad"
-                    value={filters.difficulty}
-                    onChange={(value) => updateFilter("difficulty", value)}
-                    min={EXAM_VALIDATION_LIMITS.minDifficulty}
-                    max={EXAM_VALIDATION_LIMITS.maxDifficulty}
-                    step={1}
-                    showLabels
-                    getLabel={getDifficultyLabel}
+                    value={filters.difficulty.toString()}
+                    onChange={(value) => updateFilter("difficulty", parseInt(value))}
+                    options={questionDifficulties.map(d => ({
+                      value: d.value.toString(),
+                      label: d.label,
+                      description: d.description
+                    }))}
+                    placeholder="Seleccionar dificultad"
                   />
 
                   <ExamFormField
