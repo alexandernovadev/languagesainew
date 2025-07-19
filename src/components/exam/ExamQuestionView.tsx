@@ -175,11 +175,17 @@ export function ExamQuestionView({
                 {getExamTypeLabel(question.type)}
               </Badge>
             </div>
-            <GrammarExplanationTooltip explanation={question.explanation}>
+            {showAnswers && question.explanation ? (
               <CardTitle className="text-lg leading-relaxed flex-1">
                 {question.text}
               </CardTitle>
-            </GrammarExplanationTooltip>
+            ) : (
+              <GrammarExplanationTooltip explanation={question.explanation}>
+                <CardTitle className="text-lg leading-relaxed flex-1">
+                  {question.text}
+                </CardTitle>
+              </GrammarExplanationTooltip>
+            )}
           </div>
         </div>
       </CardHeader>

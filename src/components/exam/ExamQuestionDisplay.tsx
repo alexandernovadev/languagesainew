@@ -153,11 +153,17 @@ export function ExamQuestionDisplay({
               </Badge>
             </div>
             <div className="flex items-start justify-between">
-              <GrammarExplanationTooltip explanation={question.explanation}>
+              {question.explanation ? (
                 <CardTitle className="text-lg leading-relaxed flex-1">
                   {question.text}
                 </CardTitle>
-              </GrammarExplanationTooltip>
+              ) : (
+                <GrammarExplanationTooltip explanation={question.explanation}>
+                  <CardTitle className="text-lg leading-relaxed flex-1">
+                    {question.text}
+                  </CardTitle>
+                </GrammarExplanationTooltip>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
