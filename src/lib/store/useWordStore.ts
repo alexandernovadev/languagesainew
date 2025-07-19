@@ -164,7 +164,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.getWordByName(word);
       set({ activeWord: data, loading: false });
     } catch (error: any) {
-      set({ errors: error.message, loading: false });
+      set({ errors: error.message, loading: false, activeWord: null });
+      throw error; // Lanzar el error para que el componente lo maneje
     }
   },
 
@@ -177,6 +178,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.createWord(wordData);
       set((state) => ({
         words: [...state.words, data],
+        activeWord: data,
         actionLoading: { ...state.actionLoading, create: false },
       }));
       return data;
@@ -541,10 +543,17 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   generateWord: async (prompt: string) => {
     try {
+      console.log("Generando JSON para palabra:", prompt);
       const { data } = await wordService.generateWordJSON(prompt);
+      console.log("JSON generado:", data);
+      
+      console.log("Creando palabra en BD...");
       const createdWord = await get().createWord(data);
+      console.log("Palabra creada exitosamente:", createdWord);
+      
       return createdWord;
     } catch (error) {
+      console.error("Error en generateWord:", error);
       throw error;
     }
   },

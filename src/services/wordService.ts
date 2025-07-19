@@ -31,7 +31,7 @@ export const wordService = {
   },
 
   async getWordByName(word: string) {
-    const res = await api.get(`/api/words/word/${word}`);
+    const res = await api.get(`/api/words/${word}/word`);
     return res.data;
   },
 

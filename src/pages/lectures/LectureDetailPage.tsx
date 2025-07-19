@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useLectureStore } from "@/lib/store/useLectureStore";
+import { useWordStore } from "@/lib/store/useWordStore";
 import {
   Volume2,
   X,
@@ -21,17 +22,31 @@ import {
   Star,
   User,
   Eye,
+  RefreshCw,
+  Wand2,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import type { Lecture } from "@/models/Lecture";
+import type { Word } from "@/models/Word";
 import { getMarkdownTitle, convertMarkdownToHtml } from "@/utils/common/string";
 import { lectureTypes } from "@/data/lectureTypes";
 import { SPEECH_RATES } from "../../speechRates";
 import { getLanguageInfo } from "@/utils/common/language";
+import { toast } from "sonner";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { lectures, getLectureById, loading } = useLectureStore();
+  const { 
+    getWordByName, 
+    generateWord, 
+    updateWordImage, 
+    updateWordExamples, 
+    updateWordSynonyms, 
+    updateWordCodeSwitching, 
+    updateWordTypes 
+  } = useWordStore();
 
   const [lecture, setLecture] = useState<Lecture | null>(null);
 
@@ -41,6 +56,14 @@ export default function LectureDetailPage() {
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const [modalWord, setModalWord] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [foundWord, setFoundWord] = useState<Word | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [loadingExamples, setLoadingExamples] = useState(false);
+  const [loadingSynonyms, setLoadingSynonyms] = useState(false);
+  const [loadingCodeSwitching, setLoadingCodeSwitching] = useState(false);
+  const [loadingTypes, setLoadingTypes] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -90,14 +113,250 @@ export default function LectureDetailPage() {
     setSelectedWords([]);
   };
 
-  const openWordModal = (word: string) => {
+  const openWordModal = async (word: string) => {
     setModalWord(word);
     setIsModalOpen(true);
+    setIsSearching(true);
+    setFoundWord(null);
+    
+    try {
+      await getWordByName(word);
+      // Si no hay error, la palabra existe
+      const wordStore = useWordStore.getState();
+      setFoundWord(wordStore.activeWord);
+    } catch (error) {
+      // La palabra no existe - error 404
+      setFoundWord(null);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const closeWordModal = () => {
     setIsModalOpen(false);
     setModalWord(null);
+    setFoundWord(null);
+    setIsSearching(false);
+    setIsGenerating(false);
+    setLoadingImage(false);
+    setLoadingExamples(false);
+    setLoadingSynonyms(false);
+    setLoadingCodeSwitching(false);
+    setLoadingTypes(false);
+  };
+
+  const handleGenerateWord = async () => {
+    if (!modalWord) return;
+    
+    setIsGenerating(true);
+    try {
+      console.log("Generando palabra:", modalWord);
+      const generatedWord = await generateWord(modalWord);
+      console.log("Palabra generada exitosamente:", generatedWord);
+      
+      // Pequeño delay para asegurar que el backend termine de procesar
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      toast.success("Palabra generada", {
+        description: `La palabra "${modalWord}" ha sido generada exitosamente`,
+      });
+      
+      // Usar directamente la palabra generada
+      setFoundWord(generatedWord);
+      console.log("Estado foundWord actualizado:", generatedWord);
+      
+      // Verificar que el estado se actualizó correctamente
+      setTimeout(() => {
+        console.log("Estado foundWord después de actualizar:", foundWord);
+      }, 100);
+      
+    } catch (error: any) {
+      console.error("Error al generar palabra:", error);
+      toast.error("Error al generar palabra", {
+        description: error.message || "No se pudo generar la palabra",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRefreshImage = async () => {
+    if (!foundWord?._id || !modalWord) return;
+    
+    setLoadingImage(true);
+    try {
+      await updateWordImage(foundWord._id, modalWord, foundWord.img);
+      toast.success("Imagen actualizada", {
+        description: `La imagen de "${modalWord}" ha sido regenerada`,
+      });
+      // Actualizar los datos de la palabra
+      await getWordByName(modalWord);
+      const wordStore = useWordStore.getState();
+      if (wordStore.activeWord) {
+        setFoundWord(wordStore.activeWord);
+      }
+    } catch (error: any) {
+      toast.error("Error al actualizar imagen", {
+        description: error.message || "No se pudo actualizar la imagen",
+      });
+    } finally {
+      setLoadingImage(false);
+    }
+  };
+
+  const handleRefreshExamples = async () => {
+    if (!foundWord?._id || !modalWord) return;
+    
+    setLoadingExamples(true);
+    try {
+      await updateWordExamples(foundWord._id, modalWord, "en", foundWord.examples || []);
+      toast.success("Ejemplos actualizados", {
+        description: `Los ejemplos de "${modalWord}" han sido regenerados`,
+      });
+      // Actualizar los datos de la palabra
+      await getWordByName(modalWord);
+      const wordStore = useWordStore.getState();
+      if (wordStore.activeWord) {
+        setFoundWord(wordStore.activeWord);
+      }
+    } catch (error: any) {
+      toast.error("Error al actualizar ejemplos", {
+        description: error.message || "No se pudo actualizar los ejemplos",
+      });
+    } finally {
+      setLoadingExamples(false);
+    }
+  };
+
+  const handleRefreshSynonyms = async () => {
+    if (!foundWord?._id || !modalWord) return;
+    
+    setLoadingSynonyms(true);
+    try {
+      await updateWordSynonyms(foundWord._id, modalWord, "en", foundWord.sinonyms || []);
+      toast.success("Sinónimos actualizados", {
+        description: `Los sinónimos de "${modalWord}" han sido regenerados`,
+      });
+      // Actualizar los datos de la palabra
+      await getWordByName(modalWord);
+      const wordStore = useWordStore.getState();
+      if (wordStore.activeWord) {
+        setFoundWord(wordStore.activeWord);
+      }
+    } catch (error: any) {
+      toast.error("Error al actualizar sinónimos", {
+        description: error.message || "No se pudo actualizar los sinónimos",
+      });
+    } finally {
+      setLoadingSynonyms(false);
+    }
+  };
+
+  const handleRefreshCodeSwitching = async () => {
+    if (!foundWord?._id || !modalWord) return;
+    
+    setLoadingCodeSwitching(true);
+    try {
+      await updateWordCodeSwitching(foundWord._id, modalWord, "en", foundWord.codeSwitching || []);
+      toast.success("Code-switching actualizado", {
+        description: `El code-switching de "${modalWord}" ha sido regenerado`,
+      });
+      // Actualizar los datos de la palabra
+      await getWordByName(modalWord);
+      const wordStore = useWordStore.getState();
+      if (wordStore.activeWord) {
+        setFoundWord(wordStore.activeWord);
+      }
+    } catch (error: any) {
+      toast.error("Error al actualizar code-switching", {
+        description: error.message || "No se pudo actualizar el code-switching",
+      });
+    } finally {
+      setLoadingCodeSwitching(false);
+    }
+  };
+
+  const handleRefreshTypes = async () => {
+    if (!foundWord?._id || !modalWord) return;
+    
+    setLoadingTypes(true);
+    try {
+      await updateWordTypes(foundWord._id, modalWord, "en", foundWord.type || []);
+      toast.success("Tipos actualizados", {
+        description: `Los tipos de "${modalWord}" ha sido regenerados`,
+      });
+      // Actualizar los datos de la palabra
+      await getWordByName(modalWord);
+      const wordStore = useWordStore.getState();
+      if (wordStore.activeWord) {
+        setFoundWord(wordStore.activeWord);
+      }
+    } catch (error: any) {
+      toast.error("Error al actualizar tipos", {
+        description: error.message || "No se pudo actualizar los tipos",
+      });
+    } finally {
+      setLoadingTypes(false);
+    }
+  };
+
+  // Componentes auxiliares para el modal
+  const SectionContainer = ({
+    children,
+    hasBox = false,
+    className = "",
+  }: {
+    children: React.ReactNode;
+    hasBox?: boolean;
+    className?: string;
+  }) => (
+    <div
+      className={cn(
+        "my-4",
+        hasBox && "border border-border rounded-lg p-5 relative",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+
+  const SectionHeader = ({
+    title,
+    onRefresh,
+    loading = false,
+  }: {
+    title: string;
+    onRefresh?: () => void;
+    loading?: boolean;
+  }) => (
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-lg font-semibold text-muted-foreground">{title}</h3>
+      {onRefresh && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onRefresh}
+          disabled={loading}
+          className="h-8 w-8 p-0"
+        >
+          <RefreshCw
+            className={cn(
+              "h-4 w-4",
+              loading && "animate-spin text-muted-foreground"
+            )}
+          />
+        </Button>
+      )}
+    </div>
+  );
+
+  const speakWordModal = (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
+    if (!modalWord) return;
+    const utterance = new SpeechSynthesisUtterance(modalWord);
+    utterance.rate = rate;
+    utterance.lang = language;
+    speechSynthesis.speak(utterance);
   };
 
   const renderInteractiveText = (text: string) => {
@@ -363,30 +622,235 @@ export default function LectureDetailPage() {
 
       {/* Modal para detalles de palabra */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Eye className="h-5 w-5" />
               Detalles de la palabra
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-primary capitalize">
-                {modalWord}
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Modal vacío por ahora...
-              </p>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={closeWordModal}
-              >
-                Cerrar
-              </Button>
-            </div>
+          
+          <div className="space-y-4 max-h-[calc(90vh-120px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+            {isSearching ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <span className="ml-2">Buscando palabra...</span>
+              </div>
+                        ) : !foundWord ? (
+              // Palabra no encontrada - mostrar solo la palabra y botón para generar
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h1 className="text-3xl font-bold text-primary capitalize mb-2">
+                    {modalWord}
+                  </h1>
+                  <p className="text-muted-foreground text-lg">
+                    Esta palabra no existe en la base de datos
+                  </p>
+                </div>
+                
+                <div className="flex justify-center">
+                  <Button
+                    onClick={handleGenerateWord}
+                    disabled={isGenerating}
+                    size="lg"
+                    className="flex items-center gap-3 px-8 py-3"
+                  >
+                    {isGenerating ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Wand2 className="h-5 w-5" />
+                    )}
+                    {isGenerating ? "Generando palabra..." : "Generar palabra con IA"}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              // Palabra encontrada - mostrar detalles completos
+              <div className="space-y-6">
+                {/* Word Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-2xl font-bold text-primary capitalize mb-1">
+                      {modalWord}
+                    </h1>
+                    <p className="text-yellow-600 font-semibold text-sm">
+                      👀 {foundWord.seen || 0} vistas
+                    </p>
+                  </div>
+                </div>
+
+                {/* Pronunciation */}
+                <div className="flex items-center justify-between">
+                  <p className="text-lg text-purple-600 font-semibold">
+                    {foundWord.IPA || "/ˈwɜːd/"}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => speakWordModal()}
+                      className="h-9 w-9 p-0 rounded-full border-2"
+                    >
+                      🔊
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => speakWordModal(SPEECH_RATES.SUPERSLOW)}
+                      className="h-9 w-9 p-0 rounded-full border-2"
+                    >
+                      🐢
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Definition */}
+                {foundWord.definition && (
+                  <div>
+                    <p className="text-base text-muted-foreground leading-relaxed">
+                      {foundWord.definition}
+                    </p>
+                  </div>
+                )}
+
+                {/* Spanish Translation */}
+                {foundWord.spanish && (
+                  <SectionContainer>
+                    <h3 className="text-xl font-bold text-blue-600 capitalize mb-2">
+                      {foundWord.spanish.word}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {foundWord.spanish.definition}
+                    </p>
+                  </SectionContainer>
+                )}
+
+                {/* Image */}
+                <SectionContainer hasBox>
+                  <div className="relative flex justify-center">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRefreshImage}
+                      disabled={loadingImage}
+                      className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 rounded-full"
+                    >
+                      <RefreshCw
+                        className={cn("h-4 w-4", loadingImage && "animate-spin")}
+                      />
+                    </Button>
+                    {foundWord.img ? (
+                      <img
+                        src={foundWord.img}
+                        alt={modalWord || "word"}
+                        className="w-2/3 rounded-lg h-64 object-cover"
+                      />
+                    ) : (
+                      <div className="w-2/3 h-64 rounded-lg bg-muted flex items-center justify-center">
+                        <img
+                          src="/placeholder.svg"
+                          alt="No image available"
+                          className="w-20 h-20 opacity-50"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </SectionContainer>
+
+                {/* Examples */}
+                {foundWord.examples && foundWord.examples.length > 0 && (
+                  <SectionContainer hasBox>
+                    <SectionHeader
+                      title="Examples"
+                      onRefresh={handleRefreshExamples}
+                      loading={loadingExamples}
+                    />
+                    <div className="space-y-2">
+                      {foundWord.examples.map((example, index) => (
+                        <p
+                          key={index}
+                          className="text-sm text-muted-foreground leading-relaxed"
+                        >
+                          • {example}
+                        </p>
+                      ))}
+                    </div>
+                  </SectionContainer>
+                )}
+
+                {/* Code Switching */}
+                {foundWord.codeSwitching && foundWord.codeSwitching.length > 0 && (
+                  <SectionContainer hasBox>
+                    <SectionHeader
+                      title="Code-Switching"
+                      onRefresh={handleRefreshCodeSwitching}
+                      loading={loadingCodeSwitching}
+                    />
+                    <div className="space-y-2">
+                      {foundWord.codeSwitching.map((example, index) => (
+                        <p
+                          key={index}
+                          className="text-sm text-muted-foreground leading-relaxed"
+                        >
+                          • {example}
+                        </p>
+                      ))}
+                    </div>
+                  </SectionContainer>
+                )}
+
+                {/* Synonyms */}
+                {foundWord.sinonyms && foundWord.sinonyms.length > 0 && (
+                  <SectionContainer hasBox>
+                    <SectionHeader
+                      title="Synonyms"
+                      onRefresh={handleRefreshSynonyms}
+                      loading={loadingSynonyms}
+                    />
+                    <div className="space-y-2">
+                      {foundWord.sinonyms.map((synonym, index) => (
+                        <p
+                          key={index}
+                          className="text-sm text-foreground capitalize leading-relaxed"
+                        >
+                          🔹 {synonym}
+                        </p>
+                      ))}
+                    </div>
+                  </SectionContainer>
+                )}
+
+                {/* Word Types */}
+                {foundWord.type && foundWord.type.length > 0 && (
+                  <SectionContainer hasBox>
+                    <SectionHeader
+                      title="Word Types"
+                      onRefresh={handleRefreshTypes}
+                      loading={loadingTypes}
+                    />
+                    <div className="space-y-2">
+                      {foundWord.type.map((type, index) => (
+                        <p
+                          key={index}
+                          className="text-sm text-foreground capitalize leading-relaxed"
+                        >
+                          🪹 {type}
+                        </p>
+                      ))}
+                    </div>
+                  </SectionContainer>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={closeWordModal}
+            >
+              Cerrar
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
