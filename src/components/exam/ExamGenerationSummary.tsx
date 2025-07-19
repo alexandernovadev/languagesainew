@@ -55,119 +55,121 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
     }
   };
 
-      return (
-      <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-2 border-slate-700">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-xl text-blue-400">
-            <Sparkles className="h-6 w-6 text-blue-400" />
-            Resumen del Examen
-          </CardTitle>
-        </CardHeader>
+  return (
+    <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-2 border-slate-700">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-lg text-blue-400">
+          <Sparkles className="h-5 w-5 text-blue-400" />
+          Resumen del Examen
+        </CardTitle>
+      </CardHeader>
 
-        <CardContent className="space-y-6">
-          {/* Grid de información */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            
-            {/* Tema */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <BookOpen className="h-5 w-5 text-blue-400" />
-                <h3 className="font-semibold text-blue-400">Tema</h3>
-              </div>
-              <p className="text-sm text-gray-300 leading-relaxed">
-                {filters.topic || "No especificado"}
-              </p>
+      <CardContent className="space-y-3">
+        {/* Grid compacto de información */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          
+          {/* Tema */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <BookOpen className="h-4 w-4 text-blue-400" />
+              <h3 className="font-semibold text-blue-400 text-sm">Tema</h3>
             </div>
+            <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">
+              {filters.topic || "No especificado"}
+            </p>
+          </div>
 
-            {/* Nivel */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <Target className="h-5 w-5 text-green-400" />
-                <h3 className="font-semibold text-green-400">Nivel CEFR</h3>
-              </div>
-              <Badge variant={getLevelVariant(filters.level)} className="border">
-                {filters.level}
-              </Badge>
-              <p className="text-xs text-gray-400 mt-1">
-                {getLevelDescription(filters.level)}
-              </p>
+          {/* Nivel */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Target className="h-4 w-4 text-green-400" />
+              <h3 className="font-semibold text-green-400 text-sm">Nivel</h3>
             </div>
+            <Badge variant={getLevelVariant(filters.level)} className="border text-xs">
+              {filters.level}
+            </Badge>
+          </div>
 
-            {/* Dificultad */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <Zap className="h-5 w-5 text-orange-400" />
-                <h3 className="font-semibold text-orange-400">Dificultad</h3>
-              </div>
-              <Badge variant={getDifficultyVariant(filters.difficulty)} className="border">
-                {getDifficultyLabel(filters.difficulty)}
-              </Badge>
+          {/* Dificultad */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Zap className="h-4 w-4 text-orange-400" />
+              <h3 className="font-semibold text-orange-400 text-sm">Dificultad</h3>
             </div>
+            <Badge variant={getDifficultyVariant(filters.difficulty)} className="border text-xs">
+              {getDifficultyLabel(filters.difficulty)}
+            </Badge>
+          </div>
 
-            {/* Número de preguntas */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <FileText className="h-5 w-5 text-purple-400" />
-                <h3 className="font-semibold text-purple-400">Preguntas</h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-purple-400">
-                  {filters.numberOfQuestions}
-                </span>
-                <span className="text-sm text-gray-400">preguntas</span>
-              </div>
+          {/* Número de preguntas */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <FileText className="h-4 w-4 text-purple-400" />
+              <h3 className="font-semibold text-purple-400 text-sm">Preguntas</h3>
             </div>
+            <div className="flex items-center gap-1">
+              <span className="text-lg font-bold text-purple-400">
+                {filters.numberOfQuestions}
+              </span>
+              <span className="text-xs text-gray-400">preguntas</span>
+            </div>
+          </div>
 
-            {/* Tipos de preguntas */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <Settings className="h-5 w-5 text-indigo-400" />
-                <h3 className="font-semibold text-indigo-400">Tipos</h3>
-              </div>
+          {/* Tipos de preguntas */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Settings className="h-4 w-4 text-indigo-400" />
+              <h3 className="font-semibold text-indigo-400 text-sm">Tipos</h3>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {filters.types.slice(0, 2).map((type) => (
+                <Badge 
+                  key={type} 
+                  variant="outline" 
+                  className="text-xs"
+                >
+                  {getQuestionTypeIcon(type)} {type.replace('_', ' ')}
+                </Badge>
+              ))}
+              {filters.types.length > 2 && (
+                <Badge variant="outline" className="text-xs">
+                  +{filters.types.length - 2}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Temas de gramática */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Brain className="h-4 w-4 text-pink-400" />
+              <h3 className="font-semibold text-pink-400 text-sm">Gramática</h3>
+            </div>
+            {filters.grammarTopics.length > 0 ? (
               <div className="flex flex-wrap gap-1">
-                {filters.types.map((type) => (
+                {filters.grammarTopics.slice(0, 2).map((topic) => (
                   <Badge 
-                    key={type} 
+                    key={topic} 
                     variant="outline" 
                     className="text-xs"
                   >
-                    {getQuestionTypeIcon(type)} {type.replace('_', ' ')}
+                    {topic}
                   </Badge>
                 ))}
+                {filters.grammarTopics.length > 2 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{filters.grammarTopics.length - 2}
+                  </Badge>
+                )}
               </div>
-            </div>
-
-            {/* Temas de gramática */}
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-4 border border-slate-700 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <Brain className="h-5 w-5 text-pink-400" />
-                <h3 className="font-semibold text-pink-400">Gramática</h3>
-              </div>
-              {filters.grammarTopics.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {filters.grammarTopics.slice(0, 3).map((topic) => (
-                    <Badge 
-                      key={topic} 
-                      variant="outline" 
-                      className="text-xs"
-                    >
-                      {topic}
-                    </Badge>
-                  ))}
-                  {filters.grammarTopics.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{filters.grammarTopics.length - 3} más
-                    </Badge>
-                  )}
-                </div>
-              ) : (
-                <p className="text-xs text-gray-500">Sin temas específicos</p>
-              )}
-            </div>
-
+            ) : (
+              <p className="text-xs text-gray-500">Sin temas específicos</p>
+            )}
           </div>
 
-        </CardContent>
-      </Card>
-    );
+        </div>
+
+      </CardContent>
+    </Card>
+  );
 } 
