@@ -28,11 +28,13 @@ export function VerbRow({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foundWord, setFoundWord] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [currentWord, setCurrentWord] = useState<string>("");
 
   const openWordModal = async (word: string) => {
     setIsModalOpen(true);
     setIsSearching(true);
     setFoundWord(null);
+    setCurrentWord(word);
     
     try {
       await getWordByName(word);
@@ -49,7 +51,9 @@ export function VerbRow({
     setIsModalOpen(false);
     setFoundWord(null);
     setIsSearching(false);
+    setCurrentWord("");
   };
+
   const getInputClassName = () => {
     if (!showAnswers) return "";
     return isCorrect
@@ -60,7 +64,7 @@ export function VerbRow({
   const renderField = (fieldType: VerbField, value: string) => {
     if (field === fieldType) {
       return (
-        <>
+        <div className="flex items-center gap-1">
           <Input
             placeholder="..."
             value={userAnswer || ""}
@@ -68,15 +72,39 @@ export function VerbRow({
             className={`min-w-[90px] md:min-w-[120px] px-2 py-1 text-sm h-7 ${getInputClassName()}`}
             disabled={showAnswers}
           />
+          {showAnswers && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openWordModal(value)}
+              className="h-6 w-6 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+              title={`Ver detalles de "${value}"`}
+            >
+              <Eye className="h-3 w-3" />
+            </Button>
+          )}
           {showAnswers && !isCorrect && (
             <div className="text-xs text-green-600 dark:text-green-400 mt-0.5">
               Respuesta: {value}
             </div>
           )}
-        </>
+        </div>
       );
     }
-    return value;
+    return (
+      <div className="flex items-center gap-1">
+        <span>{value}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => openWordModal(value)}
+          className="h-6 w-6 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+          title={`Ver detalles de "${value}"`}
+        >
+          <Eye className="h-3 w-3" />
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -93,17 +121,6 @@ export function VerbRow({
         </TableCell>
         <TableCell className="text-muted-foreground capitalize font-bold text-xs md:text-sm py-1">
           {verb.meaning}
-        </TableCell>
-        <TableCell className="py-1 text-sm">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => openWordModal(verb.infinitive)}
-            className="h-6 w-6 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
-            title="Ver detalles de la palabra"
-          >
-            <Eye className="h-3 w-3" />
-          </Button>
         </TableCell>
       </TableRow>
 
@@ -125,7 +142,7 @@ export function VerbRow({
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-2">Palabra no encontrada</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                La palabra "{verb.infinitive}" no existe en la base de datos.
+                La palabra "{currentWord}" no existe en la base de datos.
               </p>
               <Button onClick={closeWordModal} className="w-full">
                 Cerrar
