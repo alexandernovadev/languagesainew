@@ -37,18 +37,6 @@ export function ExamGradingProgress({
               {currentMessage}
               <span className="text-blue-400">{dots}</span>
             </p>
-            <div className="flex gap-1 mt-2">
-              {Array.from({ length: totalMessages }).map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-1 w-1 rounded-full transition-all duration-300 ${
-                    index === currentMessageIndex 
-                      ? 'bg-blue-400 w-3' 
-                      : 'bg-blue-600'
-                  }`}
-                />
-              ))}
-            </div>
           </div>
         </div>
 
