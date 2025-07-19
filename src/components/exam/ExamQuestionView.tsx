@@ -107,10 +107,7 @@ export function ExamQuestionView({
                   )}
                   <span className="font-medium">{answer}</span>
                   {showAnswers && (
-                    <Badge
-                      variant="secondary"
-                      className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
-                    >
+                    <Badge variant="default" className="ml-auto">
                       Correcta
                     </Badge>
                   )}
@@ -151,10 +148,7 @@ export function ExamQuestionView({
                     {val === "true" ? "Verdadero" : "Falso"}
                   </span>
                   {showAnswers && question.correctAnswers.includes(val) && (
-                    <Badge
-                      variant="secondary"
-                      className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
-                    >
+                    <Badge variant="default" className="ml-auto">
                       Correcta
                     </Badge>
                   )}

@@ -26,9 +26,7 @@ export const ExamOptionCard: React.FC<ExamOptionCardProps> = ({
     </div>
     <span className={isCorrect ? "font-medium" : ""}>{label}</span>
     {isCorrect && (
-      <Badge
-        className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
-      >
+      <Badge variant="default" className="ml-auto">
         {badgeText}
       </Badge>
     )}

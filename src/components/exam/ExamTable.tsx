@@ -2,15 +2,7 @@ import React from 'react';
 import { Exam } from '@/services/examService';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Eye, 
@@ -23,7 +15,9 @@ import {
   Brain,
   Settings,
   Hash,
-  FileText
+  FileText,
+  Clock,
+  Target
 } from 'lucide-react';
 import { 
   getLevelColor, 
@@ -58,203 +52,191 @@ export function ExamTable({
 
   if (loading && exams.length === 0) {
     return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[400px]">Detalle</TableHead>
-            <TableHead>Origen</TableHead>
-            <TableHead>Preguntas</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 7 }).map((_, i) => (
-            <TableRow key={i}>
-              <TableCell>
-                <Skeleton className="h-24 w-full rounded-lg" />
-              </TableCell>
-              <TableCell>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Card key={i} className="h-64">
+            <CardHeader className="pb-3">
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <div className="flex gap-2">
                 <Skeleton className="h-6 w-16 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-8" />
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end gap-2">
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                <Skeleton className="h-6 w-12 rounded" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (exams.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="space-y-4">
+          <BookOpen className="w-16 h-16 mx-auto text-muted-foreground/50" />
+          <div>
+            <p className="text-lg font-medium">No se encontraron exámenes</p>
+            {searchQuery && (
+              <p className="text-sm text-muted-foreground mt-1">
+                No hay exámenes que coincidan con "{searchQuery}"
+              </p>
+            )}
+            <p className="text-sm text-muted-foreground mt-2">
+              Intenta ajustar los filtros o crear un nuevo examen
+            </p>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[400px]">Detalle</TableHead>
-          <TableHead>Origen</TableHead>
-          <TableHead>Preguntas</TableHead>
-          <TableHead className="text-right">Acciones</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {exams.length > 0 ? (
-          exams.map((exam) => (
-            <TableRow key={exam._id} className="hover:bg-muted/50">
-              {/* Detalle Card */}
-              <TableCell className="">
-                <Card className="border-0 shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="">
-                    <div className="space-y-3">
-                      {/* Título */}
-                      <div>
-                        <h3 className="font-semibold text-sm text-foreground leading-tight">
-                          {exam.title}
-                        </h3>
-                        {exam.description && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {truncateText(exam.description, 80)}
-                          </p>
-                        )}
-                      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {exams.map((exam) => (
+        <Card key={exam._id} className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-border/50">
+          <CardHeader className="pb-3">
+            {/* Header con título y acciones */}
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                  {exam.title}
+                </h3>
+                {exam.description && (
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                    {truncateText(exam.description, 60)}
+                  </p>
+                )}
+              </div>
+              
+              {/* Acciones principales */}
+              <div className="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onTake(exam)}
+                  className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
+                  title="Contestar examen"
+                >
+                  <Play className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onView(exam)}
+                  className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+                  title="Ver examen"
+                >
+                  <Eye className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
 
-                      {/* Tema */}
-                      <div className="flex items-center gap-2">
-                        <Hash className="w-3 h-3 text-muted-foreground" />
-                        {exam.topic ? (
-                          <Badge variant="secondary" className="text-xs">
-                            {exam.topic}
-                          </Badge>
-                        ) : (
-                          <span className="text-xs text-muted-foreground italic">
-                            Sin tema
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Fecha */}
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">
-                          {formatDateShort(exam.createdAt)}
-                        </span>
-                      </div>
-
-                      {/* Idioma & Nivel */}
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-3 h-3 text-muted-foreground" />
-                        <Badge variant="outline" className="text-xs">
-                          {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
-                        </Badge>
-                        <Badge variant={getLevelColor(exam.level)} className="text-xs">
-                          {exam.level}
-                        </Badge>
-                        {exam.adaptive && (
-                          <Badge variant="outline" className="text-xs">
-                            <Settings className="w-3 h-3 mr-1" />
-                            Adaptativo
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TableCell>
-
-              {/* Origen */}
-              <TableCell>
-                <Badge variant={getSourceVariant(exam.source)} className="text-xs">
-                  <div className="flex items-center gap-1">
-                    {getSourceIcon(exam.source)}
-                    {exam.source === 'ai' ? 'IA' : 'Manual'}
-                  </div>
+          <CardContent className="space-y-3">
+            {/* Tema */}
+            <div className="flex items-center gap-2">
+              <Hash className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+              {exam.topic ? (
+                <Badge variant="secondary" className="text-xs truncate">
+                  {exam.topic}
                 </Badge>
-              </TableCell>
+              ) : (
+                <span className="text-xs text-muted-foreground italic">
+                  Sin tema
+                </span>
+              )}
+            </div>
 
-              {/* Preguntas */}
-              <TableCell>
+            {/* Información principal */}
+            <div className="space-y-2">
+              {/* Idioma y Nivel */}
+              <div className="flex items-center gap-2">
+                <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                <Badge variant="outline" className="text-xs">
+                  {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+                </Badge>
+                <Badge variant={getLevelColor(exam.level)} className="text-xs">
+                  {exam.level}
+                </Badge>
+              </div>
+
+              {/* Origen y Preguntas */}
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-bold">
-                    {exam.questions?.length || 0}
+                  <Badge variant={getSourceVariant(exam.source)} className="text-xs">
+                    <div className="flex items-center gap-1">
+                      {getSourceIcon(exam.source)}
+                      {exam.source === 'ai' ? 'IA' : 'Manual'}
+                    </div>
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  <FileText className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs font-bold">
+                    {exam.questions?.length || 0} preguntas
                   </span>
                 </div>
-              </TableCell>
-
-              {/* Acciones */}
-              <TableCell>
-                <div className="flex items-center justify-end gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onView(exam)}
-                    className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
-                    title="Ver examen"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(exam)}
-                    className="h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
-                    title="Editar examen"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onRemove(exam)}
-                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
-                    title="Eliminar examen"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onTake(exam)}
-                    className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
-                    title="Contestar examen"
-                  >
-                    <Play className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow className="hover:bg-transparent cursor-default">
-            <TableCell
-              colSpan={4}
-              className="text-center h-32 text-muted-foreground"
-            >
-              <div className="space-y-4">
-                <BookOpen className="w-16 h-16 mx-auto text-muted-foreground/50" />
-                <div>
-                  <p className="text-lg font-medium">No se encontraron exámenes</p>
-                  {searchQuery && (
-                    <p className="text-sm text-muted-foreground mt-1">
-                      No hay exámenes que coincidan con "{searchQuery}"
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Intenta ajustar los filtros o crear un nuevo examen
-                  </p>
-                </div>
               </div>
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+            </div>
+
+            {/* Información adicional */}
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              {/* Fecha */}
+              <div className="flex items-center gap-2">
+                <Calendar className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs text-muted-foreground">
+                  {formatDateShort(exam.createdAt)}
+                </span>
+              </div>
+
+              {/* Características especiales */}
+              <div className="flex items-center gap-2">
+                {exam.adaptive && (
+                  <Badge variant="outline" className="text-xs">
+                    <Settings className="w-3 h-3 mr-1" />
+                    Adaptativo
+                  </Badge>
+                )}
+                {exam.timeLimit && (
+                  <Badge variant="outline" className="text-xs">
+                    <Clock className="w-3 h-3 mr-1" />
+                    {exam.timeLimit} min
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Acciones secundarias */}
+            <div className="flex items-center justify-between pt-2 border-t border-border/50">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEdit(exam)}
+                className="h-7 px-2 text-xs hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                Editar
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemove(exam)}
+                className="h-7 px-2 text-xs hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
+              >
+                <Trash2 className="h-3 w-3 mr-1" />
+                Eliminar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   );
 } 

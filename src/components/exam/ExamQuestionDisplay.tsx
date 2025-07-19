@@ -87,10 +87,7 @@ export function ExamQuestionDisplay({
                     "bg-green-500"
                   )}
                   <span className="font-medium">{answer}</span>
-                  <Badge
-                    variant="secondary"
-                    className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
-                  >
+                  <Badge variant="default" className="ml-auto">
                     Correcta
                   </Badge>
                 </div>
@@ -128,10 +125,7 @@ export function ExamQuestionDisplay({
                     {val === "true" ? "Verdadero" : "Falso"}
                   </span>
                   {question.correctAnswers.includes(val) && (
-                    <Badge
-                      variant="secondary"
-                      className="ml-auto bg-green-500/20 text-green-600 dark:text-green-400"
-                    >
+                    <Badge variant="default" className="ml-auto">
                       Correcta
                     </Badge>
                   )}

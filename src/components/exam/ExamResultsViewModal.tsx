@@ -430,13 +430,8 @@ export default function ExamResultsViewModal({
                                 {answer.userAnswer.map((ans, ansIndex) => (
                                   <Badge
                                     key={ansIndex}
-                                    variant="outline"
-                                    className={cn(
-                                      "text-xs",
-                                      answer.isCorrect
-                                        ? "border-green-700 text-green-200 bg-green-900/60"
-                                        : "border-red-700 text-red-200 bg-red-900/60"
-                                    )}
+                                    variant={answer.isCorrect ? "default" : "destructive"}
+                                    className="text-xs"
                                   >
                                     {ans}
                                   </Badge>
