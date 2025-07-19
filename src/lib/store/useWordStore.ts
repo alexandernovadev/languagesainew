@@ -547,11 +547,14 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordJSON(prompt);
       console.log("JSON generado:", data);
       
-      console.log("Creando palabra en BD...");
-      const createdWord = await get().createWord(data);
-      console.log("Palabra creada exitosamente:", createdWord);
+      // El backend ya creó la palabra, solo necesitamos actualizar el estado
+      set((state) => ({
+        words: [...state.words, data],
+        activeWord: data,
+      }));
       
-      return createdWord;
+      console.log("Palabra creada exitosamente:", data);
+      return data;
     } catch (error) {
       console.error("Error en generateWord:", error);
       throw error;
