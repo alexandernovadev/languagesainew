@@ -273,17 +273,6 @@ export const getExamGradingMessages = (): string[] => [
   "🎉 ¡Calificación lista para revisar y celebrar el aprendizaje!"
 ];
 
-export const getProgressMessage = (progress: number): string => {
-  if (progress === 0) return "Iniciando generación...";
-  if (progress < 25) return "Analizando tema y configurando preguntas...";
-  if (progress < 50) return "Generando preguntas con IA...";
-  if (progress < 75) return "Creando opciones y explicaciones...";
-  if (progress < 100) return "Finalizando y optimizando...";
-  return "¡Examen generado exitosamente!";
-};
 
-export const getProgressColor = (progress: number): string => {
-  if (progress === 100) return "bg-green-500";
-  if (progress > 50) return "bg-blue-500";
-  return "bg-orange-500";
-};
+
+
