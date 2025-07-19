@@ -62,6 +62,20 @@ export const GRAMMAR_TOPICS = {
       'Reported Speech - Time Expressions'
     ]
   },
+  basicGrammar: {
+    title: 'Gramática Básica',
+    icon: '📚',
+    topics: [
+      'Subject-Verb Agreement',
+      'Basic Word Order',
+      'Questions (Yes/No Questions)',
+      'Questions (Wh-Questions)',
+      'Negatives and Negation',
+      'There is/There are',
+      'Have got/Has got',
+      'This/That/These/Those'
+    ]
+  },
   articles: {
     title: 'Artículos',
     icon: '📰',
@@ -119,15 +133,28 @@ export const GRAMMAR_TOPICS = {
       'Comparative and Superlative Adverbs'
     ]
   },
-  prepositions: {
-    title: 'Preposiciones',
+  basicPrepositions: {
+    title: 'Preposiciones Básicas',
     icon: '📍',
+    topics: [
+      'In, On, At (Time)',
+      'In, On, At (Place)',
+      'In, On, At (Transport)',
+      'By, With, From',
+      'To, For, Of',
+      'Common Prepositional Phrases'
+    ]
+  },
+  prepositions: {
+    title: 'Preposiciones Avanzadas',
+    icon: '🎯',
     topics: [
       'Prepositions of Time',
       'Prepositions of Place',
       'Prepositions of Movement',
       'Prepositions with Verbs',
-      'Prepositions with Adjectives'
+      'Prepositions with Adjectives',
+      'Complex Prepositional Phrases'
     ]
   },
   conjunctions: {
@@ -150,6 +177,48 @@ export const GRAMMAR_TOPICS = {
       'Gerunds and Infinitives',
       'Participles (Present/Past)',
       'Causative Verbs (Have/Get/Make)'
+    ]
+  },
+  vocabulary: {
+    title: 'Vocabulario y Expresiones',
+    icon: '📖',
+    topics: [
+      'Common Expressions',
+      'Idioms and Phrases',
+      'Collocations',
+      'Phrasal Verbs',
+      'Word Formation',
+      'Synonyms and Antonyms',
+      'Formal vs Informal Language',
+      'Academic Vocabulary'
+    ]
+  },
+  communication: {
+    title: 'Comunicación y Funciones',
+    icon: '💬',
+    topics: [
+      'Making Requests',
+      'Giving Advice',
+      'Expressing Opinions',
+      'Agreeing and Disagreeing',
+      'Making Suggestions',
+      'Expressing Preferences',
+      'Describing People and Things',
+      'Talking about the Future'
+    ]
+  },
+  integratedSkills: {
+    title: 'Habilidades Integradas',
+    icon: '🎯',
+    topics: [
+      'Reading Comprehension',
+      'Listening Comprehension',
+      'Writing Skills',
+      'Speaking Skills',
+      'Critical Thinking',
+      'Context Clues',
+      'Inference Skills',
+      'Text Analysis'
     ]
   },
   advancedStructures: {

@@ -36,6 +36,7 @@ export function GrammarTopicsSelector({
 }: GrammarTopicsSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [isShaking, setIsShaking] = useState(false);
 
   const categoryKeys = getCategoryKeys();
 
@@ -61,6 +62,9 @@ export function GrammarTopicsSelector({
   };
 
   const handleSelectRandom = () => {
+    // Start shaking animation
+    setIsShaking(true);
+    
     const allTopics = categoryKeys.flatMap(categoryKey => {
       const category = getCategoryInfo(categoryKey);
       return category?.topics || [];
@@ -71,6 +75,11 @@ export function GrammarTopicsSelector({
     const randomTopics = shuffled.slice(0, 4);
     
     onTopicsChange(randomTopics);
+    
+    // Stop shaking after 0.2 seconds
+    setTimeout(() => {
+      setIsShaking(false);
+    }, 200);
   };
 
   const handleClearAll = () => {
@@ -147,7 +156,11 @@ export function GrammarTopicsSelector({
             variant="outline"
             size="sm"
             onClick={handleSelectRandom}
-            className="text-xs"
+            className={`text-xs transition-all duration-200 ${
+              isShaking 
+                ? 'animate-shake' 
+                : ''
+            }`}
           >
             <Check className="h-3 w-3 mr-1" />
             Seleccionar 4 Aleatorios
@@ -159,7 +172,7 @@ export function GrammarTopicsSelector({
             className="text-xs"
           >
             <X className="h-3 w-3 mr-1" />
-            Limpiar Todo
+            Limpiar
           </Button>
         </div>
 
@@ -169,7 +182,12 @@ export function GrammarTopicsSelector({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge variant="secondary" className="cursor-help">
+                  <Badge 
+                    variant="secondary" 
+                    className={`cursor-help transition-all duration-200 ${
+                      isShaking ? 'animate-shake' : ''
+                    }`}
+                  >
                     {selectedTopics.length} tema{selectedTopics.length !== 1 ? 's' : ''} seleccionado{selectedTopics.length !== 1 ? 's' : ''}
                   </Badge>
                 </TooltipTrigger>
