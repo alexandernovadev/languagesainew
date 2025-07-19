@@ -438,16 +438,19 @@ export function ExamTakingPage() {
       {/* Results Modal */}
       <ExamResultsViewModal
         isOpen={showResultsModal}
-        onClose={() => setShowResultsModal(false)}
+        onClose={() => {
+          setShowResultsModal(false);
+          navigate("/exams");
+        }}
         result={examResult}
         onRetakeExam={() => {
           setShowResultsModal(false);
           resetAttempt();
-          // Optionally navigate to exam start
+          navigate("/exams");
         }}
         onViewExam={() => {
           setShowResultsModal(false);
-          // Optionally navigate to exam view
+          navigate("/exams");
         }}
       />
 
