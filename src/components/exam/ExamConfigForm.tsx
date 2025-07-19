@@ -79,14 +79,14 @@ export function ExamConfigForm({
                   error={validation.errors.find((e) => e.includes("tema"))}
                   rows={5}
                   extraContent={
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between w-full">
                       <TopicGeneratorButton
                         onClick={handleGenerateTopic}
                         isGenerating={isGeneratingTopic}
                         disabled={isGenerating}
                       />
                       <span className="text-xs text-muted-foreground">
-                        {filters.topic.length} / 220 caracteres
+                        {filters.topic.length} / 300 caracteres
                       </span>
                     </div>
                   }

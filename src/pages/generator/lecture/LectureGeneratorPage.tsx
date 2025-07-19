@@ -27,8 +27,8 @@ import { LectureGeneratorConfigModal } from "@/components/forms/LectureGenerator
 const generatorFormSchema = z.object({
   prompt: z
     .string()
-    .min(60, { message: "El tema debe tener al menos 60 caracteres." })
-    .max(220, { message: "El tema no debe exceder los 220 caracteres." }),
+    .min(120, { message: "El tema debe tener al menos 120 caracteres." })
+    .max(300, { message: "El tema no debe exceder los 300 caracteres." }),
   typeWrite: z.string(),
   level: z.string(),
   difficulty: z.string(),
@@ -275,7 +275,7 @@ export default function LectureGeneratorPage() {
                       disabled={isGenerating}
                     />
                     <p className={`text-xs text-muted-foreground`}>
-                      {watchedValues.prompt.length} / 220 caracteres
+                      {watchedValues.prompt.length} / 300 caracteres
                     </p>
                   </div>
                 </div>
