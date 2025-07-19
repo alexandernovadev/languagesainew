@@ -6,6 +6,14 @@ import { Verb, VerbField } from "../types";
 import { WordDetailsModal } from "@/components/word-details";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Loader2, Wand2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface VerbRowProps {
   verb: Verb;
@@ -24,10 +32,11 @@ export function VerbRow({
   isCorrect,
   onInputChange,
 }: VerbRowProps) {
-  const { getWordByName, activeWord } = useWordStore();
+  const { getWordByName, generateWord, activeWord, setActiveWord } = useWordStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const openWordModal = async (word: string) => {
     setIsModalOpen(true);
@@ -36,8 +45,11 @@ export function VerbRow({
     
     try {
       await getWordByName(word);
+      // Si no hay error, la palabra existe y activeWord se actualiza automáticamente
     } catch (error) {
-      // Error manejado por el store
+      // La palabra no existe - error 404
+      // Limpiar activeWord para que no muestre una palabra anterior
+      setActiveWord(null);
     } finally {
       setIsSearching(false);
     }
@@ -47,6 +59,37 @@ export function VerbRow({
     setIsModalOpen(false);
     setIsSearching(false);
     setCurrentWord("");
+    setIsGenerating(false);
+    // Limpiar activeWord al cerrar
+    setActiveWord(null);
+  };
+
+  const handleGenerateWord = async () => {
+    if (!currentWord) return;
+    
+    setIsGenerating(true);
+    try {
+      console.log("Generando palabra:", currentWord);
+      const generatedWord = await generateWord(currentWord);
+      console.log("Palabra generada exitosamente:", generatedWord);
+      
+      // Pequeño delay para asegurar que el backend termine de procesar
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      toast.success("Palabra generada", {
+        description: `La palabra "${currentWord}" ha sido generada exitosamente`,
+      });
+      
+      // activeWord se actualiza automáticamente en el store
+      
+    } catch (error: any) {
+      console.error("Error al generar palabra:", error);
+      toast.error("Error al generar palabra", {
+        description: error.message || "No se pudo generar la palabra",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const getInputClassName = () => {
@@ -132,31 +175,51 @@ export function VerbRow({
 
       {/* Modal para palabra no encontrada */}
       {isModalOpen && !activeWord && !isSearching && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-background border rounded-lg p-6 max-w-md">
-            <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Palabra no encontrada</h3>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Palabra no encontrada
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="text-center py-4">
               <p className="text-sm text-muted-foreground mb-4">
                 La palabra "{currentWord}" no existe en la base de datos.
               </p>
-              <Button onClick={closeWordModal} className="w-full">
-                Cerrar
+              <Button
+                onClick={handleGenerateWord}
+                disabled={isGenerating}
+                className="w-full"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Generando palabra...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    Generar palabra
+                  </>
+                )}
               </Button>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* Loading state */}
       {isModalOpen && isSearching && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-background border rounded-lg p-6 max-w-md">
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-md">
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
               <span className="ml-2">Buscando palabra...</span>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
     </>
   );
