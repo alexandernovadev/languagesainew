@@ -9,6 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { TruncatedText } from "@/components/common/TruncatedText";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const routeNameMapping: { [key: string]: string } = {
   "/dashboard": "Inicio",
@@ -66,37 +68,51 @@ export function DynamicBreadcrumb() {
   };
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {pathSegments.map((segment, index) => {
-          const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
-          const isLast = index === pathSegments.length - 1;
-          const name = getSegmentName(segment, index);
-          const isNonClickable = nonClickableRoutes.includes(path);
+    <TooltipProvider>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" />
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {pathSegments.map((segment, index) => {
+            const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
+            const isLast = index === pathSegments.length - 1;
+            const name = getSegmentName(segment, index);
+            const isNonClickable = nonClickableRoutes.includes(path);
 
-          return (
-            <React.Fragment key={path}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast || isNonClickable ? (
-                  <BreadcrumbPage>{name}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={path}>{name}</Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </React.Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
+            return (
+              <React.Fragment key={path}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {isLast || isNonClickable ? (
+                    <BreadcrumbPage>
+                      <TruncatedText
+                        text={name}
+                        maxLength={20}
+                        className="cursor-default"
+                      />
+                    </BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink asChild>
+                      <Link to={path}>
+                        <TruncatedText
+                          text={name}
+                          maxLength={20}
+                          className="cursor-pointer"
+                        />
+                      </Link>
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+              </React.Fragment>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </TooltipProvider>
   );
 }
