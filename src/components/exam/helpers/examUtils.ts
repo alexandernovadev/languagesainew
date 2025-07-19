@@ -223,36 +223,54 @@ export const validateExamFilters = (
   };
 };
 
-// Progress Helpers - Mensajes divertidos sin progreso falso
+// Progress Helpers - Mensajes divertidos y genéricos sobre lo que hace la IA
 export const getFunnyProgressMessages = (): string[] => [
-  "🧠 Despertando a la IA...",
-  "📚 Consultando la biblioteca de conocimiento...",
-  "✍️ Escribiendo preguntas inteligentes...",
-  "🎯 Creando opciones tramposas...",
-  "✨ Añadiendo explicaciones brillantes...",
-  "🎨 Coloreando las respuestas...",
-  "🚀 Preparando el lanzamiento...",
-  "🎉 ¡Casi listo!",
-  "🔍 Revisando la gramática...",
-  "💡 Generando ideas brillantes...",
-  "🎪 Preparando el espectáculo...",
-  "🌟 Añadiendo el toque mágico..."
+  "🧠 Despertando a la IAnuel desde su siesta digital...",
+  "📚 Consultando la biblioteca infinita de conocimiento...",
+  "✨ Activando el cerebro artificial con toda su potencia...",
+  "🎯 Creando preguntas inteligentes que harán pensar...",
+  "📝 Escribiendo contenido educativo que inspire aprendizaje...",
+  "🔍 Diseñando ejercicios divertidos para mantener el interés...",
+  "💭 Formulando desafíos mentales que expandan la mente...",
+  "🎨 Creando opciones de respuesta con estilo y elegancia...",
+  "✨ Añadiendo explicaciones brillantes que iluminen el camino...",
+  "🔧 Revisando la dificultad para que sea el desafío perfecto...",
+  "📊 Balanceando el contenido para una experiencia equilibrada...",
+  "✅ Verificando la calidad para asegurar la excelencia...",
+  "🎯 Ajustando el nivel para que sea ni muy fácil ni muy difícil...",
+  "📝 Generando material educativo que conecte con el estudiante...",
+  "🔍 Revisando la coherencia para que todo tenga sentido...",
+  "💡 Añadiendo toques creativos que hagan el aprendizaje divertido...",
+  "🎪 Preparando el contenido para que sea una experiencia memorable...",
+  "🌟 Optimizando la experiencia para que sea fluida y agradable...",
+  "📋 Finalizando la configuración con todos los detalles perfectos...",
+  "🎉 ¡Examen listo para usar y conquistar el conocimiento!"
 ];
 
 // Mensajes para el proceso de calificación del examen
 export const getExamGradingMessages = (): string[] => [
-  "🔍 Analizando respuestas...",
-  "📝 Revisando gramática...",
-  "🧠 Evaluando comprensión...",
-  "📊 Calculando puntuación...",
-  "💬 Generando feedback...",
-  "⚙️ Procesando resultados...",
-  "📋 Preparando reporte...",
-  "✅ Finalizando calificación...",
-  "🎯 Completando evaluación...",
-  "🔎 Verificando detalles...",
-  "📈 Terminando análisis...",
-  "🎉 ¡Calificación lista!"
+  "🧠 AInuel esta analizando la calificación con su sabiduría digital...",
+  "📚 Consultando las respuestas correctas desde la base de datos del conocimiento...",
+  "✨ Iniciando el análisis inteligente con precisión milimétrica...",
+  "🔍 Analizando las respuestas con atención al detalle...",
+  "📝 Revisando el contenido para asegurar la justicia en la evaluación...",
+  "🧠 Evaluando la comprensión con criterios pedagógicos avanzados...",
+  "📊 Calculando la puntuación con algoritmos de precisión...",
+  "💬 Generando feedback personalizado que motive el crecimiento...",
+  "⚙️ Procesando los resultados con tecnología de última generación...",
+  "📋 Preparando el reporte con información detallada y útil...",
+  "✅ Verificando la coherencia para garantizar la imparcialidad...",
+  "🎯 Evaluando el rendimiento con métricas científicas...",
+  "🔎 Revisando los detalles que marcan la diferencia...",
+  "📈 Analizando el progreso para identificar tendencias de mejora...",
+  "💡 Generando recomendaciones personalizadas para el desarrollo...",
+  "📚 Identificando mejoras específicas para el crecimiento académico...",
+  "🎨 Preparando el resumen visual que facilite la comprensión...",
+  "📊 Calculando estadísticas que revelen el verdadero potencial...",
+  "🔍 Verificando la calidad del feedback para asegurar su utilidad...",
+  "📝 Finalizando el reporte con todos los elementos necesarios...",
+  "✅ Completando la evaluación con rigor académico y empatía...",
+  "🎉 ¡Calificación lista para revisar y celebrar el aprendizaje!"
 ];
 
 export const getProgressMessage = (progress: number): string => {
