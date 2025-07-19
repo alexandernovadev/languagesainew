@@ -43,6 +43,7 @@ export function VerbsTable({
                 <TableHead className="w-[150px]">Pasado</TableHead>
                 <TableHead className="w-[150px]">Participio</TableHead>
                 <TableHead>Significado</TableHead>
+                <TableHead className="w-[50px]">Ver</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

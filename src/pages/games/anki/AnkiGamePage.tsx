@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnkiStats } from "@/components/games/anki/AnkiStats";
+import { WordDetailsCard } from "@/components/word-details";
 
 // Declaraciones de tipos para Web Speech API
 declare global {
@@ -427,68 +428,14 @@ export default function AnkiGamePage() {
                     <AudioButtons word={currentCard?.word} size="sm" />
                   </div>
                 </div>
-                <div className="flex-1 w-full h-full overflow-y-auto p-4 bg-zinc-900/60 rounded-xl shadow-inner border border-primary/30 custom-scroll">
-                  {/* Definición ES */}
-                  {currentCard?.spanish?.definition && (
-                    <div className="mb-2">
-                      <div className="text-lg font-bold text-blue-200 flex items-center gap-2 mb-1">
-                        <span>🇪🇸</span> Definición (ES)
-                      </div>
-                      <div className="text-base text-zinc-100 capitalize">{currentCard.spanish.definition}</div>
-                    </div>
-                  )}
-                  {/* Ejemplos */}
-                  {currentCard?.examples && (
-                    <div className="mb-2">
-                      <div className="text-lg font-bold text-green-200 flex items-center gap-2 mb-1">
-                        <span>💬</span> Ejemplos
-                      </div>
-                      <ul className="list-disc ml-5 text-base text-zinc-200 space-y-1">
-                        {currentCard.examples.map((ex, i) => (
-                          <li key={i}>{ex}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {/* Code-Switching */}
-                  {currentCard?.codeSwitching && currentCard.codeSwitching.length > 0 && (
-                    <div className="mb-2">
-                      <div className="text-lg font-bold text-purple-200 flex items-center gap-2 mb-1">
-                        <span>🔀</span> Code-Switching
-                      </div>
-                      <ul className="list-disc ml-5 text-base text-zinc-200 space-y-1">
-                        {currentCard.codeSwitching.map((ex, i) => (
-                          <li key={i}>{ex}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {/* Sinónimos */}
-                  {currentCard?.sinonyms && currentCard.sinonyms.length > 0 && (
-                    <div className="mb-2">
-                      <div className="text-lg font-bold text-yellow-200 flex items-center gap-2 mb-1">
-                        <span>🔗</span> Sinónimos
-                      </div>
-                      <div className="text-base text-zinc-200">{currentCard.sinonyms.join(", ")}</div>
-                    </div>
-                  )}
-                  {/* Tipo */}
-                  {currentCard?.type && currentCard.type.length > 0 && (
-                    <div className="mb-2">
-                      <div className="text-lg font-bold text-pink-200 flex items-center gap-2 mb-1">
-                        <span>🏷️</span> Tipo
-                      </div>
-                      <div className="text-base text-zinc-200">{currentCard.type.join(", ")}</div>
-                    </div>
-                  )}
-                  {/* Definición EN */}
-                  {currentCard?.definition && (
-                    <div className="mt-3">
-                      <div className="text-lg font-bold text-blue-100 flex items-center gap-2 mb-1">
-                        <span>🇬🇧</span> Definición (EN)
-                      </div>
-                      <div className="text-base text-zinc-100 capitalize">{currentCard.definition}</div>
-                    </div>
+                <div className="flex-1 w-full h-full overflow-y-auto">
+                  {currentCard && (
+                    <WordDetailsCard
+                      word={currentCard}
+                      variant="compact"
+                      showLevelButtons={false}
+                      showRefreshButtons={false}
+                    />
                   )}
                 </div>
                 <div className="flex items-center text-xs text-muted-foreground mt-2 opacity-70 pb-1">

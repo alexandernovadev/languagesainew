@@ -117,7 +117,7 @@ export const wordService = {
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) {
     const res = await api.post(
       `/api/ai/update-word-examples/${wordId}`,
@@ -130,7 +130,7 @@ export const wordService = {
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) {
     const res = await api.post(
       `/api/ai/update-word-examples-code-switching/${wordId}`,
@@ -143,7 +143,7 @@ export const wordService = {
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) {
     const res = await api.post(
       `/api/ai/update-word-synonyms/${wordId}`,
@@ -156,7 +156,7 @@ export const wordService = {
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) {
     const res = await api.post(
       `/api/ai/update-word-types/${wordId}`,

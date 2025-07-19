@@ -34,6 +34,7 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { SPEECH_RATES } from "../../speechRates";
 import { getLanguageInfo } from "@/utils/common/language";
 import { toast } from "sonner";
+import { WordDetailsModal } from "@/components/word-details";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -596,239 +597,73 @@ export default function LectureDetailPage() {
       )}
 
       {/* Modal para detalles de palabra */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Eye className="h-5 w-5" />
-              Detalles de la palabra
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4 max-h-[calc(90vh-120px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-            {isSearching ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin" />
-                <span className="ml-2">Buscando palabra...</span>
-              </div>
-                        ) : !foundWord ? (
-              // Palabra no encontrada - mostrar solo la palabra y botón para generar
-              <div className="space-y-6">
-                <div className="text-center">
-                  <h1 className="text-3xl font-bold text-primary capitalize mb-2">
-                    {modalWord}
-                  </h1>
-                  <p className="text-muted-foreground text-lg">
-                    Esta palabra no existe en la base de datos
-                  </p>
-                </div>
-                
-                <div className="flex justify-center">
-                  <Button
-                    onClick={handleGenerateWord}
-                    disabled={isGenerating}
-                    size="lg"
-                    className="flex items-center gap-3 px-8 py-3"
-                  >
-                    {isGenerating ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <Wand2 className="h-5 w-5" />
-                    )}
-                    {isGenerating ? "Generando palabra..." : "Generar palabra con IA"}
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              // Palabra encontrada - mostrar detalles completos
-              <div className="space-y-6">
-                {/* Word Header */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h1 className="text-2xl font-bold text-primary capitalize mb-1">
-                      {modalWord}
-                    </h1>
-                    <p className="text-yellow-600 font-semibold text-sm">
-                      👀 {foundWord.seen || 0} vistas
-                    </p>
-                  </div>
-                </div>
+      {foundWord && (
+        <WordDetailsModal
+          word={foundWord}
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          showLevelButtons={true}
+          showRefreshButtons={true}
+        />
+      )}
 
-                {/* Pronunciation */}
-                <div className="flex items-center justify-between">
-                  <p className="text-lg text-purple-600 font-semibold">
-                    {foundWord.IPA || "/ˈwɜːd/"}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => speakWordModal()}
-                      className="h-9 w-9 p-0 rounded-full border-2"
-                    >
-                      🔊
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => speakWordModal(SPEECH_RATES.SUPERSLOW)}
-                      className="h-9 w-9 p-0 rounded-full border-2"
-                    >
-                      🐢
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Definition */}
-                {foundWord.definition && (
-                  <div>
-                    <p className="text-base text-muted-foreground leading-relaxed">
-                      {foundWord.definition}
-                    </p>
-                  </div>
+      {/* Modal para palabra no encontrada */}
+      {isModalOpen && !foundWord && !isSearching && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Palabra no encontrada
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="text-center py-4">
+              <p className="text-sm text-muted-foreground mb-4">
+                La palabra "{modalWord}" no existe en la base de datos.
+              </p>
+              <Button
+                onClick={handleGenerateWord}
+                disabled={isGenerating}
+                className="w-full"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Generando palabra...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    Generar palabra
+                  </>
                 )}
+              </Button>
+            </div>
 
-                {/* Spanish Translation */}
-                {foundWord.spanish && (
-                  <SectionContainer>
-                    <h3 className="text-xl font-bold text-blue-600 capitalize mb-2">
-                      {foundWord.spanish.word}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {foundWord.spanish.definition}
-                    </p>
-                  </SectionContainer>
-                )}
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button
+                variant="outline"
+                onClick={closeWordModal}
+              >
+                Cerrar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
-                {/* Image */}
-                <SectionContainer hasBox>
-                  <div className="relative flex justify-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleRefreshImage}
-                      disabled={loadingImage}
-                      className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 rounded-full"
-                    >
-                      <RefreshCw
-                        className={cn("h-4 w-4", loadingImage && "animate-spin")}
-                      />
-                    </Button>
-                    {foundWord.img ? (
-                      <img
-                        src={foundWord.img}
-                        alt={modalWord || "word"}
-                        className="w-2/3 rounded-lg h-64 object-cover"
-                      />
-                    ) : (
-                      <div className="w-2/3 h-64 rounded-lg bg-muted flex items-center justify-center">
-                        <img
-                          src="/placeholder.svg"
-                          alt="No image available"
-                          className="w-20 h-20 opacity-50"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </SectionContainer>
-
-                {/* Examples */}
-                {foundWord.examples && foundWord.examples.length > 0 && (
-                  <SectionContainer hasBox>
-                    <SectionHeader
-                      title="Examples"
-                      onRefresh={handleRefreshExamples}
-                      loading={loadingExamples}
-                    />
-                    <div className="space-y-2">
-                      {foundWord.examples.map((example, index) => (
-                        <p
-                          key={index}
-                          className="text-sm text-muted-foreground leading-relaxed"
-                        >
-                          • {example}
-                        </p>
-                      ))}
-                    </div>
-                  </SectionContainer>
-                )}
-
-                {/* Code Switching */}
-                {foundWord.codeSwitching && foundWord.codeSwitching.length > 0 && (
-                  <SectionContainer hasBox>
-                    <SectionHeader
-                      title="Code-Switching"
-                      onRefresh={handleRefreshCodeSwitching}
-                      loading={loadingCodeSwitching}
-                    />
-                    <div className="space-y-2">
-                      {foundWord.codeSwitching.map((example, index) => (
-                        <p
-                          key={index}
-                          className="text-sm text-muted-foreground leading-relaxed"
-                        >
-                          • {example}
-                        </p>
-                      ))}
-                    </div>
-                  </SectionContainer>
-                )}
-
-                {/* Synonyms */}
-                {foundWord.sinonyms && foundWord.sinonyms.length > 0 && (
-                  <SectionContainer hasBox>
-                    <SectionHeader
-                      title="Synonyms"
-                      onRefresh={handleRefreshSynonyms}
-                      loading={loadingSynonyms}
-                    />
-                    <div className="space-y-2">
-                      {foundWord.sinonyms.map((synonym, index) => (
-                        <p
-                          key={index}
-                          className="text-sm text-foreground capitalize leading-relaxed"
-                        >
-                          🔹 {synonym}
-                        </p>
-                      ))}
-                    </div>
-                  </SectionContainer>
-                )}
-
-                {/* Word Types */}
-                {foundWord.type && foundWord.type.length > 0 && (
-                  <SectionContainer hasBox>
-                    <SectionHeader
-                      title="Word Types"
-                      onRefresh={handleRefreshTypes}
-                      loading={loadingTypes}
-                    />
-                    <div className="space-y-2">
-                      {foundWord.type.map((type, index) => (
-                        <p
-                          key={index}
-                          className="text-sm text-foreground capitalize leading-relaxed"
-                        >
-                          🪹 {type}
-                        </p>
-                      ))}
-                    </div>
-                  </SectionContainer>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-end gap-2 pt-4 border-t">
-            <Button
-              variant="outline"
-              onClick={closeWordModal}
-            >
-              Cerrar
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Loading state */}
+      {isModalOpen && isSearching && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-md">
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="ml-2">Buscando palabra...</span>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

@@ -44,25 +44,25 @@ interface WordStore {
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => Promise<Word>;
   updateWordCodeSwitching: (
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => Promise<Word>;
   updateWordSynonyms: (
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => Promise<Word>;
   updateWordTypes: (
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => Promise<Word>;
   updateWordImage: (
     wordId: string,
@@ -360,7 +360,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => {
     set({
       actionLoading: { ...get().actionLoading, updateExamples: true },
@@ -399,7 +399,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => {
     set({
       actionLoading: { ...get().actionLoading, updateCodeSwitching: true },
@@ -438,7 +438,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => {
     set({
       actionLoading: { ...get().actionLoading, updateSynonyms: true },
@@ -477,7 +477,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     wordId: string,
     word: string,
     language: string,
-    oldExamples: string[]
+    oldExamples: string
   ) => {
     set({
       actionLoading: { ...get().actionLoading, updateTypes: true },

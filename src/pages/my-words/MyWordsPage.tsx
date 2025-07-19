@@ -33,7 +33,7 @@ import {
 import { useWordStore } from "@/lib/store/useWordStore";
 import { Word } from "@/models/Word";
 import { WordForm } from "@/components/forms/WordForm";
-import { WordDetailsModal } from "@/components/WordDetailsModal";
+import { WordDetailsModal } from "@/components/word-details";
 import { WordFiltersModal } from "@/components/forms/word-filters/WordFiltersModal";
 import {
   ChevronLeft,
@@ -91,7 +91,7 @@ export default function MyWordsPage() {
   const [generating, setGenerating] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
-  const dots = useAnimatedDots(generating);
+  const dots = useAnimatedDots();
 
   // Evitar fetch duplicado por filtros al montar
   const filtersFirstRender = useRef(true);
@@ -664,22 +664,13 @@ export default function MyWordsPage() {
       </AlertDialog>
 
       {/* Modal de detalles de la palabra */}
-      {detailsModalOpen && selectedWord && (
+      {selectedWord && (
         <WordDetailsModal
           word={selectedWord}
-          onClose={() => setDetailsModalOpen(false)}
-          onUpdateLevel={handleUpdateLevel}
-          onRefreshImage={handleRefreshImage}
-          onRefreshExamples={handleRefreshExamples}
-          onRefreshSynonyms={handleRefreshSynonyms}
-          onRefreshCodeSwitching={handleRefreshCodeSwitching}
-          onRefreshTypes={handleRefreshTypes}
-          loading={actionLoading.updateLevel}
-          loadingImage={actionLoading.updateImage}
-          loadingExamples={actionLoading.updateExamples}
-          loadingSynonyms={actionLoading.updateSynonyms}
-          loadingCodeSwitching={actionLoading.updateCodeSwitching}
-          loadingTypes={actionLoading.updateTypes}
+          open={detailsModalOpen}
+          onOpenChange={setDetailsModalOpen}
+          showLevelButtons={true}
+          showRefreshButtons={true}
         />
       )}
 

@@ -1,6 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 import { Verb, VerbField } from "../types";
+import { WordDetailsModal } from "@/components/word-details";
+import { useWordStore } from "@/lib/store/useWordStore";
+import { useState } from "react";
 
 interface VerbRowProps {
   verb: Verb;
@@ -19,6 +24,32 @@ export function VerbRow({
   isCorrect,
   onInputChange,
 }: VerbRowProps) {
+  const { getWordByName } = useWordStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [foundWord, setFoundWord] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const openWordModal = async (word: string) => {
+    setIsModalOpen(true);
+    setIsSearching(true);
+    setFoundWord(null);
+    
+    try {
+      await getWordByName(word);
+      const wordStore = useWordStore.getState();
+      setFoundWord(wordStore.activeWord);
+    } catch (error) {
+      setFoundWord(null);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const closeWordModal = () => {
+    setIsModalOpen(false);
+    setFoundWord(null);
+    setIsSearching(false);
+  };
   const getInputClassName = () => {
     if (!showAnswers) return "";
     return isCorrect
@@ -49,19 +80,72 @@ export function VerbRow({
   };
 
   return (
-    <TableRow className="py-0.5 h-8">
-      <TableCell className="font-medium py-1 text-sm">
-        {renderField("infinitive", verb.infinitive)}
-      </TableCell>
-      <TableCell className="py-1 text-sm">
-        {renderField("past", verb.past)}
-      </TableCell>
-      <TableCell className="py-1 text-sm">
-        {renderField("participle", verb.participle)}
-      </TableCell>
-      <TableCell className="text-muted-foreground capitalize font-bold text-xs md:text-sm py-1">
-        {verb.meaning}
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow className="py-0.5 h-8">
+        <TableCell className="font-medium py-1 text-sm">
+          {renderField("infinitive", verb.infinitive)}
+        </TableCell>
+        <TableCell className="py-1 text-sm">
+          {renderField("past", verb.past)}
+        </TableCell>
+        <TableCell className="py-1 text-sm">
+          {renderField("participle", verb.participle)}
+        </TableCell>
+        <TableCell className="text-muted-foreground capitalize font-bold text-xs md:text-sm py-1">
+          {verb.meaning}
+        </TableCell>
+        <TableCell className="py-1 text-sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => openWordModal(verb.infinitive)}
+            className="h-6 w-6 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+            title="Ver detalles de la palabra"
+          >
+            <Eye className="h-3 w-3" />
+          </Button>
+        </TableCell>
+      </TableRow>
+
+      {/* Modal para detalles de palabra */}
+      {foundWord && (
+        <WordDetailsModal
+          word={foundWord}
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          showLevelButtons={true}
+          showRefreshButtons={true}
+        />
+      )}
+
+      {/* Modal para palabra no encontrada */}
+      {isModalOpen && !foundWord && !isSearching && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-background border rounded-lg p-6 max-w-md">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold mb-2">Palabra no encontrada</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                La palabra "{verb.infinitive}" no existe en la base de datos.
+              </p>
+              <Button onClick={closeWordModal} className="w-full">
+                Cerrar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Loading state */}
+      {isModalOpen && isSearching && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-background border rounded-lg p-6 max-w-md">
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span className="ml-2">Buscando palabra...</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
