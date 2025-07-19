@@ -24,24 +24,20 @@ export function VerbRow({
   isCorrect,
   onInputChange,
 }: VerbRowProps) {
-  const { getWordByName } = useWordStore();
+  const { getWordByName, activeWord } = useWordStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [foundWord, setFoundWord] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>("");
 
   const openWordModal = async (word: string) => {
     setIsModalOpen(true);
     setIsSearching(true);
-    setFoundWord(null);
     setCurrentWord(word);
     
     try {
       await getWordByName(word);
-      const wordStore = useWordStore.getState();
-      setFoundWord(wordStore.activeWord);
     } catch (error) {
-      setFoundWord(null);
+      // Error manejado por el store
     } finally {
       setIsSearching(false);
     }
@@ -49,7 +45,6 @@ export function VerbRow({
 
   const closeWordModal = () => {
     setIsModalOpen(false);
-    setFoundWord(null);
     setIsSearching(false);
     setCurrentWord("");
   };
@@ -125,9 +120,9 @@ export function VerbRow({
       </TableRow>
 
       {/* Modal para detalles de palabra */}
-      {foundWord && (
+      {activeWord && (
         <WordDetailsModal
-          word={foundWord}
+          word={activeWord}
           open={isModalOpen}
           onOpenChange={setIsModalOpen}
           showLevelButtons={true}
@@ -136,7 +131,7 @@ export function VerbRow({
       )}
 
       {/* Modal para palabra no encontrada */}
-      {isModalOpen && !foundWord && !isSearching && (
+      {isModalOpen && !activeWord && !isSearching && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-background border rounded-lg p-6 max-w-md">
             <div className="text-center">
