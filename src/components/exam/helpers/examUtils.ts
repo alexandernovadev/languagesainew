@@ -205,6 +205,10 @@ export const validateExamFilters = (
     errors.push("Los temas de gramática deben ser un array");
   }
 
+  if (!filters.grammarTopics || filters.grammarTopics.length === 0) {
+    errors.push("Debe seleccionar al menos un tema de gramática");
+  }
+
   if (filters.grammarTopics && filters.grammarTopics.length > EXAM_VALIDATION_LIMITS.maxGrammarTopics) {
     errors.push(`Máximo ${EXAM_VALIDATION_LIMITS.maxGrammarTopics} temas de gramática permitidos`);
   }

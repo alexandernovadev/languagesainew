@@ -131,12 +131,11 @@ export function ExamConfigForm({
 
                   <ExamFormField
                     type="number"
-                    label="Número de Preguntas"
+                    label="# Preguntas (4-30 preguntas)"
                     value={filters.numberOfQuestions}
                     onChange={(value) => updateFilter("numberOfQuestions", value)}
                     min={EXAM_VALIDATION_LIMITS.minQuestions}
                     max={EXAM_VALIDATION_LIMITS.maxQuestions}
-                    description={`(${EXAM_VALIDATION_LIMITS.minQuestions}-${EXAM_VALIDATION_LIMITS.maxQuestions} preguntas)`}
                   />
 
                   <ExamFormField

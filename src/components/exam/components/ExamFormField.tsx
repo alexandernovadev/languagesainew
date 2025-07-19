@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -47,16 +48,61 @@ export function ExamFormField(props: ExamFormFieldProps) {
 
       case "number":
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const currentValue = Number(props.value) || (props as any).min || 4;
+                const newValue = Math.max((props as any).min || 4, currentValue - 1);
+                (props as any).onChange(newValue);
+              }}
+              className="h-8 w-8 p-0"
+              disabled={Number(props.value) <= ((props as any).min || 4)}
+            >
+              -
+            </Button>
             <Input
               type="number"
               value={props.value}
-              onChange={(e) => props.onChange(parseInt(e.target.value))}
-              min={props.min}
-              max={props.max}
-              step={props.step}
-              className="w-24"
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                // Solo permitir números enteros
+                if (/^\d*$/.test(inputValue)) {
+                  const numValue = parseInt(inputValue) || 0;
+                  const clampedValue = Math.max((props as any).min || 4, Math.min((props as any).max || 30, numValue));
+                  (props as any).onChange(clampedValue);
+                }
+              }}
+              onKeyDown={(e) => {
+                // Prevenir caracteres no numéricos excepto backspace, delete, arrow keys
+                if (!/[\d\b\-\+]/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab'].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+              min={(props as any).min || 4}
+              max={(props as any).max || 30}
+              className={`w-16 text-center ${
+                Number(props.value) < 4 || Number(props.value) > 30 
+                  ? 'border-red-500 text-red-500' 
+                  : ''
+              }`}
             />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const currentValue = Number(props.value) || (props as any).min || 4;
+                const newValue = Math.min((props as any).max || 30, currentValue + 1);
+                (props as any).onChange(newValue);
+              }}
+              className="h-8 w-8 p-0"
+              disabled={Number(props.value) >= ((props as any).max || 30)}
+            >
+              +
+            </Button>
           </div>
         );
 
@@ -152,7 +198,16 @@ export function ExamFormField(props: ExamFormFieldProps) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium">
-        {label}
+        {label.includes('(') ? (
+          <>
+            {label.split('(')[0]}
+            <span className="text-[10px] text-muted-foreground font-normal">
+              ({label.split('(')[1]}
+            </span>
+          </>
+        ) : (
+          label
+        )}
         {error && (
           <span className="text-[12px] text-red-500 font-normal ml-1">
             ({error})
@@ -164,6 +219,10 @@ export function ExamFormField(props: ExamFormFieldProps) {
 
       {description && !error && (
         <p className="text-xs text-muted-foreground">{description}</p>
+      )}
+      
+      {type === "number" && (Number(props.value) < 4 || Number(props.value) > 30) && (
+        <p className="text-xs text-red-500">El valor debe estar entre 4 y 30</p>
       )}
     </div>
   );

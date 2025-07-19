@@ -185,6 +185,7 @@ export function GrammarTopicsSelector({
                       isShaking ? 'animate-shake' : ''
                     }`}
                   >
+                    <Info className="h-3 w-3 mr-1" />
                     {selectedTopics.length} tema{selectedTopics.length !== 1 ? 's' : ''} seleccionado{selectedTopics.length !== 1 ? 's' : ''}
                   </Badge>
                 </TooltipTrigger>
@@ -202,20 +203,13 @@ export function GrammarTopicsSelector({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            {selectedTopics.length > 5 && (
-              <div className="flex items-center gap-1 text-amber-600">
-                <AlertCircle className="h-3 w-3" />
-                <span className="text-xs">Muchos temas pueden afectar la distribución</span>
-              </div>
-            )}
+
           </div>
         )}
 
         {/* Error display */}
         {error && (
-          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-sm text-destructive">{error}</p>
-          </div>
+          <p className="text-xs text-red-500">{error}</p>
         )}
 
         <Separator />
