@@ -185,16 +185,11 @@ export default function LectureDetailPage() {
     
     setLoadingImage(true);
     try {
-      await updateWordImage(foundWord._id, modalWord, foundWord.img);
+      const updatedWord = await updateWordImage(foundWord._id, modalWord, foundWord.img);
       toast.success("Imagen actualizada", {
         description: `La imagen de "${modalWord}" ha sido regenerada`,
       });
-      // Actualizar los datos de la palabra
-      await getWordByName(modalWord);
-      const wordStore = useWordStore.getState();
-      if (wordStore.activeWord) {
-        setFoundWord(wordStore.activeWord);
-      }
+      setFoundWord(updatedWord);
     } catch (error: any) {
       toast.error("Error al actualizar imagen", {
         description: error.message || "No se pudo actualizar la imagen",
@@ -209,16 +204,11 @@ export default function LectureDetailPage() {
     
     setLoadingExamples(true);
     try {
-      await updateWordExamples(foundWord._id, modalWord, "en", foundWord.examples || []);
+      const updatedWord = await updateWordExamples(foundWord._id, modalWord, "en", foundWord.examples || []);
       toast.success("Ejemplos actualizados", {
         description: `Los ejemplos de "${modalWord}" han sido regenerados`,
       });
-      // Actualizar los datos de la palabra
-      await getWordByName(modalWord);
-      const wordStore = useWordStore.getState();
-      if (wordStore.activeWord) {
-        setFoundWord(wordStore.activeWord);
-      }
+      setFoundWord(updatedWord);
     } catch (error: any) {
       toast.error("Error al actualizar ejemplos", {
         description: error.message || "No se pudo actualizar los ejemplos",
@@ -233,16 +223,11 @@ export default function LectureDetailPage() {
     
     setLoadingSynonyms(true);
     try {
-      await updateWordSynonyms(foundWord._id, modalWord, "en", foundWord.sinonyms || []);
+      const updatedWord = await updateWordSynonyms(foundWord._id, modalWord, "en", foundWord.sinonyms || []);
       toast.success("Sinónimos actualizados", {
         description: `Los sinónimos de "${modalWord}" han sido regenerados`,
       });
-      // Actualizar los datos de la palabra
-      await getWordByName(modalWord);
-      const wordStore = useWordStore.getState();
-      if (wordStore.activeWord) {
-        setFoundWord(wordStore.activeWord);
-      }
+      setFoundWord(updatedWord);
     } catch (error: any) {
       toast.error("Error al actualizar sinónimos", {
         description: error.message || "No se pudo actualizar los sinónimos",
@@ -257,16 +242,11 @@ export default function LectureDetailPage() {
     
     setLoadingCodeSwitching(true);
     try {
-      await updateWordCodeSwitching(foundWord._id, modalWord, "en", foundWord.codeSwitching || []);
+      const updatedWord = await updateWordCodeSwitching(foundWord._id, modalWord, "en", foundWord.codeSwitching || []);
       toast.success("Code-switching actualizado", {
         description: `El code-switching de "${modalWord}" ha sido regenerado`,
       });
-      // Actualizar los datos de la palabra
-      await getWordByName(modalWord);
-      const wordStore = useWordStore.getState();
-      if (wordStore.activeWord) {
-        setFoundWord(wordStore.activeWord);
-      }
+      setFoundWord(updatedWord);
     } catch (error: any) {
       toast.error("Error al actualizar code-switching", {
         description: error.message || "No se pudo actualizar el code-switching",
@@ -281,16 +261,11 @@ export default function LectureDetailPage() {
     
     setLoadingTypes(true);
     try {
-      await updateWordTypes(foundWord._id, modalWord, "en", foundWord.type || []);
+      const updatedWord = await updateWordTypes(foundWord._id, modalWord, "en", foundWord.type || []);
       toast.success("Tipos actualizados", {
         description: `Los tipos de "${modalWord}" ha sido regenerados`,
       });
-      // Actualizar los datos de la palabra
-      await getWordByName(modalWord);
-      const wordStore = useWordStore.getState();
-      if (wordStore.activeWord) {
-        setFoundWord(wordStore.activeWord);
-      }
+      setFoundWord(updatedWord);
     } catch (error: any) {
       toast.error("Error al actualizar tipos", {
         description: error.message || "No se pudo actualizar los tipos",
