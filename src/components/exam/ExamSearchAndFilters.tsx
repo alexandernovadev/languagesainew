@@ -40,12 +40,12 @@ export function ExamSearchAndFilters({
         <Button
           variant="outline"
           onClick={onFiltersClick}
-          className={hasActiveFilters ? "border-blue-500 text-blue-600" : ""}
+          className={`h-10 w-10 p-0 ${hasActiveFilters ? "border-blue-500 text-blue-600" : ""}`}
+          title="Filtros"
         >
-          <Filter className="w-4 h-4 mr-2" />
-          Filtros
+          <Filter className="w-4 h-4" />
           {hasActiveFilters && (
-            <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 text-xs">
+            <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
               !
             </Badge>
           )}

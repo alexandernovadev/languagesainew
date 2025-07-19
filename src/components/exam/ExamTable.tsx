@@ -100,7 +100,7 @@ export function ExamTable({
       {exams.map((exam) => (
         <Card key={exam._id} className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-border/50">
           <CardHeader className="pb-3">
-            {/* Header con título y acciones */}
+            {/* Header con título */}
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
@@ -111,28 +111,6 @@ export function ExamTable({
                     {truncateText(exam.description, 60)}
                   </p>
                 )}
-              </div>
-              
-              {/* Acciones principales */}
-              <div className="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onTake(exam)}
-                  className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
-                  title="Contestar examen"
-                >
-                  <Play className="h-3 w-3" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onView(exam)}
-                  className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
-                  title="Ver examen"
-                >
-                  <Eye className="h-3 w-3" />
-                </Button>
               </div>
             </div>
           </CardHeader>
@@ -212,26 +190,43 @@ export function ExamTable({
               </div>
             </div>
 
-            {/* Acciones secundarias */}
-            <div className="flex items-center justify-between pt-2 border-t border-border/50">
+            {/* Acciones siempre visibles */}
+            <div className="flex items-center gap-1 pt-2 border-t border-border/50">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onTake(exam)}
+                className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
+                title="Contestar examen"
+              >
+                <Play className="h-3 w-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onView(exam)}
+                className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+                title="Ver examen"
+              >
+                <Eye className="h-3 w-3" />
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onEdit(exam)}
-                className="h-7 px-2 text-xs hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
+                className="h-7 w-7 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
+                title="Editar examen"
               >
-                <Edit className="h-3 w-3 mr-1" />
-                Editar
+                <Edit className="h-3 w-3" />
               </Button>
-              
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onRemove(exam)}
-                className="h-7 px-2 text-xs hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
+                className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
+                title="Eliminar examen"
               >
-                <Trash2 className="h-3 w-3 mr-1" />
-                Eliminar
+                <Trash2 className="h-3 w-3" />
               </Button>
             </div>
           </CardContent>
