@@ -132,16 +132,18 @@ export function WordDetailsCard({
     className?: string;
     loading?: boolean;
   }) => (
-    <div
-      className={cn(
-        "mb-4 p-4 rounded-lg border transition-all duration-300",
-        loading
-          ? "bg-zinc-900/60 border-green-400/30"
-          : "bg-zinc-900/40 border-zinc-800",
-        className
+    <div className="mb-4">
+      {loading ? (
+        <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
+          <div className="bg-zinc-900/90 rounded-lg p-4">
+            {children}
+          </div>
+        </div>
+      ) : (
+        <div className={cn("p-4 rounded-lg border bg-zinc-900/40 border-zinc-800", className)}>
+          {children}
+        </div>
       )}
-    >
-      {children}
     </div>
   );
 
