@@ -21,6 +21,7 @@ import {
   Info
 } from 'lucide-react';
 import { GRAMMAR_TOPICS, getCategoryKeys, getCategoryInfo } from '../constants/grammarTopics';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface GrammarTopicsSelectorProps {
   selectedTopics: string[];
@@ -59,12 +60,17 @@ export function GrammarTopicsSelector({
     onTopicsChange(newTopics);
   };
 
-  const handleSelectAll = () => {
+  const handleSelectRandom = () => {
     const allTopics = categoryKeys.flatMap(categoryKey => {
       const category = getCategoryInfo(categoryKey);
       return category?.topics || [];
     });
-    onTopicsChange(allTopics);
+    
+    // Select 4 random topics, replacing any previously selected topics
+    const shuffled = [...allTopics].sort(() => 0.5 - Math.random());
+    const randomTopics = shuffled.slice(0, 4);
+    
+    onTopicsChange(randomTopics);
   };
 
   const handleClearAll = () => {
@@ -140,11 +146,11 @@ export function GrammarTopicsSelector({
           <Button
             variant="outline"
             size="sm"
-            onClick={handleSelectAll}
+            onClick={handleSelectRandom}
             className="text-xs"
           >
             <Check className="h-3 w-3 mr-1" />
-            Seleccionar Todo
+            Seleccionar 4 Aleatorios
           </Button>
           <Button
             variant="outline"
@@ -160,9 +166,27 @@ export function GrammarTopicsSelector({
         {/* Selected count */}
         {selectedTopics.length > 0 && (
           <div className="flex items-center gap-2 text-sm">
-            <Badge variant="secondary">
-              {selectedTopics.length} tema{selectedTopics.length !== 1 ? 's' : ''} seleccionado{selectedTopics.length !== 1 ? 's' : ''}
-            </Badge>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="secondary" className="cursor-help">
+                    {selectedTopics.length} tema{selectedTopics.length !== 1 ? 's' : ''} seleccionado{selectedTopics.length !== 1 ? 's' : ''}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <div className="space-y-1">
+                    <p className="font-medium">Temas seleccionados:</p>
+                    <div className="space-y-1">
+                      {selectedTopics.map((topic, index) => (
+                        <div key={index} className="text-xs">
+                          • {topic}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             {selectedTopics.length > 5 && (
               <div className="flex items-center gap-1 text-amber-600">
                 <AlertCircle className="h-3 w-3" />
