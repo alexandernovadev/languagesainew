@@ -53,11 +53,11 @@ export function LectureCard({
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">
-          <Badge className="border-none bg-blue-600 text-white shadow-lg">
+          <Badge variant="blue" className="border-none shadow-lg">
             {lecture.level}
           </Badge>
           {lang && (
-            <Badge className="flex items-center gap-1.5 border-none bg-gray-900/80 text-white shadow-lg backdrop-blur-sm">
+            <Badge variant="outline" className="flex items-center gap-1.5 border-none bg-gray-900/80 text-white shadow-lg backdrop-blur-sm">
               <span className="text-base leading-none">{lang.flag}</span>
               <span className="text-xs">{lang.code.toLowerCase()}</span>
             </Badge>

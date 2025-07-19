@@ -53,14 +53,14 @@ export function QuestionDetailsModal({ question, open, onOpenChange }: QuestionD
     return questionDifficulties.find(d => d.value === difficulty)?.label || `Nivel ${difficulty}`;
   };
 
-  const getDifficultyColor = (difficulty: number) => {
+  const getDifficultyVariant = (difficulty: number) => {
     switch (difficulty) {
-      case 1: return "bg-green-100 text-green-800";
-      case 2: return "bg-yellow-100 text-yellow-800";
-      case 3: return "bg-orange-100 text-orange-800";
-      case 4: return "bg-red-100 text-red-800";
-      case 5: return "bg-purple-100 text-purple-800";
-      default: return "bg-gray-100 text-gray-800";
+      case 1: return "blue";
+      case 2: return "secondary";
+      case 3: return "yellow";
+      case 4: return "magenta";
+      case 5: return "destructive";
+      default: return "outline";
     }
   };
 
@@ -116,7 +116,9 @@ export function QuestionDetailsModal({ question, open, onOpenChange }: QuestionD
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">Tipo</Label>
-                    <Badge variant="outline">{getTypeLabel(question.type)}</Badge>
+                    <div className="mt-1">
+                      <Badge variant="outline">{getTypeLabel(question.type)}</Badge>
+                    </div>
                   </div>
                 </div>
 
@@ -125,19 +127,25 @@ export function QuestionDetailsModal({ question, open, onOpenChange }: QuestionD
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">Nivel CEFR</Label>
-                    <Badge variant="outline">{getLevelLabel(question.level)}</Badge>
+                    <div className="mt-1">
+                      <Badge variant="outline">{getLevelLabel(question.level)}</Badge>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">Tipo</Label>
-                    <Badge variant="outline">{getTypeLabel(question.type)}</Badge>
+                    <div className="mt-1">
+                      <Badge variant="outline">{getTypeLabel(question.type)}</Badge>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">Dificultad</Label>
-                    <Badge className={getDifficultyColor(question.difficulty)}>
-                      {getDifficultyLabel(question.difficulty)}
-                    </Badge>
+                    <div className="mt-1">
+                      <Badge variant={getDifficultyVariant(question.difficulty)}>
+                        {getDifficultyLabel(question.difficulty)}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
 
@@ -149,7 +157,7 @@ export function QuestionDetailsModal({ question, open, onOpenChange }: QuestionD
                         <Tag className="h-4 w-4" />
                         Etiquetas
                       </Label>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2 mt-1">
                         {question.tags.map((tag, index) => (
                           <Badge key={index} variant="secondary">
                             {tag}

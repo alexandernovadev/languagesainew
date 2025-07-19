@@ -47,14 +47,14 @@ export function QuestionTable({
     return difficultyData?.label || difficulty.toString();
   };
 
-  const getDifficultyColor = (difficulty: number) => {
+  const getDifficultyVariant = (difficulty: number) => {
     switch (difficulty) {
-      case 1: return "bg-green-100 text-green-800";
-      case 2: return "bg-blue-100 text-blue-800";
-      case 3: return "bg-yellow-100 text-yellow-800";
-      case 4: return "bg-orange-100 text-orange-800";
-      case 5: return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case 1: return "blue";
+      case 2: return "secondary";
+      case 3: return "yellow";
+      case 4: return "magenta";
+      case 5: return "destructive";
+      default: return "outline";
     }
   };
 
@@ -153,17 +153,17 @@ export function QuestionTable({
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="yellow" className="text-xs border-none bg-transparent">
                   {getTypeLabel(question.type)}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="outline" className="text-xs rounded-sm border-2">
                   {getLevelLabel(question.level)}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge className={`text-xs ${getDifficultyColor(question.difficulty)}`}>
+                <Badge variant={getDifficultyVariant(question.difficulty)} className="text-xs">
                   {getDifficultyLabel(question.difficulty)}
                 </Badge>
               </TableCell>

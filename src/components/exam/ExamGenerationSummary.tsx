@@ -32,26 +32,26 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
     }
   };
 
-  const getLevelColor = (level: string) => {
+  const getLevelVariant = (level: string) => {
     switch (level) {
-      case 'A1': return 'bg-green-900/20 text-green-400 border-green-700/30';
-      case 'A2': return 'bg-blue-900/20 text-blue-400 border-blue-700/30';
-      case 'B1': return 'bg-yellow-900/20 text-yellow-400 border-yellow-700/30';
-      case 'B2': return 'bg-orange-900/20 text-orange-400 border-orange-700/30';
-      case 'C1': return 'bg-red-900/20 text-red-400 border-red-700/30';
-      case 'C2': return 'bg-purple-900/20 text-purple-400 border-purple-700/30';
-      default: return 'bg-gray-900/20 text-gray-400 border-gray-700/30';
+      case 'A1': return 'blue';
+      case 'A2': return 'secondary';
+      case 'B1': return 'yellow';
+      case 'B2': return 'magenta';
+      case 'C1': return 'destructive';
+      case 'C2': return 'default';
+      default: return 'outline';
     }
   };
 
-  const getDifficultyColor = (difficulty: number) => {
+  const getDifficultyVariant = (difficulty: number) => {
     switch (difficulty) {
-      case 1: return 'bg-green-900/20 text-green-400 border-green-700/30';
-      case 2: return 'bg-blue-900/20 text-blue-400 border-blue-700/30';
-      case 3: return 'bg-yellow-900/20 text-yellow-400 border-yellow-700/30';
-      case 4: return 'bg-orange-900/20 text-orange-400 border-orange-700/30';
-      case 5: return 'bg-red-900/20 text-red-400 border-red-700/30';
-      default: return 'bg-gray-900/20 text-gray-400 border-gray-700/30';
+      case 1: return 'blue';
+      case 2: return 'secondary';
+      case 3: return 'yellow';
+      case 4: return 'magenta';
+      case 5: return 'destructive';
+      default: return 'outline';
     }
   };
 
@@ -85,7 +85,7 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
                 <Target className="h-5 w-5 text-green-400" />
                 <h3 className="font-semibold text-green-400">Nivel CEFR</h3>
               </div>
-              <Badge className={`${getLevelColor(filters.level)} border`}>
+              <Badge variant={getLevelVariant(filters.level)} className="border">
                 {filters.level}
               </Badge>
               <p className="text-xs text-gray-400 mt-1">
@@ -99,7 +99,7 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
                 <Zap className="h-5 w-5 text-orange-400" />
                 <h3 className="font-semibold text-orange-400">Dificultad</h3>
               </div>
-              <Badge className={`${getDifficultyColor(filters.difficulty)} border`}>
+              <Badge variant={getDifficultyVariant(filters.difficulty)} className="border">
                 {getDifficultyLabel(filters.difficulty)}
               </Badge>
             </div>
@@ -129,7 +129,7 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
                   <Badge 
                     key={type} 
                     variant="outline" 
-                    className="text-xs bg-indigo-900/20 text-indigo-400 border-indigo-700/30"
+                    className="text-xs"
                   >
                     {getQuestionTypeIcon(type)} {type.replace('_', ' ')}
                   </Badge>
@@ -149,13 +149,13 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
                     <Badge 
                       key={topic} 
                       variant="outline" 
-                      className="text-xs bg-pink-900/20 text-pink-400 border-pink-700/30"
+                      className="text-xs"
                     >
                       {topic}
                     </Badge>
                   ))}
                   {filters.grammarTopics.length > 3 && (
-                    <Badge variant="outline" className="text-xs bg-pink-900/20 text-pink-400 border-pink-700/30">
+                    <Badge variant="outline" className="text-xs">
                       +{filters.grammarTopics.length - 3} más
                     </Badge>
                   )}
