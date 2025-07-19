@@ -37,7 +37,6 @@ export interface ExamStatsProps {
 }
 
 export interface ExamGenerationProgressProps {
-  progress: number;
   isGenerating: boolean;
 }
 

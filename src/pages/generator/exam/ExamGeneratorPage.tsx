@@ -304,11 +304,10 @@ export default function ExamGeneratorPage() {
               />
             ) : (
               <div className="space-y-6">
-                <ExamGenerationSummary filters={filters} />
                 <ExamGenerationProgress
-                  progress={state.progress}
                   isGenerating={state.isGenerating}
                 />
+                <ExamGenerationSummary filters={filters} />
               </div>
             )}
           </TabsContent>

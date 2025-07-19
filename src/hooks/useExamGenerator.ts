@@ -17,7 +17,6 @@ export interface ExamGeneratorState {
   isGenerating: boolean;
   generatedExam: ExamGenerationResponse | null;
   error: string | null;
-  progress: number;
 }
 
 export interface ExamGeneratorFilters {
@@ -35,7 +34,6 @@ export function useExamGenerator() {
     isGenerating: false,
     generatedExam: null,
     error: null,
-    progress: 0, // Mantenemos para compatibilidad pero no lo usamos
   });
 
   const [filters, setFilters] = useState<ExamGeneratorFilters>({
@@ -89,7 +87,6 @@ export function useExamGenerator() {
         ...prev,
         isGenerating: false,
         generatedExam: examData,
-        progress: 100,
       }));
 
       toast.success("¡Examen generado!", {
@@ -102,7 +99,6 @@ export function useExamGenerator() {
         ...prev,
         isGenerating: false,
         error: errorMessage,
-        progress: 0,
       }));
 
       toast.error("Error al generar examen", {
@@ -118,7 +114,6 @@ export function useExamGenerator() {
       isGenerating: false,
       generatedExam: null,
       error: null,
-      progress: 0,
     });
   }, []);
 
@@ -140,7 +135,6 @@ export function useExamGenerator() {
         isGenerating: false,
         generatedExam: examData,
         error: null,
-        progress: 100,
       });
 
       setFilters((prev) => ({

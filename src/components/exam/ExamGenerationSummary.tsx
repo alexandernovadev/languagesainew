@@ -167,16 +167,6 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
 
           </div>
 
-          {/* Mensaje motivacional */}
-          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg p-4 border border-blue-700/30">
-            <div className="flex items-center gap-3">
-              <Star className="h-5 w-5 text-yellow-400 animate-pulse" />
-              <p className="text-sm font-medium text-blue-300">
-                ¡Tu examen personalizado está siendo creado con amor y tecnología! 🌟
-              </p>
-            </div>
-          </div>
-
         </CardContent>
       </Card>
     );
