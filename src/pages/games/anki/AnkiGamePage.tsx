@@ -334,7 +334,7 @@ export default function AnkiGamePage() {
       
       <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-180px)] items-center w-full">
         {/* Indicador de progreso compacto */}
-        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-2 mb-2">
+        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-1 mb-1">
           {gameStats.currentIndex + 1}/{shuffledWords.length}
         </span>
         <div className="flex-1 flex items-center justify-center w-full max-w-lg min-h-0">
@@ -452,24 +452,24 @@ export default function AnkiGamePage() {
         </div>
 
         {/* Card de reconocimiento de voz */}
-        <Card className="w-full max-w-lg mx-1 p-3 mb-4">
+        <Card className="w-full max-w-lg mx-1 p-2 mb-1">
           <div className="flex items-center gap-2">
             {/* Micrófono - 20% */}
             <div className="flex justify-center">
               <Button
                 variant={isRecording ? "destructive" : "outline"}
                 size="sm"
-                className={`w-12 h-12 rounded-full transition-all duration-200 ${
+                className={`w-8 h-8 rounded-full transition-all duration-200 ${
                   isRecording ? "animate-pulse bg-red-500 hover:bg-red-600" : ""
                 }`}
                 onClick={toggleRecording}
                 disabled={!isSupported}
               >
                 {isRecording ? (
-                  <div className="w-4 h-4 bg-white rounded-sm" />
+                  <div className="w-3 h-3 bg-white rounded-sm" />
                 ) : (
                   <svg
-                    className="w-6 h-6"
+                    className="w-4 h-4"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -484,15 +484,15 @@ export default function AnkiGamePage() {
             </div>
 
             {/* Área de texto - 80% */}
-            <div className="flex-1 min-h-12 flex items-center">
-              <div className="w-full p-3 border rounded-lg bg-background min-h-12 flex items-center justify-between">
+            <div className="flex-1 min-h-8 flex items-center">
+              <div className="w-full p-2 border rounded-lg bg-background min-h-8 flex items-center justify-between">
                 <div className="flex-1">
                   {recognizedText ? (
-                    <span className="text-lg font-medium">
+                    <span className="text-sm font-medium">
                       {recognizedText}
                     </span>
                   ) : (
-                    <span className="text-muted-foreground italic">
+                    <span className="text-muted-foreground italic text-sm">
                       {isRecording
                         ? "Escuchando..."
                         : "Presiona el micrófono y habla"}
@@ -503,7 +503,7 @@ export default function AnkiGamePage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 ml-2 hover:bg-red-100 hover:text-red-600"
+                    className="h-5 w-5 p-0 ml-2 hover:bg-red-100 hover:text-red-600"
                     onClick={() => setRecognizedText("")}
                   >
                     ✕
@@ -515,13 +515,13 @@ export default function AnkiGamePage() {
 
           {/* Mensaje de soporte */}
           {!isSupported && (
-            <div className="mt-2 text-xs text-red-500 text-center">
+            <div className="mt-1 text-xs text-red-500 text-center">
               Tu navegador no soporta reconocimiento de voz
             </div>
           )}
         </Card>
         {/* Botones SIEMPRE abajo */}
-        <div className="flex justify-center gap-4 mt-4 mb-4 w-full">
+        <div className="flex justify-center gap-4 mt-2 mb-2 w-full">
           <Button
             variant="outline"
             onClick={handlePrevious}
