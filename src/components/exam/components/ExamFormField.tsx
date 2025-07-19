@@ -68,8 +68,8 @@ export function ExamFormField(props: ExamFormFieldProps) {
             </SelectTrigger>
             <SelectContent>
               {props.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  <div className="flex flex-col">
+                <SelectItem key={option.value} value={option.value} className="text-left">
+                  <div className="flex flex-col items-start">
                     <span className="font-medium">{option.label}</span>
                     {option.description && (
                       <span className="text-xs text-muted-foreground">
@@ -85,7 +85,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
 
       case "slider":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Slider
               value={[props.value]}
               onValueChange={(value) => props.onChange(value[0])}
@@ -115,7 +115,7 @@ export function ExamFormField(props: ExamFormFieldProps) {
 
       case "checkbox-group":
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {props.options.map((option) => (
               <div key={option.value} className="flex items-center space-x-2">
                 <Checkbox
@@ -150,18 +150,21 @@ export function ExamFormField(props: ExamFormFieldProps) {
   };
 
   return (
-    <div className="space-y-2">
-      <Label className="text-base font-medium">
-        {label} {required && "*"}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium">
+        {label}
+        {error && (
+          <span className="text-[12px] text-red-500 font-normal ml-1">
+            ({error})
+          </span>
+        )}
       </Label>
 
       {renderField()}
 
       {description && !error && (
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
       )}
-
-      {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
     </div>
   );
 }

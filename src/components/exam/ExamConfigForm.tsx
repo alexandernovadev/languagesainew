@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Sparkles, Settings } from "lucide-react";
+import { Loader2, Sparkles, Settings, Info } from "lucide-react";
 import { useTopicGenerator } from "@/hooks/useTopicGenerator";
 import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
 import { ExamFormField } from "./components/ExamFormField";
 import { GrammarTopicsSelector } from "./components/GrammarTopicsSelector";
+import { ExamInfoModal } from "./components/ExamInfoModal";
 import {
   getDifficultyLabel,
   getLevelDescription,
@@ -16,7 +17,6 @@ import {
 } from "./helpers/examUtils";
 import {
   LANGUAGE_OPTIONS,
-  EXAM_GENERATION_TIPS,
   EXAM_VALIDATION_LIMITS,
 } from "./constants/examConstants";
 
@@ -35,6 +35,7 @@ export function ExamConfigForm({
   isGenerating,
   error,
 }: ExamConfigFormProps) {
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const validation = validateExamFilters(filters);
   const isFormValid = validation.isValid && !isGenerating;
 
@@ -56,17 +57,27 @@ export function ExamConfigForm({
       <div>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Configuración del Examen
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Configuración del Examen
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsInfoModalOpen(true)}
+                className="h-8 w-8 p-0"
+              >
+                <Info className="h-4 w-4" />
+              </Button>
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             {/* Layout principal: 2 columnas con proporción 3:2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
               {/* Columna izquierda: Todos los campos excepto temas de gramática (3/5 del espacio) */}
-              <div className="space-y-6 lg:col-span-3">
+              <div className="space-y-4 lg:col-span-3">
                 {/* Tema del examen */}
                 <ExamFormField
                   type="textarea"
@@ -95,7 +106,7 @@ export function ExamConfigForm({
                 <Separator />
 
                 {/* Configuración en grid de 2x2 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <ExamFormField
                     type="select"
                     label="Nivel CEFR"
@@ -103,9 +114,6 @@ export function ExamConfigForm({
                     onChange={(value) => updateFilter("level", value)}
                     options={questionLevels}
                     placeholder="Seleccionar nivel"
-                    description={
-                      filters.level ? getLevelDescription(filters.level) : undefined
-                    }
                   />
 
                   <ExamFormField
@@ -152,18 +160,6 @@ export function ExamConfigForm({
                   options={questionTypes}
                   error={validation.errors.find((e) => e.includes("tipo"))}
                 />
-
-                {/* Tips */}
-                <div className="p-4 bg-muted/50 border border-border rounded-lg">
-                  <h4 className="font-medium mb-2">
-                    💡 Consejos para mejores resultados:
-                  </h4>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {EXAM_GENERATION_TIPS.map((tip, index) => (
-                      <li key={index}>• {tip}</li>
-                    ))}
-                  </ul>
-                </div>
               </div>
 
               {/* Columna derecha: Temas de gramática (2/5 del espacio) */}
@@ -184,7 +180,7 @@ export function ExamConfigForm({
             )}
 
             {/* Generate button */}
-            <div className="pt-4">
+            <div className="pt-2">
               <Button
                 onClick={onGenerate}
                 disabled={!isFormValid}
@@ -207,6 +203,12 @@ export function ExamConfigForm({
           </CardContent>
         </Card>
       </div>
+
+      {/* Info Modal */}
+      <ExamInfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+      />
     </div>
   );
 }

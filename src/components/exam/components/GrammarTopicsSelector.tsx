@@ -129,16 +129,13 @@ export function GrammarTopicsSelector({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BookOpen className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base">
+          <BookOpen className="h-4 w-4" />
           Temas de Gramática Obligatorios
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Selecciona los temas de gramática que deben incluirse obligatoriamente en el examen
-        </p>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -224,12 +221,12 @@ export function GrammarTopicsSelector({
         <Separator />
 
         {/* Categories */}
-        <ScrollArea className="h-[400px]">
+        <ScrollArea className="min-h-[400px] max-h-[500px]">
           <Accordion 
             type="multiple" 
             value={expandedCategories}
             onValueChange={setExpandedCategories}
-            className="space-y-2"
+            className="space-y-1"
           >
             {filteredCategories.map((categoryKey) => {
               const category = getCategoryInfo(categoryKey);
@@ -249,39 +246,39 @@ export function GrammarTopicsSelector({
                   value={categoryKey}
                   className="border rounded-lg"
                 >
-                  <div className="flex items-center px-4">
+                  <div className="flex items-center px-3 bg-muted/20 rounded-t-lg">
                     <Checkbox
                       checked={isSelected || isPartiallySelected}
                       onCheckedChange={() => handleSelectCategory(categoryKey)}
-                      className="mr-3"
+                      className="mr-2"
                       data-testid={`category-checkbox-${categoryKey}`}
                       aria-label={`Select all topics in ${category.title}`}
                     />
-                    <AccordionTrigger className="flex-1 hover:no-underline py-4">
-                      <div className="flex items-center gap-3 w-full">
-                        <span className="text-lg">{category.icon}</span>
+                    <AccordionTrigger className="flex-1 hover:no-underline py-2">
+                      <div className="flex items-center gap-2 w-full">
+                        <span className="text-base">{category.icon}</span>
                         <div className="flex-1 text-left">
-                          <div className="font-medium">{category.title}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="font-medium text-sm">{category.title}</div>
+                          <div className="text-xs text-muted-foreground">
                             {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
                           </div>
                         </div>
                       </div>
                     </AccordionTrigger>
                   </div>
-                  <AccordionContent className="px-4 pb-4">
-                    <div className="space-y-2 mt-2 ml-8">
+                  <AccordionContent className="px-3 pb-2">
+                    <div className="space-y-0.5 mt-1 ml-6">
                       {categoryTopics.map((topic) => (
                         <label
                           key={topic}
-                          className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
+                          className="flex items-center gap-2 p-1 rounded-md hover:bg-muted/50 cursor-pointer"
                         >
                           <Checkbox
                             checked={selectedTopics.includes(topic)}
                             onCheckedChange={() => handleTopicToggle(topic)}
                             aria-label={`Select topic: ${topic}`}
                           />
-                          <span className="text-sm">{topic}</span>
+                          <span className="text-xs">{topic}</span>
                         </label>
                       ))}
                     </div>
@@ -292,17 +289,7 @@ export function GrammarTopicsSelector({
           </Accordion>
         </ScrollArea>
 
-        {/* Info */}
-        <div className="flex items-start gap-2 p-3 bg-muted/50 border border-border rounded-lg">
-          <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-muted-foreground">
-            <p className="font-medium">¿Cómo funciona?</p>
-            <p>
-              Los temas seleccionados se incluirán obligatoriamente en el examen. 
-              La IA distribuirá las preguntas para cubrir cada tema de gramática seleccionado.
-            </p>
-          </div>
-        </div>
+
       </CardContent>
     </Card>
   );
