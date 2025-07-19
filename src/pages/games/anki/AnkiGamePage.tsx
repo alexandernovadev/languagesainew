@@ -10,6 +10,7 @@ import {
   RefreshCw,
   Loader2,
   Wand2,
+  BarChart3,
 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -20,7 +21,7 @@ import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AnkiStats } from "@/components/games/anki/AnkiStats";
+import { AnkiStatsModal } from "@/components/games/anki/AnkiStatsModal";
 import { WordDetailsCard } from "@/components/word-details";
 
 // Declaraciones de tipos para Web Speech API
@@ -92,6 +93,9 @@ export default function AnkiGamePage() {
 
   // Estado local para palabras mezcladas
   const [shuffledWords, setShuffledWords] = useState(words);
+
+  // Estado para el modal de estadísticas
+  const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -281,6 +285,9 @@ export default function AnkiGamePage() {
       <Button variant="outline" onClick={handleReset}>
         <RefreshCw className="h-4 w-4" />
       </Button>
+      <Button variant="outline" onClick={() => setIsStatsModalOpen(true)}>
+        <BarChart3 className="h-4 w-4" />
+      </Button>
     </>
   );
 
@@ -325,10 +332,7 @@ export default function AnkiGamePage() {
         actions={actions}
       />
       
-      {/* Estadísticas de repaso */}
-      <AnkiStats />
-      
-      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-230px)] items-center w-full">
+      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-180px)] items-center w-full">
         {/* Indicador de progreso compacto */}
         <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-2 mb-2">
           {gameStats.currentIndex + 1}/{shuffledWords.length}
@@ -567,6 +571,12 @@ export default function AnkiGamePage() {
           </Button>
         </div>
       </div>
+
+      {/* Modal de estadísticas */}
+      <AnkiStatsModal 
+        open={isStatsModalOpen} 
+        onOpenChange={setIsStatsModalOpen} 
+      />
     </PageLayout>
   );
 }
