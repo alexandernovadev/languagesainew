@@ -9,7 +9,7 @@ export const lectureService = {
 
   async getLectureById(id: string) {
     const res = await api.get(`/api/lectures/${id}`);
-    return res.data;
+    return res.data.data;
   },
 
   async postLecture(lectureData: Lecture) {

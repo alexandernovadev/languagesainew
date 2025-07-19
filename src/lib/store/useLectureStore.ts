@@ -82,7 +82,26 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     set({ loading: true });
     try {
       const data = await lectureService.getLectureById(id);
-      set({ activeLecture: data, loading: false });
+      
+      set((state) => {
+        // Check if the lecture is already in the lectures array
+        const existingLecture = state.lectures.find(lecture => lecture._id === id);
+        
+        if (!existingLecture) {
+          // Add the lecture to the lectures array if it's not already there
+          return {
+            lectures: [...state.lectures, data],
+            activeLecture: data,
+            loading: false,
+          };
+        } else {
+          // Just update the activeLecture
+          return {
+            activeLecture: data,
+            loading: false,
+          };
+        }
+      });
     } catch (error: any) {
       set({ loading: false });
       throw error;
