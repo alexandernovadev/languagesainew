@@ -332,9 +332,9 @@ export default function AnkiGamePage() {
         actions={actions}
       />
       
-      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-180px)] items-center w-full">
+      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-180px)] items-center w-full py-0 my-0">
         {/* Indicador de progreso compacto */}
-        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm mt-1 mb-1">
+        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm  mb-1 py-0">
           {gameStats.currentIndex + 1}/{shuffledWords.length}
         </span>
         <div className="flex-1 flex items-center justify-center w-full max-w-lg min-h-0">
@@ -404,12 +404,10 @@ export default function AnkiGamePage() {
                 style={{ transform: "rotateY(180deg)" }}
               >
                 {/* Cabecera fija */}
-                <div className="w-full flex justify-between items-center px-4 pt-3 pb-2 bg-transparent z-10">
+                <div className="w-full flex justify-between items-center px-4 py-1 bg-transparent z-10">
                   <span className="font-bold text-lg capitalize text-white">{currentCard?.spanish?.word}</span>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">
-                      {currentCard?.level}
-                    </Badge>
+              
                     <Button
                       variant="ghost"
                       size="sm"
@@ -439,6 +437,7 @@ export default function AnkiGamePage() {
                       variant="compact"
                       showLevelButtons={false}
                       showRefreshButtons={false}
+                      showAudioButtons={false}
                     />
                   )}
                 </div>

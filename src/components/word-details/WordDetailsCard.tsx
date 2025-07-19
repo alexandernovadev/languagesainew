@@ -16,6 +16,7 @@ interface WordDetailsCardProps {
   variant?: "full" | "compact" | "modal";
   showLevelButtons?: boolean;
   showRefreshButtons?: boolean;
+  showAudioButtons?: boolean;
   loading?: boolean;
 }
 
@@ -24,6 +25,7 @@ export function WordDetailsCard({
   variant = "full",
   showLevelButtons = true,
   showRefreshButtons = true,
+  showAudioButtons = true,
   loading = false,
 }: WordDetailsCardProps) {
   const {
@@ -231,26 +233,28 @@ export function WordDetailsCard({
             {word.seen || 0}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => speakWord()}
-            disabled={isPlaying}
-            className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-          >
-            <Volume2 className={cn("h-3 w-3", isPlaying && "animate-pulse")} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
-            disabled={isPlaying}
-            className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-          >
-            🐢
-          </Button>
-        </div>
+        {showAudioButtons && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => speakWord()}
+              disabled={isPlaying}
+              className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+            >
+              <Volume2 className={cn("h-3 w-3", isPlaying && "animate-pulse")} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
+              disabled={isPlaying}
+              className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+            >
+              🐢
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Word & Pronunciation */}
