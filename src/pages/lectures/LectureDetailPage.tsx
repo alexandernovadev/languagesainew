@@ -4,6 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import {
   Volume2,
@@ -14,6 +20,7 @@ import {
   Languages,
   Star,
   User,
+  Eye,
 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import type { Lecture } from "@/models/Lecture";
@@ -32,6 +39,8 @@ export default function LectureDetailPage() {
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentWord, setCurrentWord] = useState<string | null>(null);
+  const [modalWord, setModalWord] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -79,6 +88,16 @@ export default function LectureDetailPage() {
 
   const clearSelectedWords = () => {
     setSelectedWords([]);
+  };
+
+  const openWordModal = (word: string) => {
+    setModalWord(word);
+    setIsModalOpen(true);
+  };
+
+  const closeWordModal = () => {
+    setIsModalOpen(false);
+    setModalWord(null);
   };
 
   const renderInteractiveText = (text: string) => {
@@ -299,23 +318,25 @@ export default function LectureDetailPage() {
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="cursor-pointer hover:bg-primary/20 transition-colors"
+                  className="flex items-center gap-1 px-2 py-1"
                 >
-                  <span onClick={() => speakWord(word)}>{word}</span>
+                  <span className="font-medium">{word}</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-4 w-4 p-0 ml-2 hover:bg-destructive/20"
-                    onClick={() => removeSelectedWord(word)}
+                    className="h-4 w-4 p-0 hover:bg-primary/20"
+                    onClick={() => openWordModal(word)}
+                    title="Ver detalles"
                   >
-                    <X className="h-3 w-3" />
+                    <Eye className="h-3 w-3" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-4 w-4 p-0 ml-1"
+                    className="h-4 w-4 p-0 hover:bg-primary/20"
                     onClick={() => speakWord(word)}
                     disabled={isPlaying && currentWord === word}
+                    title="Reproducir audio"
                   >
                     <Volume2
                       className={cn(
@@ -324,12 +345,51 @@ export default function LectureDetailPage() {
                       )}
                     />
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 hover:bg-destructive/20"
+                    onClick={() => removeSelectedWord(word)}
+                    title="Eliminar palabra"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
                 </Badge>
               ))}
             </div>
           </CardContent>
         </Card>
       )}
+
+      {/* Modal para detalles de palabra */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5" />
+              Detalles de la palabra
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-primary capitalize">
+                {modalWord}
+              </h3>
+              <p className="text-muted-foreground mt-2">
+                Modal vacío por ahora...
+              </p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={closeWordModal}
+              >
+                Cerrar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
