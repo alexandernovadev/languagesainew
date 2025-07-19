@@ -83,7 +83,7 @@ export default function ExamsPage() {
             </span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 pb-4">
           <div className="table-container">
             <ExamTable
               exams={exams}

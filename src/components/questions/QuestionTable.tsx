@@ -1,24 +1,22 @@
-import { Question } from "@/models/Question";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Edit, Trash2, Eye, RotateCcw } from "lucide-react";
-import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
+import React from 'react';
+import { Question } from '@/models/Question';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { TruncatedText } from '@/components/common/TruncatedText';
+import { Eye, Edit, Trash2, RefreshCw, BookOpen, Calendar, User, Brain, Settings, Hash, FileText, Clock, Target } from 'lucide-react';
+import { questionTypes, questionLevels, questionDifficulties } from '@/data/questionTypes';
+import { getLanguageInfo } from "@/utils/common/language";
 
 interface QuestionTableProps {
   questions: Question[];
   onEdit: (question: Question) => void;
   onDelete: (question: Question) => void;
   onView: (question: Question) => void;
-  onRetry: () => void;
+  onRetry?: (question: Question) => void;
   loading?: boolean;
   searchQuery?: string;
 }
@@ -63,8 +61,31 @@ export function QuestionTable({
     return text.substring(0, maxLength) + "...";
   };
 
-  if (loading && questions.length === 0) {
+  if (loading) {
     return (
+      <div className="space-y-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16 rounded" />
+                <Skeleton className="h-6 w-12 rounded" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <TooltipProvider>
       <Table>
         <TableHeader>
           <TableRow>
@@ -77,160 +98,115 @@ export function QuestionTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 7 }).map((_, i) => (
-            <TableRow key={i}>
-              <TableCell className="max-w-md">
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <div className="flex gap-1">
-                    <Skeleton className="h-5 w-12 rounded" />
-                    <Skeleton className="h-5 w-16 rounded" />
-                    <Skeleton className="h-5 w-10 rounded" />
+          {questions.length > 0 ? (
+            questions.map((question) => (
+              <TableRow key={question._id}>
+                <TableCell className="max-w-md">
+                  <div className="space-y-1">
+                    <TruncatedText
+                      text={question.text}
+                      maxLength={80}
+                      className="font-medium text-sm cursor-default"
+                    />
+                    {question.tags && question.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {question.tags.slice(0, 3).map((tag: string, index: number) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                        {question.tags.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{question.tags.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-6 w-16 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-6 w-20 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-6 w-16 rounded" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-24" />
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                  <Skeleton className="h-8 w-8 rounded" />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  }
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Pregunta</TableHead>
-          <TableHead>Tipo</TableHead>
-          <TableHead>Nivel</TableHead>
-          <TableHead>Dificultad</TableHead>
-          <TableHead>Tema</TableHead>
-          <TableHead>Acciones</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {questions.length > 0 ? (
-          questions.map((question) => (
-            <TableRow key={question._id}>
-              <TableCell className="max-w-md">
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">
-                    {truncateText(question.text, 80)}
-                  </p>
-                  {question.tags && question.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {question.tags.slice(0, 3).map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {question.tags.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{question.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="yellow" className="text-xs border-none bg-transparent">
+                    {getTypeLabel(question.type)}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline" className="text-xs rounded-sm border-2">
+                    {getLevelLabel(question.level)}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={getDifficultyVariant(question.difficulty)} className="text-xs">
+                    {getDifficultyLabel(question.difficulty)}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <TruncatedText
+                    text={question.topic || "Sin tema"}
+                    maxLength={30}
+                    className="text-xs text-muted-foreground cursor-default"
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onView(question)}
+                      className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+                      title="Ver pregunta"
+                    >
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onEdit(question)}
+                      className="h-7 w-7 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
+                      title="Editar pregunta"
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onDelete(question)}
+                      className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
+                      title="Eliminar pregunta"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                    {onRetry && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onRetry(question)}
+                        className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
+                        title="Regenerar pregunta"
+                      >
+                        <RefreshCw className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center py-8">
+                <div className="space-y-2">
+                  <BookOpen className="w-8 h-8 mx-auto text-muted-foreground/50" />
+                  <p className="text-sm font-medium">No se encontraron preguntas</p>
+                  {searchQuery && (
+                    <p className="text-xs text-muted-foreground">
+                      No hay preguntas que coincidan con "{searchQuery}"
+                    </p>
                   )}
                 </div>
               </TableCell>
-              <TableCell>
-                <Badge variant="yellow" className="text-xs border-none bg-transparent">
-                  {getTypeLabel(question.type)}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className="text-xs rounded-sm border-2">
-                  {getLevelLabel(question.level)}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant={getDifficultyVariant(question.difficulty)} className="text-xs">
-                  {getDifficultyLabel(question.difficulty)}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <span className="text-sm text-muted-foreground">
-                  {question.topic || "Sin tema"}
-                </span>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onView(question)}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(question)}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onDelete(question)}
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
             </TableRow>
-          ))
-        ) : (
-          <TableRow className="hover:bg-transparent cursor-default">
-            <TableCell
-              colSpan={6}
-              className="text-center h-24 text-muted-foreground"
-            >
-              <div className="space-y-4">
-                <div>No se encontraron preguntas.</div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onRetry}
-                  className="rounded-full"
-                >
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  Recargar
-                </Button>
-                {searchQuery && (
-                  <div className="flex flex-col items-center gap-2 mt-4">
-                    <p className="text-sm text-muted-foreground">
-                      No hay preguntas que coincidan con "{searchQuery}"
-                    </p>
-                  </div>
-                )}
-              </div>
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          )}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   );
 } 

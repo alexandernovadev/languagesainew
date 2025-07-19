@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { TruncatedText, TruncatedBadge } from '@/components/common';
 import { 
   Eye, 
   Edit, 
@@ -96,142 +98,150 @@ export function ExamTable({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {exams.map((exam) => (
-        <Card key={exam._id} className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-border/50">
-          <CardHeader className="pb-3">
-            {/* Header con título */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                  {exam.title}
-                </h3>
-                {exam.description && (
-                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                    {truncateText(exam.description, 60)}
-                  </p>
-                )}
-              </div>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-3">
-            {/* Tema */}
-            <div className="flex items-center gap-2">
-              <Hash className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-              {exam.topic ? (
-                <Badge variant="secondary" className="text-xs truncate">
-                  {exam.topic}
-                </Badge>
-              ) : (
-                <span className="text-xs text-muted-foreground italic">
-                  Sin tema
-                </span>
-              )}
-            </div>
-
-            {/* Información principal */}
-            <div className="space-y-2">
-              {/* Idioma y Nivel */}
-              <div className="flex items-center gap-2">
-                <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                <Badge variant="outline" className="text-xs">
-                  {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
-                </Badge>
-                <Badge variant={getLevelColor(exam.level)} className="text-xs">
-                  {exam.level}
-                </Badge>
-              </div>
-
-              {/* Origen y Preguntas */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge variant={getSourceVariant(exam.source)} className="text-xs">
-                    <div className="flex items-center gap-1">
-                      {getSourceIcon(exam.source)}
-                      {exam.source === 'ai' ? 'IA' : 'Manual'}
-                    </div>
-                  </Badge>
+    <TooltipProvider>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {exams.map((exam) => (
+          <Card key={exam._id} className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-border/50">
+            <CardHeader className="pb-3">
+              {/* Header con título */}
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <TruncatedText
+                    text={exam.title}
+                    maxLength={60}
+                    className="font-semibold text-sm text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors"
+                  />
                 </div>
-                
-                <div className="flex items-center gap-1">
-                  <FileText className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs font-bold">
-                    {exam.questions?.length || 0} preguntas
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-3">
+              {/* Tema */}
+              <div className="flex items-center gap-2">
+                <Hash className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                {exam.topic ? (
+                  <div className="flex-1 min-w-0 max-w-full">
+                    <TruncatedBadge
+                      text={exam.topic}
+                      maxLength={25}
+                      variant="secondary"
+                    />
+                  </div>
+                ) : (
+                  <span className="text-xs text-muted-foreground italic">
+                    Sin tema
                   </span>
+                )}
+              </div>
+
+              {/* Información principal */}
+              <div className="space-y-2">
+                {/* Idioma y Nivel */}
+                <div className="flex items-center gap-2">
+                  <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                  <Badge variant="outline" className="text-xs">
+                    {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+                  </Badge>
+                  <Badge variant={getLevelColor(exam.level)} className="text-xs">
+                    {exam.level}
+                  </Badge>
+                </div>
+
+                {/* Origen y Preguntas */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getSourceVariant(exam.source)} className="text-xs">
+                      <div className="flex items-center gap-1">
+                        {getSourceIcon(exam.source)}
+                        {exam.source === 'ai' ? 'IA' : 'Manual'}
+                      </div>
+                    </Badge>
+                  </div>
+                  
+                  <div className="flex items-center gap-1">
+                    <FileText className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-xs font-bold">
+                      {exam.questions?.length || 0} preguntas
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Información adicional */}
-            <div className="space-y-2 pt-2 border-t border-border/50">
-              {/* Fecha */}
-              <div className="flex items-center gap-2">
-                <Calendar className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs text-muted-foreground">
-                  {formatDateShort(exam.createdAt)}
-                </span>
+              {/* Información adicional */}
+              <div className="space-y-2 pt-2 border-t border-border/50">
+                {/* Fecha y Duración en la misma línea */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                    <span className="text-xs text-muted-foreground">
+                      {formatDateShort(exam.createdAt)}
+                    </span>
+                  </div>
+                  
+                  {exam.timeLimit && (
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {exam.timeLimit} min
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Características especiales */}
+                <div className="flex items-center gap-2">
+                  {exam.adaptive && (
+                    <Badge variant="outline" className="text-xs">
+                      <Settings className="w-3 h-3 mr-1" />
+                      Adaptativo
+                    </Badge>
+                  )}
+                </div>
               </div>
 
-              {/* Características especiales */}
-              <div className="flex items-center gap-2">
-                {exam.adaptive && (
-                  <Badge variant="outline" className="text-xs">
-                    <Settings className="w-3 h-3 mr-1" />
-                    Adaptativo
-                  </Badge>
-                )}
-                {exam.timeLimit && (
-                  <Badge variant="outline" className="text-xs">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {exam.timeLimit} min
-                  </Badge>
-                )}
+              {/* Acciones siempre visibles */}
+              <div className="flex items-center gap-1 pt-2 border-t border-border/50">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onTake(exam)}
+                  className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
+                  title="Contestar examen"
+                >
+                  <Play className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onView(exam)}
+                  className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
+                  title="Ver examen"
+                >
+                  <Eye className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onEdit(exam)}
+                  className="h-7 w-7 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
+                  title="Editar examen"
+                >
+                  <Edit className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onRemove(exam)}
+                  className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
+                  title="Eliminar examen"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
               </div>
-            </div>
-
-            {/* Acciones siempre visibles */}
-            <div className="flex items-center gap-1 pt-2 border-t border-border/50">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onTake(exam)}
-                className="h-7 w-7 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950/20"
-                title="Contestar examen"
-              >
-                <Play className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onView(exam)}
-                className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/20"
-                title="Ver examen"
-              >
-                <Eye className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onEdit(exam)}
-                className="h-7 w-7 p-0 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950/20"
-                title="Editar examen"
-              >
-                <Edit className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onRemove(exam)}
-                className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20"
-                title="Eliminar examen"
-              >
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </TooltipProvider>
   );
 } 
