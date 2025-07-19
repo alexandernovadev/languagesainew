@@ -10,6 +10,13 @@ import {
   History,
   Trash2,
   Users,
+  BookMarked,
+  FileDown,
+  FileUp,
+  FileSpreadsheet,
+  Info,
+  Brain,
+  BookOpenCheck,
 } from "lucide-react";
 
 export const menuItems = [
@@ -26,7 +33,7 @@ export const menuItems = [
   {
     title: "Mis Palabras",
     url: "/my-words",
-    icon: BookOpen,
+    icon: BookMarked,
   },
   {
     title: "Preguntas",
@@ -51,12 +58,12 @@ export const generatorItems = [
   {
     title: "Generador de Exámenes",
     url: "/generator/exam",
-    icon: FileText,
+    icon: Brain,
   },
   {
     title: "Generador de Lecturas",
     url: "/generator/lecture",
-    icon: BookOpen,
+    icon: BookOpenCheck,
   },
 ];
 
@@ -87,12 +94,12 @@ export const configSettingsItems = [
   {
     title: "Importar",
     url: "/settings/import",
-    icon: FileText,
+    icon: FileUp,
   },
   {
     title: "Exportar",
     url: "/settings/export",
-    icon: RotateCcw,
+    icon: FileDown,
   },
   {
     title: "Limpiador",
@@ -102,11 +109,11 @@ export const configSettingsItems = [
   {
     title: "Registros",
     url: "/settings/logs",
-    icon: FileText,
+    icon: FileSpreadsheet,
   },
   {
     title: "Información del Sistema",
     url: "/settings/system",
-    icon: Settings,
+    icon: Info,
   },
 ];
