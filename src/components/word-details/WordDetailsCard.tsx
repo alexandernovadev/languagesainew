@@ -78,7 +78,12 @@ export function WordDetailsCard({
     if (!word._id) return;
 
     try {
-      await updateWordExamples(word._id, word.word, "en", (word.examples || []).join('\n'));
+      await updateWordExamples(
+        word._id,
+        word.word,
+        "en",
+        (word.examples || []).join("\n")
+      );
       toast.success("Ejemplos actualizados");
     } catch (error: any) {
       toast.error(`Error al actualizar ejemplos: ${error.message}`);
@@ -89,7 +94,12 @@ export function WordDetailsCard({
     if (!word._id) return;
 
     try {
-      await updateWordSynonyms(word._id, word.word, "en", (word.sinonyms || []).join('\n'));
+      await updateWordSynonyms(
+        word._id,
+        word.word,
+        "en",
+        (word.sinonyms || []).join("\n")
+      );
       toast.success("Sinónimos actualizados");
     } catch (error: any) {
       toast.error(`Error al actualizar sinónimos: ${error.message}`);
@@ -104,7 +114,7 @@ export function WordDetailsCard({
         word._id,
         word.word,
         "en",
-        (word.codeSwitching || []).join('\n')
+        (word.codeSwitching || []).join("\n")
       );
       toast.success("Code-switching actualizado");
     } catch (error: any) {
@@ -116,7 +126,12 @@ export function WordDetailsCard({
     if (!word._id) return;
 
     try {
-      await updateWordTypes(word._id, word.word, "en", (word.type || []).join('\n'));
+      await updateWordTypes(
+        word._id,
+        word.word,
+        "en",
+        (word.type || []).join("\n")
+      );
       toast.success("Tipos actualizados");
     } catch (error: any) {
       toast.error(`Error al actualizar tipos: ${error.message}`);
@@ -135,12 +150,15 @@ export function WordDetailsCard({
     <div className="mb-4">
       {loading ? (
         <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
-          <div className="bg-zinc-900/90 rounded-lg p-4">
-            {children}
-          </div>
+          <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
         </div>
       ) : (
-        <div className={cn("p-4 rounded-lg border bg-zinc-900/40 border-zinc-800", className)}>
+        <div
+          className={cn(
+            "p-4 rounded-lg border bg-zinc-900/40 border-zinc-800",
+            className
+          )}
+        >
           {children}
         </div>
       )}
@@ -169,7 +187,10 @@ export function WordDetailsCard({
         <Button
           variant="ghost"
           size="sm"
-          onClick={onRefresh}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRefresh();
+          }}
           disabled={loading}
           className={cn(
             "h-6 w-6 p-0 transition-all duration-300",
@@ -181,9 +202,7 @@ export function WordDetailsCard({
           <RefreshCw
             className={cn(
               "h-3 w-3 transition-all duration-300",
-              loading
-                ? "animate-spin text-green-400"
-                : "text-zinc-400"
+              loading ? "animate-spin text-green-400" : "text-zinc-400"
             )}
           />
         </Button>
@@ -194,10 +213,12 @@ export function WordDetailsCard({
   const isCompact = variant === "compact";
 
   return (
-    <div className={cn(
-      "bg-zinc-950 text-zinc-100", 
-      isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
-    )}>
+    <div
+      className={cn(
+        "bg-zinc-950 text-zinc-100",
+        isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
+      )}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
