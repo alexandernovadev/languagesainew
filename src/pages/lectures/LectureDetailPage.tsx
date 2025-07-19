@@ -277,7 +277,7 @@ export default function LectureDetailPage() {
 
       {/* Panel de palabras seleccionadas */}
       {selectedWords.length > 0 && (
-        <Card className="fixed bottom-0 left-0 right-0 z-50 rounded-t-lg border-t shadow-lg">
+        <Card className="sticky bottom-0 z-50 rounded-t-lg border-t shadow-lg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center justify-between text-lg">
               <span>Palabras Seleccionadas ({selectedWords.length})</span>
@@ -330,9 +330,6 @@ export default function LectureDetailPage() {
           </CardContent>
         </Card>
       )}
-
-      {/* Espaciado para el panel fijo */}
-      {selectedWords.length > 0 && <div className="h-32" />}
     </div>
   );
 }
