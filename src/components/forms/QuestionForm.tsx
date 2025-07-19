@@ -36,6 +36,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { quillModules } from "@/components/quillModules";
+import { Badge } from "@/components/ui/badge";
 
 // Schema de validación
 const questionSchema = z.object({
@@ -139,6 +143,7 @@ export function QuestionForm({
   loading = false,
 }: QuestionFormProps) {
   const [activeTab, setActiveTab] = useState("basic");
+  const [newTag, setNewTag] = useState("");
 
   const {
     register,
@@ -170,6 +175,26 @@ export function QuestionForm({
   const shouldShowOptions = ["multiple_choice", "true_false", "fill_blank"].includes(
     watchedType
   );
+
+  const currentTags = watch("tags") || [];
+
+  const handleAddTag = () => {
+    if (newTag.trim() && !currentTags.includes(newTag.trim())) {
+      setValue("tags", [...currentTags, newTag.trim()]);
+      setNewTag("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setValue("tags", currentTags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleTagKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
 
   const handleFormSubmit = async (data: QuestionFormData) => {
     try {
@@ -398,12 +423,16 @@ export function QuestionForm({
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="explanation">Explicación</Label>
-                <Textarea
-                  id="explanation"
-                  placeholder="Explicación de la respuesta correcta..."
-                  className="min-h-[100px]"
-                  {...register("explanation")}
-                />
+                <div className="border rounded-md overflow-hidden">
+                  <ReactQuill
+                    modules={quillModules}
+                    value={watch("explanation")}
+                    onChange={(content) => setValue("explanation", content)}
+                    placeholder="Explicación de la respuesta correcta..."
+                    className="min-h-[120px]"
+                    theme="snow"
+                  />
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Esta explicación se mostrará al usuario después de responder
                 </p>
@@ -411,13 +440,42 @@ export function QuestionForm({
 
               <div className="space-y-2">
                 <Label htmlFor="tags">Etiquetas</Label>
-                <Input
-                  id="tags"
-                  placeholder="Ej: gramática, verbos, presente, separadas por comas"
-                  {...register("tags")}
-                />
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    {currentTags.map((tag, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveTag(tag)}
+                          className="ml-1 hover:text-destructive"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      onKeyPress={handleTagKeyPress}
+                      placeholder="Escribe una etiqueta y presiona Enter"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAddTag}
+                      disabled={!newTag.trim()}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
                 <p className="text-sm text-muted-foreground">
-                  Separa las etiquetas con comas para facilitar la búsqueda
+                  Escribe etiquetas y presiona Enter para agregarlas
                 </p>
               </div>
             </CardContent>
