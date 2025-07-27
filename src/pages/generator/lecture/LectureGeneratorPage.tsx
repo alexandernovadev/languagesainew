@@ -44,7 +44,7 @@ export default function LectureGeneratorPage() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
 
   // Añadir estados locales para language, rangeMin, rangeMax
-  const [language, setLanguage] = useState("es");
+  const [language, setLanguage] = useState("en");
   const [rangeMin, setRangeMin] = useState(5200);
   const [rangeMax, setRangeMax] = useState(6500);
 
