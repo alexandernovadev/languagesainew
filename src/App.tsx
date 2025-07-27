@@ -30,7 +30,7 @@ import {
   QuestionsPage,
   ProfilePage,
   LogsSettingsPage,
-  CleanerPage,
+  LabsPage,
   UsersPage,
 } from "./routes";
 
@@ -69,7 +69,7 @@ export default function App() {
                   <Route path="general" element={<GeneralSettingsPage />} />
                   <Route path="import" element={<ImportSettingsPage />} />
                   <Route path="export" element={<ExportSettingsPage />} />
-                  <Route path="cleaner" element={<CleanerPage />} />
+                  <Route path="labs" element={<LabsPage />} />
                   <Route path="system" element={<SystemInfoPage />} />
                   <Route path="logs" element={<LogsSettingsPage />} />
                 </Route>

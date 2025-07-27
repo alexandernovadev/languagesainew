@@ -102,9 +102,9 @@ export const configSettingsItems = [
     icon: FileDown,
   },
   {
-    title: "Limpiador",
-    url: "/settings/cleaner",
-    icon: Trash2,
+    title: "Labs",
+    url: "/settings/labs",
+    icon: Settings,
   },
   {
     title: "Registros",
