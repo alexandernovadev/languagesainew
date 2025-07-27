@@ -2,13 +2,11 @@ import {
   Home,
   Settings,
   BookOpen,
-  FileText,
   RotateCcw,
   Gamepad2,
   HelpCircle,
   ClipboardList,
   History,
-  Trash2,
   Users,
   BookMarked,
   FileDown,
@@ -17,7 +15,7 @@ import {
   Info,
   Brain,
   BookOpenCheck,
-  MessageSquare,
+  Quote,
 } from "lucide-react";
 
 export const menuItems = [
@@ -39,7 +37,7 @@ export const menuItems = [
   {
     title: "Mis Expresiones",
     url: "/my-expressions",
-    icon: MessageSquare,
+    icon: Quote,
   },
   {
     title: "Preguntas",

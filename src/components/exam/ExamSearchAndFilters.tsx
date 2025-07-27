@@ -45,7 +45,7 @@ export function ExamSearchAndFilters({
         >
           <Filter className="w-4 h-4" />
           {hasActiveFilters && (
-            <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                                  <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0">
               !
             </Badge>
           )}

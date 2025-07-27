@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,7 @@ import { Expression } from "@/models/Expression";
 import { ExpressionForm } from "@/components/forms/ExpressionForm";
 import { ExpressionDetailsModal } from "@/components/expressions/ExpressionDetailsModal";
 import { ExpressionFiltersModal } from "@/components/forms/expression-filters/ExpressionFiltersModal";
+import { ExpressionGeneratorModal } from "@/components/expressions/ExpressionGeneratorModal";
 import {
   ChevronLeft,
   ChevronRight,
@@ -84,28 +85,18 @@ export default function MyExpressionsPage() {
 
   const [localSearch, setLocalSearch] = useState("");
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+  const [generatorModalOpen, setGeneratorModalOpen] = useState(false);
 
   // Hook para obtener información de filtros activos
   const { activeFiltersCount, getActiveFiltersDescription } = useExpressionFilters();
 
-  // Evitar fetch duplicado por filtros al montar
-  const filtersFirstRender = useRef(true);
-  // Evitar fetch duplicado por búsqueda local al montar
-  const searchFirstRender = useRef(true);
+
 
   useEffect(() => {
-    if (filtersFirstRender.current) {
-      filtersFirstRender.current = false;
-      return;
-    }
     getExpressions();
   }, []);
 
   useEffect(() => {
-    if (searchFirstRender.current) {
-      searchFirstRender.current = false;
-      return;
-    }
     const timeoutId = setTimeout(() => {
       setSearchQuery(localSearch);
     }, 500);
@@ -207,7 +198,7 @@ export default function MyExpressionsPage() {
                   >
                     <SlidersHorizontal className="h-4 w-4" />
                     {activeFiltersCount > 0 && (
-                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
+                      <Badge variant="default" className="absolute -top-1 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-green-600 text-white">
                         {activeFiltersCount}
                       </Badge>
                     )}
@@ -247,10 +238,7 @@ export default function MyExpressionsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
-                      // TODO: Implementar generación con AI
-                      toast.info("Generación con AI próximamente");
-                    }}
+                    onClick={() => setGeneratorModalOpen(true)}
                     className="h-10 w-10 rounded-full"
                   >
                     <Sparkles className="h-5 w-5" />
@@ -274,7 +262,6 @@ export default function MyExpressionsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Expresión</TableHead>
-                  <TableHead>Definición</TableHead>
                   <TableHead>Nivel</TableHead>
                   <TableHead>Tipos</TableHead>
                   <TableHead>Imagen</TableHead>
@@ -285,23 +272,29 @@ export default function MyExpressionsPage() {
                 {loading ? (
                   Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
-                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+                      <TableCell>
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-48" />
+                        </div>
+                      </TableCell>
                       <TableCell><Skeleton className="h-6 w-16" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-8 w-8 rounded" /></TableCell>
+                      <TableCell><Skeleton className="h-10 w-10 rounded" /></TableCell>
                       <TableCell><Skeleton className="h-8 w-24" /></TableCell>
                     </TableRow>
                   ))
                 ) : expressions.length > 0 ? (
                   expressions.map((expression) => (
                     <TableRow key={expression._id}>
-                      <TableCell className="font-medium">
-                        {expression.expression}
-                      </TableCell>
                       <TableCell>
-                        <div className="max-w-xs truncate">
-                          {expression.definition}
+                        <div className="space-y-1">
+                          <div className="font-medium">
+                            {expression.expression}
+                          </div>
+                          <div className="text-sm text-muted-foreground max-w-xs truncate">
+                            {expression.definition}
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -309,20 +302,41 @@ export default function MyExpressionsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
-                          {expression.type?.slice(0, 2).map((type, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
+                          {expression.type?.slice(0, 1).map((type, index) => (
+                            <Badge key={index} variant="secondary">
                               {type}
                             </Badge>
                           ))}
-                          {expression.type && expression.type.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{expression.type.length - 2}
-                            </Badge>
+                          {expression.type && expression.type.length > 1 && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge variant="outline" className="cursor-help">
+                                    +{expression.type.length - 1}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <div className="space-y-2">
+                                    <p className="font-medium text-xs">Tipos adicionales:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                      {expression.type.slice(1).map((type, index) => (
+                                        <Badge key={index} variant="secondary" className="text-xs">
+                                          {type}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                      {expression.type.length} tipos en total
+                                    </p>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="w-12 h-12 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
                           {expression.img ? (
                             <img
                               src={expression.img}
@@ -334,12 +348,20 @@ export default function MyExpressionsPage() {
                                 target.nextElementSibling?.classList.remove("hidden");
                               }}
                             />
-                          ) : null}
-                          {!expression.img && (
-                            <div className="flex flex-col items-center justify-center text-muted-foreground">
-                              <span className="text-xs">NO</span>
-                              <span className="text-xs">IMAGE</span>
-                            </div>
+                          ) : (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="flex flex-col items-center justify-center text-muted-foreground cursor-help">
+                                    <span className="text-xs">NO</span>
+                                    <span className="text-xs">IMG</span>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-xs">Sin imagen asociada</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           )}
                         </div>
                       </TableCell>
@@ -547,6 +569,12 @@ export default function MyExpressionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Modal de generación AI */}
+      <ExpressionGeneratorModal
+        open={generatorModalOpen}
+        onOpenChange={setGeneratorModalOpen}
+      />
     </PageLayout>
   );
 } 

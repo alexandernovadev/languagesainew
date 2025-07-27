@@ -29,7 +29,7 @@ export function ExpressionDetailsModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] border border-gray-600 shadow-2xl">
         <DialogHeader>
-          <DialogTitle>{expression.expression}</DialogTitle>
+          <DialogTitle className="text-xl font-bold">{expression.expression}</DialogTitle>
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "chat")}>
@@ -38,7 +38,7 @@ export function ExpressionDetailsModal({
             <TabsTrigger value="chat">Chat con GPT</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="info" className="space-y-4">
+          <TabsContent value="info" className="max-h-[60vh] overflow-y-auto pr-2">
             <ExpressionInfoTab expression={expression} />
           </TabsContent>
           

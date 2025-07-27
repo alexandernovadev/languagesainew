@@ -56,4 +56,6 @@ export const expressionService = {
 
   clearChatHistory: (expressionId: string) => 
     api.delete(`/api/expressions/${expressionId}/chat`),
+
+  generateExpression: (prompt: string, options?: any) => api.post("/api/expressions/generate", { prompt, options }),
 }; 

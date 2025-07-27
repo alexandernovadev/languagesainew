@@ -221,7 +221,7 @@ export function ExpressionFiltersModal({
               <Label className="text-base font-semibold">Filtros Activos</Label>
               <div className="flex flex-wrap gap-2 mt-2">
                 {localFilters.type?.map((type: string) => (
-                  <Badge key={type} variant="secondary" className="gap-1">
+                                              <Badge key={type} variant="secondary">
                     {expressionTypes.find(t => t.value === type)?.label || type}
                     <button
                       onClick={() => handleTypeToggle(type)}
@@ -232,7 +232,7 @@ export function ExpressionFiltersModal({
                   </Badge>
                 ))}
                 {localFilters.difficulty?.map((level: string) => (
-                  <Badge key={level} variant="secondary" className="gap-1">
+                                              <Badge key={level} variant="secondary">
                     {expressionLevels.find(l => l.value === level)?.label || level}
                     <button
                       onClick={() => handleLevelToggle(level)}
@@ -243,7 +243,7 @@ export function ExpressionFiltersModal({
                   </Badge>
                 ))}
                 {localFilters.language?.map((lang: string) => (
-                  <Badge key={lang} variant="secondary" className="gap-1">
+                                              <Badge key={lang} variant="secondary">
                     {expressionLanguages.find(l => l.value === lang)?.label || lang}
                     <button
                       onClick={() => handleLanguageToggle(lang)}
@@ -254,7 +254,7 @@ export function ExpressionFiltersModal({
                   </Badge>
                 ))}
                 {localFilters.hasImage && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary">
                     Con imagen
                     <button
                       onClick={handleHasImageToggle}
@@ -265,7 +265,7 @@ export function ExpressionFiltersModal({
                   </Badge>
                 )}
                 {localFilters.hasSpanish && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary">
                     Con español
                     <button
                       onClick={handleHasSpanishToggle}

@@ -4,14 +4,24 @@ import { expressionService } from "../../services/expressionService";
 import { toast } from "sonner";
 
 interface ExpressionStore {
+  // State
   expressions: Expression[];
   loading: boolean;
-  actionLoading: Record<string, boolean>;
+  actionLoading: {
+    create?: boolean;
+    update?: boolean;
+    delete?: boolean;
+    generate?: boolean;
+  };
   currentPage: number;
   totalPages: number;
   total: number;
   searchQuery: string;
-  filters: Record<string, any>;
+  filters: any;
+
+  // Generated expression state
+  generatedExpression: Expression | null;
+  isGenerating: boolean;
 
   // Actions
   getExpressions: (filters?: any) => Promise<void>;
@@ -20,12 +30,16 @@ interface ExpressionStore {
   deleteExpression: (id: string) => Promise<void>;
   setPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
-  setFilters: (filters: Record<string, any>) => void;
-  
+  setFilters: (filters: any) => void;
+
   // Chat actions
   addChatMessage: (expressionId: string, message: string) => Promise<void>;
   getChatHistory: (expressionId: string) => Promise<ChatMessage[]>;
   clearChatHistory: (expressionId: string) => Promise<void>;
+
+  // AI Generation actions
+  generateExpression: (prompt: string, options?: any) => Promise<Expression | null>;
+  clearGeneratedExpression: () => void;
 }
 
 export const useExpressionStore = create<ExpressionStore>((set, get) => ({
@@ -37,108 +51,100 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
   total: 0,
   searchQuery: "",
   filters: {},
+  generatedExpression: null,
+  isGenerating: false,
 
   getExpressions: async (filters = {}) => {
     set({ loading: true });
     try {
-      const response = await expressionService.getExpressions({
-        page: get().currentPage,
-        ...get().filters,
-        ...filters,
-      });
-      
+      const response = await expressionService.getExpressions(filters);
       set({
         expressions: response.data.data,
         total: response.data.total,
         totalPages: response.data.pages,
-        loading: false,
+        currentPage: response.data.page,
       });
     } catch (error: any) {
       console.error("Error fetching expressions:", error);
       toast.error("Error al cargar las expresiones");
+    } finally {
       set({ loading: false });
     }
   },
 
   createExpression: async (data) => {
-    set({ actionLoading: { create: true } });
+    set({ actionLoading: { ...get().actionLoading, create: true } });
     try {
-      await expressionService.createExpression(data);
+      const response = await expressionService.createExpression(data);
+      set({
+        expressions: [response.data, ...get().expressions],
+        actionLoading: { ...get().actionLoading, create: false },
+      });
       toast.success("Expresión creada exitosamente");
-      get().getExpressions();
     } catch (error: any) {
       console.error("Error creating expression:", error);
       toast.error("Error al crear la expresión");
-    } finally {
-      set({ actionLoading: { create: false } });
+      set({ actionLoading: { ...get().actionLoading, create: false } });
     }
   },
 
   updateExpression: async (id, data) => {
-    set({ actionLoading: { update: true } });
+    set({ actionLoading: { ...get().actionLoading, update: true } });
     try {
-      await expressionService.updateExpression(id, data);
+      const response = await expressionService.updateExpression(id, data);
+      set({
+        expressions: get().expressions.map((expr) =>
+          expr._id === id ? response.data : expr
+        ),
+        actionLoading: { ...get().actionLoading, update: false },
+      });
       toast.success("Expresión actualizada exitosamente");
-      get().getExpressions();
     } catch (error: any) {
       console.error("Error updating expression:", error);
       toast.error("Error al actualizar la expresión");
-    } finally {
-      set({ actionLoading: { update: false } });
+      set({ actionLoading: { ...get().actionLoading, update: false } });
     }
   },
 
   deleteExpression: async (id) => {
-    set({ actionLoading: { delete: true } });
+    set({ actionLoading: { ...get().actionLoading, delete: true } });
     try {
       await expressionService.deleteExpression(id);
+      set({
+        expressions: get().expressions.filter((expr) => expr._id !== id),
+        actionLoading: { ...get().actionLoading, delete: false },
+      });
       toast.success("Expresión eliminada exitosamente");
-      get().getExpressions();
     } catch (error: any) {
       console.error("Error deleting expression:", error);
       toast.error("Error al eliminar la expresión");
-    } finally {
-      set({ actionLoading: { delete: false } });
+      set({ actionLoading: { ...get().actionLoading, delete: false } });
     }
   },
 
   setPage: (page) => {
     set({ currentPage: page });
-    get().getExpressions();
   },
 
   setSearchQuery: (query) => {
-    set({ searchQuery: query, currentPage: 1 });
-    get().getExpressions({ expression: query });
+    set({ searchQuery: query });
   },
 
   setFilters: (filters) => {
-    set({ filters, currentPage: 1 });
-    get().getExpressions();
+    set({ filters });
   },
 
-  // Chat methods
   addChatMessage: async (expressionId, message) => {
-    set({ actionLoading: { chat: true } });
     try {
       const response = await expressionService.addChatMessage(expressionId, message);
-      
-      // Update the expression in the store with new chat messages
-      const { expressions } = get();
-      const updatedExpressions = expressions.map(expr => 
-        expr._id === expressionId 
-          ? { ...expr, chat: response.data.expression.chat }
-          : expr
-      );
-      
-      set({ 
-        expressions: updatedExpressions,
-        actionLoading: { chat: false }
+      set({
+        expressions: get().expressions.map((expr) =>
+          expr._id === expressionId ? response.data : expr
+        ),
       });
     } catch (error: any) {
       console.error("Error adding chat message:", error);
       toast.error("Error al enviar el mensaje");
-      set({ actionLoading: { chat: false } });
     }
   },
 
@@ -154,27 +160,45 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
   },
 
   clearChatHistory: async (expressionId) => {
-    set({ actionLoading: { clearChat: true } });
     try {
       await expressionService.clearChatHistory(expressionId);
-      toast.success("Historial del chat limpiado");
-      
-      // Update the expression in the store
-      const { expressions } = get();
-      const updatedExpressions = expressions.map(expr => 
-        expr._id === expressionId 
-          ? { ...expr, chat: [] }
-          : expr
-      );
-      
-      set({ 
-        expressions: updatedExpressions,
-        actionLoading: { clearChat: false }
+      set({
+        expressions: get().expressions.map((expr) =>
+          expr._id === expressionId ? { ...expr, chat: [] } : expr
+        ),
       });
+      toast.success("Chat limpiado exitosamente");
     } catch (error: any) {
       console.error("Error clearing chat history:", error);
-      toast.error("Error al limpiar el historial del chat");
-      set({ actionLoading: { clearChat: false } });
+      toast.error("Error al limpiar el chat");
     }
+  },
+
+  generateExpression: async (prompt, options = {}) => {
+    set({ isGenerating: true });
+    try {
+      const response = await expressionService.generateExpression(prompt, options);
+      
+      if (response.data.success) {
+        const generatedExpression = response.data.data;
+        set({ 
+          generatedExpression,
+          isGenerating: false 
+        });
+        toast.success("Expresión generada exitosamente");
+        return generatedExpression;
+      } else {
+        throw new Error("Error en la generación");
+      }
+    } catch (error: any) {
+      console.error("Error generating expression:", error);
+      toast.error("Error al generar la expresión");
+      set({ isGenerating: false });
+      return null;
+    }
+  },
+
+  clearGeneratedExpression: () => {
+    set({ generatedExpression: null });
   },
 })); 

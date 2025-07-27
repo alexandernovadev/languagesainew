@@ -16,6 +16,7 @@ const routeNameMapping: { [key: string]: string } = {
   "/dashboard": "Inicio",
   "/lectures": "Lecturas",
   "/my-words": "Mis Palabras",
+  "/my-expressions": "Mis Expresiones",
 
   "/settings": "Configuración",
   "/generator": "Generador",

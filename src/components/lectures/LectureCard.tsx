@@ -87,7 +87,7 @@ export function LectureCard({
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <Badge variant="secondary" className="text-xs">
+                                        <Badge variant="secondary">
               <BookOpen className="h-3 w-3 mr-1" />
               {lecture.time} min
             </Badge>

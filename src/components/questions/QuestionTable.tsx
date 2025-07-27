@@ -111,12 +111,12 @@ export function QuestionTable({
                     {question.tags && question.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1">
                         {question.tags.slice(0, 3).map((tag: string, index: number) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                                                      <Badge key={index} variant="secondary">
                             {tag}
                           </Badge>
                         ))}
                         {question.tags.length > 3 && (
-                          <Badge variant="outline" className="text-xs">
+                                                      <Badge variant="outline">
                             +{question.tags.length - 3}
                           </Badge>
                         )}
@@ -135,7 +135,7 @@ export function QuestionTable({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getDifficultyVariant(question.difficulty)} className="text-xs">
+                                              <Badge variant={getDifficultyVariant(question.difficulty)}>
                     {getDifficultyLabel(question.difficulty)}
                   </Badge>
                 </TableCell>

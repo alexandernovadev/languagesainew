@@ -24,7 +24,7 @@ export function TruncatedBadge({
 
   if (!shouldTruncate) {
     return (
-      <Badge variant={variant} className={`text-xs ${className}`}>
+      <Badge variant={variant} className={className}>
         {text}
       </Badge>
     );
@@ -35,7 +35,7 @@ export function TruncatedBadge({
       <TooltipTrigger asChild>
         <Badge 
           variant={variant} 
-          className={`text-xs max-w-full truncate cursor-default overflow-hidden ${className}`}
+          className={`max-w-full truncate cursor-default overflow-hidden ${className}`}
           style={{ maxWidth: '100%' }}
         >
           {truncatedText}

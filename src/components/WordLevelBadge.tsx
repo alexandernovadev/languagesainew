@@ -7,21 +7,38 @@ export function WordLevelBadge({
   level?: "easy" | "medium" | "hard";
   className?: string;
 }) {
-  const colorClass =
-    level === "easy"
-      ? "border-green-500 text-green-500"
-      : level === "medium"
-      ? "border-blue-500 text-blue-500"
-      : level === "hard"
-      ? "border-red-600 text-red-600"
-      : "";
+  const getLevelConfig = (level?: string) => {
+    switch (level) {
+      case "easy":
+        return {
+          variant: "default" as const,
+        };
+      case "medium":
+        return {
+          variant: "secondary" as const,
+        };
+      case "hard":
+        return {
+          variant: "destructive" as const,
+        };
+      default:
+        return {
+          variant: "outline" as const,
+        };
+    }
+  };
+
+  const config = getLevelConfig(level);
 
   return (
     <Badge
-      variant="outline"
-      className={`uppercase tracking-wider font-semibold px-3 py-1 ${colorClass} ${className}`}
+      variant={config.variant}
+      className={className}
     >
-      {level}
+      {level === "easy" && "Fácil"}
+      {level === "medium" && "Medio"}
+      {level === "hard" && "Difícil"}
+      {!level && "N/A"}
     </Badge>
   );
 } 
