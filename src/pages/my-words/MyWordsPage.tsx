@@ -306,9 +306,9 @@ export default function MyWordsPage() {
               variant="ghost"
               size="icon"
               onClick={() => openDialog()}
-              className="h-12 w-12 rounded-full"
+              className="h-10 w-10 rounded-full"
             >
-              <Plus className="h-6 w-6" />
+              <Plus className="h-5 w-5" />
             </Button>
           </div>
         }

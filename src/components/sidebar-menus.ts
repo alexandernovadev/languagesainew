@@ -17,6 +17,7 @@ import {
   Info,
   Brain,
   BookOpenCheck,
+  MessageSquare,
 } from "lucide-react";
 
 export const menuItems = [
@@ -34,6 +35,11 @@ export const menuItems = [
     title: "Mis Palabras",
     url: "/my-words",
     icon: BookMarked,
+  },
+  {
+    title: "Mis Expresiones",
+    url: "/my-expressions",
+    icon: MessageSquare,
   },
   {
     title: "Preguntas",

@@ -195,9 +195,9 @@ export default function LecturesPage() {
                   variant="ghost"
                   size="icon"
                   onClick={openAddModal}
-                  className="h-12 w-12 rounded-full"
+                  className="h-10 w-10 rounded-full"
                 >
-                  <Plus className="h-6 w-6" />
+                  <Plus className="h-5 w-5" />
                 </Button>
                 <DialogContent className="sm:max-w-5xl h-[95vh] flex flex-col p-0 border border-gray-600 shadow-2xl">
                   <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">

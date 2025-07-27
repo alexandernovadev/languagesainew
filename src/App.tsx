@@ -27,6 +27,7 @@ import {
   SettingsIndexRedirect,
 
   MyWordsPage,
+  MyExpressionsPage,
   QuestionsPage,
   ProfilePage,
   LogsSettingsPage,
@@ -76,6 +77,7 @@ export default function App() {
 
 
                 <Route path="/my-words" element={<MyWordsPage />} />
+                <Route path="/my-expressions" element={<MyExpressionsPage />} />
                 <Route path="/questions" element={<QuestionsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin/users" element={<UsersPage />} />
