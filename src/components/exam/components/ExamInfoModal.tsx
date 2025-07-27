@@ -17,7 +17,7 @@ interface ExamInfoModalProps {
 export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto border border-gray-600 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Info className="h-5 w-5" />

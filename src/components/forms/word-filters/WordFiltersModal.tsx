@@ -65,7 +65,7 @@ export function WordFiltersModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col border border-gray-600 shadow-2xl">
         {/* Header Sticky */}
         <DialogHeader className="px-6 pt-6 pb-4 border-b bg-background sticky top-0 z-60 ">
           <div className="flex items-center justify-between">

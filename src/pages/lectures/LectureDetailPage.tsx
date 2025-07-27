@@ -610,7 +610,7 @@ export default function LectureDetailPage() {
       {/* Modal para palabra no encontrada */}
       {isModalOpen && !foundWord && !isSearching && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md border border-gray-600 shadow-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Eye className="h-5 w-5" />
@@ -656,7 +656,7 @@ export default function LectureDetailPage() {
       {/* Loading state */}
       {isModalOpen && isSearching && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md border border-gray-600 shadow-2xl">
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-8 w-8 animate-spin" />
               <span className="ml-2">Buscando palabra...</span>

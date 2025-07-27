@@ -91,7 +91,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col border border-gray-600 shadow-2xl">
         {/* Sticky Header */}
         <DialogHeader className="sticky top-0 bg-background border-b pb-4">
           <div className="flex items-center justify-between">

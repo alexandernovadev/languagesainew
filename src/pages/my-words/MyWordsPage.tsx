@@ -529,7 +529,7 @@ export default function MyWordsPage() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col">
+        <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col border border-gray-600 shadow-2xl">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>
               {isEditing ? "Editar Palabra" : "Agregar Nueva Palabra"}

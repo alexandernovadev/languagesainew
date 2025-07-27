@@ -27,7 +27,7 @@ export function WordDetailsModal({
 }: WordDetailsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl h-[90vh] flex flex-col bg-zinc-950 border-zinc-800 p-0">
+      <DialogContent className="w-full max-w-2xl h-[90vh] flex flex-col bg-zinc-950 border-zinc-800 p-0 border border-gray-600 shadow-2xl">
         <DialogHeader className="flex items-center justify-between p-4 border-b border-zinc-800 flex-shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-xl">📖</span>

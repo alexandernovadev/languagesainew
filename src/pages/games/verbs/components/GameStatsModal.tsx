@@ -59,7 +59,7 @@ export function GameStatsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl border border-gray-600 shadow-2xl">
         <DialogHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <Trophy className="h-8 w-8 text-yellow-500 mr-2" />

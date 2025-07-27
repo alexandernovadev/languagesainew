@@ -43,10 +43,11 @@ export default function LectureGeneratorPage() {
   const [generatedText, setGeneratedText] = useState("");
   const [isConfigOpen, setIsConfigOpen] = useState(false);
 
-  // Añadir estados locales para language, rangeMin, rangeMax
+  // Añadir estados locales para language, rangeMin, rangeMax, grammarTopics
   const [language, setLanguage] = useState("en");
   const [rangeMin, setRangeMin] = useState(5200);
   const [rangeMax, setRangeMax] = useState(6500);
+  const [grammarTopics, setGrammarTopics] = useState<string[]>([]);
 
   // Topic generator hook
   const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
@@ -100,6 +101,7 @@ export default function LectureGeneratorPage() {
             language,
             rangeMin,
             rangeMax,
+            grammarTopics,
           }),
         }
       );
@@ -177,6 +179,7 @@ export default function LectureGeneratorPage() {
     language: string;
     rangeMin: number;
     rangeMax: number;
+    grammarTopics: string[];
   }) => {
     setValue("level", config.level);
     setValue("typeWrite", config.typeWrite);
@@ -185,6 +188,7 @@ export default function LectureGeneratorPage() {
     setLanguage(config.language);
     setRangeMin(config.rangeMin);
     setRangeMax(config.rangeMax);
+    setGrammarTopics(config.grammarTopics);
   };
 
   const handleGenerateTopic = async () => {
@@ -200,6 +204,7 @@ export default function LectureGeneratorPage() {
     language,
     rangeMin,
     rangeMax,
+    grammarTopics,
   };
 
   return (
@@ -288,47 +293,46 @@ export default function LectureGeneratorPage() {
         {generatedText && (
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between"></div>
-
               <>
-                <div className="flex flex-wrap gap-3 mt-3">
-                  <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 text-green-400">
-                    Nivel:{" "}
-                    {lectureLevels.find((l) => l.value === watchedValues.level)
-                      ?.label || watchedValues.level}
-                  </span>
-                  <span className="border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 text-blue-400">
-                    Tipo:{" "}
-                    {lectureTypes.find(
-                      (t) => t.value === watchedValues.typeWrite
-                    )?.label || watchedValues.typeWrite}
-                  </span>
-                  <span
-                    className={`border rounded px-3 py-1 text-sm font-medium bg-transparent ${
-                      watchedValues.difficulty === "easy"
-                        ? "border-green-500 text-green-400"
-                        : watchedValues.difficulty === "medium"
-                        ? "border-yellow-500 text-yellow-400"
-                        : "border-red-500 text-red-400"
-                    }`}
-                  >
-                    Dificultad:{" "}
-                    {watchedValues.difficulty === "easy"
-                      ? "Fácil"
-                      : watchedValues.difficulty === "medium"
-                      ? "Media"
-                      : "Difícil"}
-                  </span>
-                  <span
-                    className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${
-                      watchedValues.addEasyWords
-                        ? "text-purple-400"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    Vocabulario adicional:{" "}
-                    {watchedValues.addEasyWords ? "Sí" : "No"}
-                  </span>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Lectura Generada</h3>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-blue-500 ${
+                        watchedValues.level
+                          ? "text-blue-400"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      Nivel: {watchedValues.level}
+                    </span>
+                    <span
+                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-green-500 ${
+                        watchedValues.typeWrite
+                          ? "text-green-400"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      Tipo: {watchedValues.typeWrite}
+                    </span>
+                    <span
+                      className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-purple-500 ${
+                        watchedValues.addEasyWords
+                          ? "text-purple-400"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      Vocabulario adicional:{" "}
+                      {watchedValues.addEasyWords ? "Sí" : "No"}
+                    </span>
+                    {grammarTopics.length > 0 && (
+                      <span
+                        className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-orange-500 text-orange-400`}
+                      >
+                        Gramática: {grammarTopics.length} tema{grammarTopics.length !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </>
             </CardHeader>

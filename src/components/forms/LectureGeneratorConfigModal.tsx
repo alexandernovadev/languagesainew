@@ -17,6 +17,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
 
 interface LectureGeneratorConfigModalProps {
   open: boolean;
@@ -29,6 +30,7 @@ interface LectureGeneratorConfigModalProps {
     language?: string;
     rangeMin?: number;
     rangeMax?: number;
+    grammarTopics?: string[];
   };
   onSave: (config: {
     level: string;
@@ -38,6 +40,7 @@ interface LectureGeneratorConfigModalProps {
     language: string;
     rangeMin: number;
     rangeMax: number;
+    grammarTopics: string[];
   }) => void;
   lectureLevels: { value: string; label: string }[];
   lectureTypes: { value: string; label: string }[];
@@ -64,6 +67,7 @@ export const LectureGeneratorConfigModal: React.FC<
     language: initialConfig.language || "en",
     rangeMin: initialConfig.rangeMin ?? 5200,
     rangeMax: initialConfig.rangeMax ?? 6500,
+    grammarTopics: initialConfig.grammarTopics || [],
   });
   const [rangeError, setRangeError] = useState<string | null>(null);
 
@@ -74,6 +78,7 @@ export const LectureGeneratorConfigModal: React.FC<
         language: initialConfig.language || "en",
         rangeMin: initialConfig.rangeMin ?? 5200,
         rangeMax: initialConfig.rangeMax ?? 6500,
+        grammarTopics: initialConfig.grammarTopics || [],
       });
       setRangeError(null);
     }
@@ -92,7 +97,7 @@ export const LectureGeneratorConfigModal: React.FC<
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl md:max-w-3xl p-0 border-0 shadow-2xl">
+      <DialogContent className="max-w-4xl p-0 border border-gray-600 shadow-2xl">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="text-xl font-bold tracking-tight">
             Configuración avanzada
@@ -102,7 +107,7 @@ export const LectureGeneratorConfigModal: React.FC<
           </DialogDescription>
         </DialogHeader>
         
-        <div className="max-h-[60vh] overflow-y-auto px-6 py-4 space-y-4">
+        <div className="max-h-[70vh] overflow-y-auto px-6 py-4 space-y-4">
           {/* Sección 1: Idioma, Nivel y Tipo */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Idioma */}
@@ -253,6 +258,16 @@ export const LectureGeneratorConfigModal: React.FC<
           {rangeError && (
             <div className="text-red-500 text-xs">{rangeError}</div>
           )}
+
+          {/* Sección 3: Selector de Gramática */}
+          <div className="mt-6">
+            <GrammarTopicsSelector
+              selectedTopics={tempConfig.grammarTopics}
+              onTopicsChange={(topics) =>
+                setTempConfig((c) => ({ ...c, grammarTopics: topics }))
+              }
+            />
+          </div>
         </div>
 
         <DialogFooter className="px-6 py-4 border-t">

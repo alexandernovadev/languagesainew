@@ -59,7 +59,7 @@ export function ExamSubmissionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-card text-foreground border border-border">
+      <DialogContent className="sm:max-w-md bg-card text-foreground border border-gray-600 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {status.icon}

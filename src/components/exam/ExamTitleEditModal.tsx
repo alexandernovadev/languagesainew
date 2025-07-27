@@ -49,7 +49,7 @@ export function ExamTitleEditModal({
         }
       }}
     >
-      <DialogContent className="max-w-md w-full">
+      <DialogContent className="max-w-md w-full border border-gray-600 shadow-2xl">
         <DialogTitle className="text-lg font-semibold">
           Editar Título del Examen
         </DialogTitle>
