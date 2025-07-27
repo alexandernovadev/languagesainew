@@ -5,6 +5,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateToSpanish } from "@/utils/common/time/formatDate";
+import { timeAgo } from "@/utils/common/time/timeAgo";
 import packageJson from "../../../package.json";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
@@ -19,6 +20,9 @@ export default function SystemInfoPage() {
   const [backendInfo, setBackendInfo] = useState<BackendInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Get frontend build date from package.json
+  const frontendBuildDate = (packageJson as any).buildDate || new Date().toISOString();
 
   useEffect(() => {
     const fetchBackendInfo = async () => {
@@ -79,21 +83,27 @@ export default function SystemInfoPage() {
             </div>
             <Separator />
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Fecha Backend</span>
+              <span className="text-sm font-medium">Last Update Backend</span>
               {loading ? (
                 <Skeleton className="w-24 h-4" />
               ) : error ? (
                 <span className="text-sm text-muted-foreground">No disponible</span>
               ) : backendInfo ? (
-                <span className="text-sm text-muted-foreground">{formatDateToSpanish(backendInfo.date)}</span>
+                <div className="flex flex-col items-end text-right">
+                  <span className="text-sm text-muted-foreground">{formatDateToSpanish(backendInfo.date)}</span>
+                  <span className="text-xs text-muted-foreground">{timeAgo(backendInfo.date)}</span>
+                </div>
               ) : (
                 <span className="text-sm text-muted-foreground">No disponible</span>
               )}
             </div>
             <Separator />
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Última Actualización</span>
-              <span className="text-sm text-muted-foreground">Hace 2 días</span>
+              <span className="text-sm font-medium">Last Update Frontend</span>
+              <div className="flex flex-col items-end text-right">
+                <span className="text-sm text-muted-foreground">{formatDateToSpanish(frontendBuildDate)}</span>
+                <span className="text-xs text-muted-foreground">{timeAgo(frontendBuildDate)}</span>
+              </div>
             </div>
             <Separator />
             <div className="flex items-center justify-between">

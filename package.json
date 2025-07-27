@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-date.js && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -80,5 +80,6 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5",
     "vite": "^6.3.5"
-  }
+  },
+  "buildDate": "2025-07-27T22:16:29.165Z"
 }
