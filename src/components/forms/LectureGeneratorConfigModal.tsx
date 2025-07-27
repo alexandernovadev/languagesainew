@@ -17,6 +17,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
 
 interface LectureGeneratorConfigModalProps {
@@ -259,14 +260,39 @@ export const LectureGeneratorConfigModal: React.FC<
             <div className="text-red-500 text-xs">{rangeError}</div>
           )}
 
-          {/* Sección 3: Selector de Gramática */}
+          {/* Sección 3: Tabs para Gramática y Palabras */}
           <div className="mt-6">
-            <GrammarTopicsSelector
-              selectedTopics={tempConfig.grammarTopics}
-              onTopicsChange={(topics) =>
-                setTempConfig((c) => ({ ...c, grammarTopics: topics }))
-              }
-            />
+            <Tabs defaultValue="grammar" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="grammar">Temas de Gramática</TabsTrigger>
+                <TabsTrigger value="words">Palabras</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="grammar" className="mt-4">
+                <GrammarTopicsSelector
+                  selectedTopics={tempConfig.grammarTopics}
+                  onTopicsChange={(topics) =>
+                    setTempConfig((c) => ({ ...c, grammarTopics: topics }))
+                  }
+                />
+              </TabsContent>
+              
+              <TabsContent value="words" className="mt-4">
+                <div className="border rounded-lg p-4 bg-muted/20">
+                  <div className="text-center py-8">
+                    <h3 className="text-lg font-semibold mb-2">Selección de Palabras</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Aquí podrás seleccionar palabras específicas para incluir en la lectura.
+                    </p>
+                    <div className="mt-4">
+                      <Button variant="outline" size="sm">
+                        Agregar Palabras
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
 
