@@ -18,7 +18,12 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { cn } from "@/utils/common/classnames";
-import { gamesItems, generatorItems, menuItems, configSettingsItems } from "./sidebar-menus";
+import {
+  gamesItems,
+  generatorItems,
+  menuItems,
+  configSettingsItems,
+} from "./sidebar-menus";
 import { LoginModal } from "./auth/LoginModal";
 
 export function AppSidebar() {
@@ -57,7 +62,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <div className="overflow-y-auto h-full">
+        <div className="overflow-y-auto overflow-x-hidden h-full">
           <SidebarGroup>
             <SidebarGroupLabel>Navegación</SidebarGroupLabel>
             <SidebarGroupContent>
