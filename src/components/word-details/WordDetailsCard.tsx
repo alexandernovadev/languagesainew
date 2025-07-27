@@ -302,7 +302,7 @@ export function WordDetailsCard({
             <img
               src={word.img}
               alt={word.word}
-              className="w-full max-w-xs rounded-lg h-48 object-cover border border-zinc-700"
+              className="w-full max-w-xs rounded-lg max-h-96 object-contain border border-zinc-700"
             />
           ) : (
             <div className="w-full max-w-xs h-48 rounded-lg bg-zinc-800/50 border border-zinc-700 flex items-center justify-center">
