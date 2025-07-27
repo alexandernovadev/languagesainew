@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,6 +23,7 @@ import { useLectureStore } from "@/lib/store/useLectureStore";
 import { Lecture } from "@/models/Lecture";
 import { getAuthHeaders } from "@/utils/services";
 import { LectureGeneratorConfigModal } from "@/components/forms/LectureGeneratorConfigModal";
+import { wordService } from "@/services/wordService";
 
 const generatorFormSchema = z.object({
   prompt: z
@@ -48,6 +49,9 @@ export default function LectureGeneratorPage() {
   const [rangeMin, setRangeMin] = useState(5200);
   const [rangeMax, setRangeMax] = useState(6500);
   const [grammarTopics, setGrammarTopics] = useState<string[]>([]);
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+  const [preloadedWords, setPreloadedWords] = useState<Record<string, { word: string }[]>>({});
+  const [isLoadingWords, setIsLoadingWords] = useState(false);
 
   // Topic generator hook
   const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
@@ -82,6 +86,44 @@ export default function LectureGeneratorPage() {
 
   const watchedValues = watch();
 
+  // Cargar todas las palabras al montar el componente
+  useEffect(() => {
+    const loadAllWords = async () => {
+      setIsLoadingWords(true);
+      try {
+        const wordTypes = [
+          'noun', 'verb', 'adjective', 'adverb', 'preposition', 'conjunction',
+          'personal pronoun', 'possessive pronoun', 'article', 'determiner',
+          'quantifier', 'interjection', 'auxiliary verb', 'modal verb',
+          'infinitive', 'participle', 'gerund', 'phrasal verb', 'other'
+        ];
+
+        const wordsByType: Record<string, { word: string }[]> = {};
+        
+        // Cargar palabras de cada tipo en paralelo
+        await Promise.all(
+          wordTypes.map(async (type) => {
+            try {
+              const words = await wordService.getWordsByTypeOptimized(type, 10);
+              wordsByType[type] = words;
+            } catch (error) {
+              console.error(`Error loading ${type} words:`, error);
+              wordsByType[type] = [];
+            }
+          })
+        );
+
+        setPreloadedWords(wordsByType);
+      } catch (error) {
+        console.error('Error loading words:', error);
+      } finally {
+        setIsLoadingWords(false);
+      }
+    };
+
+    loadAllWords();
+  }, []);
+
   const handleGenerateText = async (data: GeneratorFormData) => {
     setIsGenerating(true);
     setGeneratedText("");
@@ -97,11 +139,11 @@ export default function LectureGeneratorPage() {
             prompt: data.prompt,
             level: data.level,
             typeWrite: data.typeWrite,
-            addEasyWords: data.addEasyWords,
             language,
             rangeMin,
             rangeMax,
             grammarTopics,
+            selectedWords,
           }),
         }
       );
@@ -175,20 +217,20 @@ export default function LectureGeneratorPage() {
     level: string;
     typeWrite: string;
     difficulty: string;
-    addEasyWords: boolean;
     language: string;
     rangeMin: number;
     rangeMax: number;
     grammarTopics: string[];
+    selectedWords: string[];
   }) => {
     setValue("level", config.level);
     setValue("typeWrite", config.typeWrite);
     setValue("difficulty", config.difficulty);
-    setValue("addEasyWords", config.addEasyWords);
     setLanguage(config.language);
     setRangeMin(config.rangeMin);
     setRangeMax(config.rangeMax);
     setGrammarTopics(config.grammarTopics);
+    setSelectedWords(config.selectedWords);
   };
 
   const handleGenerateTopic = async () => {
@@ -200,11 +242,12 @@ export default function LectureGeneratorPage() {
     level: getValues("level"),
     typeWrite: getValues("typeWrite"),
     difficulty: getValues("difficulty"),
-    addEasyWords: getValues("addEasyWords"),
     language,
     rangeMin,
     rangeMax,
     grammarTopics,
+    selectedWords,
+    preloadedWords,
   };
 
   return (

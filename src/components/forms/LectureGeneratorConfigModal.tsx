@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
+import { WordsSelector } from "@/components/forms/WordsSelector";
 
 interface LectureGeneratorConfigModalProps {
   open: boolean;
@@ -27,21 +28,22 @@ interface LectureGeneratorConfigModalProps {
     level: string;
     typeWrite: string;
     difficulty: string;
-    addEasyWords: boolean;
     language?: string;
     rangeMin?: number;
     rangeMax?: number;
     grammarTopics?: string[];
+    selectedWords?: string[];
+    preloadedWords?: Record<string, { word: string }[]>;
   };
   onSave: (config: {
     level: string;
     typeWrite: string;
     difficulty: string;
-    addEasyWords: boolean;
     language: string;
     rangeMin: number;
     rangeMax: number;
     grammarTopics: string[];
+    selectedWords: string[];
   }) => void;
   lectureLevels: { value: string; label: string }[];
   lectureTypes: { value: string; label: string }[];
@@ -69,6 +71,7 @@ export const LectureGeneratorConfigModal: React.FC<
     rangeMin: initialConfig.rangeMin ?? 5200,
     rangeMax: initialConfig.rangeMax ?? 6500,
     grammarTopics: initialConfig.grammarTopics || [],
+    selectedWords: initialConfig.selectedWords || [],
   });
   const [rangeError, setRangeError] = useState<string | null>(null);
 
@@ -80,6 +83,7 @@ export const LectureGeneratorConfigModal: React.FC<
         rangeMin: initialConfig.rangeMin ?? 5200,
         rangeMax: initialConfig.rangeMax ?? 6500,
         grammarTopics: initialConfig.grammarTopics || [],
+        selectedWords: initialConfig.selectedWords || [],
       });
       setRangeError(null);
     }
@@ -178,8 +182,8 @@ export const LectureGeneratorConfigModal: React.FC<
             </div>
           </div>
 
-          {/* Sección 2: Dificultad, Vocabulario y Longitud */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Sección 2: Dificultad y Longitud */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Dificultad */}
             <div>
               <Label htmlFor="difficulty" className="text-sm font-medium">Dificultad</Label>
@@ -200,21 +204,7 @@ export const LectureGeneratorConfigModal: React.FC<
               </Select>
             </div>
 
-            {/* Vocabulario adicional */}
-            <div className="flex items-end">
-              <div className="flex items-center gap-2 h-9">
-                <Checkbox
-                  id="addEasyWords"
-                  checked={tempConfig.addEasyWords}
-                  onCheckedChange={(v) =>
-                    setTempConfig((c) => ({ ...c, addEasyWords: !!v }))
-                  }
-                />
-                <Label htmlFor="addEasyWords" className="text-sm">
-                  Vocabulario adicional
-                </Label>
-              </div>
-            </div>
+
 
             {/* Longitud mínima */}
             <div>
@@ -277,21 +267,15 @@ export const LectureGeneratorConfigModal: React.FC<
                 />
               </TabsContent>
               
-              <TabsContent value="words" className="mt-4">
-                <div className="border rounded-lg p-4 bg-muted/20">
-                  <div className="text-center py-8">
-                    <h3 className="text-lg font-semibold mb-2">Selección de Palabras</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Aquí podrás seleccionar palabras específicas para incluir en la lectura.
-                    </p>
-                    <div className="mt-4">
-                      <Button variant="outline" size="sm">
-                        Agregar Palabras
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
+                           <TabsContent value="words" className="mt-4">
+               <WordsSelector
+                 selectedWords={tempConfig.selectedWords}
+                 onWordsChange={(words) =>
+                   setTempConfig((c) => ({ ...c, selectedWords: words }))
+                 }
+                 preloadedWords={initialConfig.preloadedWords}
+               />
+             </TabsContent>
             </Tabs>
           </div>
         </div>

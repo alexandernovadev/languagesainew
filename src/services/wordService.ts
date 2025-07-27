@@ -98,19 +98,40 @@ export const wordService = {
     return res.data;
   },
 
-  async importWords(file: File, duplicateStrategy: string, batchSize: number, validateOnly: boolean) {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("duplicateStrategy", duplicateStrategy);
-    formData.append("batchSize", batchSize.toString());
-    formData.append("validateOnly", validateOnly.toString());
+  // NUEVO: Método optimizado para WordsSelector
+  async getWordsByTypeOptimized(type: string, limit: number = 10, search?: string) {
+    const params = new URLSearchParams();
+    params.append('type', type);
+    params.append('limit', limit.toString());
+    params.append('fields', 'word'); // Solo traer el campo word
+    
+    if (search) {
+      params.append('wordUser', search);
+    }
+    
+    const url = `/api/words/by-type-optimized?${params.toString()}`;
+    const res = await api.get(url);
+    return res.data.data; // Devolver el array de palabras
+  },
 
-    const res = await api.post(`/api/words/import-json`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return res.data;
+  // NUEVO: Método para obtener solo palabras (sin objetos completos)
+  async getWordsOnly(page: number = 1, limit: number = 10, filters?: Partial<WordFilters>) {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    params.append('fields', 'word'); // Solo traer el campo word
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, value.toString());
+        }
+      });
+    }
+    
+    const url = `/api/words/words-only?${params.toString()}`;
+    const res = await api.get(url);
+    return res.data.data; // Devolver el array de palabras
   },
 
   async updateWordExamples(
@@ -120,8 +141,8 @@ export const wordService = {
     oldExamples: string
   ) {
     const res = await api.post(
-      `/api/ai/update-word-examples/${wordId}`,
-      { word, language, oldExamples }
+      `/api/ai/update-word-examples`,
+      { wordId, word, language, oldExamples }
     );
     return res.data;
   },
@@ -133,8 +154,8 @@ export const wordService = {
     oldExamples: string
   ) {
     const res = await api.post(
-      `/api/ai/update-word-examples-code-switching/${wordId}`,
-      { word, language, oldExamples }
+      `/api/ai/update-word-code-switching`,
+      { wordId, word, language, oldExamples }
     );
     return res.data;
   },
@@ -146,8 +167,8 @@ export const wordService = {
     oldExamples: string
   ) {
     const res = await api.post(
-      `/api/ai/update-word-synonyms/${wordId}`,
-      { word, language, oldExamples }
+      `/api/ai/update-word-synonyms`,
+      { wordId, word, language, oldExamples }
     );
     return res.data;
   },
@@ -159,22 +180,34 @@ export const wordService = {
     oldExamples: string
   ) {
     const res = await api.post(
-      `/api/ai/update-word-types/${wordId}`,
-      { word, language, oldExamples }
+      `/api/ai/update-word-types`,
+      { wordId, word, language, oldExamples }
     );
     return res.data;
   },
 
   async updateWordImage(wordId: string, word: string, imgOld: string = "") {
     const res = await api.post(
-      `/api/ai/generate-image-word/${wordId}`,
-      { word, imgOld }
+      `/api/ai/update-word-image`,
+      { wordId, word, imgOld }
     );
     return res.data;
   },
 
   async exportWords() {
-    const res = await api.get(`/api/words/export-json`);
+    const res = await api.get(`/api/words/export/json`);
+    return res.data;
+  },
+
+  async importWords(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const res = await api.post(`/api/words/import/json`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return res.data;
   },
 };
