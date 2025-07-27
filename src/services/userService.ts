@@ -70,28 +70,7 @@ export interface UsersResponse {
   pages: number;
 }
 
-export interface UserAuditLog {
-  id: string;
-  userId: string;
-  action: 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN';
-  field?: string;
-  oldValue?: string;
-  newValue?: string;
-  performedBy: {
-    username: string;
-    email: string;
-  };
-  ipAddress?: string;
-  userAgent?: string;
-  timestamp: string;
-}
 
-export interface AuditLogsResponse {
-  data: UserAuditLog[];
-  total: number;
-  page: number;
-  pages: number;
-}
 
 class UserService {
   // Obtener usuarios con filtros y paginación
@@ -136,17 +115,7 @@ class UserService {
     return response.data.data;
   }
 
-  // Obtener logs de auditoría de un usuario
-  async getUserAuditLogs(userId: string, page: number = 1, limit: number = 20): Promise<AuditLogsResponse> {
-    const response = await api.get(`/api/users/${userId}/audit-logs?page=${page}&limit=${limit}`);
-    return response.data.data;
-  }
 
-  // Obtener logs de auditoría por acción
-  async getAuditLogsByAction(action: 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN', page: number = 1, limit: number = 20): Promise<AuditLogsResponse> {
-    const response = await api.get(`/api/users/audit-logs/${action}?page=${page}&limit=${limit}`);
-    return response.data.data;
-  }
 }
 
 export const userService = new UserService(); 
