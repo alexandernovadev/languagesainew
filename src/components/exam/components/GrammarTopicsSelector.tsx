@@ -215,73 +215,77 @@ export function GrammarTopicsSelector({
         <Separator />
 
         {/* Categories */}
-        <ScrollArea className="min-h-[400px] max-h-[500px]">
-          <Accordion 
-            type="multiple" 
-            value={expandedCategories}
-            onValueChange={setExpandedCategories}
-            className="space-y-1"
-          >
-            {filteredCategories.map((categoryKey) => {
-              const category = getCategoryInfo(categoryKey);
-              if (!category) return null;
+        <div className="border rounded-lg overflow-hidden">
+          <ScrollArea className="h-[400px] w-full">
+            <div className="p-4">
+              <Accordion 
+                type="multiple" 
+                value={expandedCategories}
+                onValueChange={setExpandedCategories}
+                className="space-y-2"
+              >
+                {filteredCategories.map((categoryKey) => {
+                  const category = getCategoryInfo(categoryKey);
+                  if (!category) return null;
 
-              const categoryTopics = category.topics;
-              const selectedCategoryTopics = selectedTopics.filter(topic => 
-                categoryTopics.includes(topic)
-              );
+                  const categoryTopics = category.topics;
+                  const selectedCategoryTopics = selectedTopics.filter(topic => 
+                    categoryTopics.includes(topic)
+                  );
 
-              const isSelected = isCategorySelected(categoryKey);
-              const isPartiallySelected = isCategoryPartiallySelected(categoryKey);
+                  const isSelected = isCategorySelected(categoryKey);
+                  const isPartiallySelected = isCategoryPartiallySelected(categoryKey);
 
-              return (
-                <AccordionItem 
-                  key={categoryKey} 
-                  value={categoryKey}
-                  className="border rounded-lg"
-                >
-                  <div className="flex items-center px-3 bg-muted/20 rounded-t-lg">
-                    <Checkbox
-                      checked={isSelected || isPartiallySelected}
-                      onCheckedChange={() => handleSelectCategory(categoryKey)}
-                      className="mr-2"
-                      data-testid={`category-checkbox-${categoryKey}`}
-                      aria-label={`Select all topics in ${category.title}`}
-                    />
-                    <AccordionTrigger className="flex-1 hover:no-underline py-2">
-                      <div className="flex items-center gap-2 w-full">
-                        <span className="text-base">{category.icon}</span>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-sm">{category.title}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
+                  return (
+                    <AccordionItem 
+                      key={categoryKey} 
+                      value={categoryKey}
+                      className="border rounded-md bg-background"
+                    >
+                      <div className="flex items-center px-3 py-2 bg-muted/30 rounded-t-md">
+                        <Checkbox
+                          checked={isSelected || isPartiallySelected}
+                          onCheckedChange={() => handleSelectCategory(categoryKey)}
+                          className="mr-3"
+                          data-testid={`category-checkbox-${categoryKey}`}
+                          aria-label={`Select all topics in ${category.title}`}
+                        />
+                        <AccordionTrigger className="flex-1 hover:no-underline py-1">
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="text-base">{category.icon}</span>
+                            <div className="flex-1 text-left">
+                              <div className="font-medium text-sm">{category.title}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        </AccordionTrigger>
                       </div>
-                    </AccordionTrigger>
-                  </div>
-                  <AccordionContent className="px-3 pb-2">
-                    <div className="space-y-0.5 mt-1 ml-6">
-                      {categoryTopics.map((topic) => (
-                        <label
-                          key={topic}
-                          className="flex items-center gap-2 p-1 rounded-md hover:bg-muted/50 cursor-pointer"
-                        >
-                          <Checkbox
-                            checked={selectedTopics.includes(topic)}
-                            onCheckedChange={() => handleTopicToggle(topic)}
-                            aria-label={`Select topic: ${topic}`}
-                          />
-                          <span className="text-xs">{topic}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        </ScrollArea>
+                      <AccordionContent className="px-3 pb-3">
+                        <div className="space-y-1 mt-2 ml-6">
+                          {categoryTopics.map((topic) => (
+                            <label
+                              key={topic}
+                              className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer transition-colors"
+                            >
+                              <Checkbox
+                                checked={selectedTopics.includes(topic)}
+                                onCheckedChange={() => handleTopicToggle(topic)}
+                                aria-label={`Select topic: ${topic}`}
+                              />
+                              <span className="text-sm">{topic}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+            </div>
+          </ScrollArea>
+        </div>
 
 
       </CardContent>
