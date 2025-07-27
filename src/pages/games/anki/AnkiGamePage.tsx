@@ -375,8 +375,8 @@ export default function AnkiGamePage() {
                   <img
                     src={currentCard.img}
                     alt={currentCard.word}
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                    style={{ objectFit: "cover" }}
+                    className="absolute inset-0 w-full h-full object-contain z-0"
+                    style={{ objectFit: "contain" }}
                   />
                 ) : null}
                 {/* Overlay */}
