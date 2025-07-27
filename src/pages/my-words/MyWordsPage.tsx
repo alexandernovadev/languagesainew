@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  Card
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
@@ -71,12 +69,6 @@ export default function MyWordsPage() {
     deleteWord,
     createWord,
     updateWord,
-    updateWordLevel,
-    updateWordExamples,
-    updateWordCodeSwitching,
-    updateWordSynonyms,
-    updateWordTypes,
-    updateWordImage,
     loading,
     actionLoading,
     currentPage,
@@ -85,7 +77,6 @@ export default function MyWordsPage() {
     setPage,
     setSearchQuery,
     setFilters,
-    searchQuery,
     generateWord,
   } = useWordStore();
 
@@ -156,7 +147,9 @@ export default function MyWordsPage() {
       if (isEditing && selectedWord) {
         await updateWord(selectedWord._id, data);
         toast.success("Palabra actualizada", {
-          description: `La palabra "${data.word || selectedWord.word}" ha sido actualizada correctamente`,
+          description: `La palabra "${
+            data.word || selectedWord.word
+          }" ha sido actualizada correctamente`,
         });
       } else {
         await createWord(data as Omit<Word, "_id">);
@@ -208,149 +201,6 @@ export default function MyWordsPage() {
   const viewWordDetails = (word: Word) => {
     setSelectedWord(word);
     setDetailsModalOpen(true);
-  };
-
-  const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordLevel(selectedWord._id, level);
-        toast.success("Nivel actualizado", {
-          description: `El nivel de "${selectedWord.word}" ha sido cambiado a ${level}`,
-        });
-        // Update selectedWord level directly since we only get level data back
-        setSelectedWord((prev) =>
-          prev ? { ...prev, level, updatedAt: new Date().toISOString() } : null
-        );
-      } catch (error: any) {
-        toast.error("Error al actualizar nivel", {
-          description: error.message || "No se pudo actualizar el nivel",
-        });
-      }
-    }
-  };
-
-  const handleRefreshImage = async () => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordImage(
-          selectedWord._id,
-          selectedWord.word,
-          selectedWord.img
-        );
-        toast.success("Imagen actualizada", {
-          description: `La imagen de "${selectedWord.word}" ha sido regenerada`,
-        });
-        // Update selectedWord with the latest data
-        const updatedWord = words.find((w) => w._id === selectedWord._id);
-        if (updatedWord) {
-          setSelectedWord(updatedWord);
-        }
-      } catch (error: any) {
-        toast.error("Error al actualizar imagen", {
-          description: error.message || "No se pudo actualizar la imagen",
-        });
-      }
-    }
-  };
-
-  const handleRefreshExamples = async () => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordExamples(
-          selectedWord._id,
-          selectedWord.word,
-          selectedWord.language,
-          selectedWord.examples || []
-        );
-        toast.success("Ejemplos actualizados", {
-          description: `Los ejemplos de "${selectedWord.word}" han sido regenerados`,
-        });
-        // Update selectedWord with the latest data
-        const updatedWord = words.find((w) => w._id === selectedWord._id);
-        if (updatedWord) {
-          setSelectedWord(updatedWord);
-        }
-      } catch (error: any) {
-        toast.error("Error al actualizar ejemplos", {
-          description: error.message || "No se pudo actualizar los ejemplos",
-        });
-      }
-    }
-  };
-
-  const handleRefreshSynonyms = async () => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordSynonyms(
-          selectedWord._id,
-          selectedWord.word,
-          selectedWord.language,
-          selectedWord.examples || []
-        );
-        toast.success("Sinónimos actualizados", {
-          description: `Los sinónimos de "${selectedWord.word}" han sido regenerados`,
-        });
-        // Update selectedWord with the latest data
-        const updatedWord = words.find((w) => w._id === selectedWord._id);
-        if (updatedWord) {
-          setSelectedWord(updatedWord);
-        }
-      } catch (error: any) {
-        toast.error("Error al actualizar sinónimos", {
-          description: error.message || "No se pudo actualizar los sinónimos",
-        });
-      }
-    }
-  };
-
-  const handleRefreshCodeSwitching = async () => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordCodeSwitching(
-          selectedWord._id,
-          selectedWord.word,
-          selectedWord.language,
-          selectedWord.examples || []
-        );
-        toast.success("Code switching actualizado", {
-          description: `El code switching de "${selectedWord.word}" ha sido regenerado`,
-        });
-        // Update selectedWord with the latest data
-        const updatedWord = words.find((w) => w._id === selectedWord._id);
-        if (updatedWord) {
-          setSelectedWord(updatedWord);
-        }
-      } catch (error: any) {
-        toast.error("Error al actualizar code switching", {
-          description: error.message || "No se pudo actualizar el code switching",
-        });
-      }
-    }
-  };
-
-  const handleRefreshTypes = async () => {
-    if (selectedWord?._id) {
-      try {
-        await updateWordTypes(
-          selectedWord._id,
-          selectedWord.word,
-          selectedWord.language,
-          selectedWord.examples || []
-        );
-        toast.success("Tipos actualizados", {
-          description: `Los tipos de "${selectedWord.word}" han sido regenerados`,
-        });
-        // Update selectedWord with the latest data
-        const updatedWord = words.find((w) => w._id === selectedWord._id);
-        if (updatedWord) {
-          setSelectedWord(updatedWord);
-        }
-      } catch (error: any) {
-        toast.error("Error al actualizar tipos", {
-          description: error.message || "No se pudo actualizar los tipos",
-        });
-      }
-    }
   };
 
   const speakWord = (word: string, rate = SPEECH_RATES.NORMAL) => {
@@ -422,9 +272,7 @@ export default function MyWordsPage() {
                   >
                     <SlidersHorizontal className="h-4 w-4" />
                     {activeFiltersCount > 0 && (
-                      <Badge
-                        className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white"
-                      >
+                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
                         {activeFiltersCount}
                       </Badge>
                     )}
@@ -435,7 +283,9 @@ export default function MyWordsPage() {
                     {activeFiltersCount > 0 ? (
                       <div>
                         <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                          {activeFiltersCount} filtro
+                          {activeFiltersCount !== 1 ? "s" : ""} activo
+                          {activeFiltersCount !== 1 ? "s" : ""}
                         </div>
                         <div className="space-y-1">
                           {getActiveFiltersDescription?.map((desc, index) => (
@@ -463,8 +313,6 @@ export default function MyWordsPage() {
           </div>
         }
       />
-
-
 
       {/* Tabla de palabras */}
       <Card className="!p-0 !m-0 shadow-none border-none">
@@ -497,7 +345,9 @@ export default function MyWordsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => speakWord(word.word, SPEECH_RATES.NORMAL)}
+                        onClick={() =>
+                          speakWord(word.word, SPEECH_RATES.NORMAL)
+                        }
                         className="h-8 w-8 p-0"
                       >
                         <Volume2 className="h-4 w-4" />
@@ -505,7 +355,9 @@ export default function MyWordsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => speakWord(word.word, SPEECH_RATES.SUPERSLOW)}
+                        onClick={() =>
+                          speakWord(word.word, SPEECH_RATES.SUPERSLOW)
+                        }
                         className="h-8 w-8 p-0"
                       >
                         🐢
@@ -521,8 +373,10 @@ export default function MyWordsPage() {
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              target.nextElementSibling?.classList.remove('hidden');
+                              target.style.display = "none";
+                              target.nextElementSibling?.classList.remove(
+                                "hidden"
+                              );
                             }}
                           />
                         ) : null}
@@ -548,7 +402,9 @@ export default function MyWordsPage() {
                       <WordLevelBadge level={word.level} />
                     </TableCell>
                     <TableCell>
-                      <span className="flex items-center gap-1"><Eye className="h-4 w-4 inline" /> {word.seen || 0}</span>
+                      <span className="flex items-center gap-1">
+                        <Eye className="h-4 w-4 inline" /> {word.seen || 0}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -581,10 +437,14 @@ export default function MyWordsPage() {
                       <div className="text-muted-foreground">
                         {localSearch ? (
                           <div className="space-y-4">
-                            <p>No se encontraron palabras para "{localSearch}"</p>
+                            <p>
+                              No se encontraron palabras para "{localSearch}"
+                            </p>
                             <div className="flex flex-col items-center gap-2">
                               <Button
-                                className={generating ? "shimmer-text" : undefined}
+                                className={
+                                  generating ? "shimmer-text" : undefined
+                                }
                                 variant="outline"
                                 disabled={generating}
                                 onClick={handleGenerateWord}
@@ -617,11 +477,15 @@ export default function MyWordsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => getWords().catch((error) => {
-                                toast.error("Error al recargar", {
-                                  description: error.message || "No se pudieron recargar las palabras",
-                                });
-                              })}
+                              onClick={() =>
+                                getWords().catch((error) => {
+                                  toast.error("Error al recargar", {
+                                    description:
+                                      error.message ||
+                                      "No se pudieron recargar las palabras",
+                                  });
+                                })
+                              }
                               className="rounded-full"
                             >
                               <RotateCcw className="h-4 w-4 mr-2" />
