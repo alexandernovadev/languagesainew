@@ -253,7 +253,7 @@ export function LectureForm({
                           <img
                             src={formData.img}
                             alt="Preview"
-                            className="w-full h-full object-cover rounded-md"
+                            className="w-full h-full object-contain rounded-md"
                             onError={(e) => {
                               e.currentTarget.src = "/images/noImage.png";
                             }}

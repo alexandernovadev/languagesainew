@@ -319,7 +319,7 @@ export function WordForm({
                         <img
                           src={formData.img}
                           alt={formData.word || "Word image"}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center text-muted-foreground">

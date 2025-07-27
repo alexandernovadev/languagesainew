@@ -57,7 +57,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
               <img
                 src="/loogo.png"
                 alt="Logo"
-                className="size-10 rounded-full object-cover"
+                className="size-10 rounded-full object-contain"
               />
             </div>
             <DialogTitle className="text-2xl font-bold">

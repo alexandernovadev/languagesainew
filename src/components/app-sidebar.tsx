@@ -49,7 +49,7 @@ export function AppSidebar() {
                 <img
                   src="/loogo.png"
                   alt="Logo"
-                  className="size-8 rounded-lg bg-sidebar-accent object-cover"
+                  className="size-8 rounded-lg bg-sidebar-accent object-contain"
                 />
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">LanguagesAI</span>
