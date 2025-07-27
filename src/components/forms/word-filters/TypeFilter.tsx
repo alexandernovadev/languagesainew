@@ -35,26 +35,26 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
   };
 
   const getDisplayText = () => {
-    if (selectedTypes.length === 0) return "Seleccionar tipo gramatical";
+    if (selectedTypes.length === 0) return "Select grammatical type";
     if (selectedTypes.length === 1) {
       const type = WORD_TYPES.find((t) => t.value === selectedTypes[0]);
       return type?.label || selectedTypes[0];
     }
-    return `${selectedTypes.length} tipos seleccionados`;
+    return `${selectedTypes.length} types selected`;
   };
 
   return (
-    <Popover>
+    <Popover modal={true}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-full justify-between">
           <span className="truncate">{getDisplayText()}</span>
           <ChevronDown className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
+      <PopoverContent className="w-80 p-3 z-50" align="start">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium">Tipos Gramaticales</h4>
+            <h4 className="font-medium">Grammatical Types</h4>
             {selectedTypes.length > 0 && (
               <Button
                 variant="ghost"
@@ -68,9 +68,9 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
             )}
           </div>
 
-          <div className="space-y-2 max-h-60 overflow-y-auto">
+          <div className="space-y-1 max-h-48 overflow-y-auto pr-2">
             {WORD_TYPES.map((type) => (
-              <div key={type.value} className="flex items-center space-x-2">
+              <div key={type.value} className="flex items-center space-x-2 py-0.5">
                 <Checkbox
                   id={type.value}
                   checked={selectedTypes.includes(type.value)}
@@ -80,16 +80,19 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
                 />
                 <Label
                   htmlFor={type.value}
-                  className="text-sm font-normal cursor-pointer"
+                  className="text-sm font-normal cursor-pointer flex-1"
                 >
-                  {type.label}
+                  <div className="leading-tight">
+                    <div className="font-medium text-sm">{type.label}</div>
+                    <div className="text-xs text-muted-foreground">{type.spanishLabel}</div>
+                  </div>
                 </Label>
               </div>
             ))}
           </div>
 
           {selectedTypes.length > 0 && (
-            <div className="pt-2 border-t">
+            <div className="pt-1 border-t">
               <div className="flex flex-wrap gap-1">
                 {selectedTypes.map((typeValue) => {
                   const type = WORD_TYPES.find((t) => t.value === typeValue);
@@ -99,7 +102,10 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
                       variant="secondary"
                       className="text-xs cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                     >
-                      {type?.label || typeValue}
+                      <div className="leading-tight">
+                        <div className="font-medium text-xs">{type?.label || typeValue}</div>
+                        <div className="text-xs opacity-70">{type?.spanishLabel}</div>
+                      </div>
                       <button
                         onClick={() => handleTypeToggle(typeValue, false)}
                         className="ml-1 hover:bg-destructive hover:text-destructive-foreground rounded-full w-3 h-3 flex items-center justify-center"

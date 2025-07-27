@@ -1,9 +1,30 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { WordFilters } from "@/components/forms/word-filters/types";
+import { useWordStore } from "@/lib/store/useWordStore";
 
 export function useWordFilters() {
-  const [filters, setFilters] = useState<WordFilters>({});
+  const { currentFilters } = useWordStore();
+  
+  const [filters, setFilters] = useState<WordFilters>({
+    type: "phrasal verb" // Filtro por defecto para phrasal verbs
+  });
   const [booleanFilters, setBooleanFilters] = useState<Record<string, boolean>>({});
+
+  // Sincronizar con los filtros del store
+  useEffect(() => {
+    if (currentFilters && Object.keys(currentFilters).length > 0) {
+      setFilters(currentFilters);
+    }
+  }, [currentFilters]);
+
+  // Inicializar con filtros por defecto si no hay filtros en el store
+  useEffect(() => {
+    if (!currentFilters || Object.keys(currentFilters).length === 0) {
+      setFilters({
+        type: "phrasal verb" // Filtro por defecto para phrasal verbs
+      });
+    }
+  }, [currentFilters]);
 
   // Actualizar filtros individuales
   const updateFilter = useCallback((key: keyof WordFilters, value: any) => {

@@ -50,11 +50,19 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 import { SPEECH_RATES } from "../../speechRates";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { useWordFilters } from "@/hooks/useWordFilters";
 
 export default function MyWordsPage() {
   const {
@@ -90,6 +98,9 @@ export default function MyWordsPage() {
   const [localSearch, setLocalSearch] = useState("");
   const [generating, setGenerating] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+
+  // Hook para obtener información de filtros activos
+  const { activeFiltersCount, getActiveFiltersDescription } = useWordFilters();
 
   const dots = useAnimatedDots();
 
@@ -400,14 +411,47 @@ export default function MyWordsPage() {
                 </button>
               )}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFiltersModalOpen(true)}
-              className="h-10 w-10 p-0"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFiltersModalOpen(true)}
+                    className="h-10 w-10 p-0 relative"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                    {activeFiltersCount > 0 && (
+                      <Badge
+                        className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white"
+                      >
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="text-xs">
+                    {activeFiltersCount > 0 ? (
+                      <div>
+                        <div className="font-medium mb-1">
+                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                        </div>
+                        <div className="space-y-1">
+                          {getActiveFiltersDescription?.map((desc, index) => (
+                            <div key={index} className="text-muted-foreground">
+                              • {desc}
+                            </div>
+                          )) || []}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>Sin filtros activos</div>
+                    )}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               variant="ghost"
               size="icon"

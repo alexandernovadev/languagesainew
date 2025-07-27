@@ -67,7 +67,7 @@ export function WordFiltersModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col">
         {/* Header Sticky */}
-        <DialogHeader className="px-6 pt-6 pb-4 border-b bg-background sticky top-0 z-10">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b bg-background sticky top-0 z-60 ">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5" />
@@ -76,17 +76,7 @@ export function WordFiltersModal({
                 <Badge variant="secondary">{activeFiltersCount}</Badge>
               )}
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                // No aplicar filtros al cerrar
-                onOpenChange(false);
-              }}
-              className="h-8 w-8"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+      
           </div>
           <DialogDescription>
             Aplica filtros para encontrar las palabras que necesitas.
@@ -128,15 +118,6 @@ export function WordFiltersModal({
                   Limpiar
                 </Button>
               )}
-              <Button
-                variant="outline"
-                onClick={() => {
-                  // No aplicar filtros al cancelar
-                  onOpenChange(false);
-                }}
-              >
-                Cancelar
-              </Button>
               <Button
                 onClick={handleApplyFilters}
                 className="min-w-[100px]"

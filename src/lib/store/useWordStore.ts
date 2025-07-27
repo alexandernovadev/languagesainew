@@ -82,7 +82,9 @@ export const useWordStore = create<WordStore>((set, get) => ({
   currentPage: 1,
   searchQuery: "",
   total: 0,
-  currentFilters: {},
+  currentFilters: {
+    type: "phrasal verb" // Filtro por defecto para phrasal verbs
+  },
 
   getWords: async (
     page = get().currentPage,
