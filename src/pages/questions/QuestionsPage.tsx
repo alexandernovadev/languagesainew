@@ -366,7 +366,7 @@ export default function QuestionsPage() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="btn-delete-danger"
             >
               Eliminar
             </AlertDialogAction>

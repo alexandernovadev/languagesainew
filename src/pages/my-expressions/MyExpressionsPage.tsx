@@ -590,7 +590,7 @@ export default function MyExpressionsPage() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-red-600 hover:bg-red-700"
+              className="btn-delete-danger"
             >
               Eliminar
             </AlertDialogAction>

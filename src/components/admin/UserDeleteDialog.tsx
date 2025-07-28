@@ -53,7 +53,7 @@ export function UserDeleteDialog({ user, isOpen, onOpenChange, onConfirm, loadin
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={loading}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="btn-delete-danger"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             {loading ? 'Eliminando...' : 'Eliminar Usuario'}

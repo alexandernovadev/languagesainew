@@ -308,7 +308,7 @@ export default function LecturesPage() {
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteConfirm}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="btn-delete-danger"
                 disabled={actionLoading.delete}
               >
                 Eliminar

@@ -50,7 +50,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-sm mx-auto rounded-xl p-6 border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-sm rounded-xl p-6 border border-gray-600 shadow-2xl">
         <DialogHeader className="items-center text-center">
           <div className="flex flex-col items-center gap-2 mb-2">
             <div className="bg-sidebar-accent p-3 rounded-full mb-1 flex items-center justify-center">

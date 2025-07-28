@@ -38,7 +38,7 @@ export function ExamDeleteDialog({
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90 border-none"
+            className="btn-delete-danger"
           >
             Eliminar
           </AlertDialogAction>

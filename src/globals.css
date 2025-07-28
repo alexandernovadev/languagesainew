@@ -351,3 +351,18 @@ body {
   background-size: 200% 200%;
   animation: gradient-x 4s ease infinite;
 }
+
+/* Botón de eliminar personalizado */
+.btn-delete-danger {
+  background-color: hsl(var(--destructive) / 0.2) !important;
+  border-color: hsl(var(--destructive)) !important;
+  color: hsl(var(--destructive)) !important;
+  box-shadow: 0 0 15px hsl(var(--destructive) / 0.2) !important;
+  transition: all 0.2s ease;
+}
+
+.btn-delete-danger:hover {
+  background-color: hsl(var(--destructive) / 0.3) !important;
+  border-color: hsl(var(--destructive)) !important;
+  box-shadow: 0 0 20px hsl(var(--destructive) / 0.3) !important;
+}

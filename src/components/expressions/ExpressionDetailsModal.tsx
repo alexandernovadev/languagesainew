@@ -27,7 +27,7 @@ export function ExpressionDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[calc(100dvh-2rem)] border border-gray-600 shadow-2xl mx-4 my-4">
+      <DialogContent className="max-w-4xl h-[calc(100dvh-2rem)] border border-gray-600 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             {expression.expression}
