@@ -1052,7 +1052,7 @@ export function ExamEditModal({
         </div>
       }
     >
-              <Tabs defaultValue="general" className="flex-1 flex flex-col pt-6">
+              <Tabs defaultValue="general" className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
             <TabsTrigger value="general" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />

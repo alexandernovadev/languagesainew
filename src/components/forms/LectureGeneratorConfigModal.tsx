@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import {
   Select,
   SelectTrigger,
@@ -17,8 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
 import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
 import { WordsSelector } from "@/components/forms/WordsSelector";
+import { Settings, BookOpen, FileText } from "lucide-react";
 
 interface LectureGeneratorConfigModalProps {
   open: boolean;
@@ -99,199 +94,18 @@ export const LectureGeneratorConfigModal: React.FC<
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 border border-gray-600 shadow-2xl">
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="text-xl font-bold tracking-tight">
-            Configuración avanzada
-          </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
-            Ajusta los parámetros de la lectura generada.
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="max-h-[70dvh] overflow-y-auto px-6 py-4 space-y-4">
-          {/* Sección 1: Idioma, Nivel y Tipo */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Idioma */}
-            <div>
-              <Label htmlFor="language" className="text-sm font-medium">
-                Idioma
-              </Label>
-              <Select
-                value={tempConfig.language}
-                onValueChange={(v) =>
-                  setTempConfig((c) => ({ ...c, language: v }))
-                }
-              >
-                <SelectTrigger id="language" className="h-9 mt-1">
-                  <SelectValue placeholder="Idioma" />
-                </SelectTrigger>
-                <SelectContent>
-                  {LANG_OPTIONS.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>
-                      {l.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Nivel */}
-            <div>
-              <Label htmlFor="level" className="text-sm font-medium">
-                Nivel
-              </Label>
-              <Select
-                value={tempConfig.level}
-                onValueChange={(v) =>
-                  setTempConfig((c) => ({ ...c, level: v }))
-                }
-              >
-                <SelectTrigger id="level" className="h-9 mt-1">
-                  <SelectValue placeholder="Nivel" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lectureLevels.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>
-                      {l.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Tipo */}
-            <div>
-              <Label htmlFor="typeWrite" className="text-sm font-medium">
-                Tipo
-              </Label>
-              <Select
-                value={tempConfig.typeWrite}
-                onValueChange={(v) =>
-                  setTempConfig((c) => ({ ...c, typeWrite: v }))
-                }
-              >
-                <SelectTrigger id="typeWrite" className="h-9 mt-1">
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lectureTypes.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Sección 2: Dificultad y Longitud */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Dificultad */}
-            <div>
-              <Label htmlFor="difficulty" className="text-sm font-medium">
-                Dificultad
-              </Label>
-              <Select
-                value={tempConfig.difficulty}
-                onValueChange={(v) =>
-                  setTempConfig((c) => ({ ...c, difficulty: v }))
-                }
-              >
-                <SelectTrigger id="difficulty" className="h-9 mt-1">
-                  <SelectValue placeholder="Dificultad" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Fácil</SelectItem>
-                  <SelectItem value="medium">Media</SelectItem>
-                  <SelectItem value="hard">Difícil</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Longitud mínima */}
-            <div>
-              <Label htmlFor="rangeMin" className="text-sm font-medium">
-                Mín (chars)
-              </Label>
-              <input
-                id="rangeMin"
-                type="number"
-                min={100}
-                max={100000}
-                className="h-9 w-full mt-1 border rounded-md px-3 py-2 bg-background focus:ring-2 focus:ring-primary text-sm"
-                value={tempConfig.rangeMin}
-                onChange={(e) =>
-                  setTempConfig((c) => ({
-                    ...c,
-                    rangeMin: Number(e.target.value),
-                  }))
-                }
-              />
-            </div>
-
-            {/* Longitud máxima */}
-            <div>
-              <Label htmlFor="rangeMax" className="text-sm font-medium">
-                Máx (chars)
-              </Label>
-              <input
-                id="rangeMax"
-                type="number"
-                min={100}
-                max={100000}
-                className="h-9 w-full mt-1 border rounded-md px-3 py-2 bg-background focus:ring-2 focus:ring-primary text-sm"
-                value={tempConfig.rangeMax}
-                onChange={(e) =>
-                  setTempConfig((c) => ({
-                    ...c,
-                    rangeMax: Number(e.target.value),
-                  }))
-                }
-              />
-            </div>
-          </div>
-
-          {/* Error de rango */}
-          {rangeError && (
-            <div className="text-red-500 text-xs">{rangeError}</div>
-          )}
-
-          {/* Sección 3: Tabs para Gramática y Palabras */}
-          <div className="mt-6">
-            <Tabs defaultValue="grammar" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="grammar">Temas de Gramática</TabsTrigger>
-                <TabsTrigger value="words">Palabras</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="grammar" className="mt-4">
-                <GrammarTopicsSelector
-                  selectedTopics={tempConfig.grammarTopics}
-                  onTopicsChange={(topics) =>
-                    setTempConfig((c) => ({ ...c, grammarTopics: topics }))
-                  }
-                />
-              </TabsContent>
-
-              <TabsContent value="words" className="mt-4">
-                <WordsSelector
-                  selectedWords={tempConfig.selectedWords}
-                  onWordsChange={(words) =>
-                    setTempConfig((c) => ({ ...c, selectedWords: words }))
-                  }
-                  preloadedWords={initialConfig.preloadedWords}
-                />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-
-        <DialogFooter className="px-6 py-4 border-t">
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Configuración avanzada"
+      description="Ajusta los parámetros de la lectura generada."
+      size="4xl"
+      height="h-[90dvh]"
+      footer={
+        <>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             onClick={() => onOpenChange(false)}
             size="sm"
           >
@@ -300,8 +114,199 @@ export const LectureGeneratorConfigModal: React.FC<
           <Button type="button" onClick={handleSave} size="sm">
             Guardar
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
+        </>
+      }
+    >
+      <div className="px-6 pb-4">
+        <Tabs defaultValue="basic" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
+            <TabsTrigger value="basic" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Básico
+            </TabsTrigger>
+            <TabsTrigger value="grammar" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              Gramática
+            </TabsTrigger>
+            <TabsTrigger value="words" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Palabras
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="basic" className="mt-4">
+            <Card>
+              <CardContent className="space-y-4 pt-4">
+                {/* Sección 1: Idioma, Nivel y Tipo */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Idioma */}
+                  <div>
+                    <Label htmlFor="language" className="text-sm font-medium">
+                      Idioma
+                    </Label>
+                    <Select
+                      value={tempConfig.language}
+                      onValueChange={(v) =>
+                        setTempConfig((c) => ({ ...c, language: v }))
+                      }
+                    >
+                      <SelectTrigger id="language" className="h-9 mt-1">
+                        <SelectValue placeholder="Idioma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LANG_OPTIONS.map((l) => (
+                          <SelectItem key={l.value} value={l.value}>
+                            {l.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Nivel */}
+                  <div>
+                    <Label htmlFor="level" className="text-sm font-medium">
+                      Nivel
+                    </Label>
+                    <Select
+                      value={tempConfig.level}
+                      onValueChange={(v) =>
+                        setTempConfig((c) => ({ ...c, level: v }))
+                      }
+                    >
+                      <SelectTrigger id="level" className="h-9 mt-1">
+                        <SelectValue placeholder="Nivel" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {lectureLevels.map((l) => (
+                          <SelectItem key={l.value} value={l.value}>
+                            {l.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Tipo */}
+                  <div>
+                    <Label htmlFor="typeWrite" className="text-sm font-medium">
+                      Tipo
+                    </Label>
+                    <Select
+                      value={tempConfig.typeWrite}
+                      onValueChange={(v) =>
+                        setTempConfig((c) => ({ ...c, typeWrite: v }))
+                      }
+                    >
+                      <SelectTrigger id="typeWrite" className="h-9 mt-1">
+                        <SelectValue placeholder="Tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {lectureTypes.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Sección 2: Dificultad y Longitud */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Dificultad */}
+                  <div>
+                    <Label htmlFor="difficulty" className="text-sm font-medium">
+                      Dificultad
+                    </Label>
+                    <Select
+                      value={tempConfig.difficulty}
+                      onValueChange={(v) =>
+                        setTempConfig((c) => ({ ...c, difficulty: v }))
+                      }
+                    >
+                      <SelectTrigger id="difficulty" className="h-9 mt-1">
+                        <SelectValue placeholder="Dificultad" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="easy">Fácil</SelectItem>
+                        <SelectItem value="medium">Media</SelectItem>
+                        <SelectItem value="hard">Difícil</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Longitud mínima */}
+                  <div>
+                    <Label htmlFor="rangeMin" className="text-sm font-medium">
+                      Mín (chars)
+                    </Label>
+                    <input
+                      id="rangeMin"
+                      type="number"
+                      min={100}
+                      max={100000}
+                      className="h-9 w-full mt-1 border rounded-md px-3 py-2 bg-background focus:ring-2 focus:ring-primary text-sm"
+                      value={tempConfig.rangeMin}
+                      onChange={(e) =>
+                        setTempConfig((c) => ({
+                          ...c,
+                          rangeMin: Number(e.target.value),
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Longitud máxima */}
+                  <div>
+                    <Label htmlFor="rangeMax" className="text-sm font-medium">
+                      Máx (chars)
+                    </Label>
+                    <input
+                      id="rangeMax"
+                      type="number"
+                      min={100}
+                      max={100000}
+                      className="h-9 w-full mt-1 border rounded-md px-3 py-2 bg-background focus:ring-2 focus:ring-primary text-sm"
+                      value={tempConfig.rangeMax}
+                      onChange={(e) =>
+                        setTempConfig((c) => ({
+                          ...c,
+                          rangeMax: Number(e.target.value),
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* Error de rango */}
+                {rangeError && (
+                  <div className="text-red-500 text-xs">{rangeError}</div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="grammar" className="mt-4">
+            <GrammarTopicsSelector
+              selectedTopics={tempConfig.grammarTopics}
+              onTopicsChange={(topics) =>
+                setTempConfig((c) => ({ ...c, grammarTopics: topics }))
+              }
+            />
+          </TabsContent>
+
+          <TabsContent value="words" className="mt-4">
+            <WordsSelector
+              selectedWords={tempConfig.selectedWords}
+              onWordsChange={(words) =>
+                setTempConfig((c) => ({ ...c, selectedWords: words }))
+              }
+              preloadedWords={initialConfig.preloadedWords}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
+      </ModalNova>
+    );
+  }

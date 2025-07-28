@@ -140,14 +140,7 @@ export function GrammarTopicsSelector({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <BookOpen className="h-4 w-4" />
-          Temas de Gramática Obligatorios
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 pt-4">
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -224,9 +217,8 @@ export function GrammarTopicsSelector({
         <Separator />
 
         {/* Categories */}
-        <div className="border rounded-lg overflow-hidden">
-          <ScrollArea className="h-[400px] w-full">
-            <div className="p-4">
+        <div className="border rounded-lg">
+          <div className="p-4">
               <Accordion
                 type="multiple"
                 value={expandedCategories}
@@ -299,9 +291,8 @@ export function GrammarTopicsSelector({
                 })}
               </Accordion>
             </div>
-          </ScrollArea>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }

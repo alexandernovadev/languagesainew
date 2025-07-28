@@ -202,14 +202,7 @@ export function WordsSelector({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <BookOpen className="h-4 w-4" />
-          Selección de Mis Palabras
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 pt-4">
         {/* Actions */}
         <div className="flex gap-2">
           <Button
@@ -275,9 +268,8 @@ export function WordsSelector({
         <Separator />
 
         {/* Word Types */}
-        <div className="border rounded-lg overflow-hidden">
-          <ScrollArea className="h-[400px] w-full">
-            <div className="p-4">
+        <div className="border rounded-lg">
+          <div className="p-4">
               <Accordion
                 type="multiple"
                 value={expandedTypes}
@@ -403,9 +395,8 @@ export function WordsSelector({
                 })}
               </Accordion>
             </div>
-          </ScrollArea>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
