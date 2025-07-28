@@ -173,9 +173,11 @@ export function QuestionForm({
   });
 
   const watchedType = watch("type");
-  const shouldShowOptions = ["multiple_choice", "true_false", "fill_blank"].includes(
-    watchedType
-  );
+  const shouldShowOptions = [
+    "multiple_choice",
+    "true_false",
+    "fill_blank",
+  ].includes(watchedType);
 
   const currentTags = watch("tags") || [];
 
@@ -187,7 +189,10 @@ export function QuestionForm({
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setValue("tags", currentTags.filter(tag => tag !== tagToRemove));
+    setValue(
+      "tags",
+      currentTags.filter((tag) => tag !== tagToRemove)
+    );
   };
 
   const handleTagKeyPress = (e: React.KeyboardEvent) => {
@@ -444,7 +449,11 @@ export function QuestionForm({
                 <div className="space-y-3">
                   <div className="flex flex-wrap gap-2">
                     {currentTags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {tag}
                         <button
                           type="button"
