@@ -272,6 +272,45 @@ export default function LectureGeneratorPage() {
       <PageHeader
         title="Lecture Generator"
         description="Genera lecturas personalizadas con IA."
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Configuración avanzada"
+              onClick={openConfigModal}
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
+            <LectureGeneratorConfigModal
+              open={isConfigOpen}
+              onOpenChange={setIsConfigOpen}
+              initialConfig={initialConfig}
+              onSave={handleSaveConfig}
+              lectureLevels={lectureLevels}
+              lectureTypes={lectureTypes}
+            />
+            <Button
+              type="submit"
+              disabled={isGenerating || !isValid}
+              className="gap-2"
+              style={{ minWidth: 140 }}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="shimmer-text">Generando...</span>
+                </>
+              ) : (
+                <>
+                  <BookOpen className="h-4 w-4" />
+                  Generar Lectura
+                </>
+              )}
+            </Button>
+          </div>
+        }
       />
 
       <div className="grid gap-6">
@@ -280,51 +319,12 @@ export default function LectureGeneratorPage() {
           <Card>
             <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
-                <div className="flex items-center justify-between gap-4">
-                  <Label
-                    htmlFor="mainPrompt"
-                    className={isGenerating ? "shimmer-text" : undefined}
-                  >
-                    Tema de la Lectura
-                  </Label>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      aria-label="Configuración avanzada"
-                      onClick={openConfigModal}
-                    >
-                      <Settings className="w-5 h-5" />
-                    </Button>
-                    <LectureGeneratorConfigModal
-                      open={isConfigOpen}
-                      onOpenChange={setIsConfigOpen}
-                      initialConfig={initialConfig}
-                      onSave={handleSaveConfig}
-                      lectureLevels={lectureLevels}
-                      lectureTypes={lectureTypes}
-                    />
-                    <Button
-                      type="submit"
-                      disabled={isGenerating || !isValid}
-                      className={`gap-2`}
-                      style={{ minWidth: 140 }}
-                    >
-                      {isGenerating ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <span className="shimmer-text">Generando...</span>
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="h-4 w-4" />
-                          Generar Lectura
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
+                <Label
+                  htmlFor="mainPrompt"
+                  className={isGenerating ? "shimmer-text" : undefined}
+                >
+                  Tema de la Lectura
+                </Label>
                 <div className="space-y-2">
                   <Textarea
                     id="mainPrompt"
