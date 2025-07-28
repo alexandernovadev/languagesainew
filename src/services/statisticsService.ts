@@ -19,5 +19,5 @@ export const statisticsService = {
   async getWordStats() {
     const res = await api.get("/api/statistics/words");
     return res.data.data;
-  }
-}; 
+  },
+};

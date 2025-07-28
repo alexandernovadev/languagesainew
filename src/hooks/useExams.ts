@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { examService, Exam } from '@/services/examService';
-import { toast } from 'sonner';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { examService, Exam } from "@/services/examService";
+import { toast } from "sonner";
 
 interface ExamFilters {
   level: string;
@@ -65,23 +65,23 @@ interface UseExamsReturn {
 }
 
 const defaultFilters: ExamFilters = {
-  level: 'all',
-  language: 'all',
-  topic: 'all',
-  source: 'all',
-  adaptive: 'all',
-  createdBy: 'all',
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  createdAfter: '',
-  createdBefore: '',
+  level: "all",
+  language: "all",
+  topic: "all",
+  source: "all",
+  adaptive: "all",
+  createdBy: "all",
+  sortBy: "createdAt",
+  sortOrder: "desc",
+  createdAfter: "",
+  createdBefore: "",
 };
 
 export function useExams(): UseExamsReturn {
   const navigate = useNavigate();
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<ExamFilters>(defaultFilters);
   const [pagination, setPagination] = useState<Pagination>({
     currentPage: 1,
@@ -95,70 +95,75 @@ export function useExams(): UseExamsReturn {
   const [examToDelete, setExamToDelete] = useState<Exam | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
+
   const filtersFirstRender = useRef(true);
 
   const fetchExams = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      
+
       // Pagination
-      params.append('page', pagination.currentPage.toString());
-      params.append('limit', pagination.itemsPerPage.toString());
-      
+      params.append("page", pagination.currentPage.toString());
+      params.append("limit", pagination.itemsPerPage.toString());
+
       // Search
       if (searchTerm.trim()) {
-        params.append('search', searchTerm.trim());
+        params.append("search", searchTerm.trim());
       }
-      
-      // Filters
-      if (filters.level !== 'all') params.append('level', filters.level);
-      if (filters.language !== 'all') params.append('language', filters.language);
-      if (filters.topic !== 'all') params.append('topic', filters.topic);
-      if (filters.source !== 'all') params.append('source', filters.source);
-      if (filters.adaptive !== 'all') params.append('adaptive', filters.adaptive);
-      if (filters.createdBy !== 'all') params.append('createdBy', filters.createdBy);
-      
-      // Sorting
-      params.append('sortBy', filters.sortBy);
-      params.append('sortOrder', filters.sortOrder);
-      
-      // Date filters
-      if (filters.createdAfter) params.append('createdAfter', filters.createdAfter);
-      if (filters.createdBefore) params.append('createdBefore', filters.createdBefore);
 
-      console.log('Fetching exams with params:', params.toString());
+      // Filters
+      if (filters.level !== "all") params.append("level", filters.level);
+      if (filters.language !== "all")
+        params.append("language", filters.language);
+      if (filters.topic !== "all") params.append("topic", filters.topic);
+      if (filters.source !== "all") params.append("source", filters.source);
+      if (filters.adaptive !== "all")
+        params.append("adaptive", filters.adaptive);
+      if (filters.createdBy !== "all")
+        params.append("createdBy", filters.createdBy);
+
+      // Sorting
+      params.append("sortBy", filters.sortBy);
+      params.append("sortOrder", filters.sortOrder);
+
+      // Date filters
+      if (filters.createdAfter)
+        params.append("createdAfter", filters.createdAfter);
+      if (filters.createdBefore)
+        params.append("createdBefore", filters.createdBefore);
+
+      console.log("Fetching exams with params:", params.toString());
       const response = await examService.getExams(params.toString());
-      console.log('API Response:', response);
-      
+      console.log("API Response:", response);
+
       if (response && response.success && response.data) {
         setExams(response.data.data || []);
-        
+
         setPagination({
           currentPage: response.data.page || 1,
           totalPages: response.data.pages || 1,
           totalItems: response.data.total || 0,
           itemsPerPage: pagination.itemsPerPage,
         });
-        
+
         toast.success("Exámenes cargados exitosamente");
       } else {
-        console.warn('Unexpected response structure:', response);
+        console.warn("Unexpected response structure:", response);
         setExams([]);
-        setPagination(prev => ({
+        setPagination((prev) => ({
           ...prev,
           totalPages: 1,
           totalItems: 0,
         }));
       }
     } catch (error: any) {
-      console.error('Error fetching exams:', error);
+      console.error("Error fetching exams:", error);
       toast.error("Error al cargar exámenes", {
         description: error.message || "No se pudieron cargar los exámenes",
       });
       setExams([]);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         totalPages: 1,
         totalItems: 0,
@@ -169,7 +174,7 @@ export function useExams(): UseExamsReturn {
   };
 
   const goToPage = (page: number) => {
-    setPagination(prev => ({ ...prev, currentPage: page }));
+    setPagination((prev) => ({ ...prev, currentPage: page }));
   };
 
   const handleFilterChange = (newFilters: ExamFilters) => {
@@ -230,35 +235,37 @@ export function useExams(): UseExamsReturn {
 
     try {
       setLoading(true);
-      
+
       // Call the delete API
       const response = await examService.deleteExam(examToDelete._id);
-      
+
       if (response && response.success) {
         toast.success("Examen eliminado exitosamente", {
           description: `"${examToDelete.title}" ha sido eliminado`,
         });
-        
+
         // Remove the exam from the local state
-        setExams(prevExams => prevExams.filter(exam => exam._id !== examToDelete._id));
-        
+        setExams((prevExams) =>
+          prevExams.filter((exam) => exam._id !== examToDelete._id)
+        );
+
         // Update pagination
-        setPagination(prev => ({
+        setPagination((prev) => ({
           ...prev,
           totalItems: prev.totalItems - 1,
         }));
-        
+
         // Close the dialog and reset state
         setIsDeleteDialogOpen(false);
         setExamToDelete(null);
-        
+
         // Refresh the exams list to ensure consistency
         await fetchExams();
       } else {
         throw new Error(response?.message || "Error al eliminar el examen");
       }
     } catch (error: any) {
-      console.error('Error deleting exam:', error);
+      console.error("Error deleting exam:", error);
       toast.error("Error al eliminar examen", {
         description: error.message || "No se pudo eliminar el examen",
       });
@@ -278,7 +285,8 @@ export function useExams(): UseExamsReturn {
   };
 
   const hasActiveFilters = Object.values(filters).some(
-    (value) => value && value !== 'all' && value !== 'createdAt' && value !== 'desc'
+    (value) =>
+      value && value !== "all" && value !== "createdAt" && value !== "desc"
   );
 
   // Effects
@@ -356,4 +364,4 @@ export function useExams(): UseExamsReturn {
     fetchExams,
     goToPage,
   };
-} 
+}

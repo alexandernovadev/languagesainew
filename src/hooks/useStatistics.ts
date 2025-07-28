@@ -119,24 +119,25 @@ export function useStatistics() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Cargar todos los datos en paralelo
-      const [dashboardResponse, lectureResponse, wordResponse] = await Promise.all([
-        statisticsService.getDashboardStats(),
-        statisticsService.getLectureStats(),
-        statisticsService.getWordStats()
-      ]);
-      
+      const [dashboardResponse, lectureResponse, wordResponse] =
+        await Promise.all([
+          statisticsService.getDashboardStats(),
+          statisticsService.getLectureStats(),
+          statisticsService.getWordStats(),
+        ]);
+
       console.log("Dashboard Response:", dashboardResponse);
       console.log("Lecture Response:", lectureResponse);
       console.log("Word Response:", wordResponse);
-      
+
       setStats(dashboardResponse);
       setLectureStats(lectureResponse);
       setWordStats(wordResponse);
     } catch (err: any) {
       console.error("Error loading statistics:", err);
-      
+
       // Manejar diferentes tipos de errores
       if (err.status === 401) {
         setError("Necesitas iniciar sesión para ver las estadísticas");
@@ -163,6 +164,6 @@ export function useStatistics() {
     wordStats,
     loading,
     error,
-    refetch: loadStats
+    refetch: loadStats,
   };
-} 
+}

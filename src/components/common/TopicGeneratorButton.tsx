@@ -39,12 +39,9 @@ export function TopicGeneratorButton({
       }
     >
       <Sparkles
-        className={cn(
-          "h-4 w-4",
-          isGenerating && "animate-spin text-primary"
-        )}
+        className={cn("h-4 w-4", isGenerating && "animate-spin text-primary")}
       />
       {isGenerating ? "Generando..." : "AI"}
     </Button>
   );
-} 
+}

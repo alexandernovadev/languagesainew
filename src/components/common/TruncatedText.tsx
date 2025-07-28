@@ -1,11 +1,15 @@
-import React from 'react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import React from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TruncatedTextProps {
   text: string;
   maxLength?: number;
   className?: string;
-  tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
+  tooltipSide?: "top" | "bottom" | "left" | "right";
   tooltipMaxWidth?: string;
   children?: React.ReactNode;
 }
@@ -13,13 +17,15 @@ interface TruncatedTextProps {
 export function TruncatedText({
   text,
   maxLength = 80,
-  className = '',
-  tooltipSide = 'top',
-  tooltipMaxWidth = 'max-w-xs',
-  children
+  className = "",
+  tooltipSide = "top",
+  tooltipMaxWidth = "max-w-xs",
+  children,
 }: TruncatedTextProps) {
   const shouldTruncate = text.length > maxLength;
-  const truncatedText = shouldTruncate ? text.substring(0, maxLength) + '...' : text;
+  const truncatedText = shouldTruncate
+    ? text.substring(0, maxLength) + "..."
+    : text;
 
   if (!shouldTruncate) {
     return <span className={className}>{children || text}</span>;
@@ -37,4 +43,4 @@ export function TruncatedText({
       </TooltipContent>
     </Tooltip>
   );
-} 
+}

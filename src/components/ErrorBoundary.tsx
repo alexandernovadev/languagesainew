@@ -1,7 +1,13 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -27,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log del error
-    console.error('🚨 [REACT ERROR BOUNDARY]', {
+    console.error("🚨 [REACT ERROR BOUNDARY]", {
       error: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack,
@@ -44,7 +50,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   render() {
@@ -63,7 +69,8 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
               <CardTitle className="text-xl">Algo salió mal</CardTitle>
               <CardDescription>
-                Ha ocurrido un error inesperado. Por favor, intenta recargar la página.
+                Ha ocurrido un error inesperado. Por favor, intenta recargar la
+                página.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -95,18 +102,18 @@ export class ErrorBoundary extends Component<Props, State> {
                   </div>
                 </details>
               )}
-              
+
               <div className="flex gap-2">
-                <Button 
-                  onClick={this.handleReload} 
+                <Button
+                  onClick={this.handleReload}
                   className="flex-1"
                   variant="default"
                 >
                   <RefreshCw className="mr-2 h-4 w-4" />
                   Recargar
                 </Button>
-                <Button 
-                  onClick={this.handleGoHome} 
+                <Button
+                  onClick={this.handleGoHome}
                   className="flex-1"
                   variant="outline"
                 >
@@ -122,4 +129,4 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
-} 
+}

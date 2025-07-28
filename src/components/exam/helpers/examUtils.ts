@@ -25,71 +25,88 @@ export const getLevelDescription = (level: string): string => {
 // Shared Level Color Helper
 export const getLevelColor = (level: string) => {
   switch (level) {
-    case 'A1': return 'default';
-    case 'A2': return 'secondary';
-    case 'B1': return 'outline';
-    case 'B2': return 'destructive';
-    case 'C1': return 'default';
-    case 'C2': return 'secondary';
-    default: return 'outline';
+    case "A1":
+      return "default";
+    case "A2":
+      return "secondary";
+    case "B1":
+      return "outline";
+    case "B2":
+      return "destructive";
+    case "C1":
+      return "default";
+    case "C2":
+      return "secondary";
+    default:
+      return "outline";
   }
 };
 
 // Shared Source Helpers
 export const getSourceIcon = (source?: string) => {
-  return source === 'ai' ? 'Brain' : 'PenTool';
+  return source === "ai" ? "Brain" : "PenTool";
 };
 
 export const getSourceVariant = (source?: string) => {
-  return source === 'ai' ? 'default' : 'secondary';
+  return source === "ai" ? "default" : "secondary";
 };
 
 // Question Text Extraction Helper
 export const getQuestionText = (question: any): string => {
   // Handle different question structures
-  if (typeof question === 'string') {
+  if (typeof question === "string") {
     return question;
   }
-  
-  if (typeof question === 'object' && question !== null) {
+
+  if (typeof question === "object" && question !== null) {
     // Try different possible field names
     if (question.text) return question.text;
     if (question.question) {
       // If question.question is a string, return it
-      if (typeof question.question === 'string') {
+      if (typeof question.question === "string") {
         return question.question;
       }
       // If question.question is an object, try to get text from it
-      if (typeof question.question === 'object' && question.question.text) {
+      if (typeof question.question === "object" && question.question.text) {
         return question.question.text;
       }
     }
     if (question.content) return question.content;
     if (question.title) return question.title;
   }
-  
+
   // Fallback
-  return 'Pregunta sin texto';
+  return "Pregunta sin texto";
 };
 
 // Question Type Extraction Helper
 export const getQuestionType = (question: any): string => {
-  if (typeof question === 'object' && question !== null) {
+  if (typeof question === "object" && question !== null) {
     if (question.type) return question.type;
-    if (question.question && typeof question.question === 'object' && question.question.type) {
+    if (
+      question.question &&
+      typeof question.question === "object" &&
+      question.question.type
+    ) {
       return question.question.type;
     }
   }
-  return 'multiple_choice'; // Default fallback
+  return "multiple_choice"; // Default fallback
 };
 
 // Question Options Extraction Helper
-export const getQuestionOptions = (question: any): Array<{value: string; label: string; isCorrect: boolean}> => {
-  if (typeof question === 'object' && question !== null) {
+export const getQuestionOptions = (
+  question: any
+): Array<{ value: string; label: string; isCorrect: boolean }> => {
+  if (typeof question === "object" && question !== null) {
     if (question.options && Array.isArray(question.options)) {
       return question.options;
     }
-    if (question.question && typeof question.question === 'object' && question.question.options) {
+    if (
+      question.question &&
+      typeof question.question === "object" &&
+      question.question.options
+    ) {
       return question.question.options;
     }
   }
@@ -98,11 +115,15 @@ export const getQuestionOptions = (question: any): Array<{value: string; label: 
 
 // Question Correct Answers Extraction Helper
 export const getQuestionCorrectAnswers = (question: any): string[] => {
-  if (typeof question === 'object' && question !== null) {
+  if (typeof question === "object" && question !== null) {
     if (question.correctAnswers && Array.isArray(question.correctAnswers)) {
       return question.correctAnswers;
     }
-    if (question.question && typeof question.question === 'object' && question.question.correctAnswers) {
+    if (
+      question.question &&
+      typeof question.question === "object" &&
+      question.question.correctAnswers
+    ) {
       return question.question.correctAnswers;
     }
   }
@@ -111,11 +132,15 @@ export const getQuestionCorrectAnswers = (question: any): string[] => {
 
 // Question Tags Extraction Helper
 export const getQuestionTags = (question: any): string[] => {
-  if (typeof question === 'object' && question !== null) {
+  if (typeof question === "object" && question !== null) {
     if (question.tags && Array.isArray(question.tags)) {
       return question.tags;
     }
-    if (question.question && typeof question.question === 'object' && question.question.tags) {
+    if (
+      question.question &&
+      typeof question.question === "object" &&
+      question.question.tags
+    ) {
       return question.question.tags;
     }
   }
@@ -124,13 +149,17 @@ export const getQuestionTags = (question: any): string[] => {
 
 // Question Explanation Extraction Helper
 export const getQuestionExplanation = (question: any): string => {
-  if (typeof question === 'object' && question !== null) {
+  if (typeof question === "object" && question !== null) {
     if (question.explanation) return question.explanation;
-    if (question.question && typeof question.question === 'object' && question.question.explanation) {
+    if (
+      question.question &&
+      typeof question.question === "object" &&
+      question.question.explanation
+    ) {
       return question.question.explanation;
     }
   }
-  return '';
+  return "";
 };
 
 // Difficulty Helpers
@@ -164,16 +193,16 @@ export const formatDate = (date: string) => {
 };
 
 export const formatDateShort = (date: string) => {
-  return new Date(date).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
+  return new Date(date).toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 };
 
 // Text Truncation Helper
 export const truncateText = (text: string, maxLength: number = 50) => {
-  if (!text) return 'Sin descripción';
+  if (!text) return "Sin descripción";
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + "...";
 };
@@ -209,16 +238,26 @@ export const validateExamFilters = (
     errors.push("Debe seleccionar al menos un tema de gramática");
   }
 
-  if (filters.grammarTopics && filters.grammarTopics.length > EXAM_VALIDATION_LIMITS.maxGrammarTopics) {
-    errors.push(`Máximo ${EXAM_VALIDATION_LIMITS.maxGrammarTopics} temas de gramática permitidos`);
+  if (
+    filters.grammarTopics &&
+    filters.grammarTopics.length > EXAM_VALIDATION_LIMITS.maxGrammarTopics
+  ) {
+    errors.push(
+      `Máximo ${EXAM_VALIDATION_LIMITS.maxGrammarTopics} temas de gramática permitidos`
+    );
   }
 
   if (!filters.types || filters.types.length === 0) {
     errors.push("Debe seleccionar al menos un tipo de pregunta");
   }
 
-  if (filters.numberOfQuestions < EXAM_VALIDATION_LIMITS.minQuestions || filters.numberOfQuestions > EXAM_VALIDATION_LIMITS.maxQuestions) {
-    errors.push(`El número de preguntas debe estar entre ${EXAM_VALIDATION_LIMITS.minQuestions} y ${EXAM_VALIDATION_LIMITS.maxQuestions}`);
+  if (
+    filters.numberOfQuestions < EXAM_VALIDATION_LIMITS.minQuestions ||
+    filters.numberOfQuestions > EXAM_VALIDATION_LIMITS.maxQuestions
+  ) {
+    errors.push(
+      `El número de preguntas debe estar entre ${EXAM_VALIDATION_LIMITS.minQuestions} y ${EXAM_VALIDATION_LIMITS.maxQuestions}`
+    );
   }
 
   return {
@@ -248,7 +287,7 @@ export const getFunnyProgressMessages = (): string[] => [
   "🎪 Preparando el contenido para que sea una experiencia memorable...",
   "🌟 Optimizando la experiencia para que sea fluida y agradable...",
   "📋 Finalizando la configuración con todos los detalles perfectos...",
-  "🎉 ¡Examen listo para usar y conquistar el conocimiento!"
+  "🎉 ¡Examen listo para usar y conquistar el conocimiento!",
 ];
 
 // Mensajes para el proceso de calificación del examen
@@ -274,9 +313,5 @@ export const getExamGradingMessages = (): string[] => [
   "🔍 Verificando la calidad del feedback para asegurar su utilidad...",
   "📝 Finalizando el reporte con todos los elementos necesarios...",
   "✅ Completando la evaluación con rigor académico y empatía...",
-  "🎉 ¡Calificación lista para revisar y celebrar el aprendizaje!"
+  "🎉 ¡Calificación lista para revisar y celebrar el aprendizaje!",
 ];
-
-
-
-

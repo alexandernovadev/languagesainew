@@ -6,13 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   ChevronLeft,
@@ -26,7 +19,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { Question, QuestionOption } from "./types";
+import { Question } from "./types";
 import { cn } from "@/utils/common/classnames/cn";
 import { ExamTimer } from "@/components/exam/ExamTimer";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
@@ -59,7 +52,7 @@ const OptionCardRadio = ({
   checked,
   onChange,
   name,
-  id
+  id,
 }: {
   option: { value: string; label: string; _id?: string };
   checked: boolean;
@@ -70,12 +63,18 @@ const OptionCardRadio = ({
   <div
     className={cn(
       "flex items-center gap-2 p-2 rounded-md border transition-all duration-200 cursor-pointer",
-      checked ? "border-primary bg-primary/10" : "border-border hover:border-primary/40 hover:bg-muted/30"
+      checked
+        ? "border-primary bg-primary/10"
+        : "border-border hover:border-primary/40 hover:bg-muted/30"
     )}
     style={{ minHeight: 0 }}
     onClick={() => onChange(option.value)}
   >
-    <RadioGroupItem value={option.value} id={id || option._id || option.value} checked={checked} />
+    <RadioGroupItem
+      value={option.value}
+      id={id || option._id || option.value}
+      checked={checked}
+    />
     <label
       htmlFor={id || option._id || option.value}
       className="flex-1 cursor-pointer text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -105,7 +104,6 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
   formatTimeRemaining,
   onFinish,
 }) => {
-  const [showNavigation, setShowNavigation] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
 
   // Validation
@@ -212,7 +210,10 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
             onValueChange={(value) => handleAnswerChange(value)}
             className="space-y-2"
           >
-            {[{ value: "true", label: "Verdadero" }, { value: "false", label: "Falso" }].map((option) => (
+            {[
+              { value: "true", label: "Verdadero" },
+              { value: "false", label: "Falso" },
+            ].map((option) => (
               <OptionCardRadio
                 key={option.value}
                 option={option}
@@ -411,10 +412,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
           </Button>
         </div>
         <div>
-          <Button
-            onClick={handleNext}
-            className="flex items-center gap-2"
-          >
+          <Button onClick={handleNext} className="flex items-center gap-2">
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

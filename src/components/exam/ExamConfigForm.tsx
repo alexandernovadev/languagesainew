@@ -6,15 +6,15 @@ import { Loader2, Sparkles, Settings, Info } from "lucide-react";
 import { useTopicGenerator } from "@/hooks/useTopicGenerator";
 import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
-import { questionTypes, questionLevels, questionDifficulties } from "@/data/questionTypes";
+import {
+  questionTypes,
+  questionLevels,
+  questionDifficulties,
+} from "@/data/questionTypes";
 import { ExamFormField } from "./components/ExamFormField";
 import { GrammarTopicsSelector } from "./components/GrammarTopicsSelector";
 import { ExamInfoModal } from "./components/ExamInfoModal";
-import {
-  getDifficultyLabel,
-  getLevelDescription,
-  validateExamFilters,
-} from "./helpers/examUtils";
+import { validateExamFilters } from "./helpers/examUtils";
 import {
   LANGUAGE_OPTIONS,
   EXAM_VALIDATION_LIMITS,
@@ -120,11 +120,13 @@ export function ExamConfigForm({
                     type="select"
                     label="Dificultad"
                     value={filters.difficulty.toString()}
-                    onChange={(value) => updateFilter("difficulty", parseInt(value))}
-                    options={questionDifficulties.map(d => ({
+                    onChange={(value) =>
+                      updateFilter("difficulty", parseInt(value))
+                    }
+                    options={questionDifficulties.map((d) => ({
                       value: d.value.toString(),
                       label: d.label,
-                      description: d.description
+                      description: d.description,
                     }))}
                     placeholder="Seleccionar dificultad"
                   />
@@ -133,7 +135,9 @@ export function ExamConfigForm({
                     type="number"
                     label="# Preguntas (4-30 preguntas)"
                     value={filters.numberOfQuestions}
-                    onChange={(value) => updateFilter("numberOfQuestions", value)}
+                    onChange={(value) =>
+                      updateFilter("numberOfQuestions", value)
+                    }
                     min={EXAM_VALIDATION_LIMITS.minQuestions}
                     max={EXAM_VALIDATION_LIMITS.maxQuestions}
                   />
@@ -165,7 +169,9 @@ export function ExamConfigForm({
               <div className="lg:col-span-2">
                 <GrammarTopicsSelector
                   selectedTopics={filters.grammarTopics}
-                  onTopicsChange={(topics) => updateFilter("grammarTopics", topics)}
+                  onTopicsChange={(topics) =>
+                    updateFilter("grammarTopics", topics)
+                  }
                   error={validation.errors.find((e) => e.includes("gramática"))}
                 />
               </div>

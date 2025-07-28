@@ -6,4 +6,4 @@ export const fakeStats = {
     { icon: "🔥", label: "Racha de 7 días" },
     { icon: "📚", label: "100 Palabras Aprendidas" },
   ],
-}; 
+};

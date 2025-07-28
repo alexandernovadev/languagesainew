@@ -38,7 +38,9 @@ class LabsService {
     return response.data;
   }
 
-  async resetWordsSeenCount(data: ResetWordsSeenRequest = { seen: 0 }): Promise<LabsResponse> {
+  async resetWordsSeenCount(
+    data: ResetWordsSeenRequest = { seen: 0 }
+  ): Promise<LabsResponse> {
     const response = await api.post("/api/fixes/words/reset-seen", data);
     return response.data;
   }
@@ -100,4 +102,4 @@ class LabsService {
   }
 }
 
-export const labsService = new LabsService(); 
+export const labsService = new LabsService();

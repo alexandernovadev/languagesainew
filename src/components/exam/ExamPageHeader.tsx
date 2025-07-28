@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ExamPageHeaderProps {
   title?: string;
@@ -9,10 +9,10 @@ interface ExamPageHeaderProps {
   showCreateButton?: boolean;
 }
 
-export function ExamPageHeader({ 
+export function ExamPageHeader({
   title = "Exámenes",
   description = "Gestiona y revisa todos tus exámenes",
-  showCreateButton = true 
+  showCreateButton = true,
 }: ExamPageHeaderProps) {
   const navigate = useNavigate();
 
@@ -23,11 +23,11 @@ export function ExamPageHeader({
         <p className="text-muted-foreground">{description}</p>
       </div>
       {showCreateButton && (
-        <Button onClick={() => navigate('/generator/exam')}>
+        <Button onClick={() => navigate("/generator/exam")}>
           <Plus className="w-4 h-4 mr-2" />
           Crear Examen
         </Button>
       )}
     </div>
   );
-} 
+}

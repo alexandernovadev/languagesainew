@@ -1,17 +1,16 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useExams } from '@/hooks/useExams';
-import { ExamPageHeader } from '@/components/exam/ExamPageHeader';
-import { ExamSearchAndFilters } from '@/components/exam/ExamSearchAndFilters';
-import { ExamTable } from '@/components/exam/ExamTable';
-import { ExamPagination } from '@/components/exam/ExamPagination';
-import { ExamPageSkeleton } from '@/components/exam/ExamPageSkeleton';
-import ExamFiltersModal from '@/components/exam/ExamFiltersModal';
-import ExamViewModal from '@/components/exam/ExamViewModal';
-import { ExamEditModal } from '@/components/exam/ExamEditModal';
-import { ExamDeleteDialog } from '@/components/exam/ExamDeleteDialog';
-import { PageHeader } from '@/components/ui/page-header';
-import { PageLayout } from '@/components/layouts/page-layout';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useExams } from "@/hooks/useExams";
+import { ExamSearchAndFilters } from "@/components/exam/ExamSearchAndFilters";
+import { ExamTable } from "@/components/exam/ExamTable";
+import { ExamPagination } from "@/components/exam/ExamPagination";
+import { ExamPageSkeleton } from "@/components/exam/ExamPageSkeleton";
+import ExamFiltersModal from "@/components/exam/ExamFiltersModal";
+import ExamViewModal from "@/components/exam/ExamViewModal";
+import { ExamEditModal } from "@/components/exam/ExamEditModal";
+import { ExamDeleteDialog } from "@/components/exam/ExamDeleteDialog";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export default function ExamsPage() {
   const {
@@ -31,9 +30,7 @@ export default function ExamsPage() {
 
     // Actions
     setSearchTerm,
-    setIsViewModalOpen,
     setIsFiltersModalOpen,
-    setIsEditModalOpen,
     setIsDeleteDialogOpen,
 
     // Handlers

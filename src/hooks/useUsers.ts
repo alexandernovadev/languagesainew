@@ -1,6 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { userService, User, UserCreate, UserUpdate, UserFilters, UsersResponse } from '@/services/userService';
-import { toast } from 'sonner';
+import { useState, useEffect, useCallback } from "react";
+import {
+  userService,
+  User,
+  UserCreate,
+  UserUpdate,
+  UserFilters,
+} from "@/services/userService";
+import { toast } from "sonner";
 
 export const useUsers = () => {
   // State
@@ -16,10 +22,10 @@ export const useUsers = () => {
   const [filters, setFilters] = useState<UserFilters>({
     page: 1,
     limit: 10,
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
+    sortBy: "createdAt",
+    sortOrder: "desc",
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
@@ -41,8 +47,8 @@ export const useUsers = () => {
         itemsPerPage: filters.limit || 10,
       });
     } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error('Error al cargar usuarios');
+      console.error("Error fetching users:", error);
+      toast.error("Error al cargar usuarios");
       setUsers([]);
       setPagination({
         currentPage: 1,
@@ -62,7 +68,7 @@ export const useUsers = () => {
 
   // Handle search
   const handleSearch = useCallback(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       username: searchTerm || undefined,
       page: 1,
@@ -71,7 +77,7 @@ export const useUsers = () => {
 
   // Handle filter changes
   const handleFilterChange = useCallback((newFilters: Partial<UserFilters>) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       ...newFilters,
       page: 1, // Reset to first page when filters change
@@ -89,70 +95,83 @@ export const useUsers = () => {
     setFilters({
       page: 1,
       limit: 10,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
+      sortBy: "createdAt",
+      sortOrder: "desc",
     });
-    setSearchTerm('');
+    setSearchTerm("");
   }, []);
 
   // Pagination
   const goToPage = useCallback((page: number) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       page,
     }));
   }, []);
 
   // Create user
-  const createUser = useCallback(async (userData: UserCreate) => {
-    setSaving(true);
-    try {
-      await userService.createUser(userData);
-      toast.success('Usuario creado exitosamente');
-      setIsEditModalOpen(false);
-      setSelectedUser(null);
-      fetchUsers();
-    } catch (error: any) {
-      console.error('Error creating user:', error);
-      toast.error(error.response?.data?.message || 'Error al crear usuario');
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchUsers]);
+  const createUser = useCallback(
+    async (userData: UserCreate) => {
+      setSaving(true);
+      try {
+        await userService.createUser(userData);
+        toast.success("Usuario creado exitosamente");
+        setIsEditModalOpen(false);
+        setSelectedUser(null);
+        fetchUsers();
+      } catch (error: any) {
+        console.error("Error creating user:", error);
+        toast.error(error.response?.data?.message || "Error al crear usuario");
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchUsers]
+  );
 
   // Update user
-  const updateUser = useCallback(async (id: string, userData: UserUpdate) => {
-    setSaving(true);
-    try {
-      await userService.updateUser(id, userData);
-      toast.success('Usuario actualizado exitosamente');
-      setIsEditModalOpen(false);
-      setSelectedUser(null);
-      fetchUsers();
-    } catch (error: any) {
-      console.error('Error updating user:', error);
-      toast.error(error.response?.data?.message || 'Error al actualizar usuario');
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchUsers]);
+  const updateUser = useCallback(
+    async (id: string, userData: UserUpdate) => {
+      setSaving(true);
+      try {
+        await userService.updateUser(id, userData);
+        toast.success("Usuario actualizado exitosamente");
+        setIsEditModalOpen(false);
+        setSelectedUser(null);
+        fetchUsers();
+      } catch (error: any) {
+        console.error("Error updating user:", error);
+        toast.error(
+          error.response?.data?.message || "Error al actualizar usuario"
+        );
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchUsers]
+  );
 
   // Delete user
-  const deleteUser = useCallback(async (id: string) => {
-    setSaving(true);
-    try {
-      await userService.deleteUser(id);
-      toast.success('Usuario eliminado exitosamente');
-      setIsDeleteDialogOpen(false);
-      setUserToDelete(null);
-      fetchUsers();
-    } catch (error: any) {
-      console.error('Error deleting user:', error);
-      toast.error(error.response?.data?.message || 'Error al eliminar usuario');
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchUsers]);
+  const deleteUser = useCallback(
+    async (id: string) => {
+      setSaving(true);
+      try {
+        await userService.deleteUser(id);
+        toast.success("Usuario eliminado exitosamente");
+        setIsDeleteDialogOpen(false);
+        setUserToDelete(null);
+        fetchUsers();
+      } catch (error: any) {
+        console.error("Error deleting user:", error);
+        toast.error(
+          error.response?.data?.message || "Error al eliminar usuario"
+        );
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchUsers]
+  );
 
   // Handle edit user
   const handleEditUser = useCallback((user: User) => {
@@ -167,9 +186,17 @@ export const useUsers = () => {
   }, []);
 
   // Check if there are active filters
-  const hasActiveFilters = Object.keys(filters).some(key => {
+  const hasActiveFilters = Object.keys(filters).some((key) => {
     const value = filters[key as keyof UserFilters];
-    return value !== undefined && value !== null && value !== '' && key !== 'page' && key !== 'limit' && key !== 'sortBy' && key !== 'sortOrder';
+    return (
+      value !== undefined &&
+      value !== null &&
+      value !== "" &&
+      key !== "page" &&
+      key !== "limit" &&
+      key !== "sortBy" &&
+      key !== "sortOrder"
+    );
   });
 
   return {
@@ -206,4 +233,4 @@ export const useUsers = () => {
     fetchUsers,
     goToPage,
   };
-}; 
+};

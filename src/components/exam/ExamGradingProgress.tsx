@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Loader2, Brain, CheckCircle } from "lucide-react";
+import { Loader2, Brain } from "lucide-react";
 import { useGradingMessages } from "@/hooks/useAnimatedMessages";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 
@@ -9,10 +8,8 @@ interface ExamGradingProgressProps {
   isGrading: boolean;
 }
 
-export function ExamGradingProgress({
-  isGrading,
-}: ExamGradingProgressProps) {
-  const { currentMessage, currentMessageIndex, totalMessages } = useGradingMessages(isGrading);
+export function ExamGradingProgress({ isGrading }: ExamGradingProgressProps) {
+  const { currentMessage } = useGradingMessages(isGrading);
   const dots = useAnimatedDots();
 
   if (!isGrading) {
@@ -43,10 +40,11 @@ export function ExamGradingProgress({
         {/* Información adicional */}
         <div className="bg-blue-900/10 border border-blue-700/20 rounded-lg p-3">
           <p className="text-xs text-blue-300">
-            La IA está analizando tus respuestas y generando un feedback personalizado...
+            La IA está analizando tus respuestas y generando un feedback
+            personalizado...
           </p>
         </div>
       </CardContent>
     </Card>
   );
-} 
+}

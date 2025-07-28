@@ -32,23 +32,6 @@ export default function WordImportForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
 
-  // File input handler
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] || null;
-    if (selected) {
-      if (!selected.name.endsWith(".json")) {
-        setFile(null);
-        setFileError("Only .json files are allowed");
-      } else {
-        setFile(selected);
-        setFileError(null);
-      }
-    } else {
-      setFile(null);
-      setFileError(null);
-    }
-  };
-
   // Batch size handler
   const handleBatchSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);

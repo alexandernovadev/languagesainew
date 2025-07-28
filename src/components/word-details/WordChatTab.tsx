@@ -7,7 +7,7 @@ import type { ChatMessage } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { TypingAnimation } from "@/components/common/TypingAnimation";
 import { toast } from "sonner";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 
 interface WordChatTabProps {
   word: Word;
@@ -36,27 +36,18 @@ export function WordChatTab({ word }: WordChatTabProps) {
     {
       title: "Ejemplos",
       icon: "💡",
-      questions: [
-        "Dame ejemplos de uso",
-        "Úsala en una conversación"
-      ]
+      questions: ["Dame ejemplos de uso", "Úsala en una conversación"],
     },
     {
       title: "Contexto",
-      icon: "🎯", 
-      questions: [
-        "¿Cuándo se usa?",
-        "¿Es formal o informal?"
-      ]
+      icon: "🎯",
+      questions: ["¿Cuándo se usa?", "¿Es formal o informal?"],
     },
     {
       title: "Detalles",
       icon: "📚",
-      questions: [
-        "Explícame más a detalle",
-        "Dame sinónimos"
-      ]
-    }
+      questions: ["Explícame más a detalle", "Dame sinónimos"],
+    },
   ];
 
   const handleDefaultQuestion = async (question: string) => {
@@ -66,7 +57,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !word) return;
-    
+
     setIsLoading(true);
     setIsStreaming(true);
     setStreamingMessage("");
@@ -76,15 +67,15 @@ export function WordChatTab({ word }: WordChatTabProps) {
       id: Math.random().toString(36).substr(2, 9),
       role: "user",
       content: message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
 
     try {
       let fullMessage = "";
-      
+
       // Start streaming
       await streamChatMessage(word._id, message, (chunk: string) => {
         fullMessage += chunk;
@@ -94,12 +85,12 @@ export function WordChatTab({ word }: WordChatTabProps) {
       // Add final assistant message
       const assistantMessage: ChatMessage = {
         id: Math.random().toString(36).substr(2, 9),
-        role: "assistant", 
+        role: "assistant",
         content: fullMessage,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, assistantMessage]);
       setStreamingMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -111,7 +102,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(inputValue);
     }
@@ -139,7 +130,9 @@ export function WordChatTab({ word }: WordChatTabProps) {
                 <div key={categoryIndex} className="text-center">
                   <div className="mb-2">
                     <div className="text-lg mb-1">{category.icon}</div>
-                    <h5 className="text-sm font-medium text-muted-foreground">{category.title}</h5>
+                    <h5 className="text-sm font-medium text-muted-foreground">
+                      {category.title}
+                    </h5>
                   </div>
                   <div className="space-y-2">
                     {category.questions.map((question, questionIndex) => (
@@ -160,12 +153,12 @@ export function WordChatTab({ word }: WordChatTabProps) {
             </div>
           </div>
         )}
-        
+
         {/* Mensajes del chat */}
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
-        
+
         {/* Mensaje streaming */}
         {isStreaming && (
           <div className="flex justify-start">
@@ -182,7 +175,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       {/* Input para nueva pregunta */}
       <div className="mt-4 flex gap-2">
         <Input
@@ -192,14 +185,14 @@ export function WordChatTab({ word }: WordChatTabProps) {
           disabled={isLoading}
           onKeyPress={handleKeyPress}
         />
-        <Button 
-          onClick={() => handleSendMessage(inputValue)} 
+        <Button
+          onClick={() => handleSendMessage(inputValue)}
           disabled={isLoading || !inputValue.trim()}
         >
           <Send className="h-4 w-4" />
         </Button>
         {messages.length > 0 && (
-          <Button 
+          <Button
             variant="outline"
             onClick={clearChat}
             disabled={isLoading}
@@ -216,25 +209,35 @@ export function WordChatTab({ word }: WordChatTabProps) {
 // Componente para mostrar un mensaje individual
 function ChatMessage({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
-  
+
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`p-3 rounded-lg ${
-        isUser 
-          ? 'max-w-[80%] bg-primary/70 text-primary-foreground' 
-          : 'w-full bg-muted/30'
-      }`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`p-3 rounded-lg ${
+          isUser
+            ? "max-w-[80%] bg-primary/70 text-primary-foreground"
+            : "w-full bg-muted/30"
+        }`}
+      >
         <div className="text-sm">
           {isUser ? (
             <p>{message.content}</p>
           ) : (
-            <ReactMarkdown 
+            <ReactMarkdown
               components={{
-                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
-                ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
+                p: ({ children }) => (
+                  <p className="mb-2 last:mb-0">{children}</p>
+                ),
+                ul: ({ children }) => (
+                  <ul className="list-disc pl-4 mb-2">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="list-decimal pl-4 mb-2">{children}</ol>
+                ),
                 li: ({ children }) => <li className="mb-1">{children}</li>,
-                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                strong: ({ children }) => (
+                  <strong className="font-semibold">{children}</strong>
+                ),
                 em: ({ children }) => <em className="italic">{children}</em>,
               }}
             >
@@ -248,4 +251,4 @@ function ChatMessage({ message }: { message: ChatMessage }) {
       </div>
     </div>
   );
-} 
+}

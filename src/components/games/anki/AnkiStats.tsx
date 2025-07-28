@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, TrendingUp, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wordService } from "@/services/wordService";
@@ -23,7 +22,7 @@ export function AnkiStats() {
         const response = await wordService.getReviewStats();
         setStats(response.data);
       } catch (error) {
-        console.error('Error fetching review stats:', error);
+        console.error("Error fetching review stats:", error);
       } finally {
         setLoading(false);
       }
@@ -53,9 +52,10 @@ export function AnkiStats() {
     return null;
   }
 
-  const progressPercentage = stats.totalWords > 0 
-    ? Math.round((stats.wordsReviewedToday / stats.totalWords) * 100)
-    : 0;
+  const progressPercentage =
+    stats.totalWords > 0
+      ? Math.round((stats.wordsReviewedToday / stats.totalWords) * 100)
+      : 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -92,15 +92,15 @@ export function AnkiStats() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.wordsDueForReview}</div>
-          <p className="text-xs text-muted-foreground">
-            Necesitan repaso
-          </p>
+          <p className="text-xs text-muted-foreground">Necesitan repaso</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Facilidad Promedio</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Facilidad Promedio
+          </CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -114,4 +114,4 @@ export function AnkiStats() {
       </Card>
     </div>
   );
-} 
+}

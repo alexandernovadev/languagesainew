@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X, RotateCcw, Filter } from "lucide-react";
+import { X, Filter } from "lucide-react";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 
@@ -25,7 +25,7 @@ export function ExpressionFiltersModal({
   onClose,
   onApply,
 }: ExpressionFiltersModalProps) {
-  const { filters, setFilters } = useExpressionStore();
+  const { filters } = useExpressionStore();
   const [localFilters, setLocalFilters] = useState<any>({});
 
   useEffect(() => {

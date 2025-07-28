@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,9 +6,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 interface ExamSubmissionModalProps {
   isOpen: boolean;
@@ -25,32 +25,35 @@ export function ExamSubmissionModal({
   onSubmit,
   isSubmitting,
   answeredCount,
-  totalQuestions
+  totalQuestions,
 }: ExamSubmissionModalProps) {
   const unansweredCount = totalQuestions - answeredCount;
-  const completionPercentage = Math.round((answeredCount / totalQuestions) * 100);
+  const completionPercentage = Math.round(
+    (answeredCount / totalQuestions) * 100
+  );
 
   const getCompletionStatus = () => {
     if (completionPercentage === 100) {
       return {
         icon: <CheckCircle className="h-6 w-6 text-green-600" />,
         title: "¡Examen completo!",
-        description: "Has respondido todas las preguntas. ¿Estás listo para enviar?",
-        variant: "success" as const
+        description:
+          "Has respondido todas las preguntas. ¿Estás listo para enviar?",
+        variant: "success" as const,
       };
     } else if (completionPercentage >= 80) {
       return {
         icon: <AlertTriangle className="h-6 w-6 text-yellow-600" />,
         title: "Casi completo",
         description: `Has respondido ${answeredCount} de ${totalQuestions} preguntas. ¿Quieres continuar o enviar ahora?`,
-        variant: "warning" as const
+        variant: "warning" as const,
       };
     } else {
       return {
         icon: <XCircle className="h-6 w-6 text-red-600" />,
         title: "Examen incompleto",
         description: `Solo has respondido ${answeredCount} de ${totalQuestions} preguntas. Te recomendamos completar todas las preguntas.`,
-        variant: "danger" as const
+        variant: "danger" as const,
       };
     }
   };
@@ -65,9 +68,7 @@ export function ExamSubmissionModal({
             {status.icon}
             {status.title}
           </DialogTitle>
-          <DialogDescription>
-            {status.description}
-          </DialogDescription>
+          <DialogDescription>{status.description}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -80,7 +81,7 @@ export function ExamSubmissionModal({
               </span>
             </div>
             <div className="w-full bg-muted rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${completionPercentage}%` }}
               />
@@ -101,11 +102,10 @@ export function ExamSubmissionModal({
                     Examen incompleto
                   </p>
                   <p className="text-yellow-700 dark:text-yellow-100 mt-1">
-                    Las preguntas sin responder no tendrán puntaje. 
-                    {unansweredCount === 1 
-                      ? ' Te falta 1 pregunta.' 
-                      : ` Te faltan ${unansweredCount} preguntas.`
-                    }
+                    Las preguntas sin responder no tendrán puntaje.
+                    {unansweredCount === 1
+                      ? " Te falta 1 pregunta."
+                      : ` Te faltan ${unansweredCount} preguntas.`}
                   </p>
                 </div>
               </div>
@@ -115,25 +115,22 @@ export function ExamSubmissionModal({
           {/* Final confirmation */}
           <div className="bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              <strong>Importante:</strong> Una vez enviado, no podrás modificar tus respuestas.
+              <strong>Importante:</strong> Una vez enviado, no podrás modificar
+              tus respuestas.
             </p>
           </div>
         </div>
 
         <DialogFooter className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Continuar
           </Button>
-          <Button 
+          <Button
             onClick={onSubmit}
             disabled={isSubmitting}
             className={
-              completionPercentage === 100 
-                ? "bg-green-600 hover:bg-green-700 text-white" 
+              completionPercentage === 100
+                ? "bg-green-600 hover:bg-green-700 text-white"
                 : "bg-yellow-600 hover:bg-yellow-700 text-white"
             }
           >
@@ -143,11 +140,11 @@ export function ExamSubmissionModal({
                 Enviando...
               </>
             ) : (
-              'Enviar Examen'
+              "Enviar Examen"
             )}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-} 
+}

@@ -7,9 +7,9 @@ export const WORD_LEVELS = [
 ];
 
 export const LANGUAGES = [
-  { value: 'es', label: 'Español', icon: '🇪🇸' },
-  { value: 'en', label: 'Inglés', icon: '🇬🇧' },
-  { value: 'pt', label: 'Portugués', icon: '🇵🇹' },
+  { value: "es", label: "Español", icon: "🇪🇸" },
+  { value: "en", label: "Inglés", icon: "🇬🇧" },
+  { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 
 export const WORD_TYPES = [
@@ -17,20 +17,40 @@ export const WORD_TYPES = [
   { value: "verb", label: "Verb", spanishLabel: "Verbo" },
   { value: "adjective", label: "Adjective", spanishLabel: "Adjetivo" },
   { value: "adverb", label: "Adverb", spanishLabel: "Adverbio" },
-  { value: "personal pronoun", label: "Personal Pronoun", spanishLabel: "Pronombre Personal" },
-  { value: "possessive pronoun", label: "Possessive Pronoun", spanishLabel: "Pronombre Posesivo" },
+  {
+    value: "personal pronoun",
+    label: "Personal Pronoun",
+    spanishLabel: "Pronombre Personal",
+  },
+  {
+    value: "possessive pronoun",
+    label: "Possessive Pronoun",
+    spanishLabel: "Pronombre Posesivo",
+  },
   { value: "preposition", label: "Preposition", spanishLabel: "Preposición" },
   { value: "conjunction", label: "Conjunction", spanishLabel: "Conjunción" },
   { value: "determiner", label: "Determiner", spanishLabel: "Determinante" },
   { value: "article", label: "Article", spanishLabel: "Artículo" },
   { value: "quantifier", label: "Quantifier", spanishLabel: "Cuantificador" },
-  { value: "interjection", label: "Interjection", spanishLabel: "Interjección" },
-  { value: "auxiliary verb", label: "Auxiliary Verb", spanishLabel: "Verbo Auxiliar" },
+  {
+    value: "interjection",
+    label: "Interjection",
+    spanishLabel: "Interjección",
+  },
+  {
+    value: "auxiliary verb",
+    label: "Auxiliary Verb",
+    spanishLabel: "Verbo Auxiliar",
+  },
   { value: "modal verb", label: "Modal Verb", spanishLabel: "Verbo Modal" },
   { value: "infinitive", label: "Infinitive", spanishLabel: "Infinitivo" },
   { value: "participle", label: "Participle", spanishLabel: "Participio" },
   { value: "gerund", label: "Gerund", spanishLabel: "Gerundio" },
-  { value: "phrasal verb", label: "Phrasal Verb", spanishLabel: "Verbo Frasal" },
+  {
+    value: "phrasal verb",
+    label: "Phrasal Verb",
+    spanishLabel: "Verbo Frasal",
+  },
   { value: "other", label: "Other", spanishLabel: "Otro" },
 ];
 

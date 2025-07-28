@@ -30,7 +30,9 @@ export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-5 w-5 text-amber-500" />
-              <h3 className="text-lg font-semibold">Consejos para mejores resultados</h3>
+              <h3 className="text-lg font-semibold">
+                Consejos para mejores resultados
+              </h3>
             </div>
             <div className="pl-7">
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -53,17 +55,18 @@ export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
               </div>
               <div className="pl-7 space-y-3 text-sm text-muted-foreground">
                 <p>
-                  Los temas seleccionados se incluirán obligatoriamente en el examen. 
-                  La IA distribuirá las preguntas para cubrir cada tema de gramática seleccionado.
+                  Los temas seleccionados se incluirán obligatoriamente en el
+                  examen. La IA distribuirá las preguntas para cubrir cada tema
+                  de gramática seleccionado.
                 </p>
                 <p>
-                  El sistema utiliza inteligencia artificial avanzada para generar preguntas 
-                  que se adaptan al nivel CEFR seleccionado y cubren los temas de gramática 
-                  que hayas especificado.
+                  El sistema utiliza inteligencia artificial avanzada para
+                  generar preguntas que se adaptan al nivel CEFR seleccionado y
+                  cubren los temas de gramática que hayas especificado.
                 </p>
                 <p>
-                  Puedes personalizar la dificultad, el número de preguntas y los tipos 
-                  de ejercicios según tus necesidades específicas.
+                  Puedes personalizar la dificultad, el número de preguntas y
+                  los tipos de ejercicios según tus necesidades específicas.
                 </p>
               </div>
             </div>
@@ -78,4 +81,4 @@ export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

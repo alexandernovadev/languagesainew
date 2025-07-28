@@ -60,7 +60,7 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
   }, [examId]);
 
   const filteredAttempts = attempts.filter((attempt) => {
-    if (examId && attempt.exam !== examId) return false;
+    if (examId && attempt.exam._id !== examId) return false;
 
     switch (activeTab) {
       case "completed":
@@ -78,14 +78,14 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
 
   const getTabCount = (status: string) => {
     return attempts.filter((attempt) => {
-      if (examId && attempt.exam !== examId) return false;
+      if (examId && attempt.exam._id !== examId) return false;
       return attempt.status === status;
     }).length;
   };
 
   const getTotalCount = () => {
     return attempts.filter((attempt) => {
-      if (examId && attempt.exam !== examId) return false;
+      if (examId && attempt.exam._id !== examId) return false;
       return true;
     }).length;
   };

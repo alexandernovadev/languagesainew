@@ -2,9 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import {
   examService,
   ExamGenerationParams,
-  ExamGenerationResponse,
-  ExamQuestion,
-  UnifiedExamQuestion,
+  ExamGenerationResponse
 } from "@/services/examService";
 import {
   questionTypes,

@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useAnimatedDots() {
-  const [dots, setDots] = useState('');
+  const [dots, setDots] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setDots(prev => {
-        if (prev === '...') return '';
-        return prev + '.';
+      setDots((prev) => {
+        if (prev === "...") return "";
+        return prev + ".";
       });
     }, 500);
 
@@ -15,4 +15,4 @@ export function useAnimatedDots() {
   }, []);
 
   return dots;
-} 
+}

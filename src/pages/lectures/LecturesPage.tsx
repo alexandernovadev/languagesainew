@@ -270,7 +270,7 @@ export default function LecturesPage() {
 
         {/* Modal de edición */}
         <Dialog open={isEditModalOpen} onOpenChange={closeEditModal}>
-                          <DialogContent className="sm:max-w-5xl h-[95dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
+          <DialogContent className="sm:max-w-5xl h-[95dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
             <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
               <DialogTitle className="text-xl">Editar Lectura</DialogTitle>
               <DialogDescription>

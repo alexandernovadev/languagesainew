@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { PieChart, Pie, Cell } from "recharts";
 
 interface StatsQualityChartProps {
   stats: {
@@ -17,13 +21,29 @@ interface StatsQualityChartProps {
 
 export function StatsQualityChart({ stats }: StatsQualityChartProps) {
   const qualityData = [
-    { name: "Con Audio", value: 100 - stats.quality.lecturesWithoutAudio, fill: "#10b981" },
-    { name: "Sin Audio", value: stats.quality.lecturesWithoutAudio, fill: "#ef4444" },
+    {
+      name: "Con Audio",
+      value: 100 - stats.quality.lecturesWithoutAudio,
+      fill: "#10b981",
+    },
+    {
+      name: "Sin Audio",
+      value: stats.quality.lecturesWithoutAudio,
+      fill: "#ef4444",
+    },
   ];
 
   const imageData = [
-    { name: "Con Imágenes", value: 100 - stats.quality.lecturesWithoutImages, fill: "#3b82f6" },
-    { name: "Sin Imágenes", value: stats.quality.lecturesWithoutImages, fill: "#f59e0b" },
+    {
+      name: "Con Imágenes",
+      value: 100 - stats.quality.lecturesWithoutImages,
+      fill: "#3b82f6",
+    },
+    {
+      name: "Sin Imágenes",
+      value: stats.quality.lecturesWithoutImages,
+      fill: "#f59e0b",
+    },
   ];
 
   const config = {
@@ -93,4 +113,4 @@ export function StatsQualityChart({ stats }: StatsQualityChartProps) {
       </Card>
     </div>
   );
-} 
+}

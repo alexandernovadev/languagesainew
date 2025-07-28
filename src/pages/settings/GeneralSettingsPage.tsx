@@ -18,7 +18,8 @@ export default function GeneralSettingsPage() {
               <div>
                 <div className="font-medium">Notificaciones por Email</div>
                 <div className="text-sm text-muted-foreground">
-                  Recibe avisos importantes y novedades en tu correo electrónico.
+                  Recibe avisos importantes y novedades en tu correo
+                  electrónico.
                 </div>
               </div>
               <Switch />
@@ -30,7 +31,8 @@ export default function GeneralSettingsPage() {
               <div>
                 <div className="font-medium">Actualizaciones Automáticas</div>
                 <div className="text-sm text-muted-foreground">
-                  Instala nuevas versiones automáticamente para estar siempre al día.
+                  Instala nuevas versiones automáticamente para estar siempre al
+                  día.
                 </div>
               </div>
               <Switch />
@@ -40,4 +42,4 @@ export default function GeneralSettingsPage() {
       </Card>
     </PageLayout>
   );
-} 
+}

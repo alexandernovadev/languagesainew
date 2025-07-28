@@ -54,4 +54,4 @@ export const useLazyRoute = (
   };
 };
 
-export default useLazyRoute; 
+export default useLazyRoute;

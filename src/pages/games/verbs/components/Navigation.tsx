@@ -3,8 +3,6 @@ import { ChevronLeft, ChevronRight, Check, BarChart2 } from "lucide-react";
 
 interface NavigationProps {
   currentPage: number;
-  totalPages: number;
-  totalVerbs: number;
   onPrevPage: () => void;
   onNextPage: () => void;
   onVerify: () => void;
@@ -16,8 +14,6 @@ interface NavigationProps {
 
 export function Navigation({
   currentPage,
-  totalPages,
-  totalVerbs,
   onPrevPage,
   onNextPage,
   onVerify,

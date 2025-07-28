@@ -50,7 +50,9 @@ export default function LectureGeneratorPage() {
   const [rangeMax, setRangeMax] = useState(6500);
   const [grammarTopics, setGrammarTopics] = useState<string[]>([]);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
-  const [preloadedWords, setPreloadedWords] = useState<Record<string, { word: string }[]>>({});
+  const [preloadedWords, setPreloadedWords] = useState<
+    Record<string, { word: string }[]>
+  >({});
   const [isLoadingWords, setIsLoadingWords] = useState(false);
 
   // Topic generator hook
@@ -92,14 +94,29 @@ export default function LectureGeneratorPage() {
       setIsLoadingWords(true);
       try {
         const wordTypes = [
-          'noun', 'verb', 'adjective', 'adverb', 'preposition', 'conjunction',
-          'personal pronoun', 'possessive pronoun', 'article', 'determiner',
-          'quantifier', 'interjection', 'auxiliary verb', 'modal verb',
-          'infinitive', 'participle', 'gerund', 'phrasal verb', 'other'
+          "noun",
+          "verb",
+          "adjective",
+          "adverb",
+          "preposition",
+          "conjunction",
+          "personal pronoun",
+          "possessive pronoun",
+          "article",
+          "determiner",
+          "quantifier",
+          "interjection",
+          "auxiliary verb",
+          "modal verb",
+          "infinitive",
+          "participle",
+          "gerund",
+          "phrasal verb",
+          "other",
         ];
 
         const wordsByType: Record<string, { word: string }[]> = {};
-        
+
         // Cargar palabras de cada tipo en paralelo
         await Promise.all(
           wordTypes.map(async (type) => {
@@ -115,7 +132,7 @@ export default function LectureGeneratorPage() {
 
         setPreloadedWords(wordsByType);
       } catch (error) {
-        console.error('Error loading words:', error);
+        console.error("Error loading words:", error);
       } finally {
         setIsLoadingWords(false);
       }
@@ -309,13 +326,13 @@ export default function LectureGeneratorPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                                  <Textarea
-                  id="mainPrompt"
-                  placeholder="Escribe palabras clave o describe el tema (ej: 'gramática', 'viajes', 'tecnología'...). La IA te ayudará a expandir la idea."
-                  {...register("prompt")}
-                  rows={3}
-                  disabled={isGenerating || isGeneratingTopic}
-                />
+                  <Textarea
+                    id="mainPrompt"
+                    placeholder="Escribe palabras clave o describe el tema (ej: 'gramática', 'viajes', 'tecnología'...). La IA te ayudará a expandir la idea."
+                    {...register("prompt")}
+                    rows={3}
+                    disabled={isGenerating || isGeneratingTopic}
+                  />
                   <div className="flex items-center justify-between">
                     <TopicGeneratorButton
                       onClick={handleGenerateTopic}
@@ -372,7 +389,8 @@ export default function LectureGeneratorPage() {
                       <span
                         className={`border rounded px-3 py-1 text-sm font-medium bg-transparent border-orange-500 text-orange-400`}
                       >
-                        Gramática: {grammarTopics.length} tema{grammarTopics.length !== 1 ? 's' : ''}
+                        Gramática: {grammarTopics.length} tema
+                        {grammarTopics.length !== 1 ? "s" : ""}
                       </span>
                     )}
                   </div>

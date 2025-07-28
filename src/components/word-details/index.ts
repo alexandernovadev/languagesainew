@@ -1,3 +1,3 @@
-export { WordDetailsCard } from './WordDetailsCard';
-export { WordDetailsModal } from './WordDetailsModal';
-export { WordChatTab } from './WordChatTab'; 
+export { WordDetailsCard } from "./WordDetailsCard";
+export { WordDetailsModal } from "./WordDetailsModal";
+export { WordChatTab } from "./WordChatTab";

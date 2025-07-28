@@ -33,9 +33,9 @@ const levelBadgeVariant: Record<string, any> = {
 };
 
 const wordBadgeVariant: Record<string, any> = {
-  "Fácil": "default",
-  "Medio": "blue",
-  "Difícil": "destructive",
+  Fácil: "default",
+  Medio: "blue",
+  Difícil: "destructive",
 };
 
 export function StatsLevelDistribution({ stats }: StatsLevelDistributionProps) {
@@ -54,8 +54,14 @@ export function StatsLevelDistribution({ stats }: StatsLevelDistributionProps) {
     { level: "Difícil", count: stats.byLevel.words.hard },
   ];
 
-  const totalLectures = Object.values(stats.byLevel.lectures).reduce((sum, count) => sum + count, 0);
-  const totalWords = Object.values(stats.byLevel.words).reduce((sum, count) => sum + count, 0);
+  const totalLectures = Object.values(stats.byLevel.lectures).reduce(
+    (sum, count) => sum + count,
+    0
+  );
+  const totalWords = Object.values(stats.byLevel.words).reduce(
+    (sum, count) => sum + count,
+    0
+  );
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -72,12 +78,15 @@ export function StatsLevelDistribution({ stats }: StatsLevelDistributionProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           {lectureLevels.map(({ level, count }) => {
-            const percentage = totalLectures > 0 ? (count / totalLectures) * 100 : 0;
+            const percentage =
+              totalLectures > 0 ? (count / totalLectures) * 100 : 0;
             return (
               <div key={level} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Badge variant={levelBadgeVariant[level] || "default"}>{level}</Badge>
+                    <Badge variant={levelBadgeVariant[level] || "default"}>
+                      {level}
+                    </Badge>
                     <span className="text-sm font-medium">{count}</span>
                   </div>
                   <span className="text-sm text-muted-foreground">
@@ -109,7 +118,9 @@ export function StatsLevelDistribution({ stats }: StatsLevelDistributionProps) {
               <div key={level} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Badge variant={wordBadgeVariant[level] || "default"}>{level}</Badge>
+                    <Badge variant={wordBadgeVariant[level] || "default"}>
+                      {level}
+                    </Badge>
                     <span className="text-sm font-medium">{count}</span>
                   </div>
                   <span className="text-sm text-muted-foreground">
@@ -124,4 +135,4 @@ export function StatsLevelDistribution({ stats }: StatsLevelDistributionProps) {
       </Card>
     </div>
   );
-} 
+}

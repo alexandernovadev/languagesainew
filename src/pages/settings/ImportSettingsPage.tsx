@@ -22,7 +22,9 @@ export default function ImportSettingsPage() {
               <TabsTrigger value="questions">Questions</TabsTrigger>
             </TabsList>
             <TabsContent value="lectures">
-              <div className="mb-3 text-lg font-semibold">Importar Lectures</div>
+              <div className="mb-3 text-lg font-semibold">
+                Importar Lectures
+              </div>
               <LectureImportForm />
             </TabsContent>
             <TabsContent value="words">
@@ -30,16 +32,19 @@ export default function ImportSettingsPage() {
               <WordImportForm />
             </TabsContent>
             <TabsContent value="questions">
-              <div className="mb-3 text-lg font-semibold">Importar Questions</div>
+              <div className="mb-3 text-lg font-semibold">
+                Importar Questions
+              </div>
               <LectureImportForm />
             </TabsContent>
           </Tabs>
           <Separator />
           <div className="text-xs text-muted-foreground mt-2 text-center">
-            Recuerda: solo se aceptan archivos en formato JSON válidos para cada tipo de dato.
+            Recuerda: solo se aceptan archivos en formato JSON válidos para cada
+            tipo de dato.
           </div>
         </CardContent>
       </Card>
     </PageLayout>
   );
-} 
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Lightbulb } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { EXAM_PROMPTS } from "./constants/examPrompts";
 
 interface SuggestedTopicsProps {

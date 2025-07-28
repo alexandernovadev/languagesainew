@@ -3,21 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  ChevronLeft,
-  ChevronRight,
-  AlertTriangle,
-  Loader2,
-  Send,
-  LogIn,
-} from "lucide-react";
+import { AlertTriangle, Loader2, LogIn } from "lucide-react";
 import { useExamTaking } from "@/hooks/useExamTaking";
 import { useAuth } from "@/hooks/useAuth";
 import { examService, Exam } from "@/services/examService";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { ExamQuestionTaking } from "./taking/ExamQuestionTaking";
 import { ExamSubmissionModal } from "./ExamSubmissionModal";
-import { ExamTimer } from "./ExamTimer";
+
 import { ExamProgress } from "./ExamProgress";
 import ExamResultsViewModal from "./ExamResultsViewModal";
 import { ExamGradingProgress } from "./ExamGradingProgress";
@@ -40,7 +33,6 @@ export function ExamTakingPage() {
   const [showGradingErrorModal, setShowGradingErrorModal] = useState(false);
 
   const {
-    exam: examData,
     currentAttempt,
     currentQuestionIndex,
     answers,
@@ -59,10 +51,8 @@ export function ExamTakingPage() {
     isQuestionAnswered,
     getAnsweredCount,
     formatTimeRemaining,
-    isExamCompleted,
     getProgressPercentage,
     resetAttempt,
-    checkCanStartExam,
   } = useExamTaking(examSlug);
 
   // Load exam data
@@ -141,17 +131,20 @@ export function ExamTakingPage() {
       const result = await finishExam();
       if (result) {
         // Check if AI couldn't grade automatically
-        if (result.aiFeedback && result.aiFeedback.includes("No se pudo calificar automáticamente")) {
+        if (
+          result.aiFeedback &&
+          result.aiFeedback.includes("No se pudo calificar automáticamente")
+        ) {
           setShowGradingErrorModal(true);
           return;
         }
-        
+
         setExamResult(result);
         setShowResultsModal(true);
       }
     } catch (error) {
-      console.error('Error finishing exam:', error);
-      toast.error('Error al finalizar el examen');
+      console.error("Error finishing exam:", error);
+      toast.error("Error al finalizar el examen");
     }
   };
 
@@ -250,9 +243,10 @@ export function ExamTakingPage() {
             <CardTitle className="text-2xl">{exam.title}</CardTitle>
             <div className="flex gap-2 flex-wrap">
               <Badge variant="outline">{exam.level}</Badge>
-                              <Badge variant="outline">
-                  {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
-                </Badge>
+              <Badge variant="outline">
+                {getLanguageInfo(exam.language).flag}{" "}
+                {getLanguageInfo(exam.language).name}
+              </Badge>
               {exam.topic && <Badge variant="outline">{exam.topic}</Badge>}
             </div>
           </CardHeader>
@@ -320,7 +314,8 @@ export function ExamTakingPage() {
   const isFirstQuestion = currentQuestionIndex === 0;
 
   // Check if user can retake the exam
-  const canRetake = exam.attemptsAllowed === -1 || 
+  const canRetake =
+    exam.attemptsAllowed === -1 ||
     (exam.attemptsAllowed && exam.attemptsAllowed > 1);
 
   // If exam is being graded, only show grading progress
@@ -334,7 +329,7 @@ export function ExamTakingPage() {
             </div>
           </div>
         </div>
-        
+
         <ExamGradingProgress isGrading={isFinishing} />
       </div>
     );
@@ -385,11 +380,13 @@ export function ExamTakingPage() {
           timeRemaining={timeRemaining}
           isTimerRunning={isTimerRunning}
           formatTimeRemaining={formatTimeRemaining}
-          onFinish={currentQuestionIndex + 1 === totalQuestions ? () => setShowSubmissionModal(true) : undefined}
+          onFinish={
+            currentQuestionIndex + 1 === totalQuestions
+              ? () => setShowSubmissionModal(true)
+              : undefined
+          }
         />
       )}
-
-
 
       {/* Submission Modal */}
       <ExamSubmissionModal
@@ -467,13 +464,15 @@ export function ExamTakingPage() {
             <CardContent className="space-y-4">
               <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                  <strong>Problema detectado:</strong> La IA no pudo calificar automáticamente tu examen.
+                  <strong>Problema detectado:</strong> La IA no pudo calificar
+                  automáticamente tu examen.
                 </p>
                 <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
-                  Esto puede deberse a un problema temporal con el sistema de calificación.
+                  Esto puede deberse a un problema temporal con el sistema de
+                  calificación.
                 </p>
               </div>
-              
+
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   <strong>¿Qué puedes hacer?</strong>

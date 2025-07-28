@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -13,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Filter,
   X,
-  SlidersHorizontal,
   Info,
   Check,
 } from "lucide-react";
@@ -45,7 +43,6 @@ export function WordFiltersModal({
     combinedFilters,
     hasActiveFilters,
     activeFiltersCount,
-    getActiveFiltersDescription,
     updateFilter,
     updateBooleanFilter,
     clearFilters,

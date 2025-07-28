@@ -6,13 +6,14 @@ import { StatsLanguageChart } from "./StatsLanguageChart";
 import { StatsLevelDistribution } from "./StatsLevelDistribution";
 import { StatsLectureMetrics } from "./StatsLectureMetrics";
 import { StatsWordMetrics } from "./StatsWordMetrics";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { RefreshCw } from "lucide-react";
 
 export function StatisticsDashboard() {
-  const { stats, lectureStats, wordStats, loading, error, refetch } = useStatistics();
+  const { stats, lectureStats, wordStats, loading, error, refetch } =
+    useStatistics();
 
   if (loading) {
     return (
@@ -56,9 +57,7 @@ export function StatisticsDashboard() {
     return (
       <Alert>
         <RefreshCw className="h-4 w-4" />
-        <AlertDescription>
-          Estructura de datos inválida
-        </AlertDescription>
+        <AlertDescription>Estructura de datos inválida</AlertDescription>
       </Alert>
     );
   }
@@ -80,9 +79,9 @@ export function StatisticsDashboard() {
       </div>
 
       <StatsKPIs stats={stats} />
-      
+
       <StatsLevelDistribution stats={stats} />
-      
+
       <div className="grid gap-4 md:grid-cols-2">
         <StatsLevelChart stats={stats} />
         <StatsLanguageChart stats={stats} />
@@ -93,7 +92,9 @@ export function StatisticsDashboard() {
       {/* Métricas Detalladas de Lecturas */}
       {lectureStats && (
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold">Métricas Detalladas de Lecturas</h3>
+          <h3 className="text-xl font-semibold">
+            Métricas Detalladas de Lecturas
+          </h3>
           <StatsLectureMetrics lectureStats={lectureStats} />
         </div>
       )}
@@ -101,10 +102,12 @@ export function StatisticsDashboard() {
       {/* Métricas Detalladas de Palabras */}
       {wordStats && (
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold">Métricas Detalladas de Palabras</h3>
+          <h3 className="text-xl font-semibold">
+            Métricas Detalladas de Palabras
+          </h3>
           <StatsWordMetrics wordStats={wordStats} />
         </div>
       )}
     </div>
   );
-} 
+}

@@ -8,16 +8,11 @@ import {
   RefreshCw,
   BarChart3,
   Trash2,
-  AlertTriangle,
-  Settings,
-  Loader2,
-  Shield,
   FileText,
   Save,
   Database as DatabaseIcon,
   UserPlus,
   Sprout as Seedling,
-  CloudUpload,
   Eraser,
   ArrowRight,
   BarChart,
@@ -42,7 +37,6 @@ interface ConfirmationState {
 }
 
 export default function LabsPage() {
-  const { user } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<ConfirmationState>({
     isOpen: false,
@@ -75,21 +69,26 @@ export default function LabsPage() {
     }
   };
 
-  const executeAction = async (actionName: string, actionFunction: () => Promise<any>) => {
+  const executeAction = async (
+    actionName: string,
+    actionFunction: () => Promise<any>
+  ) => {
     setLoading(actionName);
     try {
       const result = await actionFunction();
       if (result.success) {
-        toast.success(result.message || `${actionName} completado exitosamente`);
+        toast.success(
+          result.message || `${actionName} completado exitosamente`
+        );
       } else {
         toast.error(result.message || `Error en ${actionName}`);
       }
     } catch (error: any) {
       console.error(`Error in ${actionName}:`, error);
       toast.error(
-        error.response?.data?.message || 
-        error.message || 
-        `Error en ${actionName}`
+        error.response?.data?.message ||
+          error.message ||
+          `Error en ${actionName}`
       );
     } finally {
       setLoading(null);
@@ -394,4 +393,4 @@ export default function LabsPage() {
       />
     </PageLayout>
   );
-} 
+}

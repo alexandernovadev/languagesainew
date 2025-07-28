@@ -24,36 +24,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
-  BookOpen,
-  Clock,
-  Users,
-  Bot,
   PenTool,
   Calendar,
-  Hash,
   FileText,
   Settings,
-  Brain,
   Save,
   Loader2,
   X,
   Plus,
   Trash2,
-  CheckCircle,
   Tag,
-  Radio,
-  Check,
-  CircleDot,
-  CheckSquare,
-  Type,
-  Languages,
-  HelpCircle,
-  Edit3,
   ListOrdered,
 } from "lucide-react";
 import { toast } from "sonner";
 import { examService, Exam } from "@/services/examService";
-import { ExamHeader } from "./ExamHeader";
 import { questionTypes } from "@/data/questionTypes";
 import { getAllLanguages } from "@/utils/common/language";
 import {
@@ -62,10 +46,6 @@ import {
   getExamTypeLabel,
 } from "@/utils/common/examTypes";
 import {
-  getLevelLabel,
-  getLanguageLabel,
-  getLevelColor,
-  getSourceVariant,
   formatDate,
   getQuestionText,
   getQuestionType,

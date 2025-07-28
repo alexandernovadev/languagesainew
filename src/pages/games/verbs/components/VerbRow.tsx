@@ -32,7 +32,8 @@ export function VerbRow({
   isCorrect,
   onInputChange,
 }: VerbRowProps) {
-  const { getWordByName, generateWord, activeWord, setActiveWord } = useWordStore();
+  const { getWordByName, generateWord, activeWord, setActiveWord } =
+    useWordStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>("");
@@ -42,7 +43,7 @@ export function VerbRow({
     setIsModalOpen(true);
     setIsSearching(true);
     setCurrentWord(word);
-    
+
     try {
       await getWordByName(word);
       // Si no hay error, la palabra existe y activeWord se actualiza automáticamente
@@ -66,22 +67,21 @@ export function VerbRow({
 
   const handleGenerateWord = async () => {
     if (!currentWord) return;
-    
+
     setIsGenerating(true);
     try {
       console.log("Generando palabra:", currentWord);
       const generatedWord = await generateWord(currentWord);
       console.log("Palabra generada exitosamente:", generatedWord);
-      
+
       // Pequeño delay para asegurar que el backend termine de procesar
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       toast.success("Palabra generada", {
         description: `La palabra "${currentWord}" ha sido generada exitosamente`,
       });
-      
+
       // activeWord se actualiza automáticamente en el store
-      
     } catch (error: any) {
       console.error("Error al generar palabra:", error);
       toast.error("Error al generar palabra", {
@@ -183,7 +183,7 @@ export function VerbRow({
                 Palabra no encontrada
               </DialogTitle>
             </DialogHeader>
-            
+
             <div className="text-center py-4">
               <p className="text-sm text-muted-foreground mb-4">
                 La palabra "{currentWord}" no existe en la base de datos.

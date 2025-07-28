@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Edit, Trash2, Eye } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { User } from '@/services/userService';
 import { formatDateShort } from '@/utils/common/time/formatDate';
 
@@ -83,7 +83,7 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
       </TableHeader>
       <TableBody>
         {users.map((user, index) => (
-          <TableRow key={user.id}>
+          <TableRow key={user._id}>
             <TableCell className="font-medium">
               {index + 1}
             </TableCell>

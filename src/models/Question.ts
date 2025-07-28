@@ -13,8 +13,14 @@ export interface QuestionMedia {
 export interface Question {
   _id: string;
   text: string;
-  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  type:
+    | "single_choice"
+    | "multiple_choice"
+    | "fill_blank"
+    | "translate"
+    | "true_false"
+    | "writing";
+  level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   topic?: string;
   difficulty: number; // 1-5
   options?: QuestionOption[];
@@ -28,8 +34,14 @@ export interface Question {
 
 export interface QuestionInput {
   text: string;
-  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'translate' | 'true_false' | 'writing';
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  type:
+    | "single_choice"
+    | "multiple_choice"
+    | "fill_blank"
+    | "translate"
+    | "true_false"
+    | "writing";
+  level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
   topic?: string;
   difficulty: number; // 1-5
   options?: QuestionOption[];
@@ -46,8 +58,8 @@ export interface QuestionFilters {
   tags?: string;
   difficulty?: string;
   hasMedia?: string;
-  sortBy?: 'createdAt' | 'updatedAt' | 'text' | 'level' | 'type' | 'difficulty';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "createdAt" | "updatedAt" | "text" | "level" | "type" | "difficulty";
+  sortOrder?: "asc" | "desc";
   createdAfter?: string;
   createdBefore?: string;
 }
@@ -57,4 +69,4 @@ export interface QuestionStats {
   byLevel: Record<string, number>;
   byType: Record<string, number>;
   withMedia: number;
-} 
+}

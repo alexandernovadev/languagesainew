@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,28 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X, Plus, Loader2, Wand2 } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
-import { expressionService } from "@/services/expressionService";
 import { toast } from "sonner";
 
 interface ExpressionFormProps {
   initialData?: Partial<Expression>;
   onSubmit: (data: Partial<Expression>) => Promise<void>;
-  onCancel: () => void;
-  loading?: boolean;
-  submitText?: string;
 }
 
 export function ExpressionForm({
   initialData = {},
   onSubmit,
-  onCancel,
-  loading = false,
-  submitText = "Guardar",
 }: ExpressionFormProps) {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imageProgress, setImageProgress] = useState(0);
@@ -37,7 +29,7 @@ export function ExpressionForm({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<Partial<Expression>>({
     defaultValues: initialData,
     mode: "onChange",

@@ -1,24 +1,32 @@
-import { Question, QuestionInput, QuestionFilters, QuestionStats } from "../models/Question";
+import {
+  QuestionInput,
+  QuestionFilters,
+  QuestionStats,
+} from "../models/Question";
 import { api } from "./api";
 
 export const questionService = {
-  async getQuestions(page: number, limit: number, filters?: Partial<QuestionFilters>) {
+  async getQuestions(
+    page: number,
+    limit: number,
+    filters?: Partial<QuestionFilters>
+  ) {
     // Construir query params
     const params = new URLSearchParams();
-    
+
     // Parámetros básicos
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-    
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+
     // Agregar filtros si existen
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           params.append(key, value.toString());
         }
       });
     }
-    
+
     const url = `/api/questions?${params.toString()}`;
     const res = await api.get(url);
     return res.data;
@@ -44,7 +52,11 @@ export const questionService = {
     return res.data;
   },
 
-  async getQuestionStats(): Promise<{ success: boolean; message: string; data: QuestionStats }> {
+  async getQuestionStats(): Promise<{
+    success: boolean;
+    message: string;
+    data: QuestionStats;
+  }> {
     const res = await api.get(`/api/questions/stats`);
     return res.data;
   },
@@ -70,7 +82,9 @@ export const questionService = {
   },
 
   async getRandomQuestions(level: string, type: string, limit = 5) {
-    const res = await api.get(`/api/questions/random?level=${level}&type=${type}&limit=${limit}`);
+    const res = await api.get(
+      `/api/questions/random?level=${level}&type=${type}&limit=${limit}`
+    );
     return res.data;
   },
-}; 
+};

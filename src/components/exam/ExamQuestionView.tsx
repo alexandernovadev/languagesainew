@@ -3,8 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ExamOptionCard } from "./ExamOptionCard";
-import {
-} from "./helpers/examUtils";
+import {} from "./helpers/examUtils";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
 import { GrammarExplanationTooltip } from "@/components/common/GrammarExplanationTooltip";
 
@@ -171,9 +170,7 @@ export function ExamQuestionView({
               <span className="text-lg font-bold text-muted-foreground">
                 Pregunta {questionNumber}
               </span>
-              <Badge variant="yellow">
-                {getExamTypeLabel(question.type)}
-              </Badge>
+              <Badge variant="yellow">{getExamTypeLabel(question.type)}</Badge>
             </div>
             {showAnswers && question.explanation ? (
               <CardTitle className="text-lg leading-relaxed flex-1">

@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Eye, Trophy } from 'lucide-react';
-import { useExamAttempts } from '@/hooks/useExamAttempts';
-import ExamResultsViewModal from './ExamResultsViewModal';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Trophy } from "lucide-react";
+import { useExamAttempts } from "@/hooks/useExamAttempts";
+import ExamResultsViewModal from "./ExamResultsViewModal";
+import { toast } from "sonner";
 
 interface ViewExamResultsButtonProps {
   attemptId: string;
-  variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
-  size?: 'default' | 'sm' | 'lg' | 'icon';
+  variant?:
+    | "default"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | "destructive";
+  size?: "default" | "sm" | "lg" | "icon";
   children?: React.ReactNode;
   className?: string;
 }
 
 export default function ViewExamResultsButton({
   attemptId,
-  variant = 'outline',
-  size = 'sm',
+  variant = "outline",
+  size = "sm",
   children,
   className,
 }: ViewExamResultsButtonProps) {
@@ -33,11 +39,11 @@ export default function ViewExamResultsButton({
         setResult(attemptDetails);
         setIsModalOpen(true);
       } else {
-        toast.error('No se pudieron cargar los resultados');
+        toast.error("No se pudieron cargar los resultados");
       }
     } catch (error) {
-      console.error('Error loading exam results:', error);
-      toast.error('Error al cargar los resultados');
+      console.error("Error loading exam results:", error);
+      toast.error("Error al cargar los resultados");
     } finally {
       setLoading(false);
     }
@@ -75,4 +81,4 @@ export default function ViewExamResultsButton({
       />
     </>
   );
-} 
+}

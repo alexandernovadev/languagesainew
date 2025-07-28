@@ -5,7 +5,10 @@ interface ExpressionLevelBadgeProps {
   className?: string;
 }
 
-export function ExpressionLevelBadge({ level, className = "" }: ExpressionLevelBadgeProps) {
+export function ExpressionLevelBadge({
+  level,
+  className = "",
+}: ExpressionLevelBadgeProps) {
   const getLevelConfig = (level: string) => {
     switch (level) {
       case "easy":
@@ -30,13 +33,10 @@ export function ExpressionLevelBadge({ level, className = "" }: ExpressionLevelB
   const config = getLevelConfig(level);
 
   return (
-    <Badge
-      variant={config.variant}
-      className={className}
-    >
+    <Badge variant={config.variant} className={className}>
       {level === "easy" && "Fácil"}
       {level === "medium" && "Medio"}
       {level === "hard" && "Difícil"}
     </Badge>
   );
-} 
+}

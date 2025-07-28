@@ -19,17 +19,17 @@ export function checkAnswer(
 // Game configuration utilities
 export function getVerbsForGame(config: GameConfig): Verb[] {
   let selectedVerbs = [...irregularVerbs];
-  
+
   // Shuffle if requested
   if (config.shuffle) {
     selectedVerbs = shuffleArray(selectedVerbs);
   }
-  
+
   // Limit total verbs
   if (config.totalVerbs < irregularVerbs.length) {
     selectedVerbs = selectedVerbs.slice(0, config.totalVerbs);
   }
-  
+
   return selectedVerbs;
 }
 
@@ -38,7 +38,7 @@ export function generateInputFieldsByDifficulty(
   difficulty: GameConfig["difficulty"]
 ): InputFields {
   const fields: InputFields = {};
-  
+
   verbs.forEach((verb) => {
     switch (difficulty) {
       case "easy":
@@ -52,7 +52,7 @@ export function generateInputFieldsByDifficulty(
         break;
     }
   });
-  
+
   return fields;
 }
 
@@ -106,7 +106,8 @@ export function capitalizeFirstLetter(str: string): string {
 
 // Game statistics utilities
 export function calculateGameDuration(startTime: Date | string): number {
-  const startDate = typeof startTime === 'string' ? new Date(startTime) : startTime;
+  const startDate =
+    typeof startTime === "string" ? new Date(startTime) : startTime;
   return Math.round((new Date().getTime() - startDate.getTime()) / 1000 / 60);
 }
 

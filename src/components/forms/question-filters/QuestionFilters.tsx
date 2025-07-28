@@ -43,7 +43,6 @@ export function QuestionFilters({
   const {
     filters,
     booleanFilters,
-    combinedFilters,
     hasActiveFilters,
     activeFiltersCount,
     getActiveFiltersDescription,

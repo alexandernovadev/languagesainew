@@ -64,7 +64,8 @@ export function ExamHeader({
           <div className="space-y-2">
             <h4 className="font-medium text-foreground">Idioma</h4>
             <Badge variant="outline">
-              {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+              {getLanguageInfo(exam.language).flag}{" "}
+              {getLanguageInfo(exam.language).name}
             </Badge>
           </div>
         </div>

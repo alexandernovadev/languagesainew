@@ -1,20 +1,26 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Filter, X } from 'lucide-react';
-import { getAllLanguages } from '@/utils/common/language';
-import { getAllExamLevels, getAllExamTypes } from '@/utils/common/examTypes';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Filter, X } from "lucide-react";
+import { getAllLanguages } from "@/utils/common/language";
+import { getAllExamLevels } from "@/utils/common/examTypes";
 
 interface ExamFilters {
   level: string;
@@ -60,8 +66,9 @@ export default function ExamFiltersModal({
     onClose();
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => 
-    value && value !== 'all' && value !== 'createdAt' && value !== 'desc'
+  const hasActiveFilters = Object.values(filters).some(
+    (value) =>
+      value && value !== "all" && value !== "createdAt" && value !== "desc"
   );
 
   return (
@@ -87,7 +94,12 @@ export default function ExamFiltersModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="level">Nivel</Label>
-                  <Select value={filters.level} onValueChange={(value) => handleFilterChange('level', value)}>
+                  <Select
+                    value={filters.level}
+                    onValueChange={(value) =>
+                      handleFilterChange("level", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Todos los niveles" />
                     </SelectTrigger>
@@ -104,7 +116,12 @@ export default function ExamFiltersModal({
 
                 <div className="space-y-2">
                   <Label htmlFor="language">Idioma</Label>
-                  <Select value={filters.language} onValueChange={(value) => handleFilterChange('language', value)}>
+                  <Select
+                    value={filters.language}
+                    onValueChange={(value) =>
+                      handleFilterChange("language", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Todos los idiomas" />
                     </SelectTrigger>
@@ -124,7 +141,12 @@ export default function ExamFiltersModal({
 
                 <div className="space-y-2">
                   <Label htmlFor="topic">Tema</Label>
-                  <Select value={filters.topic} onValueChange={(value) => handleFilterChange('topic', value)}>
+                  <Select
+                    value={filters.topic}
+                    onValueChange={(value) =>
+                      handleFilterChange("topic", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Todos los temas" />
                     </SelectTrigger>
@@ -132,11 +154,17 @@ export default function ExamFiltersModal({
                       <SelectItem value="all">Todos los temas</SelectItem>
                       <SelectItem value="grammar">Gramática</SelectItem>
                       <SelectItem value="vocabulary">Vocabulario</SelectItem>
-                      <SelectItem value="reading">Comprensión Lectora</SelectItem>
-                      <SelectItem value="listening">Comprensión Auditiva</SelectItem>
+                      <SelectItem value="reading">
+                        Comprensión Lectora
+                      </SelectItem>
+                      <SelectItem value="listening">
+                        Comprensión Auditiva
+                      </SelectItem>
                       <SelectItem value="speaking">Expresión Oral</SelectItem>
                       <SelectItem value="writing">Expresión Escrita</SelectItem>
-                      <SelectItem value="pronunciation">Pronunciación</SelectItem>
+                      <SelectItem value="pronunciation">
+                        Pronunciación
+                      </SelectItem>
                       <SelectItem value="culture">Cultura</SelectItem>
                     </SelectContent>
                   </Select>
@@ -144,7 +172,12 @@ export default function ExamFiltersModal({
 
                 <div className="space-y-2">
                   <Label htmlFor="source">Origen</Label>
-                  <Select value={filters.source} onValueChange={(value) => handleFilterChange('source', value)}>
+                  <Select
+                    value={filters.source}
+                    onValueChange={(value) =>
+                      handleFilterChange("source", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Todos los orígenes" />
                     </SelectTrigger>
@@ -158,7 +191,12 @@ export default function ExamFiltersModal({
 
                 <div className="space-y-2">
                   <Label htmlFor="adaptive">Tipo de Examen</Label>
-                  <Select value={filters.adaptive} onValueChange={(value) => handleFilterChange('adaptive', value)}>
+                  <Select
+                    value={filters.adaptive}
+                    onValueChange={(value) =>
+                      handleFilterChange("adaptive", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Todos los tipos" />
                     </SelectTrigger>
@@ -176,7 +214,9 @@ export default function ExamFiltersModal({
                     id="createdBy"
                     placeholder="ID del creador"
                     value={filters.createdBy}
-                    onChange={(e) => handleFilterChange('createdBy', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("createdBy", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -194,7 +234,9 @@ export default function ExamFiltersModal({
                     id="createdAfter"
                     type="date"
                     value={filters.createdAfter}
-                    onChange={(e) => handleFilterChange('createdAfter', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("createdAfter", e.target.value)
+                    }
                   />
                 </div>
 
@@ -204,7 +246,9 @@ export default function ExamFiltersModal({
                     id="createdBefore"
                     type="date"
                     value={filters.createdBefore}
-                    onChange={(e) => handleFilterChange('createdBefore', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("createdBefore", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -218,13 +262,22 @@ export default function ExamFiltersModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="sortBy">Ordenar por</Label>
-                  <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange('sortBy', value)}>
+                  <Select
+                    value={filters.sortBy}
+                    onValueChange={(value) =>
+                      handleFilterChange("sortBy", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="createdAt">Fecha de creación</SelectItem>
-                      <SelectItem value="updatedAt">Fecha de actualización</SelectItem>
+                      <SelectItem value="createdAt">
+                        Fecha de creación
+                      </SelectItem>
+                      <SelectItem value="updatedAt">
+                        Fecha de actualización
+                      </SelectItem>
                       <SelectItem value="title">Título</SelectItem>
                       <SelectItem value="level">Nivel</SelectItem>
                       <SelectItem value="language">Idioma</SelectItem>
@@ -234,7 +287,12 @@ export default function ExamFiltersModal({
 
                 <div className="space-y-2">
                   <Label htmlFor="sortOrder">Orden</Label>
-                  <Select value={filters.sortOrder} onValueChange={(value) => handleFilterChange('sortOrder', value)}>
+                  <Select
+                    value={filters.sortOrder}
+                    onValueChange={(value) =>
+                      handleFilterChange("sortOrder", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -251,7 +309,8 @@ export default function ExamFiltersModal({
               <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
                   <Filter className="w-4 h-4 inline mr-1" />
-                  Hay filtros activos. Los resultados se mostrarán según los criterios seleccionados.
+                  Hay filtros activos. Los resultados se mostrarán según los
+                  criterios seleccionados.
                 </p>
               </div>
             )}
@@ -269,18 +328,16 @@ export default function ExamFiltersModal({
               <X className="w-4 h-4" />
               Limpiar Filtros
             </Button>
-            
+
             <div className="flex gap-2">
               <Button variant="outline" onClick={onClose}>
                 Cancelar
               </Button>
-              <Button onClick={handleApply}>
-                Aplicar Filtros
-              </Button>
+              <Button onClick={handleApply}>Aplicar Filtros</Button>
             </div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
   );
-} 
+}

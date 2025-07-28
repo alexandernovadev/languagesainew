@@ -14,10 +14,11 @@ export const sampleQuestions: Question[] = [
       { value: "D", label: "be", isCorrect: false },
     ],
     correctAnswers: ["A"],
-    explanation: "The correct form of 'to be' for the first person singular (I) is 'am'.",
+    explanation:
+      "The correct form of 'to be' for the first person singular (I) is 'am'.",
     tags: ["grammar", "present_tense", "verb_to_be"],
     createdAt: "2024-01-01T00:00:00.000Z",
-    updatedAt: "2024-01-01T00:00:00.000Z"
+    updatedAt: "2024-01-01T00:00:00.000Z",
   },
   {
     _id: "2",
@@ -29,13 +30,14 @@ export const sampleQuestions: Question[] = [
       { value: "A", label: "approved", isCorrect: true },
       { value: "B", label: "has approved", isCorrect: false },
       { value: "C", label: "approves", isCorrect: false },
-      { value: "D", label: "will approve", isCorrect: false }
+      { value: "D", label: "will approve", isCorrect: false },
     ],
     correctAnswers: ["A"],
-    explanation: "The correct form is 'approved' in passive voice past tense. The sentence uses passive voice structure: subject + was/were + past participle.",
+    explanation:
+      "The correct form is 'approved' in passive voice past tense. The sentence uses passive voice structure: subject + was/were + past participle.",
     tags: ["grammar", "passive_voice", "past_tense"],
     createdAt: "2024-01-02T00:00:00.000Z",
-    updatedAt: "2024-01-02T00:00:00.000Z"
+    updatedAt: "2024-01-02T00:00:00.000Z",
   },
   {
     _id: "3",
@@ -48,10 +50,11 @@ export const sampleQuestions: Question[] = [
       { value: "B", label: "False", isCorrect: true },
     ],
     correctAnswers: ["B"],
-    explanation: "The sentence is incorrect because 'yesterday' indicates past time, but 'am going' is present continuous tense.",
+    explanation:
+      "The sentence is incorrect because 'yesterday' indicates past time, but 'am going' is present continuous tense.",
     tags: ["grammar", "past_tense", "present_continuous"],
     createdAt: "2024-01-03T00:00:00.000Z",
-    updatedAt: "2024-01-03T00:00:00.000Z"
+    updatedAt: "2024-01-03T00:00:00.000Z",
   },
   {
     _id: "4",
@@ -63,7 +66,7 @@ export const sampleQuestions: Question[] = [
     explanation: "The Spanish translation of 'house' is 'casa'.",
     tags: ["vocabulary", "translation", "basic_words"],
     createdAt: "2024-01-04T00:00:00.000Z",
-    updatedAt: "2024-01-04T00:00:00.000Z"
+    updatedAt: "2024-01-04T00:00:00.000Z",
   },
   {
     _id: "5",
@@ -72,10 +75,11 @@ export const sampleQuestions: Question[] = [
     level: "A2",
     difficulty: 2,
     correctAnswers: ["Sample response about daily routine"],
-    explanation: "This is a writing exercise to practice describing daily activities in English.",
+    explanation:
+      "This is a writing exercise to practice describing daily activities in English.",
     tags: ["writing", "daily_routines", "present_tense"],
     createdAt: "2024-01-05T00:00:00.000Z",
-    updatedAt: "2024-01-05T00:00:00.000Z"
+    updatedAt: "2024-01-05T00:00:00.000Z",
   },
   {
     _id: "6",
@@ -90,10 +94,11 @@ export const sampleQuestions: Question[] = [
       { value: "D", label: "help, open, close", isCorrect: false },
     ],
     correctAnswers: ["A"],
-    explanation: "Go, see, and take are irregular verbs because they don't follow the regular -ed pattern for past tense.",
+    explanation:
+      "Go, see, and take are irregular verbs because they don't follow the regular -ed pattern for past tense.",
     tags: ["grammar", "irregular_verbs", "past_tense"],
     createdAt: "2024-01-06T00:00:00.000Z",
-    updatedAt: "2024-01-06T00:00:00.000Z"
+    updatedAt: "2024-01-06T00:00:00.000Z",
   },
 
   {
@@ -109,10 +114,11 @@ export const sampleQuestions: Question[] = [
       { value: "D", label: "Neither is correct", isCorrect: false },
     ],
     correctAnswers: ["B"],
-    explanation: "'I have been to Paris' is correct (experience). 'I have gone to Paris' is incorrect in this context.",
+    explanation:
+      "'I have been to Paris' is correct (experience). 'I have gone to Paris' is incorrect in this context.",
     tags: ["grammar", "present_perfect", "been_vs_gone"],
     createdAt: "2024-01-08T00:00:00.000Z",
-    updatedAt: "2024-01-08T00:00:00.000Z"
+    updatedAt: "2024-01-08T00:00:00.000Z",
   },
   {
     _id: "9",
@@ -121,10 +127,11 @@ export const sampleQuestions: Question[] = [
     level: "B1",
     difficulty: 2,
     correctAnswers: ["will stay", "stay"],
-    explanation: "This is a first conditional sentence. Both 'will stay' and 'stay' are acceptable in this context.",
+    explanation:
+      "This is a first conditional sentence. Both 'will stay' and 'stay' are acceptable in this context.",
     tags: ["grammar", "conditionals", "future_tense"],
     createdAt: "2024-01-09T00:00:00.000Z",
-    updatedAt: "2024-01-09T00:00:00.000Z"
+    updatedAt: "2024-01-09T00:00:00.000Z",
   },
   {
     _id: "10",
@@ -136,13 +143,14 @@ export const sampleQuestions: Question[] = [
       { value: "A", label: "to", isCorrect: true },
       { value: "B", label: "at", isCorrect: false },
       { value: "C", label: "in", isCorrect: false },
-      { value: "D", label: "on", isCorrect: false }
+      { value: "D", label: "on", isCorrect: false },
     ],
     correctAnswers: ["A"],
-    explanation: "The correct preposition is 'to' when indicating movement towards a destination.",
+    explanation:
+      "The correct preposition is 'to' when indicating movement towards a destination.",
     tags: ["grammar", "prepositions", "movement"],
     createdAt: "2024-01-10T00:00:00.000Z",
-    updatedAt: "2024-01-10T00:00:00.000Z"
+    updatedAt: "2024-01-10T00:00:00.000Z",
   },
   {
     _id: "11",
@@ -151,10 +159,11 @@ export const sampleQuestions: Question[] = [
     level: "A2",
     difficulty: 2,
     correctAnswers: ["me gustaría", "quisiera"],
-    explanation: "Both 'me gustaría' and 'quisiera' are correct translations of 'I would like to' in Spanish.",
+    explanation:
+      "Both 'me gustaría' and 'quisiera' are correct translations of 'I would like to' in Spanish.",
     tags: ["vocabulary", "translation", "polite_expressions"],
     createdAt: "2024-01-11T00:00:00.000Z",
-    updatedAt: "2024-01-11T00:00:00.000Z"
+    updatedAt: "2024-01-11T00:00:00.000Z",
   },
   {
     _id: "10",
@@ -163,9 +172,10 @@ export const sampleQuestions: Question[] = [
     level: "B1",
     difficulty: 3,
     correctAnswers: ["Sample email invitation"],
-    explanation: "This writing exercise helps practice informal email writing and invitation language.",
+    explanation:
+      "This writing exercise helps practice informal email writing and invitation language.",
     tags: ["writing", "email", "invitations", "informal_style"],
     createdAt: "2024-01-10T00:00:00.000Z",
-    updatedAt: "2024-01-10T00:00:00.000Z"
+    updatedAt: "2024-01-10T00:00:00.000Z",
   },
-]; 
+];

@@ -9,31 +9,23 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   BookOpen,
-  Clock,
-  Users,
-  Bot,
   PenTool,
   Calendar,
-  Hash,
   FileText,
-  Settings,
-  Brain,
   CheckCircle,
   Tag,
+  Brain,
 } from "lucide-react";
 import { Exam } from "@/services/examService";
 import { ExamHeader } from "./ExamHeader";
 import {
   getLevelLabel,
   getLevelColor,
-  getSourceVariant,
   formatDate,
   getQuestionText,
   getQuestionType,
-
   getQuestionOptions,
   getQuestionCorrectAnswers,
   getQuestionTags,
@@ -89,11 +81,11 @@ export default function ExamViewModal({
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>Creado: {formatDate(exam.createdAt)}</span>
-                  </div>
+                    </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>Actualizado: {formatDate(exam.updatedAt)}</span>
-                </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs">
@@ -119,7 +111,8 @@ export default function ExamViewModal({
                       Idioma
                     </p>
                     <p className="text-sm font-medium">
-                      {getLanguageInfo(exam.language).flag} {getLanguageInfo(exam.language).name}
+                      {getLanguageInfo(exam.language).flag}{" "}
+                      {getLanguageInfo(exam.language).name}
                     </p>
                   </div>
                   <div>
@@ -207,14 +200,14 @@ export default function ExamViewModal({
 
             {/* Questions Section */}
             {exam.questions && exam.questions.length > 0 && (
-            <Card>
-              <CardHeader>
+              <Card>
+                <CardHeader>
                   <h3 className="text-lg font-semibold flex items-center gap-2">
                     <FileText className="w-5 h-5" />
                     Preguntas del Examen ({exam.questions.length})
                   </h3>
-              </CardHeader>
-              <CardContent>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-6">
                     {exam.questions.map((question, index) => {
                       const questionText = getQuestionText(question);
@@ -256,7 +249,9 @@ export default function ExamViewModal({
 
                           {/* Question Text */}
                           <div className="mb-4">
-                            <GrammarExplanationTooltip explanation={explanation}>
+                            <GrammarExplanationTooltip
+                              explanation={explanation}
+                            >
                               <p className="text-sm font-medium text-foreground leading-relaxed">
                                 {questionText}
                               </p>
@@ -332,12 +327,12 @@ export default function ExamViewModal({
                               </div>
                             </div>
                           )}
-                  </div>
+                        </div>
                       );
                     })}
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         </ScrollArea>
@@ -353,4 +348,4 @@ export default function ExamViewModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}

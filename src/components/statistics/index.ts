@@ -5,4 +5,4 @@ export { StatsQualityChart } from "./StatsQualityChart";
 export { StatsLanguageChart } from "./StatsLanguageChart";
 export { StatsLevelDistribution } from "./StatsLevelDistribution";
 export { StatsLectureMetrics } from "./StatsLectureMetrics";
-export { StatsWordMetrics } from "./StatsWordMetrics"; 
+export { StatsWordMetrics } from "./StatsWordMetrics";

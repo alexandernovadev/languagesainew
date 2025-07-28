@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface ExamPaginationProps {
   currentPage: number;
@@ -39,4 +39,4 @@ export function ExamPagination({
       </div>
     </div>
   );
-} 
+}

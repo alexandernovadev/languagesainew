@@ -29,24 +29,32 @@ export function ExpressionDetailsModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl h-[calc(100dvh-2rem)] border border-gray-600 shadow-2xl mx-4 my-4">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{expression.expression}</DialogTitle>
+          <DialogTitle className="text-xl font-bold">
+            {expression.expression}
+          </DialogTitle>
         </DialogHeader>
-        
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "chat")}>
+
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as "info" | "chat")}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="info">Información</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
           </TabsList>
-          
-                      <TabsContent value="info" className="h-[calc(100dvh-12rem)] overflow-y-auto pr-2">
+
+          <TabsContent
+            value="info"
+            className="h-[calc(100dvh-12rem)] overflow-y-auto pr-2"
+          >
             <ExpressionInfoTab expression={expression} />
           </TabsContent>
-          
-                      <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
+
+          <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
             <ExpressionChatTab expression={expression} />
           </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
   );
-} 
+}

@@ -1,8 +1,15 @@
-import { useEffect } from 'react';
-import { useUserStore } from '@/lib/store/user-store';
+import { useEffect } from "react";
+import { useUserStore } from "@/lib/store/user-store";
 
 export const useAuth = () => {
-  const { user, token, isAuthenticated, validateToken, clearSession, openLoginModal } = useUserStore();
+  const {
+    user,
+    token,
+    isAuthenticated,
+    validateToken,
+    clearSession,
+    openLoginModal,
+  } = useUserStore();
 
   // Validación proactiva del token al montar el componente
   useEffect(() => {
@@ -20,8 +27,8 @@ export const useAuth = () => {
   useEffect(() => {
     console.log("🔍 Auth state check:", {
       user: user?._id,
-      token: token ? 'present' : 'missing',
-      isAuthenticated: isAuthenticated()
+      token: token ? "present" : "missing",
+      isAuthenticated: isAuthenticated(),
     });
   }, [user, token, isAuthenticated]);
 
@@ -33,4 +40,4 @@ export const useAuth = () => {
     clearSession,
     openLoginModal,
   };
-}; 
+};

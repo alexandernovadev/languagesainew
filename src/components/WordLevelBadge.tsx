@@ -31,14 +31,11 @@ export function WordLevelBadge({
   const config = getLevelConfig(level);
 
   return (
-    <Badge
-      variant={config.variant}
-      className={className}
-    >
+    <Badge variant={config.variant} className={className}>
       {level === "easy" && "Fácil"}
       {level === "medium" && "Medio"}
       {level === "hard" && "Difícil"}
       {!level && "N/A"}
     </Badge>
   );
-} 
+}

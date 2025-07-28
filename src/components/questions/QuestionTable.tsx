@@ -1,15 +1,25 @@
-import React from 'react';
-import { Question } from '@/models/Question';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { TruncatedText } from '@/components/common/TruncatedText';
-import { Eye, Edit, Trash2, RefreshCw, BookOpen, Calendar, User, Brain, Settings, Hash, FileText, Clock, Target } from 'lucide-react';
-import { questionTypes, questionLevels, questionDifficulties } from '@/data/questionTypes';
-import { getLanguageInfo } from "@/utils/common/language";
+import React from "react";
+import { Question } from "@/models/Question";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { TruncatedText } from "@/components/common/TruncatedText";
+import { Eye, Edit, Trash2, RefreshCw, BookOpen } from "lucide-react";
+import {
+  questionTypes,
+  questionLevels,
+  questionDifficulties,
+} from "@/data/questionTypes";
 
 interface QuestionTableProps {
   questions: Question[];
@@ -21,44 +31,47 @@ interface QuestionTableProps {
   searchQuery?: string;
 }
 
-export function QuestionTable({ 
-  questions, 
-  onEdit, 
-  onDelete, 
-  onView, 
+export function QuestionTable({
+  questions,
+  onEdit,
+  onDelete,
+  onView,
   onRetry,
   loading = false,
-  searchQuery = ""
+  searchQuery = "",
 }: QuestionTableProps) {
   const getTypeLabel = (type: string) => {
-    const typeData = questionTypes.find(t => t.value === type);
+    const typeData = questionTypes.find((t) => t.value === type);
     return typeData?.label || type;
   };
 
   const getLevelLabel = (level: string) => {
-    const levelData = questionLevels.find(l => l.value === level);
+    const levelData = questionLevels.find((l) => l.value === level);
     return levelData?.label || level;
   };
 
   const getDifficultyLabel = (difficulty: number) => {
-    const difficultyData = questionDifficulties.find(d => d.value === difficulty);
+    const difficultyData = questionDifficulties.find(
+      (d) => d.value === difficulty
+    );
     return difficultyData?.label || difficulty.toString();
   };
 
   const getDifficultyVariant = (difficulty: number) => {
     switch (difficulty) {
-      case 1: return "blue";
-      case 2: return "secondary";
-      case 3: return "yellow";
-      case 4: return "magenta";
-      case 5: return "destructive";
-      default: return "outline";
+      case 1:
+        return "blue";
+      case 2:
+        return "secondary";
+      case 3:
+        return "yellow";
+      case 4:
+        return "magenta";
+      case 5:
+        return "destructive";
+      default:
+        return "outline";
     }
-  };
-
-  const truncateText = (text: string, maxLength: number = 100) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
   };
 
   if (loading) {
@@ -110,13 +123,15 @@ export function QuestionTable({
                     />
                     {question.tags && question.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {question.tags.slice(0, 3).map((tag: string, index: number) => (
-                                                      <Badge key={index} variant="secondary">
-                            {tag}
-                          </Badge>
-                        ))}
+                        {question.tags
+                          .slice(0, 3)
+                          .map((tag: string, index: number) => (
+                            <Badge key={index} variant="secondary">
+                              {tag}
+                            </Badge>
+                          ))}
                         {question.tags.length > 3 && (
-                                                      <Badge variant="outline">
+                          <Badge variant="outline">
                             +{question.tags.length - 3}
                           </Badge>
                         )}
@@ -125,17 +140,23 @@ export function QuestionTable({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="yellow" className="text-xs border-none bg-transparent">
+                  <Badge
+                    variant="yellow"
+                    className="text-xs border-none bg-transparent"
+                  >
                     {getTypeLabel(question.type)}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="text-xs rounded-sm border-2">
+                  <Badge
+                    variant="outline"
+                    className="text-xs rounded-sm border-2"
+                  >
                     {getLevelLabel(question.level)}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                                              <Badge variant={getDifficultyVariant(question.difficulty)}>
+                  <Badge variant={getDifficultyVariant(question.difficulty)}>
                     {getDifficultyLabel(question.difficulty)}
                   </Badge>
                 </TableCell>
@@ -195,7 +216,9 @@ export function QuestionTable({
               <TableCell colSpan={6} className="text-center py-8">
                 <div className="space-y-2">
                   <BookOpen className="w-8 h-8 mx-auto text-muted-foreground/50" />
-                  <p className="text-sm font-medium">No se encontraron preguntas</p>
+                  <p className="text-sm font-medium">
+                    No se encontraron preguntas
+                  </p>
                   {searchQuery && (
                     <p className="text-xs text-muted-foreground">
                       No hay preguntas que coincidan con "{searchQuery}"
@@ -209,4 +232,4 @@ export function QuestionTable({
       </Table>
     </TooltipProvider>
   );
-} 
+}

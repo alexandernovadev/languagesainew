@@ -40,6 +40,7 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { quillModules } from "@/components/quillModules";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 // Schema de validación
 const questionSchema = z.object({
@@ -206,7 +207,7 @@ export function QuestionForm({
       await onSubmit(processedData);
       reset();
     } catch (error) {
-      // TODO: Show error toast
+      toast.error("Error al guardar la pregunta");
     }
   };
 

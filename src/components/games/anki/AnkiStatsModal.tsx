@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, TrendingUp, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wordService } from "@/services/wordService";
@@ -9,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface ReviewStats {
   totalWords: number;
@@ -35,7 +35,7 @@ export function AnkiStatsModal({ open, onOpenChange }: AnkiStatsModalProps) {
           const response = await wordService.getReviewStats();
           setStats(response.data);
         } catch (error) {
-          console.error('Error fetching review stats:', error);
+          toast.error("Error al cargar las estadísticas");
         } finally {
           setLoading(false);
         }

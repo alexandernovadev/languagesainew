@@ -25,7 +25,6 @@ import {
   ExportSettingsPage,
   SystemInfoPage,
   SettingsIndexRedirect,
-
   MyWordsPage,
   MyExpressionsPage,
   QuestionsPage,
@@ -59,11 +58,17 @@ export default function App() {
                 <Route path="/lectures" element={<LecturesPage />} />
                 <Route path="/lectures/:id" element={<LectureDetailPage />} />
                 <Route path="/exams" element={<ExamsPage />} />
-                <Route path="/exams/:examSlug/take" element={<ExamTakingPage />} />
+                <Route
+                  path="/exams/:examSlug/take"
+                  element={<ExamTakingPage />}
+                />
                 <Route path="/exam-history" element={<ExamHistoryPage />} />
                 <Route path="/games/anki" element={<AnkiGamePage />} />
                 <Route path="/games/verbs" element={<VerbsGamePage />} />
-                <Route path="/generator/lecture" element={<LectureGeneratorPage />} />
+                <Route
+                  path="/generator/lecture"
+                  element={<LectureGeneratorPage />}
+                />
                 <Route path="/generator/exam" element={<ExamGeneratorPage />} />
                 <Route path="/settings" element={<SettingsPage />}>
                   <Route index element={<SettingsIndexRedirect />} />
@@ -75,13 +80,12 @@ export default function App() {
                   <Route path="logs" element={<LogsSettingsPage />} />
                 </Route>
 
-
                 <Route path="/my-words" element={<MyWordsPage />} />
                 <Route path="/my-expressions" element={<MyExpressionsPage />} />
                 <Route path="/questions" element={<QuestionsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin/users" element={<UsersPage />} />
-                
+
                 {/* Catch-all route para rutas desconocidas */}
                 <Route path="*" element={<NotFoundRedirect />} />
               </Routes>

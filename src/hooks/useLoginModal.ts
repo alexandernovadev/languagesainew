@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useUserStore } from '@/lib/store/user-store';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useUserStore } from "@/lib/store/user-store";
 
 export const useLoginModal = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,8 +9,8 @@ export const useLoginModal = () => {
 
   // Abrir modal desde query params
   useEffect(() => {
-    const showLogin = searchParams.get('showLogin');
-    if (showLogin === 'true') {
+    const showLogin = searchParams.get("showLogin");
+    if (showLogin === "true") {
       setIsOpen(true);
     }
   }, [searchParams]);
@@ -20,9 +20,9 @@ export const useLoginModal = () => {
     if (token && isOpen) {
       // Remover el parámetro showLogin de la URL cuando el login es exitoso
       const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.delete('showLogin');
+      newSearchParams.delete("showLogin");
       setSearchParams(newSearchParams);
-      
+
       // Refrescar la página después de un breve delay para asegurar que el token se haya guardado
       setTimeout(() => {
         window.location.reload();
@@ -36,10 +36,10 @@ export const useLoginModal = () => {
       setIsOpen(true);
     };
 
-    window.addEventListener('openLoginModal', handleOpenLoginModal);
-    
+    window.addEventListener("openLoginModal", handleOpenLoginModal);
+
     return () => {
-      window.removeEventListener('openLoginModal', handleOpenLoginModal);
+      window.removeEventListener("openLoginModal", handleOpenLoginModal);
     };
   }, []);
 
@@ -51,13 +51,13 @@ export const useLoginModal = () => {
     setIsOpen(false);
     // También limpiar el parámetro cuando se cierra manualmente
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.delete('showLogin');
+    newSearchParams.delete("showLogin");
     setSearchParams(newSearchParams);
   };
 
   const openLoginModalWithQuery = () => {
     // Agregar query param para abrir el modal
-    searchParams.set('showLogin', 'true');
+    searchParams.set("showLogin", "true");
     setSearchParams(searchParams);
   };
 
@@ -67,4 +67,4 @@ export const useLoginModal = () => {
     closeLoginModal,
     openLoginModalWithQuery,
   };
-}; 
+};

@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from '@/components/ui/accordion';
-import { 
-  Search, 
-  Check, 
-  X, 
-  BookOpen, 
-  AlertCircle,
-  Info
-} from 'lucide-react';
-import { GRAMMAR_TOPICS, getCategoryKeys, getCategoryInfo } from '../constants/grammarTopics';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Search, Check, X, BookOpen, Info } from "lucide-react";
+import {
+  getCategoryKeys,
+  getCategoryInfo,
+} from "../constants/grammarTopics";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface GrammarTopicsSelectorProps {
   selectedTopics: string[];
@@ -29,53 +30,55 @@ interface GrammarTopicsSelectorProps {
   error?: string;
 }
 
-export function GrammarTopicsSelector({ 
-  selectedTopics, 
-  onTopicsChange, 
-  error 
+export function GrammarTopicsSelector({
+  selectedTopics,
+  onTopicsChange,
+  error,
 }: GrammarTopicsSelectorProps) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isShaking, setIsShaking] = useState(false);
 
   const categoryKeys = getCategoryKeys();
 
   // Filter topics based on search term
-  const filteredCategories = categoryKeys.filter(categoryKey => {
+  const filteredCategories = categoryKeys.filter((categoryKey) => {
     const category = getCategoryInfo(categoryKey);
     if (!category) return false;
-    
+
     if (!searchTerm) return true;
-    
-    return category.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           category.topics.some(topic => 
-             topic.toLowerCase().includes(searchTerm.toLowerCase())
-           );
+
+    return (
+      category.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.topics.some((topic) =>
+        topic.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
   });
 
   const handleTopicToggle = (topic: string) => {
     const newTopics = selectedTopics.includes(topic)
-      ? selectedTopics.filter(t => t !== topic)
+      ? selectedTopics.filter((t) => t !== topic)
       : [...selectedTopics, topic];
-    
+
     onTopicsChange(newTopics);
   };
 
   const handleSelectRandom = () => {
     // Start shaking animation
     setIsShaking(true);
-    
-    const allTopics = categoryKeys.flatMap(categoryKey => {
+
+    const allTopics = categoryKeys.flatMap((categoryKey) => {
       const category = getCategoryInfo(categoryKey);
       return category?.topics || [];
     });
-    
+
     // Select 4 random topics, replacing any previously selected topics
     const shuffled = [...allTopics].sort(() => 0.5 - Math.random());
     const randomTopics = shuffled.slice(0, 4);
-    
+
     onTopicsChange(randomTopics);
-    
+
     // Stop shaking after 0.2 seconds
     setTimeout(() => {
       setIsShaking(false);
@@ -91,13 +94,19 @@ export function GrammarTopicsSelector({
     if (!category) return;
 
     const categoryTopics = category.topics;
-    const currentCategoryTopics = selectedTopics.filter(topic => 
+    const currentCategoryTopics = selectedTopics.filter((topic) =>
       categoryTopics.includes(topic)
     );
 
-    const newTopics = currentCategoryTopics.length === categoryTopics.length
-      ? selectedTopics.filter(topic => !categoryTopics.includes(topic))
-      : [...selectedTopics.filter(topic => !categoryTopics.includes(topic)), ...categoryTopics];
+    const newTopics =
+      currentCategoryTopics.length === categoryTopics.length
+        ? selectedTopics.filter((topic) => !categoryTopics.includes(topic))
+        : [
+            ...selectedTopics.filter(
+              (topic) => !categoryTopics.includes(topic)
+            ),
+            ...categoryTopics,
+          ];
 
     onTopicsChange(newTopics);
   };
@@ -105,25 +114,28 @@ export function GrammarTopicsSelector({
   const isCategorySelected = (categoryKey: string) => {
     const category = getCategoryInfo(categoryKey);
     if (!category) return false;
-    
+
     const categoryTopics = category.topics;
-    const selectedCategoryTopics = selectedTopics.filter(topic => 
+    const selectedCategoryTopics = selectedTopics.filter((topic) =>
       categoryTopics.includes(topic)
     );
-    
+
     return selectedCategoryTopics.length === categoryTopics.length;
   };
 
   const isCategoryPartiallySelected = (categoryKey: string) => {
     const category = getCategoryInfo(categoryKey);
     if (!category) return false;
-    
+
     const categoryTopics = category.topics;
-    const selectedCategoryTopics = selectedTopics.filter(topic => 
+    const selectedCategoryTopics = selectedTopics.filter((topic) =>
       categoryTopics.includes(topic)
     );
-    
-    return selectedCategoryTopics.length > 0 && selectedCategoryTopics.length < categoryTopics.length;
+
+    return (
+      selectedCategoryTopics.length > 0 &&
+      selectedCategoryTopics.length < categoryTopics.length
+    );
   };
 
   return (
@@ -154,9 +166,7 @@ export function GrammarTopicsSelector({
             size="sm"
             onClick={handleSelectRandom}
             className={`text-xs transition-all duration-200 ${
-              isShaking 
-                ? 'animate-shake' 
-                : ''
+              isShaking ? "animate-shake" : ""
             }`}
           >
             <Check className="h-3 w-3 mr-1" />
@@ -179,14 +189,16 @@ export function GrammarTopicsSelector({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className={`cursor-help transition-all duration-200 ${
-                      isShaking ? 'animate-shake' : ''
+                      isShaking ? "animate-shake" : ""
                     }`}
                   >
                     <Info className="h-3 w-3 mr-1" />
-                    {selectedTopics.length} tema{selectedTopics.length !== 1 ? 's' : ''} seleccionado{selectedTopics.length !== 1 ? 's' : ''}
+                    {selectedTopics.length} tema
+                    {selectedTopics.length !== 1 ? "s" : ""} seleccionado
+                    {selectedTopics.length !== 1 ? "s" : ""}
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
@@ -203,14 +215,11 @@ export function GrammarTopicsSelector({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-
           </div>
         )}
 
         {/* Error display */}
-        {error && (
-          <p className="text-xs text-red-500">{error}</p>
-        )}
+        {error && <p className="text-xs text-red-500">{error}</p>}
 
         <Separator />
 
@@ -218,8 +227,8 @@ export function GrammarTopicsSelector({
         <div className="border rounded-lg overflow-hidden">
           <ScrollArea className="h-[400px] w-full">
             <div className="p-4">
-              <Accordion 
-                type="multiple" 
+              <Accordion
+                type="multiple"
                 value={expandedCategories}
                 onValueChange={setExpandedCategories}
                 className="space-y-2"
@@ -229,23 +238,26 @@ export function GrammarTopicsSelector({
                   if (!category) return null;
 
                   const categoryTopics = category.topics;
-                  const selectedCategoryTopics = selectedTopics.filter(topic => 
-                    categoryTopics.includes(topic)
+                  const selectedCategoryTopics = selectedTopics.filter(
+                    (topic) => categoryTopics.includes(topic)
                   );
 
                   const isSelected = isCategorySelected(categoryKey);
-                  const isPartiallySelected = isCategoryPartiallySelected(categoryKey);
+                  const isPartiallySelected =
+                    isCategoryPartiallySelected(categoryKey);
 
                   return (
-                    <AccordionItem 
-                      key={categoryKey} 
+                    <AccordionItem
+                      key={categoryKey}
                       value={categoryKey}
                       className="border rounded-md bg-background"
                     >
                       <div className="flex items-center px-3 py-2 bg-muted/30 rounded-t-md">
                         <Checkbox
                           checked={isSelected || isPartiallySelected}
-                          onCheckedChange={() => handleSelectCategory(categoryKey)}
+                          onCheckedChange={() =>
+                            handleSelectCategory(categoryKey)
+                          }
                           className="mr-3"
                           data-testid={`category-checkbox-${categoryKey}`}
                           aria-label={`Select all topics in ${category.title}`}
@@ -254,9 +266,12 @@ export function GrammarTopicsSelector({
                           <div className="flex items-center gap-2 w-full">
                             <span className="text-base">{category.icon}</span>
                             <div className="flex-1 text-left">
-                              <div className="font-medium text-sm">{category.title}</div>
+                              <div className="font-medium text-sm">
+                                {category.title}
+                              </div>
                               <div className="text-xs text-muted-foreground">
-                                {selectedCategoryTopics.length} de {categoryTopics.length} seleccionados
+                                {selectedCategoryTopics.length} de{" "}
+                                {categoryTopics.length} seleccionados
                               </div>
                             </div>
                           </div>
@@ -286,9 +301,7 @@ export function GrammarTopicsSelector({
             </div>
           </ScrollArea>
         </div>
-
-
       </CardContent>
     </Card>
   );
-} 
+}

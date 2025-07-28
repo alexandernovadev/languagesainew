@@ -42,12 +42,7 @@ const routeNameMapping: { [key: string]: string } = {
 };
 
 // Rutas que no deberían ser clickeables (solo grupos de navegación)
-const nonClickableRoutes = [
-  "/admin",
-  "/settings",
-  "/generator",
-  "/games",
-];
+const nonClickableRoutes = ["/admin", "/settings", "/generator", "/games"];
 
 export function DynamicBreadcrumb() {
   const location = useLocation();
@@ -58,13 +53,13 @@ export function DynamicBreadcrumb() {
   // Función para obtener el nombre del segmento
   const getSegmentName = (segment: string, index: number) => {
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
-    
+
     // Si es la ruta de tomar examen, intentar obtener el título del examen
-    if (path.includes('/exams/') && path.includes('/take')) {
+    if (path.includes("/exams/") && path.includes("/take")) {
       // Por ahora, mostrar "Tomar Examen" - esto se puede mejorar para mostrar el título real
       return "Tomar Examen";
     }
-    
+
     return routeNameMapping[path] || segment;
   };
 
@@ -93,7 +88,7 @@ export function DynamicBreadcrumb() {
                     <BreadcrumbPage>
                       <TruncatedText
                         text={name}
-                        maxLength={20}
+                        maxLength={24}
                         className="cursor-default"
                       />
                     </BreadcrumbPage>
@@ -102,7 +97,7 @@ export function DynamicBreadcrumb() {
                       <Link to={path}>
                         <TruncatedText
                           text={name}
-                          maxLength={20}
+                          maxLength={24}
                           className="cursor-pointer"
                         />
                       </Link>

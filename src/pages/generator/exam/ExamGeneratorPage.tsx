@@ -38,7 +38,6 @@ export default function ExamGeneratorPage() {
     updateFilter,
     generateExam,
     resetExam,
-    resetFilters,
     loadExistingExam,
   } = useExamGenerator();
 
@@ -102,12 +101,16 @@ export default function ExamGeneratorPage() {
 
             // Load the exam into the generator state
             const mockGeneratedExam = {
-              examTitle: examData.title || `Examen: ${examData.topic || ''}`,
-              examSlug: examData.slug || 'exam-general',
+              examTitle: examData.title || `Examen: ${examData.topic || ""}`,
+              examSlug: examData.slug || "exam-general",
               questions: [],
             };
 
-            loadExistingExam(mockGeneratedExam, examData.topic || '', examData.level || 'B1');
+            loadExistingExam(
+              mockGeneratedExam,
+              examData.topic || "",
+              examData.level || "B1"
+            );
 
             // Navigate to questions tab
             setActiveTab("questions");
@@ -183,8 +186,11 @@ export default function ExamGeneratorPage() {
   // Create a mock exam object for the ExamHeader component
   const createMockExamForHeader = () => {
     const currentExam = exam || state.generatedExam;
-    const examTitle = exam?.title || (state.generatedExam?.examTitle || `Examen: ${filters.topic}`);
-    const examSlug = state.generatedExam?.examSlug || 'exam-temp';
+    const examTitle =
+      exam?.title ||
+      state.generatedExam?.examTitle ||
+      `Examen: ${filters.topic}`;
+    const examSlug = state.generatedExam?.examSlug || "exam-temp";
     return {
       _id: "temp",
       title: examTitle,
@@ -198,30 +204,32 @@ export default function ExamGeneratorPage() {
       timeLimit: 60,
       adaptive: false,
       version: 1,
-      questions: ((currentExam as any)?.questions || []).map((q: any, index: number) => ({
-        _id: `temp-q-${index}`,
-        question: {
+      questions: ((currentExam as any)?.questions || []).map(
+        (q: any, index: number) => ({
           _id: `temp-q-${index}`,
-          text: q.text,
-          type: q.type,
-          level: filters.level,
-          topic: filters.topic,
-          difficulty: filters.difficulty,
-          options: q.options?.map((opt: any, optIndex: number) => ({
-            _id: `temp-opt-${index}-${optIndex}`,
-            value: opt.value,
-            label: opt.label,
-            isCorrect: opt.isCorrect,
-          })),
-          correctAnswers: q.correctAnswers,
-          explanation: q.explanation,
-          tags: q.tags,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        weight: 1,
-        order: index,
-      })),
+          question: {
+            _id: `temp-q-${index}`,
+            text: q.text,
+            type: q.type,
+            level: filters.level,
+            topic: filters.topic,
+            difficulty: filters.difficulty,
+            options: q.options?.map((opt: any, optIndex: number) => ({
+              _id: `temp-opt-${index}-${optIndex}`,
+              value: opt.value,
+              label: opt.label,
+              isCorrect: opt.isCorrect,
+            })),
+            correctAnswers: q.correctAnswers,
+            explanation: q.explanation,
+            tags: q.tags,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          weight: 1,
+          order: index,
+        })
+      ),
       createdBy: "user",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -305,9 +313,7 @@ export default function ExamGeneratorPage() {
               />
             ) : (
               <div className="space-y-6">
-                <ExamGenerationProgress
-                  isGenerating={state.isGenerating}
-                />
+                <ExamGenerationProgress isGenerating={state.isGenerating} />
                 <ExamGenerationSummary filters={filters} />
               </div>
             )}
@@ -330,15 +336,17 @@ export default function ExamGeneratorPage() {
                 />
                 {/* Questions using ExamQuestionDisplay for editing functionality */}
                 <div className="space-y-6">
-                                  {(exam?.questions || (state.generatedExam as any)?.questions || []).map(
-                  (question: any, index: number) => (
-                      <ExamQuestionDisplay
-                        key={index}
-                        question={question}
-                        questionNumber={index + 1}
-                      />
-                    )
-                  )}
+                  {(
+                    exam?.questions ||
+                    (state.generatedExam as any)?.questions ||
+                    []
+                  ).map((question: any, index: number) => (
+                    <ExamQuestionDisplay
+                      key={index}
+                      question={question}
+                      questionNumber={index + 1}
+                    />
+                  ))}
                 </div>
                 {/* Footer actions */}
                 <Card>

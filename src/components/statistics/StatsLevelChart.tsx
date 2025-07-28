@@ -1,5 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 interface StatsLevelChartProps {
@@ -54,4 +58,4 @@ export function StatsLevelChart({ stats }: StatsLevelChartProps) {
       </CardContent>
     </Card>
   );
-} 
+}

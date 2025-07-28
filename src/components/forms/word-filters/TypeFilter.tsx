@@ -70,7 +70,10 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
 
           <div className="space-y-1 max-h-48 overflow-y-auto pr-2">
             {WORD_TYPES.map((type) => (
-              <div key={type.value} className="flex items-center space-x-2 py-0.5">
+              <div
+                key={type.value}
+                className="flex items-center space-x-2 py-0.5"
+              >
                 <Checkbox
                   id={type.value}
                   checked={selectedTypes.includes(type.value)}
@@ -84,7 +87,9 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
                 >
                   <div className="leading-tight">
                     <div className="font-medium text-sm">{type.label}</div>
-                    <div className="text-xs text-muted-foreground">{type.spanishLabel}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {type.spanishLabel}
+                    </div>
                   </div>
                 </Label>
               </div>
@@ -103,8 +108,12 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
                       className="text-xs cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 hover:scale-105"
                     >
                       <div className="leading-tight">
-                        <div className="font-medium text-xs">{type?.label || typeValue}</div>
-                        <div className="text-xs opacity-70">{type?.spanishLabel}</div>
+                        <div className="font-medium text-xs">
+                          {type?.label || typeValue}
+                        </div>
+                        <div className="text-xs opacity-70">
+                          {type?.spanishLabel}
+                        </div>
                       </div>
                       <button
                         onClick={() => handleTypeToggle(typeValue, false)}

@@ -2,7 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Play, Settings } from "lucide-react";
 import { GameConfig } from "../types";
@@ -29,7 +35,7 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
   };
 
   return (
-            <div className="flex items-center justify-center min-h-[60dvh] p-4">
+    <div className="flex items-center justify-center min-h-[60dvh] p-4">
       <Card className="w-full max-w-7xl px-4 md:px-8">
         <CardHeader className="text-left">
           <div className="flex items-center justify-start mb-4">
@@ -58,7 +64,9 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                 <Switch
                   id="shuffle"
                   checked={config.shuffle}
-                  onCheckedChange={(checked) => handleConfigChange("shuffle", checked)}
+                  onCheckedChange={(checked) =>
+                    handleConfigChange("shuffle", checked)
+                  }
                 />
               </div>
 
@@ -70,14 +78,20 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                 <div className="w-full">
                   <Select
                     value={config.itemsPerPage.toString()}
-                    onValueChange={(value) => handleConfigChange("itemsPerPage", parseInt(value))}
+                    onValueChange={(value) =>
+                      handleConfigChange("itemsPerPage", parseInt(value))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {GAME_CONFIG_OPTIONS.itemsPerPage.map((count) => (
-                        <SelectItem key={count} value={count.toString()} className="w-full">
+                        <SelectItem
+                          key={count}
+                          value={count.toString()}
+                          className="w-full"
+                        >
                           {count} verbos
                         </SelectItem>
                       ))}
@@ -97,15 +111,23 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                 <div className="w-full">
                   <Select
                     value={config.totalVerbs.toString()}
-                    onValueChange={(value) => handleConfigChange("totalVerbs", parseInt(value))}
+                    onValueChange={(value) =>
+                      handleConfigChange("totalVerbs", parseInt(value))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {GAME_CONFIG_OPTIONS.totalVerbs.map((count) => (
-                        <SelectItem key={count} value={count.toString()} className="w-full">
-                          {count === irregularVerbs.length ? "Todos" : `${count} verbos`}
+                        <SelectItem
+                          key={count}
+                          value={count.toString()}
+                          className="w-full"
+                        >
+                          {count === irregularVerbs.length
+                            ? "Todos"
+                            : `${count} verbos`}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -121,7 +143,7 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                 <div className="w-full">
                   <Select
                     value={config.difficulty}
-                    onValueChange={(value: "easy" | "medium" | "hard") => 
+                    onValueChange={(value: "easy" | "medium" | "hard") =>
                       handleConfigChange("difficulty", value)
                     }
                   >
@@ -130,7 +152,11 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                     </SelectTrigger>
                     <SelectContent>
                       {GAME_CONFIG_OPTIONS.difficulty.map((option) => (
-                        <SelectItem key={option.value} value={option.value} className="w-full">
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="w-full"
+                        >
                           <div className="flex items-center justify-between w-full">
                             <span>{option.label}</span>
                             <Badge variant="outline" className="ml-2">
@@ -152,8 +178,11 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                 <div className="w-full">
                   <Select
                     value={config.timeLimit?.toString() || "undefined"}
-                    onValueChange={(value) => 
-                      handleConfigChange("timeLimit", value === "undefined" ? undefined : parseInt(value))
+                    onValueChange={(value) =>
+                      handleConfigChange(
+                        "timeLimit",
+                        value === "undefined" ? undefined : parseInt(value)
+                      )
                     }
                   >
                     <SelectTrigger className="w-full">
@@ -161,7 +190,11 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                     </SelectTrigger>
                     <SelectContent>
                       {GAME_CONFIG_OPTIONS.timeLimit.map((option) => (
-                        <SelectItem key={option.value?.toString() || "undefined"} value={option.value?.toString() || "undefined"} className="w-full">
+                        <SelectItem
+                          key={option.value?.toString() || "undefined"}
+                          value={option.value?.toString() || "undefined"}
+                          className="w-full"
+                        >
                           {option.label}
                         </SelectItem>
                       ))}
@@ -183,18 +216,26 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
                     </div>
                     <div className="flex justify-between">
                       <span>Páginas:</span>
-                      <Badge variant="secondary">{Math.ceil(config.totalVerbs / config.itemsPerPage)}</Badge>
+                      <Badge variant="secondary">
+                        {Math.ceil(config.totalVerbs / config.itemsPerPage)}
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span>Dificultad:</span>
                       <Badge variant="secondary">
-                        {GAME_CONFIG_OPTIONS.difficulty.find(d => d.value === config.difficulty)?.label}
+                        {
+                          GAME_CONFIG_OPTIONS.difficulty.find(
+                            (d) => d.value === config.difficulty
+                          )?.label
+                        }
                       </Badge>
                     </div>
                     {config.timeLimit && (
                       <div className="flex justify-between">
                         <span>Tiempo límite:</span>
-                        <Badge variant="secondary">{config.timeLimit} min</Badge>
+                        <Badge variant="secondary">
+                          {config.timeLimit} min
+                        </Badge>
                       </div>
                     )}
                     {config.shuffle && (
@@ -220,4 +261,4 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
       </Card>
     </div>
   );
-} 
+}

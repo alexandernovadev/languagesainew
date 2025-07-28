@@ -1,13 +1,17 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TruncatedBadgeProps {
   text: string;
   maxLength?: number;
   variant?: "default" | "secondary" | "destructive" | "outline";
   className?: string;
-  tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
+  tooltipSide?: "top" | "bottom" | "left" | "right";
   tooltipMaxWidth?: string;
 }
 
@@ -15,12 +19,14 @@ export function TruncatedBadge({
   text,
   maxLength = 30,
   variant = "secondary",
-  className = '',
-  tooltipSide = 'top',
-  tooltipMaxWidth = 'max-w-xs'
+  className = "",
+  tooltipSide = "top",
+  tooltipMaxWidth = "max-w-xs",
 }: TruncatedBadgeProps) {
   const shouldTruncate = text.length > maxLength;
-  const truncatedText = shouldTruncate ? text.substring(0, maxLength) + '...' : text;
+  const truncatedText = shouldTruncate
+    ? text.substring(0, maxLength) + "..."
+    : text;
 
   if (!shouldTruncate) {
     return (
@@ -33,10 +39,10 @@ export function TruncatedBadge({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge 
-          variant={variant} 
+        <Badge
+          variant={variant}
           className={`max-w-full truncate cursor-default overflow-hidden ${className}`}
-          style={{ maxWidth: '100%' }}
+          style={{ maxWidth: "100%" }}
         >
           {truncatedText}
         </Badge>
@@ -46,4 +52,4 @@ export function TruncatedBadge({
       </TooltipContent>
     </Tooltip>
   );
-} 
+}

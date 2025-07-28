@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   RotateCcw,
   ChevronLeft,
@@ -87,7 +86,6 @@ export default function AnkiGamePage() {
     updateWordLevel,
     updateWordReview,
     updateWordImage,
-    incrementWordSeen,
     actionLoading,
   } = useWordStore();
 

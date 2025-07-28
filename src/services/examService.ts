@@ -291,11 +291,11 @@ export const examService = {
   },
 
   // Update question
-  async updateQuestion(
-    questionId: string,
-    questionData: any
-  ): Promise<any> {
-    const response = await api.put(`/api/questions/${questionId}`, questionData);
+  async updateQuestion(questionId: string, questionData: any): Promise<any> {
+    const response = await api.put(
+      `/api/questions/${questionId}`,
+      questionData
+    );
     return response.data;
   },
 
@@ -360,18 +360,15 @@ export const examService = {
   async generateExamWithProgress(
     params: ExamGenerationParams
   ): Promise<ExamGenerationResponse> {
-    const response = await api.post(
-      "/api/ai/generate-exam",
-      {
-        topic: params.topic,
-        grammarTopics: params.grammarTopics || [],
-        level: params.level || "B1",
-        numberOfQuestions: params.numberOfQuestions || 10,
-        types: params.types || ["multiple_choice", "fill_blank", "true_false"],
-        difficulty: params.difficulty || 3,
-        userLang: params.userLang || "es",
-      }
-    );
+    const response = await api.post("/api/ai/generate-exam", {
+      topic: params.topic,
+      grammarTopics: params.grammarTopics || [],
+      level: params.level || "B1",
+      numberOfQuestions: params.numberOfQuestions || 10,
+      types: params.types || ["multiple_choice", "fill_blank", "true_false"],
+      difficulty: params.difficulty || 3,
+      userLang: params.userLang || "es",
+    });
 
     return response.data;
   },

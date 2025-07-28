@@ -1,15 +1,29 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trophy, Calendar, Target, Clock, CheckCircle, XCircle } from "lucide-react";
+import {
+  Trophy,
+  Calendar,
+  Target,
+  Clock,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { GameSession } from "../types";
-import { 
-  formatDateToSpanish, 
-  calculateGameDuration, 
-  getScoreColor, 
-  getScoreIcon, 
-  getScoreMessage 
+import {
+  formatDateToSpanish,
+  calculateGameDuration,
+  getScoreColor,
+  getScoreIcon,
+  getScoreMessage,
 } from "../utils";
 
 interface GameStatsModalProps {
@@ -23,14 +37,14 @@ interface GameStatsModalProps {
   historyItem?: any;
 }
 
-export function GameStatsModal({ 
-  open, 
-  onOpenChange, 
-  session, 
-  totalVerbs, 
+export function GameStatsModal({
+  open,
+  onOpenChange,
+  session,
+  totalVerbs,
   onClose,
   isHistory = false,
-  historyItem
+  historyItem,
 }: GameStatsModalProps) {
   if (!session && !historyItem) return null;
 
@@ -38,22 +52,31 @@ export function GameStatsModal({
   const data = isHistory && historyItem ? historyItem : session;
   if (!data) return null;
 
-  const correctAnswers = Object.values(data.checkedAnswers).filter(Boolean).length;
+  const correctAnswers = Object.values(data.checkedAnswers).filter(
+    Boolean
+  ).length;
   const totalVerbsCount = isHistory ? data.config.totalVerbs : totalVerbs;
   const percentage = Math.round((correctAnswers / totalVerbsCount) * 100);
-  
+
   // Calcular duración - para historial usar la fecha guardada
-  const gameDuration = isHistory && historyItem 
-    ? Math.round((new Date(historyItem.finishedAt).getTime() - new Date(data.startTime).getTime()) / 1000 / 60)
-    : calculateGameDuration(data.startTime);
-  
+  const gameDuration =
+    isHistory && historyItem
+      ? Math.round(
+          (new Date(historyItem.finishedAt).getTime() -
+            new Date(data.startTime).getTime()) /
+            1000 /
+            60
+        )
+      : calculateGameDuration(data.startTime);
+
   // Fecha - para historial usar la fecha de finalización
-  const displayDate = isHistory && historyItem 
-    ? formatDateToSpanish(new Date(historyItem.finishedAt))
-    : formatDateToSpanish(new Date());
+  const displayDate =
+    isHistory && historyItem
+      ? formatDateToSpanish(new Date(historyItem.finishedAt))
+      : formatDateToSpanish(new Date());
 
   const title = isHistory ? "Detalle de Partida" : "¡Partida Completada!";
-  const description = isHistory 
+  const description = isHistory
     ? "Revisa los detalles de esta partida anterior"
     : "¡Felicitaciones por completar la partida!";
 
@@ -73,7 +96,11 @@ export function GameStatsModal({
         <div className="space-y-6">
           {/* Score Display */}
           <div className="text-center">
-            <div className={`inline-flex items-center justify-center p-4 rounded-full ${getScoreColor(percentage)} mb-4`}>
+            <div
+              className={`inline-flex items-center justify-center p-4 rounded-full ${getScoreColor(
+                percentage
+              )} mb-4`}
+            >
               <span className="text-4xl mr-2">{getScoreIcon(percentage)}</span>
               <span className="text-3xl font-bold">{percentage}%</span>
             </div>
@@ -89,7 +116,9 @@ export function GameStatsModal({
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-6 w-6 text-green-600" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Respuestas Correctas</p>
+                    <p className="text-sm text-muted-foreground">
+                      Respuestas Correctas
+                    </p>
                     <p className="text-2xl font-bold text-green-600">
                       {correctAnswers} / {totalVerbsCount}
                     </p>
@@ -117,7 +146,9 @@ export function GameStatsModal({
                 <div className="flex items-center gap-3">
                   <Clock className="h-6 w-6 text-purple-600" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Tiempo de Juego</p>
+                    <p className="text-sm text-muted-foreground">
+                      Tiempo de Juego
+                    </p>
                     <p className="text-2xl font-bold text-purple-600">
                       {gameDuration} min
                     </p>
@@ -146,12 +177,18 @@ export function GameStatsModal({
             <CardContent className="p-4">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Verbos por página:</span>
+                  <span className="text-sm text-muted-foreground">
+                    Verbos por página:
+                  </span>
                   <Badge variant="secondary">{data.config.itemsPerPage}</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Total de páginas:</span>
-                  <Badge variant="secondary">{Math.ceil(totalVerbsCount / data.config.itemsPerPage)}</Badge>
+                  <span className="text-sm text-muted-foreground">
+                    Total de páginas:
+                  </span>
+                  <Badge variant="secondary">
+                    {Math.ceil(totalVerbsCount / data.config.itemsPerPage)}
+                  </Badge>
                 </div>
                 {data.config.shuffle && (
                   <div className="flex justify-between items-center">
@@ -165,11 +202,7 @@ export function GameStatsModal({
         </div>
 
         <DialogFooter className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={onClose}
-            className="flex-1"
-          >
+          <Button variant="outline" onClick={onClose} className="flex-1">
             <XCircle className="h-4 w-4 mr-2" />
             Cerrar
           </Button>
@@ -177,4 +210,4 @@ export function GameStatsModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}

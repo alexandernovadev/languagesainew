@@ -1,5 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 interface StatsLanguageChartProps {
@@ -11,10 +15,12 @@ interface StatsLanguageChartProps {
 }
 
 export function StatsLanguageChart({ stats }: StatsLanguageChartProps) {
-  const data = Object.entries(stats.byLanguage.lectures).map(([language, count]) => ({
-    language,
-    count,
-  }));
+  const data = Object.entries(stats.byLanguage.lectures).map(
+    ([language, count]) => ({
+      language,
+      count,
+    })
+  );
 
   const config = {
     language: {
@@ -47,4 +53,4 @@ export function StatsLanguageChart({ stats }: StatsLanguageChartProps) {
       </CardContent>
     </Card>
   );
-} 
+}

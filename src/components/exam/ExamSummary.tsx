@@ -31,7 +31,6 @@ export function ExamSummary({
   onView,
   isSaving = false,
 }: ExamSummaryProps) {
-  const totalQuestions = exam.questions.length;
 
   return (
     <div className="space-y-6">

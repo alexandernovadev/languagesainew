@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -10,12 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Filter,
-  X,
-  Info,
-  Check,
-} from "lucide-react";
+import { Filter, X, Info, Check } from "lucide-react";
 
 import { useQuestionFilters } from "@/hooks/useQuestionFilters";
 import { LevelFilter } from "./LevelFilter";
@@ -32,10 +26,10 @@ interface QuestionFiltersModalProps {
   onFiltersChange: (filters: any) => void;
 }
 
-export function QuestionFiltersModal({ 
-  open, 
-  onOpenChange, 
-  onFiltersChange 
+export function QuestionFiltersModal({
+  open,
+  onOpenChange,
+  onFiltersChange,
 }: QuestionFiltersModalProps) {
   const {
     filters,
@@ -43,7 +37,6 @@ export function QuestionFiltersModal({
     combinedFilters,
     hasActiveFilters,
     activeFiltersCount,
-    getActiveFiltersDescription,
     updateFilter,
     updateBooleanFilter,
     clearFilters,
@@ -109,7 +102,9 @@ export function QuestionFiltersModal({
                 <>
                   <Info className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground ml-2">
-                    {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                    {activeFiltersCount} filtro
+                    {activeFiltersCount !== 1 ? "s" : ""} activo
+                    {activeFiltersCount !== 1 ? "s" : ""}
                   </span>
                 </>
               )}
@@ -135,10 +130,7 @@ export function QuestionFiltersModal({
               >
                 Cancelar
               </Button>
-              <Button
-                onClick={handleApplyFilters}
-                className="min-w-[100px]"
-              >
+              <Button onClick={handleApplyFilters} className="min-w-[100px]">
                 <Check className="h-4 w-4 mr-2" />
                 Aplicar
               </Button>
@@ -284,4 +276,4 @@ function FiltersContent({
       </TabsContent>
     </Tabs>
   );
-} 
+}

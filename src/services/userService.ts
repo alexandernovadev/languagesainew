@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api } from "./api";
 
 export interface User {
   _id: string;
@@ -70,17 +70,15 @@ export interface UsersResponse {
   pages: number;
 }
 
-
-
 class UserService {
   // Obtener usuarios con filtros y paginación
   async getUsers(filters: UserFilters = {}): Promise<UsersResponse> {
     const params = new URLSearchParams();
-    
+
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         if (Array.isArray(value)) {
-          params.append(key, value.join(','));
+          params.append(key, value.join(","));
         } else {
           params.append(key, String(value));
         }
@@ -99,7 +97,7 @@ class UserService {
 
   // Crear usuario
   async createUser(userData: UserCreate): Promise<User> {
-    const response = await api.post('/api/users', userData);
+    const response = await api.post("/api/users", userData);
     return response.data.data;
   }
 
@@ -114,8 +112,6 @@ class UserService {
     const response = await api.delete(`/api/users/${id}`);
     return response.data.data;
   }
-
-
 }
 
-export const userService = new UserService(); 
+export const userService = new UserService();

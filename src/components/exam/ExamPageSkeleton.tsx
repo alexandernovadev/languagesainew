@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export function ExamPageSkeleton() {
   return (
@@ -37,7 +37,10 @@ export function ExamPageSkeleton() {
             <div className="h-6 bg-muted rounded w-32 animate-pulse"></div>
             <div className="space-y-2">
               {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} className="h-12 bg-muted rounded animate-pulse"></div>
+                <div
+                  key={i}
+                  className="h-12 bg-muted rounded animate-pulse"
+                ></div>
               ))}
             </div>
           </div>
@@ -45,4 +48,4 @@ export function ExamPageSkeleton() {
       </Card>
     </div>
   );
-} 
+}

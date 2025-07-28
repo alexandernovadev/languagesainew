@@ -9,7 +9,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { Trash2, AlertTriangle } from 'lucide-react';
 import { User } from '@/services/userService';
 
@@ -24,7 +23,7 @@ interface UserDeleteDialogProps {
 export function UserDeleteDialog({ user, isOpen, onOpenChange, onConfirm, loading }: UserDeleteDialogProps) {
   const handleConfirm = async () => {
     if (user) {
-      await onConfirm(user.id);
+      await onConfirm(user._id);
     }
   };
 

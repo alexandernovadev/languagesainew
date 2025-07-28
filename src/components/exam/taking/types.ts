@@ -8,7 +8,13 @@ export interface QuestionOption {
 export interface Question {
   _id: string;
   text: string;
-  type: 'single_choice' | 'multiple_choice' | 'fill_blank' | 'true_false' | 'translate' | 'writing';
+  type:
+    | "single_choice"
+    | "multiple_choice"
+    | "fill_blank"
+    | "true_false"
+    | "translate"
+    | "writing";
   options?: QuestionOption[];
   correctAnswers: string[];
   explanation?: string;
@@ -20,4 +26,4 @@ export interface ExamQuestionTakingProps {
   questionNumber: number;
   currentAnswer: any;
   isAnswered: boolean;
-} 
+}

@@ -7,20 +7,20 @@ export const wordService = {
   async getWords(page: number, limit: number, filters?: Partial<WordFilters>) {
     // Construir query params
     const params = new URLSearchParams();
-    
+
     // Parámetros básicos
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-    
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+
     // Agregar filtros si existen
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           params.append(key, value.toString());
         }
       });
     }
-    
+
     const url = `/api/words?${params.toString()}`;
     const res = await api.get(url);
     return res.data;
@@ -47,18 +47,12 @@ export const wordService = {
   },
 
   async updateWordLevel(id: string, level: string) {
-    const res = await api.put(
-      `/api/words/${id}/level`,
-      { level }
-    );
+    const res = await api.put(`/api/words/${id}/level`, { level });
     return res.data;
   },
 
   async incrementWordSeen(id: string) {
-    const res = await api.put(
-      `/api/words/${id}/increment-seen`,
-      {}
-    );
+    const res = await api.put(`/api/words/${id}/increment-seen`, {});
     return res.data;
   },
 
@@ -81,7 +75,7 @@ export const wordService = {
   async updateWordReview(wordId: string, difficulty: number, quality: number) {
     const res = await api.post(`/api/words/${wordId}/update-review`, {
       difficulty,
-      quality
+      quality,
     });
     return res.data;
   },
@@ -92,44 +86,52 @@ export const wordService = {
   },
 
   async generateWordJSON(prompt: string, language = "en") {
-    const res = await api.post(
-      `/api/ai/generate-wordJson`,
-      { prompt, language }
-    );
+    const res = await api.post(`/api/ai/generate-wordJson`, {
+      prompt,
+      language,
+    });
     return res.data;
   },
 
   // NUEVO: Método optimizado para WordsSelector
-  async getWordsByTypeOptimized(type: string, limit: number = 10, search?: string) {
+  async getWordsByTypeOptimized(
+    type: string,
+    limit: number = 10,
+    search?: string
+  ) {
     const params = new URLSearchParams();
-    params.append('type', type);
-    params.append('limit', limit.toString());
-    params.append('fields', 'word'); // Solo traer el campo word
-    
+    params.append("type", type);
+    params.append("limit", limit.toString());
+    params.append("fields", "word"); // Solo traer el campo word
+
     if (search) {
-      params.append('wordUser', search);
+      params.append("wordUser", search);
     }
-    
+
     const url = `/api/words/by-type-optimized?${params.toString()}`;
     const res = await api.get(url);
     return res.data.data; // Devolver el array de palabras
   },
 
   // NUEVO: Método para obtener solo palabras (sin objetos completos)
-  async getWordsOnly(page: number = 1, limit: number = 10, filters?: Partial<WordFilters>) {
+  async getWordsOnly(
+    page: number = 1,
+    limit: number = 10,
+    filters?: Partial<WordFilters>
+  ) {
     const params = new URLSearchParams();
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-    params.append('fields', 'word'); // Solo traer el campo word
-    
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+    params.append("fields", "word"); // Solo traer el campo word
+
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           params.append(key, value.toString());
         }
       });
     }
-    
+
     const url = `/api/words/words-only?${params.toString()}`;
     const res = await api.get(url);
     return res.data.data; // Devolver el array de palabras
@@ -141,10 +143,12 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(
-      `/api/ai/update-word-examples`,
-      { wordId, word, language, oldExamples }
-    );
+    const res = await api.post(`/api/ai/update-word-examples`, {
+      wordId,
+      word,
+      language,
+      oldExamples,
+    });
     return res.data;
   },
 
@@ -154,10 +158,12 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(
-      `/api/ai/update-word-code-switching`,
-      { wordId, word, language, oldExamples }
-    );
+    const res = await api.post(`/api/ai/update-word-code-switching`, {
+      wordId,
+      word,
+      language,
+      oldExamples,
+    });
     return res.data;
   },
 
@@ -167,10 +173,12 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(
-      `/api/ai/update-word-synonyms`,
-      { wordId, word, language, oldExamples }
-    );
+    const res = await api.post(`/api/ai/update-word-synonyms`, {
+      wordId,
+      word,
+      language,
+      oldExamples,
+    });
     return res.data;
   },
 
@@ -180,18 +188,21 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(
-      `/api/ai/update-word-types`,
-      { wordId, word, language, oldExamples }
-    );
+    const res = await api.post(`/api/ai/update-word-types`, {
+      wordId,
+      word,
+      language,
+      oldExamples,
+    });
     return res.data;
   },
 
   async updateWordImage(wordId: string, word: string, imgOld: string = "") {
-    const res = await api.post(
-      `/api/ai/update-word-image`,
-      { wordId, word, imgOld }
-    );
+    const res = await api.post(`/api/ai/update-word-image`, {
+      wordId,
+      word,
+      imgOld,
+    });
     return res.data;
   },
 
@@ -202,56 +213,56 @@ export const wordService = {
 
   async importWords(file: File) {
     const formData = new FormData();
-    formData.append('file', file);
-    
+    formData.append("file", file);
+
     const res = await api.post(`/api/words/import/json`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return res.data;
   },
 
   // Chat methods
-  addChatMessage: (wordId: string, message: string) => 
+  addChatMessage: (wordId: string, message: string) =>
     api.post(`/api/words/${wordId}/chat`, { message }),
 
   streamChatMessage: async (wordId: string, message: string) => {
     const baseURL = import.meta.env.VITE_BACK_URL;
     const url = `${baseURL}/api/words/${wordId}/chat/stream`;
-    
-    console.log('🔄 Streaming to:', url);
-    
+
+    console.log("🔄 Streaming to:", url);
+
     // Get auth headers without Content-Type for streaming
     const authToken = useUserStore.getState().token;
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     };
-    
+
     if (authToken) {
       headers.Authorization = `Bearer ${authToken}`;
     }
-    
+
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify({ message }),
     });
 
-    console.log('📡 Response status:', response.status);
+    console.log("📡 Response status:", response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ Stream error:', response.status, errorText);
-      throw new Error(`Failed to stream chat message: ${response.status} ${errorText}`);
+      console.error("❌ Stream error:", response.status, errorText);
+      throw new Error(
+        `Failed to stream chat message: ${response.status} ${errorText}`
+      );
     }
 
     return response.body;
   },
 
-  getChatHistory: (wordId: string) => 
-    api.get(`/api/words/${wordId}/chat`),
+  getChatHistory: (wordId: string) => api.get(`/api/words/${wordId}/chat`),
 
-  clearChatHistory: (wordId: string) => 
-    api.delete(`/api/words/${wordId}/chat`),
+  clearChatHistory: (wordId: string) => api.delete(`/api/words/${wordId}/chat`),
 };

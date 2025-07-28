@@ -56,7 +56,9 @@ export function LabsSection({
             <Icon className="h-6 w-6" />
           </div>
           <div>
-            <CardTitle className={cn("text-xl", styles.title)}>{title}</CardTitle>
+            <CardTitle className={cn("text-xl", styles.title)}>
+              {title}
+            </CardTitle>
             <p className="text-zinc-400 text-sm mt-1">{description}</p>
           </div>
         </div>
@@ -68,4 +70,4 @@ export function LabsSection({
       </CardContent>
     </Card>
   );
-} 
+}

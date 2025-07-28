@@ -22,7 +22,8 @@ export default function SystemInfoPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Get frontend build date from package.json
-  const frontendBuildDate = (packageJson as any).buildDate || new Date().toISOString();
+  const frontendBuildDate =
+    (packageJson as any).buildDate || new Date().toISOString();
 
   useEffect(() => {
     const fetchBackendInfo = async () => {
@@ -87,22 +88,34 @@ export default function SystemInfoPage() {
               {loading ? (
                 <Skeleton className="w-24 h-4" />
               ) : error ? (
-                <span className="text-sm text-muted-foreground">No disponible</span>
+                <span className="text-sm text-muted-foreground">
+                  No disponible
+                </span>
               ) : backendInfo ? (
                 <div className="flex flex-col items-end text-right">
-                  <span className="text-sm text-muted-foreground">{formatDateToSpanish(backendInfo.date)}</span>
-                  <span className="text-xs text-muted-foreground">{timeAgo(backendInfo.date)}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {formatDateToSpanish(backendInfo.date)}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {timeAgo(backendInfo.date)}
+                  </span>
                 </div>
               ) : (
-                <span className="text-sm text-muted-foreground">No disponible</span>
+                <span className="text-sm text-muted-foreground">
+                  No disponible
+                </span>
               )}
             </div>
             <Separator />
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Last Update Frontend</span>
               <div className="flex flex-col items-end text-right">
-                <span className="text-sm text-muted-foreground">{formatDateToSpanish(frontendBuildDate)}</span>
-                <span className="text-xs text-muted-foreground">{timeAgo(frontendBuildDate)}</span>
+                <span className="text-sm text-muted-foreground">
+                  {formatDateToSpanish(frontendBuildDate)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {timeAgo(frontendBuildDate)}
+                </span>
               </div>
             </div>
             <Separator />

@@ -1,6 +1,6 @@
-import React from 'react';
-import { ExamTakingPage as ExamTakingComponent } from '@/components/exam/ExamTakingPage';
-import { PageLayout } from '@/components/layouts/page-layout';
+import React from "react";
+import { ExamTakingPage as ExamTakingComponent } from "@/components/exam/ExamTakingPage";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export default function ExamTakingPage() {
   return (
@@ -8,4 +8,4 @@ export default function ExamTakingPage() {
       <ExamTakingComponent />
     </PageLayout>
   );
-} 
+}

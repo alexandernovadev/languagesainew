@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { RefreshCw, Eye, Volume2, RotateCcw } from "lucide-react";
+import { RefreshCw, Eye, Volume2 } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
@@ -19,7 +17,6 @@ interface WordDetailsCardProps {
   showLevelButtons?: boolean;
   showRefreshButtons?: boolean;
   showAudioButtons?: boolean;
-  loading?: boolean;
 }
 
 export function WordDetailsCard({
@@ -28,7 +25,6 @@ export function WordDetailsCard({
   showLevelButtons = true,
   showRefreshButtons = true,
   showAudioButtons = true,
-  loading = false,
 }: WordDetailsCardProps) {
   const {
     updateWordLevel,
@@ -470,7 +466,7 @@ export function WordDetailsCard({
           )}
         </TabsContent>
 
-                    <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
+        <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
           <WordChatTab word={word} />
         </TabsContent>
       </Tabs>

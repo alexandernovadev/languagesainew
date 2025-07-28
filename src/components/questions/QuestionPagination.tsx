@@ -8,23 +8,27 @@ interface QuestionPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function QuestionPagination({ 
-  currentPage, 
-  totalPages, 
-  total, 
-  onPageChange 
+export function QuestionPagination({
+  currentPage,
+  totalPages,
+  total,
+  onPageChange,
 }: QuestionPaginationProps) {
   const getVisiblePages = () => {
     const delta = 2;
     const range = [];
     const rangeWithDots = [];
 
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
       range.push(i);
     }
 
     if (currentPage - delta > 2) {
-      rangeWithDots.push(1, '...');
+      rangeWithDots.push(1, "...");
     } else {
       rangeWithDots.push(1);
     }
@@ -32,7 +36,7 @@ export function QuestionPagination({
     rangeWithDots.push(...range);
 
     if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push('...', totalPages);
+      rangeWithDots.push("...", totalPages);
     } else {
       rangeWithDots.push(totalPages);
     }
@@ -45,7 +49,8 @@ export function QuestionPagination({
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        Mostrando página {currentPage} de {totalPages} ({total} preguntas en total)
+        Mostrando página {currentPage} de {totalPages} ({total} preguntas en
+        total)
       </div>
       <div className="flex items-center space-x-2">
         <Button
@@ -57,12 +62,14 @@ export function QuestionPagination({
           <ChevronLeft className="h-4 w-4" />
           Anterior
         </Button>
-        
+
         <div className="flex items-center space-x-1">
           {getVisiblePages().map((page, index) => (
             <div key={index}>
-              {page === '...' ? (
-                <span className="px-2 py-1 text-sm text-muted-foreground">...</span>
+              {page === "..." ? (
+                <span className="px-2 py-1 text-sm text-muted-foreground">
+                  ...
+                </span>
               ) : (
                 <Button
                   variant={currentPage === page ? "default" : "outline"}
@@ -76,7 +83,7 @@ export function QuestionPagination({
             </div>
           ))}
         </div>
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -89,4 +96,4 @@ export function QuestionPagination({
       </div>
     </div>
   );
-} 
+}

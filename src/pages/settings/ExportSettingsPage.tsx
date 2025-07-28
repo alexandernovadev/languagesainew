@@ -11,7 +11,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { toast } from "sonner";
 
 export default function ExportSettingsPage() {
-  const [exportLoading, setExportLoading] = useState<{ words: boolean; lectures: boolean }>({ words: false, lectures: false });
+  const [exportLoading, setExportLoading] = useState<{
+    words: boolean;
+    lectures: boolean;
+  }>({ words: false, lectures: false });
 
   const handleExportWords = async () => {
     setExportLoading((prev) => ({ ...prev, words: true }));
@@ -83,4 +86,4 @@ export default function ExportSettingsPage() {
       </Card>
     </PageLayout>
   );
-} 
+}

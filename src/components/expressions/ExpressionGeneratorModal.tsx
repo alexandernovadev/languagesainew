@@ -1,34 +1,47 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Sparkles, Save, RefreshCw, X } from "lucide-react";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
-import { Expression } from "@/models/Expression";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { toast } from "sonner";
 
 interface ExpressionGeneratorModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave?: (expression: Expression) => void;
 }
 
-export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: ExpressionGeneratorModalProps) {
+export function ExpressionGeneratorModal({
+  open,
+  onOpenChange,
+}: ExpressionGeneratorModalProps) {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("generate");
-  
-  const { 
-    generateExpression, 
-    clearGeneratedExpression, 
-    generatedExpression, 
+
+  const {
+    generateExpression,
+    clearGeneratedExpression,
+    generatedExpression,
     isGenerating,
     createExpression,
-    actionLoading
+    actionLoading,
   } = useExpressionStore();
 
   const handleGenerate = async () => {
@@ -84,13 +97,18 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
             <DialogTitle>Generar Expresión con AI</DialogTitle>
           </div>
           <DialogDescription>
-            Describe qué tipo de expresión quieres generar y la AI creará una para ti
+            Describe qué tipo de expresión quieres generar y la AI creará una
+            para ti
           </DialogDescription>
         </DialogHeader>
 
         {/* Content Scrollable */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="generate">Generar</TabsTrigger>
               <TabsTrigger value="preview" disabled={!generatedExpression}>
@@ -104,7 +122,8 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                   <CardTitle>Prompt de Generación</CardTitle>
                   <CardDescription>
                     Describe qué tipo de expresión quieres generar. Por ejemplo:
-                    "Crea un idiom sobre el éxito", "Genera una frase formal para negocios"
+                    "Crea un idiom sobre el éxito", "Genera una frase formal
+                    para negocios"
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -149,7 +168,9 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                   {/* Información Principal */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-xl">{generatedExpression.expression}</CardTitle>
+                      <CardTitle className="text-xl">
+                        {generatedExpression.expression}
+                      </CardTitle>
                       <CardDescription className="text-base">
                         {generatedExpression.definition}
                       </CardDescription>
@@ -160,27 +181,34 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                         {generatedExpression.difficulty && (
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">Nivel:</span>
-                            <ExpressionLevelBadge level={generatedExpression.difficulty} />
+                            <ExpressionLevelBadge
+                              level={generatedExpression.difficulty}
+                            />
                           </div>
                         )}
-                        {generatedExpression.type && generatedExpression.type.length > 0 && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">Tipos:</span>
-                            <div className="flex gap-1">
-                              {generatedExpression.type.map((type, index) => (
-                                <Badge key={index} variant="secondary">
-                                  {type}
-                                </Badge>
-                              ))}
+                        {generatedExpression.type &&
+                          generatedExpression.type.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">
+                                Tipos:
+                              </span>
+                              <div className="flex gap-1">
+                                {generatedExpression.type.map((type, index) => (
+                                  <Badge key={index} variant="secondary">
+                                    {type}
+                                  </Badge>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
                       </div>
 
                       {/* Contexto */}
                       {generatedExpression.context && (
                         <div>
-                          <Label className="text-sm font-medium">Contexto</Label>
+                          <Label className="text-sm font-medium">
+                            Contexto
+                          </Label>
                           <p className="text-sm text-muted-foreground mt-1">
                             {generatedExpression.context}
                           </p>
@@ -190,11 +218,15 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                       {/* Traducción al Español */}
                       {generatedExpression.spanish && (
                         <div className="border-t pt-4">
-                          <Label className="text-sm font-medium">En Español</Label>
+                          <Label className="text-sm font-medium">
+                            En Español
+                          </Label>
                           <div className="space-y-2 mt-2">
                             {generatedExpression.spanish.expression && (
                               <div>
-                                <span className="text-sm font-medium">Expresión: </span>
+                                <span className="text-sm font-medium">
+                                  Expresión:{" "}
+                                </span>
                                 <span className="text-sm text-muted-foreground">
                                   {generatedExpression.spanish.expression}
                                 </span>
@@ -202,7 +234,9 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                             )}
                             {generatedExpression.spanish.definition && (
                               <div>
-                                <span className="text-sm font-medium">Definición: </span>
+                                <span className="text-sm font-medium">
+                                  Definición:{" "}
+                                </span>
                                 <span className="text-sm text-muted-foreground">
                                   {generatedExpression.spanish.definition}
                                 </span>
@@ -223,13 +257,19 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {generatedExpression.examples && generatedExpression.examples.length > 0 ? (
+                      {generatedExpression.examples &&
+                      generatedExpression.examples.length > 0 ? (
                         <div className="space-y-3">
-                          {generatedExpression.examples.map((example, index) => (
-                            <div key={index} className="p-3 bg-muted rounded-lg">
-                              <p className="text-sm">{example}</p>
-                            </div>
-                          ))}
+                          {generatedExpression.examples.map(
+                            (example, index) => (
+                              <div
+                                key={index}
+                                className="p-3 bg-muted rounded-lg"
+                              >
+                                <p className="text-sm">{example}</p>
+                              </div>
+                            )
+                          )}
                         </div>
                       ) : (
                         <p className="text-sm text-muted-foreground">
@@ -299,4 +339,4 @@ export function ExpressionGeneratorModal({ open, onOpenChange, onSave }: Express
       </DialogContent>
     </Dialog>
   );
-} 
+}

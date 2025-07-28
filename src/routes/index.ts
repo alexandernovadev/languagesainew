@@ -1,2 +1,1 @@
-// Re-exportar todas las rutas lazy load
-export * from "./lazyRoutes"; 
+export * from "./lazyRoutes";

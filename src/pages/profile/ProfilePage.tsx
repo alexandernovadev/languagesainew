@@ -64,6 +64,7 @@ export default function ProfilePage() {
       firstName: data.firstName,
       lastName: data.lastName,
       image: newImage,
+      language: user.language,
       isActive: user.isActive,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

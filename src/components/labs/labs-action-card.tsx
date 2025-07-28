@@ -59,28 +59,29 @@ export function LabsActionCard({
 
   return (
     <Card className={cn("transition-all duration-200", styles.card)}>
-            <CardHeader className="pb-3">
+      <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
-          <div className={cn("p-2 rounded-lg bg-zinc-800/50 flex-shrink-0", styles.icon)}>
+          <div
+            className={cn(
+              "p-2 rounded-lg bg-zinc-800/50 flex-shrink-0",
+              styles.icon
+            )}
+          >
             <Icon className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-zinc-100 text-lg break-words">{title}</CardTitle>
+            <CardTitle className="text-zinc-100 text-lg break-words">
+              {title}
+            </CardTitle>
             <div className="flex flex-wrap items-center gap-2 mt-1">
-              <Badge variant="secondary">
-                {category}
-              </Badge>
+              <Badge variant="secondary">{category}</Badge>
               {dangerous && (
                 <Badge variant="destructive">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   PELIGROSO
                 </Badge>
               )}
-              {requiresAuth && (
-                <Badge variant="secondary">
-                  Requiere Auth
-                </Badge>
-              )}
+              {requiresAuth && <Badge variant="secondary">Requiere Auth</Badge>}
             </div>
           </div>
         </div>
@@ -104,4 +105,4 @@ export function LabsActionCard({
       </CardContent>
     </Card>
   );
-} 
+}

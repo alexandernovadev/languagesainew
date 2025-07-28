@@ -47,7 +47,6 @@ export function WordForm({
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
     reset,
   } = useForm<Partial<Word>>({
     defaultValues: {
@@ -108,7 +107,7 @@ export function WordForm({
     try {
       // Simular progreso
       const progressInterval = setInterval(() => {
-        setImageProgress(prev => {
+        setImageProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return prev;
@@ -118,10 +117,13 @@ export function WordForm({
       }, 500);
 
       // Llamar al endpoint de generación de imagen para palabras
-      const response = await api.post(`/api/ai/generate-image/${initialData._id || 'temp'}`, {
-        word: formData.word,
-        imgOld: formData.img || "",
-      });
+      const response = await api.post(
+        `/api/ai/generate-image/${initialData._id || "temp"}`,
+        {
+          word: formData.word,
+          imgOld: formData.img || "",
+        }
+      );
 
       clearInterval(progressInterval);
       setImageProgress(100);
@@ -305,10 +307,12 @@ export function WordForm({
                         // Skeleton durante generación
                         <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
                           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                          <p className="text-sm text-muted-foreground">Generando imagen...</p>
+                          <p className="text-sm text-muted-foreground">
+                            Generando imagen...
+                          </p>
                           {imageProgress > 0 && (
                             <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
+                              <div
                                 className="bg-primary h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${imageProgress}%` }}
                               ></div>

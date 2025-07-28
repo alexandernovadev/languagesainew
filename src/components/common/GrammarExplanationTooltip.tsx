@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -13,11 +13,9 @@ interface GrammarExplanationTooltipProps {
   className?: string;
 }
 
-export const GrammarExplanationTooltip: React.FC<GrammarExplanationTooltipProps> = ({
-  explanation,
-  children,
-  className = ""
-}) => {
+export const GrammarExplanationTooltip: React.FC<
+  GrammarExplanationTooltipProps
+> = ({ explanation, children, className = "" }) => {
   if (!explanation) {
     return <>{children}</>;
   }
@@ -31,12 +29,12 @@ export const GrammarExplanationTooltip: React.FC<GrammarExplanationTooltipProps>
             <HelpCircle className="h-4 w-4 text-blue-500 hover:text-blue-600 cursor-help transition-colors" />
           </div>
         </TooltipTrigger>
-        <TooltipContent 
-          side="top" 
+        <TooltipContent
+          side="top"
           className="max-w-md p-0 bg-gray-900 border-gray-700"
           sideOffset={5}
         >
-          <div 
+          <div
             className="p-3 text-sm leading-relaxed"
             dangerouslySetInnerHTML={{ __html: explanation }}
           />
@@ -44,4 +42,4 @@ export const GrammarExplanationTooltip: React.FC<GrammarExplanationTooltipProps>
       </Tooltip>
     </TooltipProvider>
   );
-}; 
+};

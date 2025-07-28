@@ -54,8 +54,6 @@ export const menuItems = [
     url: "/exam-history",
     icon: History,
   },
-
-
 ];
 
 export const generatorItems = [

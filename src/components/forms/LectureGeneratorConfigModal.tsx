@@ -14,7 +14,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -87,7 +86,6 @@ export const LectureGeneratorConfigModal: React.FC<
       });
       setRangeError(null);
     }
-    // eslint-disable-next-line
   }, [open]);
 
   const handleSave = () => {
@@ -111,13 +109,15 @@ export const LectureGeneratorConfigModal: React.FC<
             Ajusta los parámetros de la lectura generada.
           </DialogDescription>
         </DialogHeader>
-        
-                  <div className="max-h-[70dvh] overflow-y-auto px-6 py-4 space-y-4">
+
+        <div className="max-h-[70dvh] overflow-y-auto px-6 py-4 space-y-4">
           {/* Sección 1: Idioma, Nivel y Tipo */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Idioma */}
             <div>
-              <Label htmlFor="language" className="text-sm font-medium">Idioma</Label>
+              <Label htmlFor="language" className="text-sm font-medium">
+                Idioma
+              </Label>
               <Select
                 value={tempConfig.language}
                 onValueChange={(v) =>
@@ -136,10 +136,12 @@ export const LectureGeneratorConfigModal: React.FC<
                 </SelectContent>
               </Select>
             </div>
-            
+
             {/* Nivel */}
             <div>
-              <Label htmlFor="level" className="text-sm font-medium">Nivel</Label>
+              <Label htmlFor="level" className="text-sm font-medium">
+                Nivel
+              </Label>
               <Select
                 value={tempConfig.level}
                 onValueChange={(v) =>
@@ -158,10 +160,12 @@ export const LectureGeneratorConfigModal: React.FC<
                 </SelectContent>
               </Select>
             </div>
-            
+
             {/* Tipo */}
             <div>
-              <Label htmlFor="typeWrite" className="text-sm font-medium">Tipo</Label>
+              <Label htmlFor="typeWrite" className="text-sm font-medium">
+                Tipo
+              </Label>
               <Select
                 value={tempConfig.typeWrite}
                 onValueChange={(v) =>
@@ -186,7 +190,9 @@ export const LectureGeneratorConfigModal: React.FC<
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Dificultad */}
             <div>
-              <Label htmlFor="difficulty" className="text-sm font-medium">Dificultad</Label>
+              <Label htmlFor="difficulty" className="text-sm font-medium">
+                Dificultad
+              </Label>
               <Select
                 value={tempConfig.difficulty}
                 onValueChange={(v) =>
@@ -204,11 +210,11 @@ export const LectureGeneratorConfigModal: React.FC<
               </Select>
             </div>
 
-
-
             {/* Longitud mínima */}
             <div>
-              <Label htmlFor="rangeMin" className="text-sm font-medium">Mín (chars)</Label>
+              <Label htmlFor="rangeMin" className="text-sm font-medium">
+                Mín (chars)
+              </Label>
               <input
                 id="rangeMin"
                 type="number"
@@ -227,7 +233,9 @@ export const LectureGeneratorConfigModal: React.FC<
 
             {/* Longitud máxima */}
             <div>
-              <Label htmlFor="rangeMax" className="text-sm font-medium">Máx (chars)</Label>
+              <Label htmlFor="rangeMax" className="text-sm font-medium">
+                Máx (chars)
+              </Label>
               <input
                 id="rangeMax"
                 type="number"
@@ -257,7 +265,7 @@ export const LectureGeneratorConfigModal: React.FC<
                 <TabsTrigger value="grammar">Temas de Gramática</TabsTrigger>
                 <TabsTrigger value="words">Palabras</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="grammar" className="mt-4">
                 <GrammarTopicsSelector
                   selectedTopics={tempConfig.grammarTopics}
@@ -266,16 +274,16 @@ export const LectureGeneratorConfigModal: React.FC<
                   }
                 />
               </TabsContent>
-              
-                           <TabsContent value="words" className="mt-4">
-               <WordsSelector
-                 selectedWords={tempConfig.selectedWords}
-                 onWordsChange={(words) =>
-                   setTempConfig((c) => ({ ...c, selectedWords: words }))
-                 }
-                 preloadedWords={initialConfig.preloadedWords}
-               />
-             </TabsContent>
+
+              <TabsContent value="words" className="mt-4">
+                <WordsSelector
+                  selectedWords={tempConfig.selectedWords}
+                  onWordsChange={(words) =>
+                    setTempConfig((c) => ({ ...c, selectedWords: words }))
+                  }
+                  preloadedWords={initialConfig.preloadedWords}
+                />
+              </TabsContent>
             </Tabs>
           </div>
         </div>

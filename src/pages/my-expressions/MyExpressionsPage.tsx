@@ -41,7 +41,6 @@ import {
   Edit,
   Trash2,
   Search,
-  Eye,
   X as XIcon,
   Lightbulb,
   SlidersHorizontal,
@@ -80,7 +79,8 @@ export default function MyExpressionsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedExpression, setSelectedExpression] = useState<Expression | null>(null);
+  const [selectedExpression, setSelectedExpression] =
+    useState<Expression | null>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const [localSearch, setLocalSearch] = useState("");
@@ -88,9 +88,8 @@ export default function MyExpressionsPage() {
   const [generatorModalOpen, setGeneratorModalOpen] = useState(false);
 
   // Hook para obtener información de filtros activos
-  const { activeFiltersCount, getActiveFiltersDescription } = useExpressionFilters();
-
-
+  const { activeFiltersCount, getActiveFiltersDescription } =
+    useExpressionFilters();
 
   useEffect(() => {
     getExpressions();
@@ -120,6 +119,7 @@ export default function MyExpressionsPage() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("Error al crear la expresión");
     }
   };
 
@@ -147,6 +147,7 @@ export default function MyExpressionsPage() {
         setSelectedExpression(null);
       } catch (error) {
         console.error("Error deleting expression:", error);
+        toast.error("Error al eliminar la expresión");
       }
     }
   };
@@ -198,7 +199,10 @@ export default function MyExpressionsPage() {
                   >
                     <SlidersHorizontal className="h-4 w-4" />
                     {activeFiltersCount > 0 && (
-                      <Badge variant="default" className="absolute -top-1 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-green-600 text-white">
+                      <Badge
+                        variant="default"
+                        className="absolute -top-1 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-green-600 text-white"
+                      >
                         {activeFiltersCount}
                       </Badge>
                     )}
@@ -254,7 +258,6 @@ export default function MyExpressionsPage() {
       />
 
       <div className="space-y-4">
-
         {/* Tabla */}
         <Card>
           <div className="overflow-x-auto">
@@ -278,10 +281,18 @@ export default function MyExpressionsPage() {
                           <Skeleton className="h-3 w-48" />
                         </div>
                       </TableCell>
-                      <TableCell><Skeleton className="h-6 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-10 w-10 rounded" /></TableCell>
-                      <TableCell><Skeleton className="h-8 w-24" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-6 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-10 w-10 rounded" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-8 w-24" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : expressions.length > 0 ? (
@@ -298,7 +309,9 @@ export default function MyExpressionsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <ExpressionLevelBadge level={expression.difficulty || "hard"} />
+                        <ExpressionLevelBadge
+                          level={expression.difficulty || "hard"}
+                        />
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
@@ -311,19 +324,30 @@ export default function MyExpressionsPage() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <Badge variant="outline" className="cursor-help">
+                                  <Badge
+                                    variant="outline"
+                                    className="cursor-help"
+                                  >
                                     +{expression.type.length - 1}
                                   </Badge>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                   <div className="space-y-2">
-                                    <p className="font-medium text-xs">Tipos adicionales:</p>
+                                    <p className="font-medium text-xs">
+                                      Tipos adicionales:
+                                    </p>
                                     <div className="flex flex-wrap gap-1">
-                                      {expression.type.slice(1).map((type, index) => (
-                                        <Badge key={index} variant="secondary" className="text-xs">
-                                          {type}
-                                        </Badge>
-                                      ))}
+                                      {expression.type
+                                        .slice(1)
+                                        .map((type, index) => (
+                                          <Badge
+                                            key={index}
+                                            variant="secondary"
+                                            className="text-xs"
+                                          >
+                                            {type}
+                                          </Badge>
+                                        ))}
                                     </div>
                                     <p className="text-xs text-muted-foreground">
                                       {expression.type.length} tipos en total
@@ -345,7 +369,9 @@ export default function MyExpressionsPage() {
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = "none";
-                                target.nextElementSibling?.classList.remove("hidden");
+                                target.nextElementSibling?.classList.remove(
+                                  "hidden"
+                                );
                               }}
                             />
                           ) : (
@@ -371,7 +397,9 @@ export default function MyExpressionsPage() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => viewExpressionDetails(expression)}
+                                  onClick={() =>
+                                    viewExpressionDetails(expression)
+                                  }
                                   className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-green-600 hover:text-green-700"
                                 >
                                   <Lightbulb className="h-4 w-4" />
@@ -424,7 +452,8 @@ export default function MyExpressionsPage() {
                           {localSearch ? (
                             <div className="space-y-4">
                               <p>
-                                No se encontraron expresiones para "{localSearch}"
+                                No se encontraron expresiones para "
+                                {localSearch}"
                               </p>
                             </div>
                           ) : (
@@ -453,8 +482,8 @@ export default function MyExpressionsPage() {
               Mostrando {expressions.length} de {total} expresiones
             </p>
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setPage(currentPage - 1)}
                 disabled={currentPage <= 1}
@@ -464,8 +493,8 @@ export default function MyExpressionsPage() {
               <span className="px-3 py-2 text-sm">
                 Página {currentPage} de {totalPages}
               </span>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setPage(currentPage + 1)}
                 disabled={currentPage >= totalPages}
@@ -486,10 +515,9 @@ export default function MyExpressionsPage() {
               {isEditing ? "Editar Expresión" : "Nueva Expresión"}
             </DialogTitle>
             <DialogDescription>
-              {isEditing 
+              {isEditing
                 ? "Modifica los datos de la expresión"
-                : "Crea una nueva expresión idiomática"
-              }
+                : "Crea una nueva expresión idiomática"}
             </DialogDescription>
           </DialogHeader>
 
@@ -498,27 +526,23 @@ export default function MyExpressionsPage() {
             <ExpressionForm
               initialData={selectedExpression || {}}
               onSubmit={handleFormSubmit}
-              onCancel={() => setDialogOpen(false)}
-              loading={actionLoading.create || actionLoading.update}
-              submitText={isEditing ? "Actualizar" : "Crear"}
             />
           </div>
 
           {/* Footer Sticky */}
           <div className="px-6 pt-2 border-t bg-background sticky z-10">
             <div className="flex items-center justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setDialogOpen(false)}
-              >
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancelar
               </Button>
               <Button
                 onClick={() => {
                   // Trigger form submission
-                  const form = document.querySelector('form');
+                  const form = document.querySelector("form");
                   if (form) {
-                    const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                    const submitButton = form.querySelector(
+                      'button[type="submit"]'
+                    ) as HTMLButtonElement;
                     if (submitButton) {
                       submitButton.click();
                     }
@@ -527,7 +551,11 @@ export default function MyExpressionsPage() {
                 disabled={actionLoading.create || actionLoading.update}
                 className="min-w-[100px]"
               >
-                {actionLoading.create || actionLoading.update ? "Guardando..." : (isEditing ? "Actualizar" : "Crear")}
+                {actionLoading.create || actionLoading.update
+                  ? "Guardando..."
+                  : isEditing
+                  ? "Actualizar"
+                  : "Crear"}
               </Button>
             </div>
           </div>
@@ -535,7 +563,7 @@ export default function MyExpressionsPage() {
       </Dialog>
 
       {/* Modal de detalles con chat */}
-      <ExpressionDetailsModal 
+      <ExpressionDetailsModal
         open={detailsModalOpen}
         expression={selectedExpression}
         onClose={() => setDetailsModalOpen(false)}
@@ -554,8 +582,8 @@ export default function MyExpressionsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Se eliminará permanentemente la expresión
-              "{selectedExpression?.expression}".
+              Esta acción no se puede deshacer. Se eliminará permanentemente la
+              expresión "{selectedExpression?.expression}".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -577,4 +605,4 @@ export default function MyExpressionsPage() {
       />
     </PageLayout>
   );
-} 
+}

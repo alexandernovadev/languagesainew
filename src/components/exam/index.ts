@@ -25,6 +25,3 @@ export { QuestionTypeStats } from "./components/QuestionTypeStats";
 
 // Helpers
 export * from "./helpers/examUtils";
-
-// Taking components
-export * from "./taking";

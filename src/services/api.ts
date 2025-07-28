@@ -11,18 +11,21 @@ api.interceptors.request.use(
   (config) => {
     // Log de requests (solo en desarrollo)
     if (import.meta.env.DEV) {
-      console.log(`🌐 [REQUEST] ${config.method?.toUpperCase()} ${config.url}`, {
-        data: config.data,
-        params: config.params,
-        headers: config.headers,
-      });
+      console.log(
+        `🌐 [REQUEST] ${config.method?.toUpperCase()} ${config.url}`,
+        {
+          data: config.data,
+          params: config.params,
+          headers: config.headers,
+        }
+      );
     }
 
     // Agregar token de autenticación si existe
-    const token = localStorage.getItem('user-storage') 
-      ? JSON.parse(localStorage.getItem('user-storage') || '{}')?.state?.token 
+    const token = localStorage.getItem("user-storage")
+      ? JSON.parse(localStorage.getItem("user-storage") || "{}")?.state?.token
       : null;
-    
+
     if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -40,10 +43,15 @@ api.interceptors.response.use(
   (response) => {
     // Log de responses exitosas (solo en desarrollo)
     if (import.meta.env.DEV) {
-      console.log(`✅ [RESPONSE] ${response.config.method?.toUpperCase()} ${response.config.url}`, {
-        status: response.status,
-        data: response.data,
-      });
+      console.log(
+        `✅ [RESPONSE] ${response.config.method?.toUpperCase()} ${
+          response.config.url
+        }`,
+        {
+          status: response.status,
+          data: response.data,
+        }
+      );
     }
 
     return response;
@@ -63,15 +71,15 @@ api.interceptors.response.use(
     if (error.response) {
       // Error de respuesta del servidor (4xx, 5xx)
       const { status, data } = error.response;
-      
+
       switch (status) {
         case 401:
           // No autorizado - intentar refresh token antes de limpiar
           console.log("🔒 Token expirado - Intentando refresh...");
-          
+
           const store = useUserStore.getState();
           const refreshSuccess = await store.refreshAccessToken();
-          
+
           if (refreshSuccess) {
             // Reintentar la petición original con el nuevo token
             console.log("🔄 Reintentando petición con nuevo token...");
@@ -82,57 +90,62 @@ api.interceptors.response.use(
             }
           } else {
             // Refresh falló - limpiar sesión y abrir modal de login
-            console.log("🔒 Refresh falló - Limpiando sesión y abriendo modal de login");
+            console.log(
+              "🔒 Refresh falló - Limpiando sesión y abriendo modal de login"
+            );
             store.clearSession();
-            
+
             // Abrir modal de login usando query params
             const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('showLogin', 'true');
-            window.history.replaceState({}, '', currentUrl.toString());
-            
+            currentUrl.searchParams.set("showLogin", "true");
+            window.history.replaceState({}, "", currentUrl.toString());
+
             // Disparar evento personalizado para notificar que se debe abrir el modal
-            window.dispatchEvent(new CustomEvent('openLoginModal'));
+            window.dispatchEvent(new CustomEvent("openLoginModal"));
           }
           break;
-          
+
         case 403:
           // Prohibido - mostrar mensaje de permisos
           console.error("🔒 Acceso prohibido");
           break;
-          
+
         case 404:
           // No encontrado
           console.error("🔍 Recurso no encontrado");
           break;
-          
+
         case 500:
           // Error interno del servidor
           console.error("💻 Error interno del servidor");
           break;
-          
+
         default:
           // Otros errores HTTP
           console.error(`❌ Error HTTP ${status}`);
       }
 
       // Crear un error más descriptivo
-      const errorMessage = data?.error || data?.message || `Error ${status}: ${error.response.statusText}`;
+      const errorMessage =
+        data?.error ||
+        data?.message ||
+        `Error ${status}: ${error.response.statusText}`;
       const enhancedError = new Error(errorMessage);
-      
+
       // Agregar información adicional al error
       (enhancedError as any).status = status;
       (enhancedError as any).response = error.response;
       (enhancedError as any).isAxiosError = true;
-      
+
       return Promise.reject(enhancedError);
-      
     } else if (error.request) {
       // Error de red (sin respuesta del servidor)
       console.error("🌐 [NETWORK ERROR] No se pudo conectar al servidor");
-      const networkError = new Error("Error de conexión: No se pudo conectar al servidor");
+      const networkError = new Error(
+        "Error de conexión: No se pudo conectar al servidor"
+      );
       (networkError as any).isNetworkError = true;
       return Promise.reject(networkError);
-      
     } else {
       // Error en la configuración de la petición
       console.error("⚙️ [CONFIG ERROR]", error.message);
@@ -140,12 +153,3 @@ api.interceptors.response.use(
     }
   }
 );
-
-// Agrego declaración global para Vite env
-interface ImportMetaEnv {
-  readonly VITE_BACK_URL: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}

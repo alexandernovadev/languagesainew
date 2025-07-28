@@ -1,26 +1,23 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useUsers } from '@/hooks/useUsers';
-import { PageHeader } from '@/components/ui/page-header';
-import { PageLayout } from '@/components/layouts/page-layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  RefreshCw,
-  Edit,
-  Trash2,
-  Eye
-} from 'lucide-react';
-import { UserTable } from '../../components/admin/UserTable';
-import { UserFiltersModal } from '../../components/admin/UserFiltersModal';
-import { UserEditModal } from '../../components/admin/UserEditModal';
-import { UserDeleteDialog } from '../../components/admin/UserDeleteDialog';
-import { UserPagination } from '../../components/admin/UserPagination';
-import { UserPageSkeleton } from '../../components/admin/UserPageSkeleton';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUsers } from "@/hooks/useUsers";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Search,
+  Filter,
+  Plus,
+  RefreshCw
+} from "lucide-react";
+import { UserTable } from "../../components/admin/UserTable";
+import { UserFiltersModal } from "../../components/admin/UserFiltersModal";
+import { UserEditModal } from "../../components/admin/UserEditModal";
+import { UserDeleteDialog } from "../../components/admin/UserDeleteDialog";
+import { UserPagination } from "../../components/admin/UserPagination";
+import { UserPageSkeleton } from "../../components/admin/UserPageSkeleton";
 
 export default function UsersPage() {
   const {
@@ -99,7 +96,7 @@ export default function UsersPage() {
             placeholder="Buscar por nombre de usuario..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
             className="pl-10"
           />
         </div>
@@ -117,7 +114,7 @@ export default function UsersPage() {
           onClick={fetchUsers}
           disabled={loading}
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         </Button>
       </div>
 
@@ -160,9 +157,10 @@ export default function UsersPage() {
         user={selectedUser}
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onSave={selectedUser ? 
-          (data: any) => updateUser(selectedUser.id, data) : 
-          (data: any) => createUser(data)
+        onSave={
+          selectedUser
+            ? (data: any) => updateUser(selectedUser._id, data)
+            : (data: any) => createUser(data)
         }
         saving={saving}
       />
@@ -176,4 +174,4 @@ export default function UsersPage() {
       />
     </PageLayout>
   );
-} 
+}

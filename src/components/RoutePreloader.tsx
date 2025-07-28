@@ -1,16 +1,10 @@
 import { useEffect } from "react";
-import {
-  LecturesPage,
-  ExamsPage,
-
-  MyWordsPage,
-} from "../routes/lazyRoutes";
+import { LecturesPage, ExamsPage, MyWordsPage } from "../routes/lazyRoutes";
 
 // Rutas importantes para preload
 const importantRoutes = [
   () => LecturesPage,
   () => ExamsPage,
-
   () => MyWordsPage,
 ];
 
@@ -25,12 +19,12 @@ export const RoutePreloader: React.FC = () => {
           console.warn("Error preloading route:", error);
         }
       });
-    }, 2000); // 2 segundos después de cargar la página
+    }, 200);
 
     return () => clearTimeout(preloadTimer);
   }, []);
 
-  return null; // Este componente no renderiza nada
+  return null;
 };
 
-export default RoutePreloader; 
+export default RoutePreloader;

@@ -28,14 +28,16 @@ export const lectureService = {
   },
 
   async updateLectureAudioUrl(id: string, urlAudio: string, voice = "nova") {
-    const res = await api.put(
-      `/api/lectures/${id}/audio`,
-      { urlAudio, voice }
-    );
+    const res = await api.put(`/api/lectures/${id}/audio`, { urlAudio, voice });
     return res.data;
   },
 
-  async importLectures(file: File, duplicateStrategy: string, batchSize: number, validateOnly: boolean) {
+  async importLectures(
+    file: File,
+    duplicateStrategy: string,
+    batchSize: number,
+    validateOnly: boolean
+  ) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("duplicateStrategy", duplicateStrategy);
@@ -62,10 +64,10 @@ export const lectureService = {
 
   async putLectureImage(id: string, lectureString: string, imgOld: string) {
     const trimmedLectureString = lectureString.slice(0, 3500);
-    const res = await api.post(
-      "/api/ai/generate-image-lecture",
-      { lectureString: trimmedLectureString, imgOld }
-    );
+    const res = await api.post("/api/ai/generate-image-lecture", {
+      lectureString: trimmedLectureString,
+      imgOld,
+    });
     return res.data;
   },
 };

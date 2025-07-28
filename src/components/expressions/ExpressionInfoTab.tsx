@@ -14,7 +14,7 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
         <h3 className="font-semibold mb-2">Definición</h3>
         <p className="text-muted-foreground">{expression.definition}</p>
       </div>
-      
+
       {/* Traducción */}
       {expression.spanish && (
         <div>
@@ -23,19 +23,23 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
             {expression.spanish.expression && (
               <div>
                 <span className="text-sm font-medium">Expresión: </span>
-                <span className="text-muted-foreground">{expression.spanish.expression}</span>
+                <span className="text-muted-foreground">
+                  {expression.spanish.expression}
+                </span>
               </div>
             )}
             {expression.spanish.definition && (
               <div>
                 <span className="text-sm font-medium">Definición: </span>
-                <span className="text-muted-foreground">{expression.spanish.definition}</span>
+                <span className="text-muted-foreground">
+                  {expression.spanish.definition}
+                </span>
               </div>
             )}
           </div>
         </div>
       )}
-      
+
       {/* Contexto */}
       {expression.context && (
         <div>
@@ -43,7 +47,7 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
           <p className="text-muted-foreground">{expression.context}</p>
         </div>
       )}
-      
+
       {/* Nivel */}
       {expression.difficulty && (
         <div>
@@ -51,7 +55,7 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
           <ExpressionLevelBadge level={expression.difficulty} />
         </div>
       )}
-      
+
       {/* Tipos */}
       {expression.type && expression.type.length > 0 && (
         <div>
@@ -65,7 +69,7 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
           </div>
         </div>
       )}
-      
+
       {/* Ejemplos */}
       {expression.examples && expression.examples.length > 0 && (
         <div>
@@ -79,19 +83,19 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
           </ul>
         </div>
       )}
-      
+
       {/* Imagen */}
       {expression.img && (
         <div>
           <h3 className="font-semibold mb-2">Imagen</h3>
-          <img 
-            src={expression.img} 
+          <img
+            src={expression.img}
             alt={expression.expression}
             className="w-full max-w-xs rounded-lg object-contain border"
           />
         </div>
       )}
-      
+
       {/* Información adicional */}
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
@@ -109,4 +113,4 @@ export function ExpressionInfoTab({ expression }: ExpressionInfoTabProps) {
       </div>
     </div>
   );
-} 
+}

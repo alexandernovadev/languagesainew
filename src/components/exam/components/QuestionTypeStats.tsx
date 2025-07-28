@@ -1,8 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  calculateQuestionTypeStats,
-} from "../helpers/examUtils";
+import { calculateQuestionTypeStats } from "../helpers/examUtils";
 import { getExamTypeLabel } from "@/utils/common/examTypes";
 import { QuestionTypeStatsProps } from "../types/examTypes";
 
@@ -33,7 +31,9 @@ export function QuestionTypeStats({
           <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
             {totalQuestions}
           </div>
-          <div className="text-xs text-yellow-600 dark:text-yellow-400">Total</div>
+          <div className="text-xs text-yellow-600 dark:text-yellow-400">
+            Total
+          </div>
         </div>
 
         {questionTypes.map((type) => (

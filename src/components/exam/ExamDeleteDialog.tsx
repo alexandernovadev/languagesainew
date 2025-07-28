@@ -1,5 +1,5 @@
-import React from 'react';
-import { Exam } from '@/services/examService';
+import React from "react";
+import { Exam } from "@/services/examService";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 interface ExamDeleteDialogProps {
   exam: Exam | null;
@@ -30,7 +30,7 @@ export function ExamDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>¿Eliminar examen?</AlertDialogTitle>
           <AlertDialogDescription>
-            ¿Estás seguro de que quieres eliminar el examen "{exam?.title}"? 
+            ¿Estás seguro de que quieres eliminar el examen "{exam?.title}"?
             Esta acción no se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -46,4 +46,4 @@ export function ExamDeleteDialog({
       </AlertDialogContent>
     </AlertDialog>
   );
-} 
+}

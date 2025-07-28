@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Clock, AlertTriangle } from 'lucide-react';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock, AlertTriangle } from "lucide-react";
 
 interface ExamTimerProps {
   timeRemaining: number; // in seconds
@@ -9,14 +8,20 @@ interface ExamTimerProps {
   formatTime: (seconds: number) => string;
 }
 
-export function ExamTimer({ timeRemaining, isRunning, formatTime }: ExamTimerProps) {
+export function ExamTimer({
+  timeRemaining,
+  isRunning,
+  formatTime,
+}: ExamTimerProps) {
   const isWarning = timeRemaining <= 300; // 5 minutes
   const isCritical = timeRemaining <= 60; // 1 minute
 
   const getTimerColor = () => {
-    if (isCritical) return 'text-red-500 border-red-500/30 bg-red-500/10 dark:bg-red-500/20';
-    if (isWarning) return 'text-yellow-500 border-yellow-500/30 bg-yellow-500/10 dark:bg-yellow-500/20';
-    return 'text-blue-500 border-blue-500/30 bg-blue-500/10 dark:bg-blue-500/20';
+    if (isCritical)
+      return "text-red-500 border-red-500/30 bg-red-500/10 dark:bg-red-500/20";
+    if (isWarning)
+      return "text-yellow-500 border-yellow-500/30 bg-yellow-500/10 dark:bg-yellow-500/20";
+    return "text-blue-500 border-blue-500/30 bg-blue-500/10 dark:bg-blue-500/20";
   };
 
   const getIcon = () => {
@@ -37,9 +42,13 @@ export function ExamTimer({ timeRemaining, isRunning, formatTime }: ExamTimerPro
           )}
         </div>
         <div className="text-[10px] mt-0.5 opacity-75">
-          {isCritical ? '¡Tiempo crítico!' : isWarning ? 'Poco tiempo' : 'Tiempo restante'}
+          {isCritical
+            ? "¡Tiempo crítico!"
+            : isWarning
+            ? "Poco tiempo"
+            : "Tiempo restante"}
         </div>
       </CardContent>
     </Card>
   );
-} 
+}

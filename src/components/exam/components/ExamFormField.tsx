@@ -54,8 +54,12 @@ export function ExamFormField(props: ExamFormFieldProps) {
               variant="outline"
               size="sm"
               onClick={() => {
-                const currentValue = Number(props.value) || (props as any).min || 4;
-                const newValue = Math.max((props as any).min || 4, currentValue - 1);
+                const currentValue =
+                  Number(props.value) || (props as any).min || 4;
+                const newValue = Math.max(
+                  (props as any).min || 4,
+                  currentValue - 1
+                );
                 (props as any).onChange(newValue);
               }}
               className="h-8 w-8 p-0"
@@ -71,22 +75,36 @@ export function ExamFormField(props: ExamFormFieldProps) {
                 // Solo permitir números enteros
                 if (/^\d*$/.test(inputValue)) {
                   const numValue = parseInt(inputValue) || 0;
-                  const clampedValue = Math.max((props as any).min || 4, Math.min((props as any).max || 30, numValue));
+                  const clampedValue = Math.max(
+                    (props as any).min || 4,
+                    Math.min((props as any).max || 30, numValue)
+                  );
                   (props as any).onChange(clampedValue);
                 }
               }}
               onKeyDown={(e) => {
                 // Prevenir caracteres no numéricos excepto backspace, delete, arrow keys
-                if (!/[\d\b\-\+]/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab'].includes(e.key)) {
+                if (
+                  !/[\d\b\-\+]/.test(e.key) &&
+                  ![
+                    "Backspace",
+                    "Delete",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "ArrowUp",
+                    "ArrowDown",
+                    "Tab",
+                  ].includes(e.key)
+                ) {
                   e.preventDefault();
                 }
               }}
               min={(props as any).min || 4}
               max={(props as any).max || 30}
               className={`w-16 text-center ${
-                Number(props.value) < 4 || Number(props.value) > 30 
-                  ? 'border-red-500 text-red-500' 
-                  : ''
+                Number(props.value) < 4 || Number(props.value) > 30
+                  ? "border-red-500 text-red-500"
+                  : ""
               }`}
             />
             <Button
@@ -94,8 +112,12 @@ export function ExamFormField(props: ExamFormFieldProps) {
               variant="outline"
               size="sm"
               onClick={() => {
-                const currentValue = Number(props.value) || (props as any).min || 4;
-                const newValue = Math.min((props as any).max || 30, currentValue + 1);
+                const currentValue =
+                  Number(props.value) || (props as any).min || 4;
+                const newValue = Math.min(
+                  (props as any).max || 30,
+                  currentValue + 1
+                );
                 (props as any).onChange(newValue);
               }}
               className="h-8 w-8 p-0"
@@ -114,7 +136,11 @@ export function ExamFormField(props: ExamFormFieldProps) {
             </SelectTrigger>
             <SelectContent>
               {props.options.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="text-left">
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="text-left"
+                >
                   <div className="flex flex-col items-start">
                     <span className="font-medium">{option.label}</span>
                     {option.description && (
@@ -198,11 +224,11 @@ export function ExamFormField(props: ExamFormFieldProps) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium">
-        {label.includes('(') ? (
+        {label.includes("(") ? (
           <>
-            {label.split('(')[0]}
+            {label.split("(")[0]}
             <span className="text-[10px] text-muted-foreground font-normal">
-              ({label.split('(')[1]}
+              ({label.split("(")[1]}
             </span>
           </>
         ) : (
@@ -220,10 +246,13 @@ export function ExamFormField(props: ExamFormFieldProps) {
       {description && !error && (
         <p className="text-xs text-muted-foreground">{description}</p>
       )}
-      
-      {type === "number" && (Number(props.value) < 4 || Number(props.value) > 30) && (
-        <p className="text-xs text-red-500">El valor debe estar entre 4 y 30</p>
-      )}
+
+      {type === "number" &&
+        (Number(props.value) < 4 || Number(props.value) > 30) && (
+          <p className="text-xs text-red-500">
+            El valor debe estar entre 4 y 30
+          </p>
+        )}
     </div>
   );
 }

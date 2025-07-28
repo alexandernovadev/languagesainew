@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Verb, CheckedAnswers } from "../types";
+import { Verb } from "../types";
 
 interface UseGameStatsProps {
   session: any;

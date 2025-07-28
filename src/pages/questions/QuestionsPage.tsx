@@ -29,12 +29,7 @@ import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Plus,
-  Search,
-  X as XIcon,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Plus, Search, X as XIcon, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 export default function QuestionsPage() {
@@ -52,7 +47,6 @@ export default function QuestionsPage() {
     setPage,
     setSearchQuery,
     setFilters,
-    searchQuery,
     errors,
     clearErrors,
   } = useQuestionStore();
@@ -61,7 +55,9 @@ export default function QuestionsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
+    null
+  );
   const [localSearch, setLocalSearch] = useState("");
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
@@ -125,7 +121,8 @@ export default function QuestionsPage() {
       // Recargar las preguntas después de crear/actualizar
       getQuestions();
     } catch (error) {
-      // TODO: Show error toast
+      toast.error("Error al crear la pregunta");
+      console.error(error);
     }
   };
 
@@ -166,17 +163,20 @@ export default function QuestionsPage() {
   };
 
   // Usar useCallback para evitar re-renders innecesarios
-  const handleFiltersChange = useCallback((filters: any) => {
-    if (filtersFirstRender.current) {
-      filtersFirstRender.current = false;
-      return;
-    }
-    setFilters(filters);
-    // Llamar getQuestions después de actualizar los filtros
-    setTimeout(() => {
-      getQuestions(1, 10, filters);
-    }, 0);
-  }, [setFilters, getQuestions]);
+  const handleFiltersChange = useCallback(
+    (filters: any) => {
+      if (filtersFirstRender.current) {
+        filtersFirstRender.current = false;
+        return;
+      }
+      setFilters(filters);
+      // Llamar getQuestions después de actualizar los filtros
+      setTimeout(() => {
+        getQuestions(1, 10, filters);
+      }, 0);
+    },
+    [setFilters, getQuestions]
+  );
 
   if (loading) {
     return (
@@ -229,7 +229,7 @@ export default function QuestionsPage() {
                   onRetry={() => {}}
                   loading={true}
                 />
-                
+
                 {/* Pagination Skeleton */}
                 <div className="flex justify-center gap-2">
                   <Skeleton className="w-10 h-10 rounded" />
@@ -292,8 +292,6 @@ export default function QuestionsPage() {
         </div>
       </div>
 
-
-
       {/* Questions Table */}
       <Card>
         <CardHeader>
@@ -310,7 +308,7 @@ export default function QuestionsPage() {
               loading={loading}
               searchQuery={localSearch}
             />
-            
+
             {/* Pagination */}
             <QuestionPagination
               currentPage={currentPage}
@@ -330,14 +328,15 @@ export default function QuestionsPage() {
               {isEditing ? "Editar Pregunta" : "Nueva Pregunta"}
             </DialogTitle>
             <DialogDescription>
-              {isEditing 
+              {isEditing
                 ? "Modifica los detalles de la pregunta."
-                : "Crea una nueva pregunta para ejercicios de aprendizaje."
-              }
+                : "Crea una nueva pregunta para ejercicios de aprendizaje."}
             </DialogDescription>
           </DialogHeader>
           <QuestionForm
-            initialData={isEditing && selectedQuestion ? selectedQuestion : undefined}
+            initialData={
+              isEditing && selectedQuestion ? selectedQuestion : undefined
+            }
             onSubmit={handleFormSubmit}
             onCancel={() => setDialogOpen(false)}
             loading={actionLoading.create || actionLoading.update}
@@ -358,8 +357,9 @@ export default function QuestionsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Esto eliminará permanentemente la pregunta
-              "{selectedQuestion?.text}" y todos sus datos asociados.
+              Esta acción no se puede deshacer. Esto eliminará permanentemente
+              la pregunta "{selectedQuestion?.text}" y todos sus datos
+              asociados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -382,4 +382,4 @@ export default function QuestionsPage() {
       />
     </PageLayout>
   );
-} 
+}

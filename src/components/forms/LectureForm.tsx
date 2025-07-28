@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, FileText, Wand2, Loader2 } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
@@ -17,7 +29,9 @@ import { toast } from "sonner";
 
 interface LectureFormProps {
   initialData?: Partial<Lecture>;
-  onSubmit: (data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">) => Promise<void>;
+  onSubmit: (
+    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+  ) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
   submitText?: string;
@@ -33,11 +47,17 @@ export function LectureForm({
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imageProgress, setImageProgress] = useState(0);
 
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       level: initialData.level || "",
       typeWrite: initialData.typeWrite || "",
-      language: initialData.language || "en", // Cambiar de "es" a "en" como default más neutral
+      language: initialData.language || "en",
       time: initialData.time || 0,
       content: initialData.content || "",
       img: initialData.img || "",
@@ -65,7 +85,7 @@ export function LectureForm({
     try {
       // Simular progreso
       const progressInterval = setInterval(() => {
-        setImageProgress(prev => {
+        setImageProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return prev;
@@ -75,10 +95,13 @@ export function LectureForm({
       }, 500);
 
       // Llamar al endpoint de generación de imagen
-      const response = await api.post(`/api/ai/generate-image-lecture/${initialData._id || 'temp'}`, {
-        lectureString: formData.content.substring(0, 500), // Primeros 500 caracteres
-        imgOld: formData.img || null,
-      });
+      const response = await api.post(
+        `/api/ai/generate-image-lecture/${initialData._id || "temp"}`,
+        {
+          lectureString: formData.content.substring(0, 500), // Primeros 500 caracteres
+          imgOld: formData.img || null,
+        }
+      );
 
       clearInterval(progressInterval);
       setImageProgress(100);
@@ -239,10 +262,12 @@ export function LectureForm({
                           // Skeleton durante generación
                           <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
                             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-sm text-muted-foreground">Generando imagen...</p>
+                            <p className="text-sm text-muted-foreground">
+                              Generando imagen...
+                            </p>
                             {imageProgress > 0 && (
                               <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
+                                <div
                                   className="bg-primary h-2 rounded-full transition-all duration-300"
                                   style={{ width: `${imageProgress}%` }}
                                 ></div>
@@ -327,7 +352,10 @@ export function LectureForm({
           <Button type="button" variant="ghost" onClick={onCancel}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={!isFormValid || loading || isGeneratingImage}>
+          <Button
+            type="submit"
+            disabled={!isFormValid || loading || isGeneratingImage}
+          >
             {loading ? "Guardando..." : submitText}
           </Button>
         </div>

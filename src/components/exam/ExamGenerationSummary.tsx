@@ -1,19 +1,18 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  BookOpen, 
-  Target, 
-  FileText, 
-  Settings, 
+import {
+  BookOpen,
+  Target,
+  FileText,
+  Settings,
   Sparkles,
   Brain,
   Zap,
-  Star
+  Star,
 } from "lucide-react";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
-import { getLevelDescription, getDifficultyLabel } from "./helpers/examUtils";
-import { questionTypes, questionLevels } from "@/data/questionTypes";
+import { getDifficultyLabel } from "./helpers/examUtils";
 
 interface ExamGenerationSummaryProps {
   filters: ExamGeneratorFilters;
@@ -22,36 +21,56 @@ interface ExamGenerationSummaryProps {
 export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
   const getQuestionTypeIcon = (type: string) => {
     switch (type) {
-      case 'multiple_choice': return '☑️';
-      case 'single_choice': return '🔘';
-      case 'fill_blank': return '📝';
-      case 'true_false': return '✅❌';
-      case 'translate': return '🌐';
-      case 'writing': return '✍️';
-      default: return '❓';
+      case "multiple_choice":
+        return "☑️";
+      case "single_choice":
+        return "🔘";
+      case "fill_blank":
+        return "📝";
+      case "true_false":
+        return "✅❌";
+      case "translate":
+        return "🌐";
+      case "writing":
+        return "✍️";
+      default:
+        return "❓";
     }
   };
 
   const getLevelVariant = (level: string) => {
     switch (level) {
-      case 'A1': return 'blue';
-      case 'A2': return 'secondary';
-      case 'B1': return 'yellow';
-      case 'B2': return 'magenta';
-      case 'C1': return 'destructive';
-      case 'C2': return 'default';
-      default: return 'outline';
+      case "A1":
+        return "blue";
+      case "A2":
+        return "secondary";
+      case "B1":
+        return "yellow";
+      case "B2":
+        return "magenta";
+      case "C1":
+        return "destructive";
+      case "C2":
+        return "default";
+      default:
+        return "outline";
     }
   };
 
   const getDifficultyVariant = (difficulty: number) => {
     switch (difficulty) {
-      case 1: return 'blue';
-      case 2: return 'secondary';
-      case 3: return 'yellow';
-      case 4: return 'magenta';
-      case 5: return 'destructive';
-      default: return 'outline';
+      case 1:
+        return "blue";
+      case 2:
+        return "secondary";
+      case 3:
+        return "yellow";
+      case 4:
+        return "magenta";
+      case 5:
+        return "destructive";
+      default:
+        return "outline";
     }
   };
 
@@ -67,7 +86,6 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
       <CardContent className="space-y-3">
         {/* Grid compacto de información */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          
           {/* Tema */}
           <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
@@ -85,7 +103,10 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
               <Target className="h-4 w-4 text-green-400" />
               <h3 className="font-semibold text-green-400 text-sm">Nivel</h3>
             </div>
-            <Badge variant={getLevelVariant(filters.level)} className="border text-xs">
+            <Badge
+              variant={getLevelVariant(filters.level)}
+              className="border text-xs"
+            >
               {filters.level}
             </Badge>
           </div>
@@ -94,9 +115,14 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
           <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="h-4 w-4 text-orange-400" />
-              <h3 className="font-semibold text-orange-400 text-sm">Dificultad</h3>
+              <h3 className="font-semibold text-orange-400 text-sm">
+                Dificultad
+              </h3>
             </div>
-            <Badge variant={getDifficultyVariant(filters.difficulty)} className="border text-xs">
+            <Badge
+              variant={getDifficultyVariant(filters.difficulty)}
+              className="border text-xs"
+            >
               {getDifficultyLabel(filters.difficulty)}
             </Badge>
           </div>
@@ -105,7 +131,9 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
           <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <FileText className="h-4 w-4 text-purple-400" />
-              <h3 className="font-semibold text-purple-400 text-sm">Preguntas</h3>
+              <h3 className="font-semibold text-purple-400 text-sm">
+                Preguntas
+              </h3>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-lg font-bold text-purple-400">
@@ -123,12 +151,8 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
             </div>
             <div className="flex flex-wrap gap-1">
               {filters.types.slice(0, 2).map((type) => (
-                <Badge 
-                  key={type} 
-                  variant="outline" 
-                  className="text-xs"
-                >
-                  {getQuestionTypeIcon(type)} {type.replace('_', ' ')}
+                <Badge key={type} variant="outline" className="text-xs">
+                  {getQuestionTypeIcon(type)} {type.replace("_", " ")}
                 </Badge>
               ))}
               {filters.types.length > 2 && (
@@ -148,11 +172,7 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
             {filters.grammarTopics.length > 0 ? (
               <div className="flex flex-wrap gap-1">
                 {filters.grammarTopics.slice(0, 2).map((topic) => (
-                  <Badge 
-                    key={topic} 
-                    variant="outline" 
-                    className="text-xs"
-                  >
+                  <Badge key={topic} variant="outline" className="text-xs">
                     {topic}
                   </Badge>
                 ))}
@@ -166,10 +186,8 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
               <p className="text-xs text-gray-500">Sin temas específicos</p>
             )}
           </div>
-
         </div>
-
       </CardContent>
     </Card>
   );
-} 
+}

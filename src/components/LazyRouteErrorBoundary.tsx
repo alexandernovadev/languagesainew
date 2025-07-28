@@ -37,7 +37,8 @@ export class LazyRouteErrorBoundary extends Component<Props, State> {
               Error al cargar la página
             </h2>
             <p className="text-gray-600 mb-4">
-              Ha ocurrido un error al cargar esta página. Por favor, intenta recargar la página.
+              Ha ocurrido un error al cargar esta página. Por favor, intenta
+              recargar la página.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -54,4 +55,4 @@ export class LazyRouteErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default LazyRouteErrorBoundary; 
+export default LazyRouteErrorBoundary;
