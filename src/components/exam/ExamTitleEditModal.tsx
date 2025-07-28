@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Save } from "lucide-react";
@@ -41,34 +41,17 @@ export function ExamTitleEditModal({
   };
 
   return (
-    <Dialog
+    <ModalNova
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
           stopEditing();
         }
       }}
-    >
-      <DialogContent className="max-w-md w-full border border-gray-600 shadow-2xl">
-        <DialogTitle className="text-lg font-semibold">
-          Editar Título del Examen
-        </DialogTitle>
-
-        <div className="space-y-4 py-4">
-          <div>
-            <Label htmlFor="exam-title">Título</Label>
-            <Textarea
-              id="exam-title"
-              value={editedTitle}
-              onChange={(e) => setEditedTitle(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ingresa el título del examen"
-              autoFocus
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-3">
+      title="Editar Título del Examen"
+      size="md"
+      footer={
+        <>
           <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
@@ -76,8 +59,22 @@ export function ExamTitleEditModal({
             <Save className="h-4 w-4 mr-2" />
             Guardar
           </Button>
+        </>
+      }
+    >
+      <div className="space-y-4 py-4">
+        <div>
+          <Label htmlFor="exam-title">Título</Label>
+          <Textarea
+            id="exam-title"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ingresa el título del examen"
+            autoFocus
+          />
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }

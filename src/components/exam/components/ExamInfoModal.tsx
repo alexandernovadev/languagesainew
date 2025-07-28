@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Info, Lightbulb, BookOpen } from "lucide-react";
 import { EXAM_GENERATION_TIPS } from "../constants/examConstants";
@@ -16,16 +11,14 @@ interface ExamInfoModalProps {
 
 export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80dvh] overflow-y-auto border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Info className="h-5 w-5" />
-            Información del Generador de Exámenes
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-6">
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title="💡 Tips y Consejos"
+      size="2xl"
+      height="h-[80dvh]"
+    >
+      <div className="space-y-6 px-3 pb-4">
           {/* Consejos para mejores resultados */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -72,13 +65,6 @@ export function ExamInfoModal({ isOpen, onClose }: ExamInfoModalProps) {
             </div>
           </div>
         </div>
-
-        <div className="flex justify-end pt-4">
-          <Button onClick={onClose} variant="outline">
-            Entendido
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }
