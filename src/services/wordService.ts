@@ -1,6 +1,7 @@
 import { Word } from "../models/Word";
 import { api } from "./api";
 import { WordFilters } from "@/components/forms/word-filters/types";
+import { useUserStore } from "@/lib/store/user-store";
 
 export const wordService = {
   async getWords(page: number, limit: number, filters?: Partial<WordFilters>) {
@@ -210,4 +211,47 @@ export const wordService = {
     });
     return res.data;
   },
+
+  // Chat methods
+  addChatMessage: (wordId: string, message: string) => 
+    api.post(`/api/words/${wordId}/chat`, { message }),
+
+  streamChatMessage: async (wordId: string, message: string) => {
+    const baseURL = import.meta.env.VITE_BACK_URL;
+    const url = `${baseURL}/api/words/${wordId}/chat/stream`;
+    
+    console.log('🔄 Streaming to:', url);
+    
+    // Get auth headers without Content-Type for streaming
+    const authToken = useUserStore.getState().token;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
+    }
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ message }),
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Stream error:', response.status, errorText);
+      throw new Error(`Failed to stream chat message: ${response.status} ${errorText}`);
+    }
+
+    return response.body;
+  },
+
+  getChatHistory: (wordId: string) => 
+    api.get(`/api/words/${wordId}/chat`),
+
+  clearChatHistory: (wordId: string) => 
+    api.delete(`/api/words/${wordId}/chat`),
 };

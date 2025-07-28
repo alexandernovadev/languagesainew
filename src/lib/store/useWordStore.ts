@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { wordService } from "../../services/wordService";
-import { Word } from "../../models/Word";
+import { Word, ChatMessage } from "../../models/Word";
 import { WordFilters } from "@/components/forms/word-filters/types";
+import { toast } from "sonner";
 
 interface WordStore {
   words: Word[];
@@ -70,6 +71,12 @@ interface WordStore {
     imgOld?: string
   ) => Promise<Word>;
   generateWord: (prompt: string) => Promise<Word>;
+
+  // Chat actions
+  addChatMessage: (wordId: string, message: string) => Promise<void>;
+  streamChatMessage: (wordId: string, message: string, onChunk?: (chunk: string) => void) => Promise<void>;
+  getChatHistory: (wordId: string) => Promise<ChatMessage[]>;
+  clearChatHistory: (wordId: string) => Promise<void>;
 }
 
 export const useWordStore = create<WordStore>((set, get) => ({
@@ -560,6 +567,74 @@ export const useWordStore = create<WordStore>((set, get) => ({
     } catch (error) {
       console.error("Error en generateWord:", error);
       throw error;
+    }
+  },
+
+  addChatMessage: async (wordId, message) => {
+    try {
+      const response = await wordService.addChatMessage(wordId, message);
+      set({
+        words: get().words.map((word) =>
+          word._id === wordId ? response.data.word : word
+        ),
+      });
+    } catch (error: any) {
+      console.error("Error adding chat message:", error);
+      toast.error("Error al enviar el mensaje");
+    }
+  },
+
+  streamChatMessage: async (wordId, message, onChunk) => {
+    try {
+      const stream = await wordService.streamChatMessage(wordId, message);
+      
+      if (!stream) {
+        throw new Error('No stream received');
+      }
+
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        if (onChunk) {
+          onChunk(chunk);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error streaming chat message:", error);
+      toast.error("Error al enviar el mensaje");
+      throw error;
+    }
+  },
+
+  getChatHistory: async (wordId) => {
+    try {
+      const response = await wordService.getChatHistory(wordId);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error getting chat history:", error);
+      toast.error("Error al cargar el historial del chat");
+      return [];
+    }
+  },
+
+  clearChatHistory: async (wordId) => {
+    try {
+      await wordService.clearChatHistory(wordId);
+      set({
+        words: get().words.map((word) =>
+          word._id === wordId ? { ...word, chat: [] } : word
+        ),
+      });
+      toast.success("Chat limpiado exitosamente");
+    } catch (error: any) {
+      console.error("Error clearing chat history:", error);
+      toast.error("Error al limpiar el chat");
     }
   },
 }));

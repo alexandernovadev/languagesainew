@@ -10,6 +10,8 @@ import { SPEECH_RATES } from "../../speechRates";
 import { formatDateShort } from "@/utils/common/time";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WordChatTab } from "./WordChatTab";
 
 interface WordDetailsCardProps {
   word: Word;
@@ -39,6 +41,7 @@ export function WordDetailsCard({
   } = useWordStore();
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
 
   const speakWord = (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
     if (isPlaying) return;
@@ -267,6 +270,15 @@ export function WordDetailsCard({
         </p>
       </div>
 
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "chat")}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="info">Información</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="info" className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
+
       {/* Definition */}
       {word.definition && (
         <SectionContainer>
@@ -441,6 +453,12 @@ export function WordDetailsCard({
           ))}
         </div>
       )}
+        </TabsContent>
+        
+        <TabsContent value="chat" className="h-[calc(100vh-12rem)]">
+          <WordChatTab word={word} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

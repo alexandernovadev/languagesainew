@@ -1,3 +1,10 @@
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+}
+
 export interface Word {
   _id: string;
   word: string;
@@ -15,6 +22,7 @@ export interface Word {
     definition: string;
     word: string;
   };
+  chat?: ChatMessage[];
   createdAt?: string;
   updatedAt?: string;
   // Campos para sistema de repaso inteligente
