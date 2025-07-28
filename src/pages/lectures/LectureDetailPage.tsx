@@ -22,7 +22,6 @@ import {
   Star,
   User,
   Eye,
-  RefreshCw,
   Wand2,
   Loader2,
 } from "lucide-react";
@@ -39,15 +38,7 @@ import { WordDetailsModal } from "@/components/word-details";
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { lectures, getLectureById, loading } = useLectureStore();
-  const { 
-    getWordByName, 
-    generateWord, 
-    updateWordImage, 
-    updateWordExamples, 
-    updateWordSynonyms, 
-    updateWordCodeSwitching, 
-    updateWordTypes 
-  } = useWordStore();
+  const { getWordByName, generateWord } = useWordStore();
 
   const [lecture, setLecture] = useState<Lecture | null>(null);
 
@@ -60,11 +51,6 @@ export default function LectureDetailPage() {
   const [foundWord, setFoundWord] = useState<Word | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [loadingExamples, setLoadingExamples] = useState(false);
-  const [loadingSynonyms, setLoadingSynonyms] = useState(false);
-  const [loadingCodeSwitching, setLoadingCodeSwitching] = useState(false);
-  const [loadingTypes, setLoadingTypes] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -119,7 +105,7 @@ export default function LectureDetailPage() {
     setIsModalOpen(true);
     setIsSearching(true);
     setFoundWord(null);
-    
+
     try {
       await getWordByName(word);
       // Si no hay error, la palabra existe
@@ -133,44 +119,30 @@ export default function LectureDetailPage() {
     }
   };
 
-  const closeWordModal = () => {
-    setIsModalOpen(false);
-    setModalWord(null);
-    setFoundWord(null);
-    setIsSearching(false);
-    setIsGenerating(false);
-    setLoadingImage(false);
-    setLoadingExamples(false);
-    setLoadingSynonyms(false);
-    setLoadingCodeSwitching(false);
-    setLoadingTypes(false);
-  };
-
   const handleGenerateWord = async () => {
     if (!modalWord) return;
-    
+
     setIsGenerating(true);
     try {
       console.log("Generando palabra:", modalWord);
       const generatedWord = await generateWord(modalWord);
       console.log("Palabra generada exitosamente:", generatedWord);
-      
+
       // Pequeño delay para asegurar que el backend termine de procesar
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       toast.success("Palabra generada", {
         description: `La palabra "${modalWord}" ha sido generada exitosamente`,
       });
-      
+
       // Usar directamente la palabra generada
       setFoundWord(generatedWord);
       console.log("Estado foundWord actualizado:", generatedWord);
-      
+
       // Verificar que el estado se actualizó correctamente
       setTimeout(() => {
         console.log("Estado foundWord después de actualizar:", foundWord);
       }, 100);
-      
     } catch (error: any) {
       console.error("Error al generar palabra:", error);
       toast.error("Error al generar palabra", {
@@ -179,160 +151,6 @@ export default function LectureDetailPage() {
     } finally {
       setIsGenerating(false);
     }
-  };
-
-  const handleRefreshImage = async () => {
-    if (!foundWord?._id || !modalWord) return;
-    
-    setLoadingImage(true);
-    try {
-      const updatedWord = await updateWordImage(foundWord._id, modalWord, foundWord.img);
-      toast.success("Imagen actualizada", {
-        description: `La imagen de "${modalWord}" ha sido regenerada`,
-      });
-      setFoundWord(updatedWord);
-    } catch (error: any) {
-      toast.error("Error al actualizar imagen", {
-        description: error.message || "No se pudo actualizar la imagen",
-      });
-    } finally {
-      setLoadingImage(false);
-    }
-  };
-
-  const handleRefreshExamples = async () => {
-    if (!foundWord?._id || !modalWord) return;
-    
-    setLoadingExamples(true);
-    try {
-      const updatedWord = await updateWordExamples(foundWord._id, modalWord, "en", foundWord.examples || []);
-      toast.success("Ejemplos actualizados", {
-        description: `Los ejemplos de "${modalWord}" han sido regenerados`,
-      });
-      setFoundWord(updatedWord);
-    } catch (error: any) {
-      toast.error("Error al actualizar ejemplos", {
-        description: error.message || "No se pudo actualizar los ejemplos",
-      });
-    } finally {
-      setLoadingExamples(false);
-    }
-  };
-
-  const handleRefreshSynonyms = async () => {
-    if (!foundWord?._id || !modalWord) return;
-    
-    setLoadingSynonyms(true);
-    try {
-      const updatedWord = await updateWordSynonyms(foundWord._id, modalWord, "en", foundWord.sinonyms || []);
-      toast.success("Sinónimos actualizados", {
-        description: `Los sinónimos de "${modalWord}" han sido regenerados`,
-      });
-      setFoundWord(updatedWord);
-    } catch (error: any) {
-      toast.error("Error al actualizar sinónimos", {
-        description: error.message || "No se pudo actualizar los sinónimos",
-      });
-    } finally {
-      setLoadingSynonyms(false);
-    }
-  };
-
-  const handleRefreshCodeSwitching = async () => {
-    if (!foundWord?._id || !modalWord) return;
-    
-    setLoadingCodeSwitching(true);
-    try {
-      const updatedWord = await updateWordCodeSwitching(foundWord._id, modalWord, "en", foundWord.codeSwitching || []);
-      toast.success("Code-switching actualizado", {
-        description: `El code-switching de "${modalWord}" ha sido regenerado`,
-      });
-      setFoundWord(updatedWord);
-    } catch (error: any) {
-      toast.error("Error al actualizar code-switching", {
-        description: error.message || "No se pudo actualizar el code-switching",
-      });
-    } finally {
-      setLoadingCodeSwitching(false);
-    }
-  };
-
-  const handleRefreshTypes = async () => {
-    if (!foundWord?._id || !modalWord) return;
-    
-    setLoadingTypes(true);
-    try {
-      const updatedWord = await updateWordTypes(foundWord._id, modalWord, "en", foundWord.type || []);
-      toast.success("Tipos actualizados", {
-        description: `Los tipos de "${modalWord}" ha sido regenerados`,
-      });
-      setFoundWord(updatedWord);
-    } catch (error: any) {
-      toast.error("Error al actualizar tipos", {
-        description: error.message || "No se pudo actualizar los tipos",
-      });
-    } finally {
-      setLoadingTypes(false);
-    }
-  };
-
-  // Componentes auxiliares para el modal
-  const SectionContainer = ({
-    children,
-    hasBox = false,
-    className = "",
-  }: {
-    children: React.ReactNode;
-    hasBox?: boolean;
-    className?: string;
-  }) => (
-    <div
-      className={cn(
-        "my-4",
-        hasBox && "border border-border rounded-lg p-5 relative",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-
-  const SectionHeader = ({
-    title,
-    onRefresh,
-    loading = false,
-  }: {
-    title: string;
-    onRefresh?: () => void;
-    loading?: boolean;
-  }) => (
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-lg font-semibold text-muted-foreground">{title}</h3>
-      {onRefresh && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onRefresh}
-          disabled={loading}
-          className="h-8 w-8 p-0"
-        >
-          <RefreshCw
-            className={cn(
-              "h-4 w-4",
-              loading && "animate-spin text-muted-foreground"
-            )}
-          />
-        </Button>
-      )}
-    </div>
-  );
-
-  const speakWordModal = (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
-    if (!modalWord) return;
-    const utterance = new SpeechSynthesisUtterance(modalWord);
-    utterance.rate = rate;
-    utterance.lang = language;
-    speechSynthesis.speak(utterance);
   };
 
   const renderInteractiveText = (text: string) => {
@@ -451,8 +269,6 @@ export default function LectureDetailPage() {
     );
   }
 
-  const words = lecture.content.split(/\s+/);
-
   const title = getMarkdownTitle(lecture.content) || "Detalle de la Lectura";
   const typeLabel =
     lectureTypes.find((type) => type.value === lecture.typeWrite)?.label ||
@@ -506,7 +322,10 @@ export default function LectureDetailPage() {
                 className="border-purple-400 text-purple-400 hover:bg-purple-400/10 flex items-center gap-1.5 py-1 px-3 text-xs"
               >
                 <Languages className="h-3.5 w-3.5" />
-                <span>{getLanguageInfo(lecture.language).flag} {getLanguageInfo(lecture.language).name}</span>
+                <span>
+                  {getLanguageInfo(lecture.language).flag}{" "}
+                  {getLanguageInfo(lecture.language).name}
+                </span>
               </Badge>
             </div>
           </div>
@@ -617,7 +436,7 @@ export default function LectureDetailPage() {
                 Palabra no encontrada
               </DialogTitle>
             </DialogHeader>
-            
+
             <div className="text-center py-4">
               <p className="text-sm text-muted-foreground mb-4">
                 La palabra "{modalWord}" no existe en la base de datos.
@@ -638,15 +457,6 @@ export default function LectureDetailPage() {
                     Generar palabra
                   </>
                 )}
-              </Button>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={closeWordModal}
-              >
-                Cerrar
               </Button>
             </div>
           </DialogContent>
