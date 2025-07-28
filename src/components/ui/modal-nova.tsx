@@ -58,7 +58,7 @@ export function ModalNova({
 
         {/* Footer Fijo */}
         {footer && (
-          <div className="flex justify-center gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
+          <div className="flex justify-end gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
             {footer}
           </div>
         )}

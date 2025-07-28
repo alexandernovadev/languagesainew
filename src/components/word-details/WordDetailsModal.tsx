@@ -35,7 +35,7 @@ export function WordDetailsModal({
   };
 
   const levelButtons = showLevelButtons ? (
-    <div className="flex justify-center gap-2">
+    <div className="flex justify-center gap-2 w-full">
       {(["easy", "medium", "hard"] as const).map((level) => (
         <Button
           key={level}
