@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -1009,17 +1004,56 @@ export function ExamEditModal({
   if (!exam) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-5xl max-h-[90dvh] overflow-hidden flex flex-col border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            Editar Examen
-          </DialogTitle>
-        </DialogHeader>
+    <ModalNova
+      open={isOpen}
+      onOpenChange={handleClose}
+      title="Editar Examen"
+      size="5xl"
+      height="h-[90dvh]"
+      footer={
+        <div className="flex justify-between items-center w-full">
+          <div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addQuestion}
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Agregar Pregunta
+            </Button>
+          </div>
 
-        <Tabs defaultValue="general" className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-3">
+          <div className="flex gap-2 justify-center items-center">
+            <Button variant="outline" onClick={handleClose} disabled={loading}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="min-w-[100px]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Guardar
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      }
+    >
+              <Tabs defaultValue="general" className="flex-1 flex flex-col pt-6">
+          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
             <TabsTrigger value="general" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
               General
@@ -1371,47 +1405,6 @@ export function ExamEditModal({
             </ScrollArea>
           </TabsContent>
         </Tabs>
-
-        <div className="sticky bottom-[-24px] z-10 bg-background py-4 border-t flex justify-between items-center gap-2">
-          <div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={addQuestion}
-              disabled={loading}
-              className="flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Agregar Pregunta
-            </Button>
-          </div>
-
-          <div className="flex gap-2 justify-center items-center">
-            <Button variant="outline" onClick={handleClose} disabled={loading}>
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="min-w-[100px]"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Guardar
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }

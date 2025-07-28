@@ -354,15 +354,16 @@ body {
 
 /* Botón de eliminar personalizado */
 .btn-delete-danger {
-  background-color: hsl(var(--destructive) / 0.2) !important;
+  background-color: hsl(var(--destructive) / 0.4) !important;
   border-color: hsl(var(--destructive)) !important;
-  color: hsl(var(--destructive)) !important;
-  box-shadow: 0 0 15px hsl(var(--destructive) / 0.2) !important;
-  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 0 15px hsl(var(--destructive) / 0.3) !important;
+  transition: all 0.3s ease;
+  font-weight: 500 !important;
 }
 
 .btn-delete-danger:hover {
-  background-color: hsl(var(--destructive) / 0.3) !important;
+  background-color: hsl(var(--destructive) / 0.5) !important;
   border-color: hsl(var(--destructive)) !important;
-  box-shadow: 0 0 20px hsl(var(--destructive) / 0.3) !important;
+  box-shadow: 0 0 20px hsl(var(--destructive) / 0.4) !important;
 }

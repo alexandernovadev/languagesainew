@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -17,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Filter, X } from "lucide-react";
 import { getAllLanguages } from "@/utils/common/language";
 import { getAllExamLevels } from "@/utils/common/examTypes";
@@ -72,22 +65,34 @@ export default function ExamFiltersModal({
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl h-[80dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
-        {/* Fixed Header */}
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="flex items-center gap-2">
-            <Filter className="w-5 h-5" />
-            Filtros de Exámenes
-          </DialogTitle>
-          <DialogDescription>
-            Configura los filtros para encontrar los exámenes que necesitas
-          </DialogDescription>
-        </DialogHeader>
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Filtros de Exámenes"
+      description="Configura los filtros para encontrar los exámenes que necesitas"
+      size="2xl"
+      height="h-[80dvh]"
+      footer={
+        <div className="flex justify-between items-center w-full">
+          <Button
+            variant="outline"
+            onClick={handleClear}
+            className="flex items-center gap-2"
+          >
+            <X className="w-4 h-4" />
+            Limpiar Filtros
+          </Button>
 
-        {/* Scrollable Content */}
-        <ScrollArea className="flex-1 px-6 py-4">
-          <div className="space-y-6 px-3">
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button onClick={handleApply}>Aplicar Filtros</Button>
+          </div>
+        </div>
+      }
+    >
+      <div className="space-y-6 px-3">
             {/* Filtros Básicos */}
             <div>
               <h3 className="text-sm font-medium mb-3">Filtros Básicos</h3>
@@ -315,29 +320,6 @@ export default function ExamFiltersModal({
               </div>
             )}
           </div>
-        </ScrollArea>
-
-        {/* Fixed Footer */}
-        <div className="px-6 py-4 border-t bg-background">
-          <div className="flex justify-between items-center">
-            <Button
-              variant="outline"
-              onClick={handleClear}
-              className="flex items-center gap-2"
-            >
-              <X className="w-4 h-4" />
-              Limpiar Filtros
-            </Button>
-
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button onClick={handleApply}>Aplicar Filtros</Button>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+        </ModalNova>
+      );
+    }

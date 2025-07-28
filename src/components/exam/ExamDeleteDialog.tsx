@@ -1,15 +1,6 @@
 import React from "react";
 import { Exam } from "@/services/examService";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 
 interface ExamDeleteDialogProps {
   exam: Exam | null;
@@ -25,25 +16,14 @@ export function ExamDeleteDialog({
   onConfirm,
 }: ExamDeleteDialogProps) {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>¿Eliminar examen?</AlertDialogTitle>
-          <AlertDialogDescription>
-            ¿Estás seguro de que quieres eliminar el examen "{exam?.title}"?
-            Esta acción no se puede deshacer.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="btn-delete-danger"
-          >
-            Eliminar
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogNova
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      title="¿Eliminar examen?"
+      description={`¿Estás seguro de que quieres eliminar el examen "${exam?.title}"? Esta acción no se puede deshacer.`}
+      onConfirm={onConfirm}
+      confirmText="Eliminar"
+      cancelText="Cancelar"
+    />
   );
 }

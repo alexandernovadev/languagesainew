@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -59,16 +54,24 @@ export default function ExamViewModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90dvh] overflow-hidden border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5" />
-            Detalles del Examen
-          </DialogTitle>
-        </DialogHeader>
-
-        <ScrollArea className="h-[80dvh] pr-4">
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Detalles del Examen"
+      size="5xl"
+      height="h-[90dvh]"
+      footer={
+        <>
+          {onEditExam && (
+            <Button onClick={() => onEditExam(exam)}>Editar Examen</Button>
+          )}
+          <Button variant="outline" onClick={onClose}>
+            Cerrar
+          </Button>
+        </>
+      }
+    >
+      <ScrollArea className="h-[80dvh] pr-4">
           <div className="space-y-6">
             {/* Reutilizando ExamHeader */}
             <ExamHeader exam={exam} showStats={true} showEditButton={false} />
@@ -336,16 +339,6 @@ export default function ExamViewModal({
             )}
           </div>
         </ScrollArea>
-
-        <div className="flex justify-end gap-2 pt-4 border-t">
-          {onEditExam && (
-            <Button onClick={() => onEditExam(exam)}>Editar Examen</Button>
-          )}
-          <Button variant="outline" onClick={onClose}>
-            Cerrar
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }
