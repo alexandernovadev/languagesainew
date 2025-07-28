@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -138,19 +132,40 @@ export default function ExamResultsViewModal({
 
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90dvh] overflow-hidden border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Trophy className="h-6 w-6 text-yellow-500" />
-            Resultados del Examen
-          </DialogTitle>
-          <DialogDescription>
-            {result.exam.title} - {formatDate(result.submittedAt)}
-          </DialogDescription>
-        </DialogHeader>
-
-        <ScrollArea className="h-[80dvh] pr-4">
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Resultados del Examen"
+      description={`${result.exam.title} - ${formatDate(result.submittedAt)}`}
+      size="4xl"
+      height="h-[90dvh]"
+      footer={
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="sm">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            {onViewExam && (
+              <Button variant="outline" onClick={onViewExam}>
+                <Eye className="h-4 w-4" />
+              </Button>
+            )}
+            {onRetakeExam && (
+              <Button onClick={onRetakeExam}>
+                <ArrowRight className="h-4 w-4 mr-2" />
+                Volver a Intentar
+              </Button>
+            )}
+          </div>
+        </div>
+      }
+    >
+      <ScrollArea className="h-[80dvh] pr-4">
           <div className="space-y-6">
             {/* Score Summary */}
             <Card className="border-2 border-primary/20">
@@ -463,38 +478,6 @@ export default function ExamResultsViewModal({
             </Card>
           </div>
         </ScrollArea>
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Descargar
-            </Button>
-            <Button variant="outline" size="sm">
-              <Share2 className="h-4 w-4 mr-2" />
-              Compartir
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            {onViewExam && (
-              <Button variant="outline" onClick={onViewExam}>
-                <Eye className="h-4 w-4 mr-2" />
-                Ver Examen
-              </Button>
-            )}
-            {onRetakeExam && (
-              <Button onClick={onRetakeExam}>
-                <ArrowRight className="h-4 w-4 mr-2" />
-                Volver a Intentar
-              </Button>
-            )}
-            <Button variant="outline" onClick={onClose}>
-              Cerrar
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }

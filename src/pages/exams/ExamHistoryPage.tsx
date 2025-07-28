@@ -33,6 +33,7 @@ import { getAllExamLevels } from "@/utils/common/examTypes";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import ExamHistoryFiltersModal from "@/components/exam/ExamHistoryFiltersModal";
 
 interface ExamHistoryFilters {
   status: string;
@@ -57,6 +58,7 @@ export default function ExamHistoryPage() {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
   // Load data on component mount
   useEffect(() => {
@@ -256,114 +258,23 @@ export default function ExamHistoryPage() {
         title="Historial de Exámenes"
         description="Revisa tu progreso y rendimiento en todos los exámenes"
         actions={
-          <Button onClick={loadData} disabled={loading}>
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-            />
-            Actualizar
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsFiltersModalOpen(true)}
+            >
+              <Filter className="h-4 w-4" />
+            </Button>
+            <Button onClick={loadData} disabled={loading}>
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+              />
+            </Button>
+          </div>
         }
       />
 
-      {/* Search and Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filtros y Búsqueda
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-            <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por título o tema..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
 
-            <Select
-              value={filters.status}
-              onValueChange={(value) => handleFilterChange("status", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="in_progress">En progreso</SelectItem>
-                <SelectItem value="submitted">Enviado</SelectItem>
-                <SelectItem value="graded">Calificado</SelectItem>
-                <SelectItem value="abandoned">Abandonado</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={filters.level}
-              onValueChange={(value) => handleFilterChange("level", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Nivel" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                {getAllExamLevels().map((level) => (
-                  <SelectItem key={level.value} value={level.value}>
-                    {level.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={filters.dateRange}
-              onValueChange={(value) => handleFilterChange("dateRange", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Fecha" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="today">Hoy</SelectItem>
-                <SelectItem value="week">Última semana</SelectItem>
-                <SelectItem value="month">Último mes</SelectItem>
-                <SelectItem value="year">Último año</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={filters.scoreRange}
-              onValueChange={(value) => handleFilterChange("scoreRange", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Puntuación" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="excellent">Excelente (90%+)</SelectItem>
-                <SelectItem value="good">Bueno (80-89%)</SelectItem>
-                <SelectItem value="average">Promedio (60-79%)</SelectItem>
-                <SelectItem value="poor">Bajo (&lt;60%)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-sm text-muted-foreground">
-              {Array.isArray(filteredAttempts) ? filteredAttempts.length : 0} de{" "}
-              {Array.isArray(attempts) ? attempts.length : 0} intentos mostrados
-            </div>
-            <Button variant="outline" size="sm" onClick={clearFilters}>
-              Limpiar filtros
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Main Content */}
       <Tabs
@@ -647,6 +558,20 @@ export default function ExamHistoryPage() {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Filters Modal */}
+      <ExamHistoryFiltersModal
+        isOpen={isFiltersModalOpen}
+        onClose={() => setIsFiltersModalOpen(false)}
+        filters={filters}
+        searchTerm={searchTerm}
+        onFiltersChange={setFilters}
+        onSearchChange={setSearchTerm}
+        onApplyFilters={() => {
+          // Los filtros se aplican automáticamente
+        }}
+        onClearFilters={clearFilters}
+      />
     </PageLayout>
   );
 }
