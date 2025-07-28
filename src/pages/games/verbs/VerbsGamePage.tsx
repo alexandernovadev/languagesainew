@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Settings } from "lucide-react";
+import { RotateCcw, Play, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { VerbField, GameConfig } from "./types";
 import {
@@ -258,12 +259,28 @@ export default function VerbsGamePage() {
         actions={
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              <Button variant="outline" onClick={handleNewGame}>
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" onClick={handleResetPage}>
-                <RotateCcw className="h-4 w-4" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={handleNewGame}>
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Nueva Partida</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" onClick={handleResetPage}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Limpiar</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         }
