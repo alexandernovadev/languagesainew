@@ -432,7 +432,7 @@ export default function MyWordsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center">
+                  <TableCell colSpan={7} className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center space-y-4">
                       <div className="text-muted-foreground">
                         {localSearch ? (
