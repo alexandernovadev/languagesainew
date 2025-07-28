@@ -11,23 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { Expression } from "@/models/Expression";
 import { ExpressionForm } from "@/components/forms/ExpressionForm";
@@ -58,6 +43,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExpressionFilters } from "@/hooks/useExpressionFilters";
+import { capitalize } from "@/utils/common";
 
 export default function MyExpressionsPage() {
   const {
@@ -300,12 +286,32 @@ export default function MyExpressionsPage() {
                     <TableRow key={expression._id}>
                       <TableCell>
                         <div className="space-y-1">
-                          <div className="font-medium">
-                            {expression.expression}
-                          </div>
-                          <div className="text-sm text-muted-foreground max-w-xs truncate">
-                            {expression.definition}
-                          </div>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="font-medium cursor-help">
+                                  {capitalize(expression.expression)}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{capitalize(expression.expression)}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="text-sm text-muted-foreground max-w-xs truncate cursor-help">
+                                  {expression.spanish?.definition || expression.definition}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-xs">
+                                  {expression.spanish?.definition || expression.definition}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -507,60 +513,54 @@ export default function MyExpressionsPage() {
       </div>
 
       {/* Modal de formulario */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-4xl h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-          {/* Header Sticky */}
-          <DialogHeader className="px-6 pt-4 pb-3 border-b bg-background sticky top-0 z-60">
-            <DialogTitle>
-              {isEditing ? "Editar Expresión" : "Nueva Expresión"}
-            </DialogTitle>
-            <DialogDescription>
-              {isEditing
-                ? "Modifica los datos de la expresión"
-                : "Crea una nueva expresión idiomática"}
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Content Scrollable */}
-          <div className="flex-1 overflow-y-auto px-6 py-4">
-            <ExpressionForm
-              initialData={selectedExpression || {}}
-              onSubmit={handleFormSubmit}
-            />
-          </div>
-
-          {/* Footer Sticky */}
-          <div className="px-6 pt-2 border-t bg-background sticky z-10">
-            <div className="flex items-center justify-end gap-2">
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancelar
-              </Button>
-              <Button
-                onClick={() => {
-                  // Trigger form submission
-                  const form = document.querySelector("form");
-                  if (form) {
-                    const submitButton = form.querySelector(
-                      'button[type="submit"]'
-                    ) as HTMLButtonElement;
-                    if (submitButton) {
-                      submitButton.click();
-                    }
+      <ModalNova
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={isEditing ? "Editar Expresión" : "Nueva Expresión"}
+        description={
+          isEditing
+            ? "Modifica los datos de la expresión"
+            : "Crea una nueva expresión idiomática"
+        }
+        size="4xl"
+        height="h-[90dvh]"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                // Trigger form submission
+                const form = document.querySelector("form");
+                if (form) {
+                  const submitButton = form.querySelector(
+                    'button[type="submit"]'
+                  ) as HTMLButtonElement;
+                  if (submitButton) {
+                    submitButton.click();
                   }
-                }}
-                disabled={actionLoading.create || actionLoading.update}
-                className="min-w-[100px]"
-              >
-                {actionLoading.create || actionLoading.update
-                  ? "Guardando..."
-                  : isEditing
-                  ? "Actualizar"
-                  : "Crear"}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+                }
+              }}
+              disabled={actionLoading.create || actionLoading.update}
+              className="min-w-[100px]"
+            >
+              {actionLoading.create || actionLoading.update
+                ? "Guardando..."
+                : isEditing
+                ? "Actualizar"
+                : "Crear"}
+            </Button>
+          </>
+        }
+      >
+        <div className="px-6 py-4">
+          <ExpressionForm
+            initialData={selectedExpression || {}}
+            onSubmit={handleFormSubmit}
+          />
+        </div>
+      </ModalNova>
 
       {/* Modal de detalles con chat */}
       <ExpressionDetailsModal
@@ -577,26 +577,16 @@ export default function MyExpressionsPage() {
       />
 
       {/* Modal de confirmación de eliminación */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent className="border border-gray-600 shadow-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer. Se eliminará permanentemente la
-              expresión "{selectedExpression?.expression}".
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="btn-delete-danger"
-            >
-              Eliminar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogNova
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="¿Estás seguro?"
+        description={`Esta acción no se puede deshacer. Se eliminará permanentemente la expresión "${selectedExpression?.expression ? capitalize(selectedExpression.expression) : ''}".`}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteDialogOpen(false)}
+        confirmText="Eliminar"
+        loading={actionLoading.delete}
+      />
 
       {/* Modal de generación AI */}
       <ExpressionGeneratorModal

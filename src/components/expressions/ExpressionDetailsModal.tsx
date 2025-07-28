@@ -1,14 +1,11 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Expression } from "@/models/Expression";
 import { ExpressionInfoTab } from "./ExpressionInfoTab";
 import { ExpressionChatTab } from "./ExpressionChatTab";
+import { capitalize } from "@/utils/common";
 
 interface ExpressionDetailsModalProps {
   open: boolean;
@@ -26,35 +23,37 @@ export function ExpressionDetailsModal({
   if (!expression) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[calc(100dvh-2rem)] border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
-            {expression.expression}
-          </DialogTitle>
-        </DialogHeader>
-
+    <ModalNova
+      open={open}
+      onOpenChange={onClose}
+      title={capitalize(expression.expression)}
+      size="4xl"
+      height="h-[calc(100dvh-2rem)]"
+    >
+      <div className="p-4">
         <Tabs
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as "info" | "chat")}
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
             <TabsTrigger value="info">Información</TabsTrigger>
-            <TabsTrigger value="chat">Chat</TabsTrigger>
+            <TabsTrigger value="chat" className="flex items-center gap-2">
+              Chat
+              <Badge variant="secondary" className="text-xs">
+                {capitalize(expression.expression)}
+              </Badge>
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent
-            value="info"
-            className="h-[calc(100dvh-12rem)] overflow-y-auto pr-2"
-          >
+          <TabsContent value="info" className="pr-2">
             <ExpressionInfoTab expression={expression} />
           </TabsContent>
 
-          <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
+          <TabsContent value="chat">
             <ExpressionChatTab expression={expression} />
           </TabsContent>
         </Tabs>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }

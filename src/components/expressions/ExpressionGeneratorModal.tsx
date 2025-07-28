@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -88,22 +82,58 @@ export function ExpressionGeneratorModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-        {/* Header Sticky */}
-        <DialogHeader className="px-6 pt-4 pb-3 border-b bg-background sticky top-0 z-60">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
-            <DialogTitle>Generar Expresión con AI</DialogTitle>
-          </div>
-          <DialogDescription>
-            Describe qué tipo de expresión quieres generar y la AI creará una
-            para ti
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* Content Scrollable */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title="✨ Generar Expresión con AI"
+      description="Describe qué tipo de expresión quieres generar y la AI creará una para ti"
+      size="4xl"
+      height="h-[90dvh]"
+      footer={
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={handleClose}>
+            Cerrar
+          </Button>
+          {activeTab === "generate" && (
+            <Button
+              onClick={handleGenerate}
+              disabled={isGenerating || !prompt.trim()}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generando...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generar
+                </>
+              )}
+            </Button>
+          )}
+          {activeTab === "preview" && generatedExpression && (
+            <Button
+              onClick={handleSave}
+              disabled={actionLoading.create}
+            >
+              {actionLoading.create ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+      }
+    >
+      <div className="px-6 py-4">
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
@@ -325,18 +355,7 @@ export function ExpressionGeneratorModal({
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
-
-        {/* Footer Sticky */}
-        <div className="px-6 pt-2 border-t bg-background sticky z-10">
-          <div className="flex items-center justify-end gap-2">
-            <Button variant="outline" onClick={handleClose}>
-              <X className="h-4 w-4 mr-2" />
-              Cerrar
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }
