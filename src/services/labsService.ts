@@ -60,6 +60,11 @@ class LabsService {
     return response.data;
   }
 
+  async createTestUsers(): Promise<LabsResponse> {
+    const response = await api.post("/api/fixes/users/create-test-users");
+    return response.data;
+  }
+
   // Data Seeding
   async seedInitialData(): Promise<LabsResponse> {
     const response = await api.post("/api/fixes/seed/initial-data");

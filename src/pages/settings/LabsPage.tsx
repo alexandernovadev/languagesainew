@@ -190,6 +190,24 @@ export default function LabsPage() {
             loading={loading === "createAdminUser"}
             variant="info"
           />
+
+          <LabsActionCard
+            title="Crear 5 Usuarios de Prueba"
+            description="Crea 5 usuarios de prueba con diferentes idiomas para testing"
+            category="Users"
+            icon={Users}
+            onAction={() =>
+              handleAction(
+                "createTestUsers",
+                () => labsService.createTestUsers(),
+                true,
+                "Crear Usuarios de Prueba",
+                "¿Estás seguro de que quieres crear 5 usuarios de prueba? Se crearán usuarios con diferentes idiomas para testing."
+              )
+            }
+            loading={loading === "createTestUsers"}
+            variant="info"
+          />
         </LabsSection>
 
         {/* Data Seeding */}
