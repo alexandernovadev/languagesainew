@@ -302,7 +302,7 @@ export function QuestionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form id="question-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="basic">Básico</TabsTrigger>
@@ -655,30 +655,7 @@ export function QuestionForm({
         </TabsContent>
       </Tabs>
 
-      <div className="flex justify-end gap-3 pt-6 border-t">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={loading || isSubmitting}
-        >
-          Cancelar
-        </Button>
-        <Button
-          type="submit"
-          disabled={loading || isSubmitting}
-          className="min-w-[120px]"
-        >
-          {loading || isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Guardando...
-            </>
-          ) : (
-            "Guardar Pregunta"
-          )}
-        </Button>
-      </div>
+
     </form>
   );
 }

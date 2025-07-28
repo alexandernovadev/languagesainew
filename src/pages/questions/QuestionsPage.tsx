@@ -2,23 +2,8 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useQuestionStore } from "@/lib/store/useQuestionStore";
 import { Question, QuestionInput } from "@/models/Question";
 import { QuestionFiltersModal } from "@/components/forms/question-filters/QuestionFiltersModal";
@@ -321,18 +306,43 @@ export default function QuestionsPage() {
       </Card>
 
       {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90dvh] overflow-y-auto border border-gray-600 shadow-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {isEditing ? "Editar Pregunta" : "Nueva Pregunta"}
-            </DialogTitle>
-            <DialogDescription>
-              {isEditing
-                ? "Modifica los detalles de la pregunta."
-                : "Crea una nueva pregunta para ejercicios de aprendizaje."}
-            </DialogDescription>
-          </DialogHeader>
+      <ModalNova
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={isEditing ? "Editar Pregunta" : "Nueva Pregunta"}
+        description={
+          isEditing
+            ? "Modifica los detalles de la pregunta."
+            : "Crea una nueva pregunta para ejercicios de aprendizaje."
+        }
+        size="4xl"
+        height="h-[90dvh]"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                // Trigger form submission
+                const form = document.getElementById("question-form");
+                if (form) {
+                  form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                }
+              }}
+              disabled={actionLoading.create || actionLoading.update}
+              className="min-w-[100px]"
+            >
+              {actionLoading.create || actionLoading.update
+                ? "Guardando..."
+                : isEditing
+                ? "Actualizar"
+                : "Crear"}
+            </Button>
+          </>
+        }
+      >
+        <div className="px-6 py-4">
           <QuestionForm
             initialData={
               isEditing && selectedQuestion ? selectedQuestion : undefined
@@ -341,8 +351,8 @@ export default function QuestionsPage() {
             onCancel={() => setDialogOpen(false)}
             loading={actionLoading.create || actionLoading.update}
           />
-        </DialogContent>
-      </Dialog>
+        </div>
+      </ModalNova>
 
       {/* Question Details Modal */}
       <QuestionDetailsModal
@@ -352,27 +362,16 @@ export default function QuestionsPage() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer. Esto eliminará permanentemente
-              la pregunta "{selectedQuestion?.text}" y todos sus datos
-              asociados.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="btn-delete-danger"
-            >
-              Eliminar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogNova
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="¿Estás seguro?"
+        description={`Esta acción no se puede deshacer. Esto eliminará permanentemente la pregunta "${selectedQuestion?.text}" y todos sus datos asociados.`}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteDialogOpen(false)}
+        confirmText="Eliminar"
+        loading={actionLoading.delete}
+      />
 
       {/* Modal de filtros */}
       <QuestionFiltersModal

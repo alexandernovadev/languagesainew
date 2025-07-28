@@ -5,13 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import {
   FileText,
   Image,
@@ -106,20 +100,18 @@ export function QuestionDetailsModal({
     (question.media.audio || question.media.image || question.media.video);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90dvh] overflow-y-auto border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Detalles de la Pregunta
-          </DialogTitle>
-          <DialogDescription>
-            Información completa de la pregunta y sus configuraciones
-          </DialogDescription>
-        </DialogHeader>
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title="📋 Detalles de la Pregunta" 
+      description="Información completa de la pregunta y sus configuraciones"
+      size="4xl"
+      height="h-[90dvh]"
+    >
+      <div className="p-4">
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
             <TabsTrigger value="details">Detalles</TabsTrigger>
             <TabsTrigger value="content">Contenido</TabsTrigger>
             <TabsTrigger value="options">Opciones</TabsTrigger>
@@ -440,7 +432,7 @@ export function QuestionDetailsModal({
             </Card>
           </TabsContent>
         </Tabs>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }

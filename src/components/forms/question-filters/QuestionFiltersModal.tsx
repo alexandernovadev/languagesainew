@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Filter, X, Info, Check } from "lucide-react";
 
@@ -55,90 +49,60 @@ export function QuestionFiltersModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-        {/* Header Sticky */}
-        <DialogHeader className="px-6 pt-4 pb-3 border-b bg-background sticky top-0 z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              <DialogTitle>Filtros Avanzados</DialogTitle>
-              {hasActiveFilters && (
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title="🔍 Filtros Avanzados"
+      description="Aplica filtros para encontrar las preguntas que necesitas."
+      size="4xl"
+      height="h-[90dvh]"
+      footer={
+        <div className="flex items-center justify-between w-full">
+          {/* Info de filtros activos */}
+          <div className="flex items-center gap-2">
+            {hasActiveFilters && (
+              <>
                 <Badge variant="secondary">{activeFiltersCount}</Badge>
-              )}
-            </div>
+                <span className="text-sm text-muted-foreground">
+                  {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                </span>
+              </>
+            )}
+          </div>
+          
+          {/* Botones */}
+          <div className="flex items-center gap-2">
+            {hasActiveFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearFilters}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Limpiar
+              </Button>
+            )}
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                // No aplicar filtros al cerrar
-                onOpenChange(false);
-              }}
-              className="h-8 w-8"
+              onClick={handleApplyFilters}
+              className="min-w-[100px]"
             >
-              <X className="h-4 w-4" />
+              <Check className="h-4 w-4 mr-2" />
+              Aplicar
             </Button>
           </div>
-          <DialogDescription>
-            Aplica filtros para encontrar las preguntas que necesitas.
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* Content Scrollable */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        </div>
+      }
+    >
+      <div className="px-6 py-4">
           <FiltersContent
             filters={filters}
             booleanFilters={booleanFilters}
             updateFilter={updateFilter as (key: string, value: any) => void}
             updateBooleanFilter={updateBooleanFilter}
           />
-        </div>
-
-        {/* Footer Sticky */}
-        <div className="px-6 pt-2 border-t bg-background sticky z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              {hasActiveFilters && (
-                <>
-                  <Info className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground ml-2">
-                    {activeFiltersCount} filtro
-                    {activeFiltersCount !== 1 ? "s" : ""} activo
-                    {activeFiltersCount !== 1 ? "s" : ""}
-                  </span>
-                </>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleClearFilters}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Limpiar
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                onClick={() => {
-                  // No aplicar filtros al cancelar
-                  onOpenChange(false);
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button onClick={handleApplyFilters} className="min-w-[100px]">
-                <Check className="h-4 w-4 mr-2" />
-                Aplicar
-              </Button>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }
 
