@@ -1,23 +1,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import { useLectureModals } from "@/hooks/useLectureModals";
 import { LectureForm } from "@/components/forms/LectureForm";
@@ -30,6 +14,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -190,35 +176,41 @@ export default function LecturesPage() {
                 Página {currentPage} de {totalPages} • {lectures.length}{" "}
                 lectures
               </Badge>
-              <Dialog open={isAddModalOpen} onOpenChange={closeAddModal}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={openAddModal}
-                  className="h-10 w-10 rounded-full"
-                >
-                  <Plus className="h-5 w-5" />
-                </Button>
-                <DialogContent className="sm:max-w-5xl h-[95dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
-                  <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
-                    <DialogTitle className="text-xl">
-                      Crear Nueva Lectura
-                    </DialogTitle>
-                    <DialogDescription>
-                      Crea una nueva lectura para tu biblioteca. Completa todos
-                      los campos para una mejor experiencia.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex-grow overflow-y-auto px-6 pb-6">
-                    <LectureForm
-                      onSubmit={handleAddLecture}
-                      onCancel={closeAddModal}
-                      loading={actionLoading.post}
-                      submitText="Crear Lectura"
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={openAddModal}
+                className="h-10 w-10 rounded-full"
+              >
+                <Plus className="h-5 w-5" />
+              </Button>
+              <ModalNova
+                open={isAddModalOpen}
+                onOpenChange={closeAddModal}
+                title="Crear Nueva Lectura"
+                description="Crea una nueva lectura para tu biblioteca. Completa todos los campos para una mejor experiencia."
+                footer={
+                  <>
+                    <Button type="button" variant="ghost" onClick={closeAddModal}>
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      form="lecture-form"
+                      disabled={actionLoading.post}
+                    >
+                      {actionLoading.post ? "Creando..." : "Crear Lectura"}
+                    </Button>
+                  </>
+                }
+              >
+                <LectureForm
+                  onSubmit={handleAddLecture}
+                  onCancel={closeAddModal}
+                  loading={actionLoading.post}
+                  submitText="Crear Lectura"
+                />
+              </ModalNova>
               <Button
                 variant="outline"
                 size="sm"
@@ -269,53 +261,47 @@ export default function LecturesPage() {
         />
 
         {/* Modal de edición */}
-        <Dialog open={isEditModalOpen} onOpenChange={closeEditModal}>
-          <DialogContent className="sm:max-w-5xl h-[95dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
-            <DialogHeader className="pb-4 pt-6 px-6 flex-shrink-0">
-              <DialogTitle className="text-xl">Editar Lectura</DialogTitle>
-              <DialogDescription>
-                Modifica los detalles de la lectura. Todos los campos son
-                importantes para una mejor experiencia.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex-grow overflow-y-auto px-6 pb-6">
-              <LectureForm
-                initialData={getSelectedLecture()}
-                onSubmit={handleEditLecture}
-                onCancel={closeEditModal}
-                loading={actionLoading.put}
-                submitText="Guardar Cambios"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
+        <ModalNova
+          open={isEditModalOpen}
+          onOpenChange={closeEditModal}
+          title="Editar Lectura"
+          description="Modifica los detalles de la lectura. Todos los campos son importantes para una mejor experiencia."
+          footer={
+            <>
+              <Button type="button" variant="ghost" onClick={closeEditModal}>
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                form="lecture-form"
+                disabled={actionLoading.put}
+              >
+                {actionLoading.put ? "Guardando..." : "Guardar Cambios"}
+              </Button>
+            </>
+          }
+        >
+          <LectureForm
+            initialData={getSelectedLecture()}
+            onSubmit={handleEditLecture}
+            onCancel={closeEditModal}
+            loading={actionLoading.put}
+            submitText="Guardar Cambios"
+          />
+        </ModalNova>
 
         {/* Dialog de confirmación de eliminación */}
-        <AlertDialog open={deleteDialogOpen} onOpenChange={closeDeleteDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                ¿Estás seguro de eliminar esta lectura?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Esta acción no se puede deshacer. La lectura será eliminada
-                permanentemente.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={closeDeleteDialog}>
-                Cancelar
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDeleteConfirm}
-                className="btn-delete-danger"
-                disabled={actionLoading.delete}
-              >
-                Eliminar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogNova
+          open={deleteDialogOpen}
+          onOpenChange={closeDeleteDialog}
+          title="¿Estás seguro de eliminar esta lectura?"
+          description="Esta acción no se puede deshacer. La lectura será eliminada permanentemente."
+          onConfirm={handleDeleteConfirm}
+          onCancel={closeDeleteDialog}
+          confirmText="Eliminar"
+          cancelText="Cancelar"
+          loading={actionLoading.delete}
+        />
       </div>
     </PageLayout>
   );

@@ -347,18 +347,6 @@ export function LectureForm({
             </TabsContent>
           </div>
         </Tabs>
-
-        <div className="flex justify-end gap-2 pt-4 pb-4 border-t shrink-0 bg-background px-6">
-          <Button type="button" variant="ghost" onClick={onCancel}>
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            disabled={!isFormValid || loading || isGeneratingImage}
-          >
-            {loading ? "Guardando..." : submitText}
-          </Button>
-        </div>
       </form>
     </div>
   );

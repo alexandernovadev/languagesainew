@@ -1,0 +1,66 @@
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+interface ModalNovaProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  height?: string;
+}
+
+export function ModalNova({
+  open,
+  onOpenChange,
+  title,
+  description,
+  children,
+  footer,
+  size = "5xl",
+  height = "h-[95dvh]",
+}: ModalNovaProps) {
+  const sizeClasses = {
+    sm: "sm:max-w-sm",
+    md: "sm:max-w-md",
+    lg: "sm:max-w-lg",
+    xl: "sm:max-w-xl",
+    "2xl": "sm:max-w-2xl",
+    "3xl": "sm:max-w-3xl",
+    "4xl": "sm:max-w-4xl",
+    "5xl": "sm:max-w-5xl",
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl`}
+      >
+        {/* Header Fijo */}
+        <DialogHeader className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
+          <DialogTitle className="text-2xl">{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
+        </DialogHeader>
+
+        {/* Contenido Scrollable */}
+        <div className="flex-grow overflow-y-auto">{children}</div>
+
+        {/* Footer Fijo */}
+        {footer && (
+          <div className="flex justify-end gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
+            {footer}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
