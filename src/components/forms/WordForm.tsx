@@ -146,6 +146,7 @@ export function WordForm({
 
   return (
     <form
+      id="word-form"
       onSubmit={handleSubmit(onSubmitForm)}
       className="flex flex-col flex-grow min-h-0"
     >

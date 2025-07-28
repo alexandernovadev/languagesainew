@@ -11,23 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { Word } from "@/models/Word";
 import { WordForm } from "@/components/forms/WordForm";
@@ -528,48 +513,53 @@ export default function MyWordsPage() {
         </Button>
       </div>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-4xl h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-          <DialogHeader className="px-6 pt-6">
-            <DialogTitle>
-              {isEditing ? "Editar Palabra" : "Agregar Nueva Palabra"}
-            </DialogTitle>
-            <DialogDescription>
-              {isEditing
-                ? "Modifica los detalles de la palabra."
-                : "Añade una nueva palabra a tu vocabulario."}
-            </DialogDescription>
-          </DialogHeader>
-          <WordForm
-            initialData={isEditing && selectedWord ? selectedWord : {}}
-            onSubmit={handleFormSubmit}
-            onCancel={() => setDialogOpen(false)}
-            loading={actionLoading.create || actionLoading.update}
-          />
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              ¿Estás seguro de eliminar esta palabra?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="btn-delete-danger"
+      <ModalNova
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={isEditing ? "Editar Palabra" : "Agregar Nueva Palabra"}
+        description={
+          isEditing
+            ? "Modifica los detalles de la palabra."
+            : "Añade una nueva palabra a tu vocabulario."
+        }
+        size="4xl"
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={() => setDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              form="word-form"
+              disabled={actionLoading.create || actionLoading.update}
             >
-              {actionLoading.delete ? "Eliminando..." : "Eliminar"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              {actionLoading.create || actionLoading.update
+                ? "Guardando..."
+                : isEditing
+                ? "Actualizar"
+                : "Crear"}
+            </Button>
+          </>
+        }
+      >
+        <WordForm
+          initialData={isEditing && selectedWord ? selectedWord : {}}
+          onSubmit={handleFormSubmit}
+          onCancel={() => setDialogOpen(false)}
+          loading={actionLoading.create || actionLoading.update}
+        />
+      </ModalNova>
+
+      <AlertDialogNova
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="¿Estás seguro de eliminar esta palabra?"
+        description="Esta acción no se puede deshacer."
+        onConfirm={handleDeleteConfirm}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        loading={actionLoading.delete}
+      />
 
       {/* Modal de detalles de la palabra */}
       {selectedWord && (
