@@ -100,6 +100,26 @@ class LabsService {
     const response = await api.delete("/api/cleaner/questions");
     return response.data;
   }
+
+  async cleanWords(): Promise<LabsResponse> {
+    const response = await api.delete("/api/fixes/clean/words");
+    return response.data;
+  }
+
+  async cleanLectures(): Promise<LabsResponse> {
+    const response = await api.delete("/api/fixes/clean/lectures");
+    return response.data;
+  }
+
+  async cleanExpressions(): Promise<LabsResponse> {
+    const response = await api.delete("/api/fixes/clean/expressions");
+    return response.data;
+  }
+
+  async cleanUsers(): Promise<LabsResponse> {
+    const response = await api.delete("/api/fixes/clean/users");
+    return response.data;
+  }
 }
 
 export const labsService = new LabsService();

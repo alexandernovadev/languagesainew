@@ -375,6 +375,86 @@ export default function LabsPage() {
             requiresAuth={true}
             variant="danger"
           />
+
+          <LabsActionCard
+            title="Eliminar Todas las Palabras"
+            description="Elimina TODAS las palabras de la base de datos"
+            category="Cleaner"
+            icon={FileText}
+            onAction={() =>
+              handleAction(
+                "cleanWords",
+                () => labsService.cleanWords(),
+                true,
+                "Eliminar Todas las Palabras (PELIGROSO)",
+                "⚠️ ADVERTENCIA: Esta acción eliminará TODAS las palabras de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
+              )
+            }
+            loading={loading === "cleanWords"}
+            dangerous={true}
+            requiresAuth={true}
+            variant="danger"
+          />
+
+          <LabsActionCard
+            title="Eliminar Todas las Lecturas"
+            description="Elimina TODAS las lecturas de la base de datos"
+            category="Cleaner"
+            icon={FileText}
+            onAction={() =>
+              handleAction(
+                "cleanLectures",
+                () => labsService.cleanLectures(),
+                true,
+                "Eliminar Todas las Lecturas (PELIGROSO)",
+                "⚠️ ADVERTENCIA: Esta acción eliminará TODAS las lecturas de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
+              )
+            }
+            loading={loading === "cleanLectures"}
+            dangerous={true}
+            requiresAuth={true}
+            variant="danger"
+          />
+
+          <LabsActionCard
+            title="Eliminar Todas las Expresiones"
+            description="Elimina TODAS las expresiones de la base de datos"
+            category="Cleaner"
+            icon={FileText}
+            onAction={() =>
+              handleAction(
+                "cleanExpressions",
+                () => labsService.cleanExpressions(),
+                true,
+                "Eliminar Todas las Expresiones (PELIGROSO)",
+                "⚠️ ADVERTENCIA: Esta acción eliminará TODAS las expresiones de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
+              )
+            }
+            loading={loading === "cleanExpressions"}
+            dangerous={true}
+            requiresAuth={true}
+            variant="danger"
+          />
+
+          <LabsActionCard
+            title="Eliminar Todos los Usuarios"
+            description="Elimina TODOS los usuarios excepto el actual"
+            category="Cleaner"
+            icon={Users}
+            onAction={() =>
+              handleAction(
+                "cleanUsers",
+                () => labsService.cleanUsers(),
+                true,
+                "Eliminar Todos los Usuarios (PELIGROSO)",
+                "⚠️ ADVERTENCIA: Esta acción eliminará TODOS los usuarios excepto tu usuario actual. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
+              )
+            }
+            loading={loading === "cleanUsers"}
+            dangerous={true}
+            requiresAuth={true}
+            variant="danger"
+          />
         </LabsSection>
       </div>
 
