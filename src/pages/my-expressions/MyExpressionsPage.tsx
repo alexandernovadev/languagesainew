@@ -479,7 +479,7 @@ export default function MyExpressionsPage() {
 
       {/* Modal de formulario */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-4xl h-[90vh] flex flex-col border border-gray-600 shadow-2xl">
+        <DialogContent className="sm:max-w-4xl h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
           {/* Header Sticky */}
           <DialogHeader className="px-6 pt-4 pb-3 border-b bg-background sticky top-0 z-60">
             <DialogTitle>

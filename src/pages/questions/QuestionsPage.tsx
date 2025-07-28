@@ -324,7 +324,7 @@ export default function QuestionsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-600 shadow-2xl">
+        <DialogContent className="max-w-4xl max-h-[90dvh] overflow-y-auto border border-gray-600 shadow-2xl">
           <DialogHeader>
             <DialogTitle>
               {isEditing ? "Editar Pregunta" : "Nueva Pregunta"}

@@ -112,7 +112,7 @@ export const LectureGeneratorConfigModal: React.FC<
           </DialogDescription>
         </DialogHeader>
         
-        <div className="max-h-[70vh] overflow-y-auto px-6 py-4 space-y-4">
+                  <div className="max-h-[70dvh] overflow-y-auto px-6 py-4 space-y-4">
           {/* Sección 1: Idioma, Nivel y Tipo */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Idioma */}

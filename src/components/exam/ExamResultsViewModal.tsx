@@ -139,7 +139,7 @@ export default function ExamResultsViewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-4xl max-h-[90dvh] overflow-hidden border border-gray-600 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Trophy className="h-6 w-6 text-yellow-500" />
@@ -150,7 +150,7 @@ export default function ExamResultsViewModal({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[80vh] pr-4">
+        <ScrollArea className="h-[80dvh] pr-4">
           <div className="space-y-6">
             {/* Score Summary */}
             <Card className="border-2 border-primary/20">

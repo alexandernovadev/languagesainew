@@ -117,7 +117,7 @@ export function ExamProgress({
 
       {/* Navigation Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="w-[95vw] max-w-xl h-[90vh] max-h-[600px] overflow-hidden bg-black/80 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl flex flex-col">
+        <DialogContent className="w-[95vw] max-w-xl h-[90dvh] max-h-[600px] overflow-hidden bg-black/80 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl flex flex-col">
           <DialogHeader className="flex-shrink-0 pb-2">
             <DialogTitle className="flex items-center justify-between text-lg font-bold">
               <span>Navegar entre preguntas</span>

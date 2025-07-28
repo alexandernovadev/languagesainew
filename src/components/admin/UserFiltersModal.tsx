@@ -106,7 +106,7 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-2xl max-h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
         {/* Sticky Header */}
         <DialogHeader className="sticky top-0 bg-background border-b pb-4">
           <div className="flex items-center justify-between">

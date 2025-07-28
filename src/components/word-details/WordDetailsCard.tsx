@@ -236,7 +236,7 @@ export function WordDetailsCard({
 
         <TabsContent
           value="info"
-          className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2"
+          className="max-h-[calc(100dvh-12rem)] overflow-y-auto pr-2"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
@@ -470,7 +470,7 @@ export function WordDetailsCard({
           )}
         </TabsContent>
 
-        <TabsContent value="chat" className="h-[calc(100vh-12rem)]">
+                    <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
           <WordChatTab word={word} />
         </TabsContent>
       </Tabs>

@@ -29,7 +29,7 @@ export function GameConfigModal({ onStartGame }: GameConfigModalProps) {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh] p-4">
+            <div className="flex items-center justify-center min-h-[60dvh] p-4">
       <Card className="w-full max-w-7xl px-4 md:px-8">
         <CardHeader className="text-left">
           <div className="flex items-center justify-start mb-4">

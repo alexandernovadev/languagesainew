@@ -27,7 +27,7 @@ export function WordDetailsModal({
 }: WordDetailsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl h-[90vh] flex flex-col bg-zinc-950 border-zinc-800 p-0 border border-gray-600 shadow-2xl">
+      <DialogContent className="w-full max-w-2xl h-[90dvh] flex flex-col bg-zinc-950 border-zinc-800 p-0 border border-gray-600 shadow-2xl">
         <ScrollArea className="flex-1 overflow-hidden">
           <div className="p-4">
             <WordDetailsCard

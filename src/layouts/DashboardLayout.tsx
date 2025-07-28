@@ -31,7 +31,7 @@ export default function DashboardLayout({
     <SidebarProvider>
       <Toaster />
       {showSidebar && <AppSidebar />}
-      <SidebarInset className="h-screen overflow-auto bg-background font-sans antialiased">
+      <SidebarInset className="h-dvh overflow-auto bg-background font-sans antialiased">
         <header
           className={`sticky top-0 z-50 flex h-16 shrink-0 items-center 
           gap-2 border-b bg-background/95 backdrop-blur 

@@ -332,7 +332,7 @@ export default function AnkiGamePage() {
         actions={actions}
       />
       
-      <div className="flex flex-col flex-1 min-h-0 h-[calc(100vh-180px)] items-center w-full py-0 my-0">
+              <div className="flex flex-col flex-1 min-h-0 h-[calc(100dvh-180px)] items-center w-full py-0 my-0">
         {/* Indicador de progreso compacto */}
         <span className="text-xs text-muted-foreground rounded px-2 shadow-sm  mb-1 py-0">
           {gameStats.currentIndex + 1}/{shuffledWords.length}

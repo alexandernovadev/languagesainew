@@ -66,7 +66,7 @@ export default function ExamFiltersModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0 border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-2xl h-[80dvh] flex flex-col p-0 border border-gray-600 shadow-2xl">
         {/* Fixed Header */}
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="flex items-center gap-2">

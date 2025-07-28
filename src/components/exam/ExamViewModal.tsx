@@ -68,7 +68,7 @@ export default function ExamViewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-5xl max-h-[90dvh] overflow-hidden border border-gray-600 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <BookOpen className="w-5 h-5" />
@@ -76,7 +76,7 @@ export default function ExamViewModal({
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="h-[80vh] pr-4">
+        <ScrollArea className="h-[80dvh] pr-4">
           <div className="space-y-6">
             {/* Reutilizando ExamHeader */}
             <ExamHeader exam={exam} showStats={true} showEditButton={false} />
