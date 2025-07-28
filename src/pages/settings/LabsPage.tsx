@@ -24,6 +24,7 @@ import { labsService } from "@/services/labsService";
 import { LabsSection } from "@/components/labs/labs-section";
 import { LabsActionCard } from "@/components/labs/labs-action-card";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
+import { LabsResultModal } from "@/components/labs/labs-result-modal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 
@@ -35,6 +36,12 @@ interface ConfirmationState {
   onConfirm: () => void;
 }
 
+interface ResultModalState {
+  isOpen: boolean;
+  result: any;
+  actionName: string;
+}
+
 export default function LabsPage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<ConfirmationState>({
@@ -43,6 +50,11 @@ export default function LabsPage() {
     title: "",
     description: "",
     onConfirm: () => {},
+  });
+  const [resultModal, setResultModal] = useState<ResultModalState>({
+    isOpen: false,
+    result: null,
+    actionName: "",
   });
 
   const handleAction = async (
@@ -75,20 +87,26 @@ export default function LabsPage() {
     setLoading(actionName);
     try {
       const result = await actionFunction();
-      if (result.success) {
-        toast.success(
-          result.message || `${actionName} completado exitosamente`
-        );
-      } else {
-        toast.error(result.message || `Error en ${actionName}`);
-      }
+      
+      // Show result modal instead of toast
+      setResultModal({
+        isOpen: true,
+        result: result,
+        actionName: actionName,
+      });
     } catch (error: any) {
       console.error(`Error in ${actionName}:`, error);
-      toast.error(
-        error.response?.data?.message ||
-          error.message ||
-          `Error en ${actionName}`
-      );
+      
+      // Show error in modal
+      setResultModal({
+        isOpen: true,
+        result: {
+          success: false,
+          message: error.response?.data?.message || error.message || `Error en ${actionName}`,
+          data: error.response?.data || null
+        },
+        actionName: actionName,
+      });
     } finally {
       setLoading(null);
     }
@@ -96,6 +114,10 @@ export default function LabsPage() {
 
   const closeConfirmation = () => {
     setConfirmation({ ...confirmation, isOpen: false });
+  };
+
+  const closeResultModal = () => {
+    setResultModal({ ...resultModal, isOpen: false });
   };
 
   return (
@@ -505,6 +527,14 @@ export default function LabsPage() {
         cancelText="Cancelar"
         loading={loading !== null}
         variant="danger"
+      />
+
+      {/* Results Modal */}
+      <LabsResultModal
+        isOpen={resultModal.isOpen}
+        onClose={closeResultModal}
+        result={resultModal.result}
+        actionName={resultModal.actionName}
       />
     </PageLayout>
   );
