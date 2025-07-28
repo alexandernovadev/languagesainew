@@ -147,6 +147,24 @@ export default function LabsPage() {
             loading={loading === "resetWordsSeen"}
             variant="warning"
           />
+
+          <LabsActionCard
+            title="Actualizar Idioma de Lecturas"
+            description="Establece el idioma de todas las lecturas a un valor específico"
+            category="Database"
+            icon={FileText}
+            onAction={() =>
+              handleAction(
+                "updateLecturesLanguage",
+                () => labsService.updateLecturesLanguage({ language: "en" }),
+                true,
+                "Actualizar Idioma de Lecturas",
+                "¿Estás seguro de que quieres actualizar el idioma de todas las lecturas a 'english'? Esta acción afectará a todas las lecturas en la base de datos."
+              )
+            }
+            loading={loading === "updateLecturesLanguage"}
+            variant="info"
+          />
         </LabsSection>
 
         {/* User Management */}

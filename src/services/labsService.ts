@@ -14,6 +14,10 @@ export interface ResetWordsSeenRequest {
   seen?: number;
 }
 
+export interface UpdateLecturesLanguageRequest {
+  language: string;
+}
+
 export interface DatabaseStats {
   totalWords: number;
   totalLectures: number;
@@ -42,6 +46,11 @@ class LabsService {
     data: ResetWordsSeenRequest = { seen: 0 }
   ): Promise<LabsResponse> {
     const response = await api.post("/api/fixes/words/reset-seen", data);
+    return response.data;
+  }
+
+  async updateLecturesLanguage(data: UpdateLecturesLanguageRequest): Promise<LabsResponse> {
+    const response = await api.post("/api/fixes/lectures/update-language", data);
     return response.data;
   }
 
