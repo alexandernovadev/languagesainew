@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Loader2 } from "lucide-react";
 
@@ -56,35 +49,33 @@ export function ConfirmationModal({
   const styles = getVariantStyles();
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-zinc-900 border-zinc-800">
-        <DialogHeader>
-          <DialogTitle className={`flex items-center gap-2 ${styles.titleColor}`}>
-            {styles.icon}
-            {title}
-          </DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex gap-2">
-                  <Button
-          variant="outline"
-          onClick={onClose}
-          disabled={loading}
-        >
-          {cancelText}
-        </Button>
-        <Button
-          onClick={onConfirm}
-          disabled={loading}
-          variant={variant === "danger" ? "destructive" : variant === "warning" ? "default" : "default"}
-        >
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {confirmText}
-        </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title={title}
+      description={description}
+      size="md"
+      footer={
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={loading}
+          >
+            {cancelText}
+          </Button>
+          <Button
+            onClick={onConfirm}
+            disabled={loading}
+            variant={variant === "danger" ? "destructive" : variant === "warning" ? "default" : "default"}
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {confirmText}
+          </Button>
+        </div>
+      }
+    >
+      <div></div>
+    </ModalNova>
   );
 } 

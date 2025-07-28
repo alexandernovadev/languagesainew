@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon, Lock } from "lucide-react";
@@ -49,27 +43,23 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-sm rounded-xl p-6 border border-gray-600 shadow-2xl">
-        <DialogHeader className="items-center text-center">
-          <div className="flex flex-col items-center gap-2 mb-2">
-            <div className="bg-sidebar-accent p-3 rounded-full mb-1 flex items-center justify-center">
-              <img
-                src="/loogo.png"
-                alt="Logo"
-                className="size-10 rounded-full object-contain"
-              />
-            </div>
-            <DialogTitle className="text-2xl font-bold">
-              Bienvenido de nuevo
-            </DialogTitle>
-            <DialogDescription>
-              Inicia sesión para acceder a tu espacio personal y continuar
-              aprendiendo con LanguagesAI.
-            </DialogDescription>
-          </div>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
+    <ModalNova
+      open={open}
+      onOpenChange={setOpen}
+      title="Bienvenido de nuevo"
+      description="Inicia sesión para acceder a tu espacio personal y continuar aprendiendo con LanguagesAI."
+      size="sm"
+    >
+      <div className="flex flex-col items-center gap-2 mb-2">
+        <div className="bg-sidebar-accent p-3 rounded-full mb-1 flex items-center justify-center">
+          <img
+            src="/loogo.png"
+            alt="Logo"
+            className="size-10 rounded-full object-contain"
+          />
+        </div>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
           <div className="space-y-2">
             <label
               className="text-sm font-medium flex items-center gap-2"
@@ -142,7 +132,6 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
             </a>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }

@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { CheckCircle, Grid3X3, X } from "lucide-react";
 
 interface ExamProgressProps {
@@ -116,15 +111,14 @@ export function ExamProgress({
       </div>
 
       {/* Navigation Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="w-[95vw] max-w-xl h-[90dvh] max-h-[600px] overflow-hidden bg-black/80 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl flex flex-col">
-          <DialogHeader className="flex-shrink-0 pb-2">
-            <DialogTitle className="flex items-center justify-between text-lg font-bold">
-              <span>Navegar entre preguntas</span>
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="flex-1 flex flex-col overflow-hidden">
+      <ModalNova
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        title="Navegar entre preguntas"
+        size="xl"
+        height="h-[90dvh]"
+      >
+        <div className="flex-1 flex flex-col overflow-hidden">
             {/* Contenido fijo superior */}
             <div className="flex-shrink-0 space-y-3 pb-3">
               {/* Barra de progreso visual */}
@@ -175,8 +169,7 @@ export function ExamProgress({
               </div>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </ModalNova>
       {/* Animación pulse lenta */}
       <style>{`
         @keyframes pulse-slow {

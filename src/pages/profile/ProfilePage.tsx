@@ -9,13 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader as DialogH,
-  DialogTitle as DialogT,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { useState } from "react";
 import {
   User,
@@ -88,40 +82,47 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row gap-8 w-full">
               {/* Columna izquierda: avatar y datos */}
               <div className="flex flex-col items-center md:items-start gap-4 md:w-1/3 w-full">
-                <Dialog open={avatarModal} onOpenChange={setAvatarModal}>
-                  <DialogTrigger asChild>
-                    <div className="relative group cursor-pointer mx-auto">
-                      <Avatar className="h-32 w-32 border-4 border-primary/60 shadow-lg">
-                        <AvatarImage
-                          src={user?.image || ""}
-                          alt={user?.firstName || user?.username || "Usuario"}
-                        />
-                        <AvatarFallbackClient user={user} />
-                      </Avatar>
-                      <div className="absolute bottom-2 right-2 bg-primary/90 rounded-full p-2 shadow-md group-hover:scale-110 transition-transform">
-                        <Camera className="h-5 w-5 text-white" />
-                      </div>
+                <div className="relative group cursor-pointer mx-auto">
+                  <Avatar className="h-32 w-32 border-4 border-primary/60 shadow-lg">
+                    <AvatarImage
+                      src={user?.image || ""}
+                      alt={user?.firstName || user?.username || "Usuario"}
+                    />
+                    <AvatarFallbackClient user={user} />
+                  </Avatar>
+                  <div 
+                    className="absolute bottom-2 right-2 bg-primary/90 rounded-full p-2 shadow-md group-hover:scale-110 transition-transform cursor-pointer"
+                    onClick={() => setAvatarModal(true)}
+                  >
+                    <Camera className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                
+                <ModalNova
+                  open={avatarModal}
+                  onOpenChange={setAvatarModal}
+                  title="Cambiar foto de perfil"
+                  footer={
+                    <div className="flex justify-end">
+                      <Button
+                        onClick={() => setAvatarModal(false)}
+                        className="w-full"
+                        variant="secondary"
+                      >
+                        Guardar Imagen
+                      </Button>
                     </div>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogH>
-                      <DialogT>Cambiar foto de perfil</DialogT>
-                    </DialogH>
+                  }
+                >
+                  <div className="space-y-4">
                     <Input
                       type="url"
                       placeholder="URL de la nueva imagen"
                       value={newImage}
                       onChange={(e) => setNewImage(e.target.value)}
                     />
-                    <Button
-                      onClick={() => setAvatarModal(false)}
-                      className="mt-2 w-full"
-                      variant="secondary"
-                    >
-                      Guardar Imagen
-                    </Button>
-                  </DialogContent>
-                </Dialog>
+                  </div>
+                </ModalNova>
                 <span className="text-2xl font-bold text-primary text-center">
                   {user?.firstName || ""} {user?.lastName || ""}
                 </span>

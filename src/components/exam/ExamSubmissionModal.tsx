@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle, XCircle, Loader2 } from "lucide-react";
 
@@ -61,17 +54,39 @@ export function ExamSubmissionModal({
   const status = getCompletionStatus();
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-card text-foreground border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {status.icon}
-            {status.title}
-          </DialogTitle>
-          <DialogDescription>{status.description}</DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4">
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title={status.title}
+      description={status.description}
+      size="md"
+      footer={
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+            Continuar
+          </Button>
+          <Button
+            onClick={onSubmit}
+            disabled={isSubmitting}
+            className={
+              completionPercentage === 100
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-yellow-600 hover:bg-yellow-700 text-white"
+            }
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              "Enviar Examen"
+            )}
+          </Button>
+        </div>
+      }
+    >
+      <div className="space-y-4">
           {/* Progress Summary */}
           <div className="bg-card border border-border p-4 rounded-lg">
             <div className="flex justify-between items-center mb-2">
@@ -120,31 +135,6 @@ export function ExamSubmissionModal({
             </p>
           </div>
         </div>
-
-        <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
-            Continuar
-          </Button>
-          <Button
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className={
-              completionPercentage === 100
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-yellow-600 hover:bg-yellow-700 text-white"
-            }
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              "Enviar Examen"
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }
