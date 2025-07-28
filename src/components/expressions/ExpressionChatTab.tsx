@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Trash2 } from "lucide-react";
@@ -20,6 +20,16 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState("");
   const { streamChatMessage, actionLoading } = useExpressionStore();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages are added or streaming
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, streamingMessage, isStreaming]);
 
   // Opciones por defecto organizadas por categorías
   const questionCategories = [
@@ -159,7 +169,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
         {/* Mensaje streaming */}
         {isStreaming && (
           <div className="flex justify-start">
-            <div className="max-w-[80%] p-3 rounded-lg bg-muted">
+            <div className="w-full p-3 rounded-lg bg-muted/30">
               {streamingMessage ? (
                 <div className="text-sm">
                   <ReactMarkdown>{streamingMessage}</ReactMarkdown>
@@ -170,6 +180,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
       
       {/* Input para nueva pregunta */}
@@ -208,10 +219,10 @@ function ChatMessage({ message }: { message: ChatMessage }) {
   
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[80%] p-3 rounded-lg ${
+      <div className={`p-3 rounded-lg ${
         isUser 
-          ? 'bg-primary text-primary-foreground' 
-          : 'bg-muted'
+          ? 'max-w-[80%] bg-primary/70 text-primary-foreground' 
+          : 'w-full bg-muted/30'
       }`}>
         <div className="text-sm">
           {isUser ? (
