@@ -49,6 +49,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
       title="Bienvenido de nuevo"
       description="Inicia sesión para acceder a tu espacio personal y continuar aprendiendo con LanguagesAI."
       size="sm"
+      height="h-auto"
     >
       <div className="flex flex-col items-center gap-2 mb-2">
         <div className="bg-sidebar-accent p-3 rounded-full mb-1 flex items-center justify-center">
@@ -59,7 +60,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
           />
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2 px-6 pb-4">
           <div className="space-y-2">
             <label
               className="text-sm font-medium flex items-center gap-2"
