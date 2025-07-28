@@ -44,7 +44,7 @@ export function AlertDialogNova({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="border border-gray-600 shadow-2xl rounded-xl">
+      <AlertDialogContent className="shadow-2xl rounded-xl">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           {description && (
