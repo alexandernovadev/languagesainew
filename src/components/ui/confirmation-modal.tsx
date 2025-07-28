@@ -8,7 +8,8 @@ interface ConfirmationModalProps {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
-  description: string;
+  description?: string;
+  content?: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
@@ -21,6 +22,7 @@ export function ConfirmationModal({
   onConfirm,
   title,
   description,
+  content,
   confirmText = "Confirmar",
   cancelText = "Cancelar",
   loading = false,
@@ -55,6 +57,7 @@ export function ConfirmationModal({
       title={title}
       description={description}
       size="md"
+      height="h-auto"
       footer={
         <div className="flex gap-2">
           <Button
@@ -75,7 +78,9 @@ export function ConfirmationModal({
         </div>
       }
     >
-      <div></div>
+      <div className="px-6">
+        {content}
+      </div>
     </ModalNova>
   );
 } 

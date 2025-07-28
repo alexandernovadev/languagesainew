@@ -20,7 +20,6 @@ import {
   FileX,
   ClipboardList,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { labsService } from "@/services/labsService";
 import { LabsSection } from "@/components/labs/labs-section";
 import { LabsActionCard } from "@/components/labs/labs-action-card";
@@ -385,7 +384,7 @@ export default function LabsPage() {
         onClose={closeConfirmation}
         onConfirm={confirmation.onConfirm}
         title={confirmation.title}
-        description={confirmation.description}
+        content={confirmation.description}
         confirmText="Confirmar"
         cancelText="Cancelar"
         loading={loading !== null}

@@ -21,25 +21,21 @@ export function LabsSection({
     switch (variant) {
       case "danger":
         return {
-          header: "border-red-500/20 bg-red-950/10",
           icon: "text-red-400",
           title: "text-red-100",
         };
       case "warning":
         return {
-          header: "border-yellow-500/20 bg-yellow-950/10",
           icon: "text-yellow-400",
           title: "text-yellow-100",
         };
       case "info":
         return {
-          header: "border-blue-500/20 bg-blue-950/10",
           icon: "text-blue-400",
           title: "text-blue-100",
         };
       default:
         return {
-          header: "border-zinc-700 bg-zinc-900/50",
           icon: "text-zinc-400",
           title: "text-zinc-100",
         };
@@ -49,8 +45,8 @@ export function LabsSection({
   const styles = getVariantStyles();
 
   return (
-    <Card className="border-zinc-800 bg-zinc-900/30">
-      <CardHeader className={cn("pb-4", styles.header)}>
+    <Card>
+      <CardHeader>
         <div className="flex items-center gap-3">
           <div className={cn("p-2 rounded-lg bg-zinc-800/50", styles.icon)}>
             <Icon className="h-6 w-6" />

@@ -34,22 +34,22 @@ export function LabsActionCard({
     switch (variant) {
       case "danger":
         return {
-          card: "border-red-500/20 bg-red-950/10 hover:bg-red-950/20",
+          card: "border-red-500/20 hover:border-red-500/40",
           icon: "text-red-400",
         };
       case "warning":
         return {
-          card: "border-yellow-500/20 bg-yellow-950/10 hover:bg-yellow-950/20",
+          card: "border-yellow-500/20 hover:border-yellow-500/40",
           icon: "text-yellow-400",
         };
       case "info":
         return {
-          card: "border-blue-500/20 bg-blue-950/10 hover:bg-blue-950/20",
+          card: "border-blue-500/20 hover:border-blue-500/40",
           icon: "text-blue-400",
         };
       default:
         return {
-          card: "border-zinc-700 bg-zinc-900/50 hover:bg-zinc-900/80",
+          card: "border-zinc-700 hover:border-zinc-600",
           icon: "text-zinc-400",
         };
     }
@@ -63,7 +63,7 @@ export function LabsActionCard({
         <div className="flex items-start gap-3">
           <div
             className={cn(
-              "p-2 rounded-lg bg-zinc-800/50 flex-shrink-0",
+              "p-2 rounded-lg flex-shrink-0",
               styles.icon
             )}
           >
@@ -94,10 +94,7 @@ export function LabsActionCard({
           onClick={onAction}
           disabled={loading || disabled}
           variant={dangerous ? "destructive" : "default"}
-          className={cn(
-            "w-full",
-            dangerous && "bg-red-600 hover:bg-red-700 text-white"
-          )}
+          className="w-full"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {dangerous ? "Ejecutar (PELIGROSO)" : "Ejecutar"}
