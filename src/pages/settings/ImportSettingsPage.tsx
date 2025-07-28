@@ -14,7 +14,7 @@ export default function ImportSettingsPage() {
         description="Sube archivos JSON para importar tus datos de Lectures, Words o Questions."
       />
       <Card className="w-full">
-        <CardContent className="space-y-6 pb-8">
+        <CardContent className="space-y-6 pb-8 pt-2">
           <Tabs defaultValue="lectures" className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger value="lectures">Lectures</TabsTrigger>

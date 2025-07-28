@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Separator } from '@/components/ui/separator';
-import { Filter, RotateCcw, Check, Trash2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Filter, RotateCcw, Check, Trash2, User, Calendar, Shield, Phone } from 'lucide-react';
 import { useUsers } from '@/hooks/useUsers';
 
 interface UserFiltersModalProps {
@@ -105,7 +107,7 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
       title="Filtros de Usuarios"
       size="2xl"
       footer={
-        <div className="flex justify-between">
+        <div className="flex justify-between w-full">
           <Button
             variant="outline"
             onClick={handleClear}
@@ -114,209 +116,233 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
             <Trash2 className="h-4 w-4" />
             Limpiar
           </Button>
-          <div className="flex gap-2">
-            <Button onClick={handleApply} disabled={!hasActiveFilters}>
-              <Check className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button onClick={handleApply} disabled={!hasActiveFilters}>
+            <Check className="h-4 w-4" />
+          </Button>
         </div>
       }
     >
-      <div className="space-y-6 px-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Información Básica</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Nombre de Usuario</Label>
-                <Input
-                  id="username"
-                  placeholder="Buscar por username..."
-                  value={localFilters.username}
-                  onChange={(e) => handleLocalFilterChange('username', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  placeholder="Buscar por email..."
-                  value={localFilters.email}
-                  onChange={(e) => handleLocalFilterChange('email', e.target.value)}
-                />
-              </div>
-            </div>
+            <div className="px-6">
+        <Tabs defaultValue="basic" className="w-full">
+          <TabsList className="sticky top-1 z-10 grid w-full grid-cols-4">
+            <TabsTrigger value="basic" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Básico
+            </TabsTrigger>
+            <TabsTrigger value="status" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              Estado
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              Contacto
+            </TabsTrigger>
+            <TabsTrigger value="dates" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Fechas
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="mt-4 space-y-4">
+            <TabsContent value="basic" className="space-y-4">
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="username">Nombre de Usuario</Label>
+                      <Input
+                        id="username"
+                        placeholder="Buscar por username..."
+                        value={localFilters.username}
+                        onChange={(e) => handleLocalFilterChange('username', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        placeholder="Buscar por email..."
+                        value={localFilters.email}
+                        onChange={(e) => handleLocalFilterChange('email', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="status" className="space-y-4">
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="role">Rol</Label>
+                      <Select
+                        value={localFilters.role}
+                        onValueChange={(value) => handleLocalFilterChange('role', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar rol" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos los roles</SelectItem>
+                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="user">User</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="isActive">Estado</Label>
+                      <Select
+                        value={localFilters.isActive}
+                        onValueChange={(value) => handleLocalFilterChange('isActive', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar estado" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos los estados</SelectItem>
+                          <SelectItem value="true">Activo</SelectItem>
+                          <SelectItem value="false">Inactivo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mt-4">
+                    <Label htmlFor="language">Idioma</Label>
+                    <Select
+                      value={localFilters.language}
+                      onValueChange={(value) => handleLocalFilterChange('language', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar idioma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos los idiomas</SelectItem>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="en">Inglés</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="contact" className="space-y-4">
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Teléfono</Label>
+                      <Input
+                        id="phone"
+                        placeholder="Buscar por teléfono..."
+                        value={localFilters.phone}
+                        onChange={(e) => handleLocalFilterChange('phone', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Dirección</Label>
+                      <Input
+                        id="address"
+                        placeholder="Buscar por dirección..."
+                        value={localFilters.address}
+                        onChange={(e) => handleLocalFilterChange('address', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="dates" className="space-y-4">
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Fecha de Creación</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Desde</Label>
+                          <DatePicker
+                            value={localFilters.createdAfter ? new Date(localFilters.createdAfter) : undefined}
+                            onChange={(date: Date | undefined) => handleLocalFilterChange('createdAfter', date?.toISOString() || '')}
+                            placeholder="Seleccionar fecha"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Hasta</Label>
+                          <DatePicker
+                            value={localFilters.createdBefore ? new Date(localFilters.createdBefore) : undefined}
+                            onChange={(date: Date | undefined) => handleLocalFilterChange('createdBefore', date?.toISOString() || '')}
+                            placeholder="Seleccionar fecha"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Fecha de Actualización</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Desde</Label>
+                          <DatePicker
+                            value={localFilters.updatedAfter ? new Date(localFilters.updatedAfter) : undefined}
+                            onChange={(date: Date | undefined) => handleLocalFilterChange('updatedAfter', date?.toISOString() || '')}
+                            placeholder="Seleccionar fecha"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Hasta</Label>
+                          <DatePicker
+                            value={localFilters.updatedBefore ? new Date(localFilters.updatedBefore) : undefined}
+                            onChange={(date: Date | undefined) => handleLocalFilterChange('updatedBefore', date?.toISOString() || '')}
+                            placeholder="Seleccionar fecha"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="sortBy">Ordenar por</Label>
+                        <Select
+                          value={localFilters.sortBy}
+                          onValueChange={(value) => handleLocalFilterChange('sortBy', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="createdAt">Fecha de Creación</SelectItem>
+                            <SelectItem value="updatedAt">Fecha de Actualización</SelectItem>
+                            <SelectItem value="username">Nombre de Usuario</SelectItem>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="lastLogin">Último Login</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="sortOrder">Orden</Label>
+                        <Select
+                          value={localFilters.sortOrder}
+                          onValueChange={(value) => handleLocalFilterChange('sortOrder', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="desc">Descendente</SelectItem>
+                            <SelectItem value="asc">Ascendente</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </div>
-
-          <Separator />
-
-          {/* Role and Status */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Rol y Estado</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="role">Rol</Label>
-                <Select
-                  value={localFilters.role}
-                  onValueChange={(value) => handleLocalFilterChange('role', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar rol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos los roles</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="isActive">Estado</Label>
-                <Select
-                  value={localFilters.isActive}
-                  onValueChange={(value) => handleLocalFilterChange('isActive', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos los estados</SelectItem>
-                    <SelectItem value="true">Activo</SelectItem>
-                    <SelectItem value="false">Inactivo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Language and Contact */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Idioma y Contacto</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="language">Idioma</Label>
-                <Select
-                  value={localFilters.language}
-                  onValueChange={(value) => handleLocalFilterChange('language', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar idioma" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos los idiomas</SelectItem>
-                    <SelectItem value="es">Español</SelectItem>
-                    <SelectItem value="en">Inglés</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Teléfono</Label>
-                <Input
-                  id="phone"
-                  placeholder="Buscar por teléfono..."
-                  value={localFilters.phone}
-                  onChange={(e) => handleLocalFilterChange('phone', e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">Dirección</Label>
-              <Input
-                id="address"
-                placeholder="Buscar por dirección..."
-                value={localFilters.address}
-                onChange={(e) => handleLocalFilterChange('address', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Date Filters */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Fechas</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Fecha de Creación - Desde</Label>
-                <DatePicker
-                  value={localFilters.createdAfter ? new Date(localFilters.createdAfter) : undefined}
-                  onChange={(date: Date | undefined) => handleLocalFilterChange('createdAfter', date?.toISOString() || '')}
-                  placeholder="Seleccionar fecha"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Fecha de Creación - Hasta</Label>
-                <DatePicker
-                  value={localFilters.createdBefore ? new Date(localFilters.createdBefore) : undefined}
-                  onChange={(date: Date | undefined) => handleLocalFilterChange('createdBefore', date?.toISOString() || '')}
-                  placeholder="Seleccionar fecha"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Fecha de Actualización - Desde</Label>
-                <DatePicker
-                  value={localFilters.updatedAfter ? new Date(localFilters.updatedAfter) : undefined}
-                  onChange={(date: Date | undefined) => handleLocalFilterChange('updatedAfter', date?.toISOString() || '')}
-                  placeholder="Seleccionar fecha"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Fecha de Actualización - Hasta</Label>
-                <DatePicker
-                  value={localFilters.updatedBefore ? new Date(localFilters.updatedBefore) : undefined}
-                  onChange={(date: Date | undefined) => handleLocalFilterChange('updatedBefore', date?.toISOString() || '')}
-                  placeholder="Seleccionar fecha"
-                />
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Sorting */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Ordenamiento</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="sortBy">Ordenar por</Label>
-                <Select
-                  value={localFilters.sortBy}
-                  onValueChange={(value) => handleLocalFilterChange('sortBy', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="createdAt">Fecha de Creación</SelectItem>
-                    <SelectItem value="updatedAt">Fecha de Actualización</SelectItem>
-                    <SelectItem value="username">Nombre de Usuario</SelectItem>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="lastLogin">Último Login</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sortOrder">Orden</Label>
-                <Select
-                  value={localFilters.sortOrder}
-                  onValueChange={(value) => handleLocalFilterChange('sortOrder', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="desc">Descendente</SelectItem>
-                    <SelectItem value="asc">Ascendente</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
+        </Tabs>
+      </div>
     </ModalNova>
   );
 } 
