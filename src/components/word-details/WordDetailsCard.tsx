@@ -224,237 +224,252 @@ export function WordDetailsCard({
         isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
       )}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🇺🇸</span>
-            <WordLevelBadge level={word.level} className="text-xs" />
-          </div>
-          <div className="flex items-center gap-1 text-xs text-zinc-400">
-            <Eye className="h-3 w-3" />
-            {word.seen || 0}
-          </div>
-        </div>
-        {showAudioButtons && (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => speakWord()}
-              disabled={isPlaying}
-              className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-            >
-              <Volume2 className={cn("h-3 w-3", isPlaying && "animate-pulse")} />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
-              disabled={isPlaying}
-              className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-            >
-              🐢
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Word & Pronunciation */}
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-white capitalize mb-1">
-          {word.word}
-        </h1>
-        <p className="text-sm text-purple-400 font-mono">
-          {word.IPA || "/ˈwɜːd/"}
-        </p>
-      </div>
-
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "chat")}>
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as "info" | "chat")}
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="info">Información</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="chat">Chat | {word.word}</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="info" className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
 
-      {/* Definition */}
-      {word.definition && (
-        <SectionContainer>
-          <p className="text-sm text-zinc-300 leading-relaxed">
-            {word.definition}
-          </p>
-        </SectionContainer>
-      )}
-
-      {/* Spanish Translation */}
-      {word.spanish && (
-        <SectionContainer>
-          <SectionHeader title="Traducción" icon="🇪🇸" />
-          <h3 className="text-lg font-bold text-blue-400 capitalize mb-1">
-            {word.spanish.word}
-          </h3>
-          <p className="text-sm text-zinc-300 leading-relaxed">
-            {word.spanish.definition}
-          </p>
-        </SectionContainer>
-      )}
-
-      {/* Image */}
-      <SectionContainer loading={actionLoading.updateImage}>
-        <SectionHeader
-          title="Imagen"
-          icon="🖼️"
-          onRefresh={handleRefreshImage}
-          loading={actionLoading.updateImage}
-        />
-        <div className="relative flex justify-center">
-          {word.img ? (
-            <img
-              src={word.img}
-              alt={word.word}
-              className="w-full max-w-xs rounded-lg max-h-96 object-contain border border-zinc-700"
-            />
-          ) : (
-            <div className="w-full max-w-xs h-48 rounded-lg bg-zinc-800/50 border border-zinc-700 flex items-center justify-center">
-              <div className="text-center text-zinc-500">
-                <div className="text-2xl mb-2">🖼️</div>
-                <div className="text-xs">Sin imagen</div>
+        <TabsContent
+          value="info"
+          className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🇺🇸</span>
+                <WordLevelBadge level={word.level} className="text-xs" />
+              </div>
+              <div className="flex items-center gap-1 text-xs text-zinc-400">
+                <Eye className="h-3 w-3" />
+                {word.seen || 0}
               </div>
             </div>
+            {showAudioButtons && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => speakWord()}
+                  disabled={isPlaying}
+                  className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+                >
+                  <Volume2
+                    className={cn("h-3 w-3", isPlaying && "animate-pulse")}
+                  />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
+                  disabled={isPlaying}
+                  className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+                >
+                  🐢
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Word & Pronunciation */}
+          <div className="mb-4">
+            <h1 className="text-2xl font-bold text-white capitalize mb-1">
+              {word.word}
+            </h1>
+            <p className="text-sm text-purple-400 font-mono">
+              {word.IPA || "/ˈwɜːd/"}
+            </p>
+          </div>
+
+          {/* Definition */}
+          {word.definition && (
+            <SectionContainer>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                {word.definition}
+              </p>
+            </SectionContainer>
           )}
-        </div>
-      </SectionContainer>
 
-      {/* Examples */}
-      {word.examples && word.examples.length > 0 && (
-        <SectionContainer loading={actionLoading.updateExamples}>
-          <SectionHeader
-            title="Ejemplos"
-            icon="💬"
-            onRefresh={handleRefreshExamples}
-            loading={actionLoading.updateExamples}
-          />
-          <div className="space-y-2">
-            {word.examples.map((example, index) => (
-              <p key={index} className="text-sm text-zinc-300 leading-relaxed">
-                • {example}
+          {/* Spanish Translation */}
+          {word.spanish && (
+            <SectionContainer>
+              <SectionHeader title="Traducción" icon="🇪🇸" />
+              <h3 className="text-lg font-bold text-blue-400 capitalize mb-1">
+                {word.spanish.word}
+              </h3>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                {word.spanish.definition}
               </p>
-            ))}
-          </div>
-        </SectionContainer>
-      )}
+            </SectionContainer>
+          )}
 
-      {/* Code Switching */}
-      {word.codeSwitching && word.codeSwitching.length > 0 && (
-        <SectionContainer loading={actionLoading.updateCodeSwitching}>
-          <SectionHeader
-            title="Code-Switching"
-            icon="🔀"
-            onRefresh={handleRefreshCodeSwitching}
-            loading={actionLoading.updateCodeSwitching}
-          />
-          <div className="space-y-2">
-            {word.codeSwitching.map((example, index) => (
-              <p key={index} className="text-sm text-zinc-300 leading-relaxed">
-                • {example}
-              </p>
-            ))}
-          </div>
-        </SectionContainer>
-      )}
-
-      {/* Synonyms */}
-      {word.sinonyms && word.sinonyms.length > 0 && (
-        <SectionContainer loading={actionLoading.updateSynonyms}>
-          <SectionHeader
-            title="Sinónimos"
-            icon="🔗"
-            onRefresh={handleRefreshSynonyms}
-            loading={actionLoading.updateSynonyms}
-          />
-          <div className="flex flex-wrap gap-2">
-            {word.sinonyms.map((synonym, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
-              >
-                {synonym}
-              </span>
-            ))}
-          </div>
-        </SectionContainer>
-      )}
-
-      {/* Word Types */}
-      {word.type && word.type.length > 0 && (
-        <SectionContainer loading={actionLoading.updateTypes}>
-          <SectionHeader
-            title="Tipos"
-            icon="🏷️"
-            onRefresh={handleRefreshTypes}
-            loading={actionLoading.updateTypes}
-          />
-          <div className="flex flex-wrap gap-2">
-            {word.type.map((type, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-purple-900/30 border border-purple-700/30 rounded text-xs text-purple-300 capitalize"
-              >
-                {type}
-              </span>
-            ))}
-          </div>
-        </SectionContainer>
-      )}
-
-      {/* Dates */}
-      <SectionContainer className="border-orange-500/30">
-        <div className="grid grid-cols-2 gap-4 text-xs">
-          <div>
-            <h4 className="font-semibold text-zinc-400 mb-1">Actualizado</h4>
-            <p className="text-zinc-500">
-              {word.updatedAt ? formatDateShort(word.updatedAt) : "N/A"}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-zinc-400 mb-1">Creado</h4>
-            <p className="text-zinc-500">
-              {word.createdAt ? formatDateShort(word.createdAt) : "N/A"}
-            </p>
-          </div>
-        </div>
-      </SectionContainer>
-
-      {/* Level Buttons */}
-      {showLevelButtons && (
-        <div className="flex justify-center gap-2 mt-4">
-          {(["easy", "medium", "hard"] as const).map((level) => (
-            <Button
-              key={level}
-              onClick={() => handleUpdateLevel(level)}
-              disabled={actionLoading.updateLevel}
-              variant="outline"
-              size="sm"
-              className={cn(
-                "capitalize px-3 py-1 text-xs",
-                level === "easy" &&
-                  "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
-                level === "medium" &&
-                  "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
-                level === "hard" &&
-                  "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
-                actionLoading.updateLevel && "opacity-50"
+          {/* Image */}
+          <SectionContainer loading={actionLoading.updateImage}>
+            <SectionHeader
+              title="Imagen"
+              icon="🖼️"
+              onRefresh={handleRefreshImage}
+              loading={actionLoading.updateImage}
+            />
+            <div className="relative flex justify-center">
+              {word.img ? (
+                <img
+                  src={word.img}
+                  alt={word.word}
+                  className="w-full max-w-xs rounded-lg max-h-96 object-contain border border-zinc-700"
+                />
+              ) : (
+                <div className="w-full max-w-xs h-48 rounded-lg bg-zinc-800/50 border border-zinc-700 flex items-center justify-center">
+                  <div className="text-center text-zinc-500">
+                    <div className="text-2xl mb-2">🖼️</div>
+                    <div className="text-xs">Sin imagen</div>
+                  </div>
+                </div>
               )}
-            >
-              {level}
-            </Button>
-          ))}
-        </div>
-      )}
+            </div>
+          </SectionContainer>
+
+          {/* Examples */}
+          {word.examples && word.examples.length > 0 && (
+            <SectionContainer loading={actionLoading.updateExamples}>
+              <SectionHeader
+                title="Ejemplos"
+                icon="💬"
+                onRefresh={handleRefreshExamples}
+                loading={actionLoading.updateExamples}
+              />
+              <div className="space-y-2">
+                {word.examples.map((example, index) => (
+                  <p
+                    key={index}
+                    className="text-sm text-zinc-300 leading-relaxed"
+                  >
+                    • {example}
+                  </p>
+                ))}
+              </div>
+            </SectionContainer>
+          )}
+
+          {/* Code Switching */}
+          {word.codeSwitching && word.codeSwitching.length > 0 && (
+            <SectionContainer loading={actionLoading.updateCodeSwitching}>
+              <SectionHeader
+                title="Code-Switching"
+                icon="🔀"
+                onRefresh={handleRefreshCodeSwitching}
+                loading={actionLoading.updateCodeSwitching}
+              />
+              <div className="space-y-2">
+                {word.codeSwitching.map((example, index) => (
+                  <p
+                    key={index}
+                    className="text-sm text-zinc-300 leading-relaxed"
+                  >
+                    • {example}
+                  </p>
+                ))}
+              </div>
+            </SectionContainer>
+          )}
+
+          {/* Synonyms */}
+          {word.sinonyms && word.sinonyms.length > 0 && (
+            <SectionContainer loading={actionLoading.updateSynonyms}>
+              <SectionHeader
+                title="Sinónimos"
+                icon="🔗"
+                onRefresh={handleRefreshSynonyms}
+                loading={actionLoading.updateSynonyms}
+              />
+              <div className="flex flex-wrap gap-2">
+                {word.sinonyms.map((synonym, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
+                  >
+                    {synonym}
+                  </span>
+                ))}
+              </div>
+            </SectionContainer>
+          )}
+
+          {/* Word Types */}
+          {word.type && word.type.length > 0 && (
+            <SectionContainer loading={actionLoading.updateTypes}>
+              <SectionHeader
+                title="Tipos"
+                icon="🏷️"
+                onRefresh={handleRefreshTypes}
+                loading={actionLoading.updateTypes}
+              />
+              <div className="flex flex-wrap gap-2">
+                {word.type.map((type, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-purple-900/30 border border-purple-700/30 rounded text-xs text-purple-300 capitalize"
+                  >
+                    {type}
+                  </span>
+                ))}
+              </div>
+            </SectionContainer>
+          )}
+
+          {/* Dates */}
+          <SectionContainer className="border-orange-500/30">
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <h4 className="font-semibold text-zinc-400 mb-1">
+                  Actualizado
+                </h4>
+                <p className="text-zinc-500">
+                  {word.updatedAt ? formatDateShort(word.updatedAt) : "N/A"}
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-zinc-400 mb-1">Creado</h4>
+                <p className="text-zinc-500">
+                  {word.createdAt ? formatDateShort(word.createdAt) : "N/A"}
+                </p>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* Level Buttons */}
+          {showLevelButtons && (
+            <div className="flex justify-center gap-2 mt-4">
+              {(["easy", "medium", "hard"] as const).map((level) => (
+                <Button
+                  key={level}
+                  onClick={() => handleUpdateLevel(level)}
+                  disabled={actionLoading.updateLevel}
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    "capitalize px-3 py-1 text-xs",
+                    level === "easy" &&
+                      "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
+                    level === "medium" &&
+                      "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
+                    level === "hard" &&
+                      "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
+                    actionLoading.updateLevel && "opacity-50"
+                  )}
+                >
+                  {level}
+                </Button>
+              ))}
+            </div>
+          )}
         </TabsContent>
-        
+
         <TabsContent value="chat" className="h-[calc(100vh-12rem)]">
           <WordChatTab word={word} />
         </TabsContent>

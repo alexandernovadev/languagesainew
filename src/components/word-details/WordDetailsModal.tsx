@@ -28,15 +28,6 @@ export function WordDetailsModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-2xl h-[90vh] flex flex-col bg-zinc-950 border-zinc-800 p-0 border border-gray-600 shadow-2xl">
-        <DialogHeader className="flex items-center justify-between p-4 border-b border-zinc-800 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="text-xl">📖</span>
-            <DialogTitle className="text-sm font-medium text-zinc-300">
-              Detalles de la palabra
-            </DialogTitle>
-          </div>
-        </DialogHeader>
-
         <ScrollArea className="flex-1 overflow-hidden">
           <div className="p-4">
             <WordDetailsCard
@@ -51,4 +42,4 @@ export function WordDetailsModal({
       </DialogContent>
     </Dialog>
   );
-} 
+}
