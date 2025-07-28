@@ -383,14 +383,7 @@ export function WordForm({
         </Tabs>
       </div>
 
-      <div className="flex justify-end gap-2 pt-4 pb-4 border-t shrink-0 bg-background px-6">
-        <Button type="button" variant="ghost" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button type="submit" disabled={!isFormValid || loading}>
-          {loading ? "Guardando..." : "Guardar"}
-        </Button>
-      </div>
+
     </form>
   );
 }
