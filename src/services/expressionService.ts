@@ -32,13 +32,13 @@ export const expressionService = {
     api.get("/api/expressions/expressions-only", { params: filters }),
 
   // Export expressions
-  exportExpressions: () => api.get("/api/expressions/export/json"),
+  exportExpressions: () => api.get("/api/expressions/export-file"),
 
   // Import expressions
   importExpressions: (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    return api.post("/api/expressions/import/json", formData, {
+    return api.post("/api/expressions/import-file", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

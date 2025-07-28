@@ -3,6 +3,9 @@ import LectureImportForm from "@/components/forms/LectureImportForm";
 import WordImportForm from "@/components/forms/WordImportForm";
 import ExamImportForm from "@/components/forms/ExamImportForm";
 import QuestionImportForm from "@/components/forms/QuestionImportForm";
+import ExamAttemptImportForm from "@/components/forms/ExamAttemptImportForm";
+import ExpressionImportForm from "@/components/forms/ExpressionImportForm";
+import UserImportForm from "@/components/forms/UserImportForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -23,6 +26,9 @@ export default function ImportSettingsPage() {
               <TabsTrigger value="words">Words</TabsTrigger>
               <TabsTrigger value="exams">Exams</TabsTrigger>
               <TabsTrigger value="questions">Questions</TabsTrigger>
+              <TabsTrigger value="attempts">Attempts</TabsTrigger>
+              <TabsTrigger value="expressions">Expressions</TabsTrigger>
+              <TabsTrigger value="users">Users</TabsTrigger>
             </TabsList>
             <TabsContent value="lectures">
               <div className="mb-3 text-lg font-semibold">
@@ -43,6 +49,24 @@ export default function ImportSettingsPage() {
                 Importar Questions
               </div>
               <QuestionImportForm />
+            </TabsContent>
+            <TabsContent value="attempts">
+              <div className="mb-3 text-lg font-semibold">
+                Importar Intentos de Examen
+              </div>
+              <ExamAttemptImportForm />
+            </TabsContent>
+            <TabsContent value="expressions">
+              <div className="mb-3 text-lg font-semibold">
+                Importar Expressions
+              </div>
+              <ExpressionImportForm />
+            </TabsContent>
+            <TabsContent value="users">
+              <div className="mb-3 text-lg font-semibold">
+                Importar Users
+              </div>
+              <UserImportForm />
             </TabsContent>
           </Tabs>
           <Separator />

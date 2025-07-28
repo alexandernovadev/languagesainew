@@ -112,6 +112,25 @@ class UserService {
     const response = await api.delete(`/api/users/${id}`);
     return response.data.data;
   }
+
+  // Export users to JSON
+  async exportUsers() {
+    const response = await api.get("/api/users/export-file");
+    return response.data;
+  }
+
+  // Import users from JSON file
+  async importUsers(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/api/users/import-file", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
 }
 
 export const userService = new UserService();

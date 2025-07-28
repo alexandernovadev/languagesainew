@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, BookOpen, ClipboardList, HelpCircle } from "lucide-react";
+import { FileText, BookOpen, ClipboardList, HelpCircle, Target, MessageSquare, Users } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { lectureService } from "@/services/lectureService";
 import { examService } from "@/services/examService";
 import { questionService } from "@/services/questionService";
+import { examAttemptService } from "@/services/examAttemptService";
+import { expressionService } from "@/services/expressionService";
+import { userService } from "@/services/userService";
 import { downloadJSON } from "@/utils/common";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -18,7 +21,10 @@ export default function ExportSettingsPage() {
     lectures: boolean;
     exams: boolean;
     questions: boolean;
-  }>({ words: false, lectures: false, exams: false, questions: false });
+    attempts: boolean;
+    expressions: boolean;
+    users: boolean;
+  }>({ words: false, lectures: false, exams: false, questions: false, attempts: false, expressions: false, users: false });
 
   const handleExportWords = async () => {
     setExportLoading((prev) => ({ ...prev, words: true }));
@@ -88,6 +94,57 @@ export default function ExportSettingsPage() {
     }
   };
 
+  const handleExportAttempts = async () => {
+    setExportLoading((prev) => ({ ...prev, attempts: true }));
+    try {
+      const data = await examAttemptService.exportExamAttempts();
+      downloadJSON(data, "exam-attempts-export");
+      toast.success("Exportación exitosa", {
+        description: "Los intentos de examen se han exportado correctamente",
+      });
+    } catch (error: any) {
+      toast.error("Error al exportar", {
+        description: error.message || "No se pudieron exportar los intentos de examen",
+      });
+    } finally {
+      setExportLoading((prev) => ({ ...prev, attempts: false }));
+    }
+  };
+
+  const handleExportExpressions = async () => {
+    setExportLoading((prev) => ({ ...prev, expressions: true }));
+    try {
+      const data = await expressionService.exportExpressions();
+      downloadJSON(data, "expressions-export");
+      toast.success("Exportación exitosa", {
+        description: "Las expressions se han exportado correctamente",
+      });
+    } catch (error: any) {
+      toast.error("Error al exportar", {
+        description: error.message || "No se pudieron exportar las expressions",
+      });
+    } finally {
+      setExportLoading((prev) => ({ ...prev, expressions: false }));
+    }
+  };
+
+  const handleExportUsers = async () => {
+    setExportLoading((prev) => ({ ...prev, users: true }));
+    try {
+      const data = await userService.exportUsers();
+      downloadJSON(data, "users-export");
+      toast.success("Exportación exitosa", {
+        description: "Los usuarios se han exportado correctamente",
+      });
+    } catch (error: any) {
+      toast.error("Error al exportar", {
+        description: error.message || "No se pudieron exportar los usuarios",
+      });
+    } finally {
+      setExportLoading((prev) => ({ ...prev, users: false }));
+    }
+  };
+
   return (
     <PageLayout>
       <PageHeader
@@ -132,6 +189,33 @@ export default function ExportSettingsPage() {
             >
               <HelpCircle className="mr-2 h-4 w-4" />
               {exportLoading.questions ? "Exportando..." : "Exportar Preguntas"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportAttempts}
+              disabled={exportLoading.attempts}
+              className="justify-start w-full"
+            >
+              <Target className="mr-2 h-4 w-4" />
+              {exportLoading.attempts ? "Exportando..." : "Exportar Intentos"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportExpressions}
+              disabled={exportLoading.expressions}
+              className="justify-start w-full"
+            >
+              <MessageSquare className="mr-2 h-4 w-4" />
+              {exportLoading.expressions ? "Exportando..." : "Exportar Expressions"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportUsers}
+              disabled={exportLoading.users}
+              className="justify-start w-full"
+            >
+              <Users className="mr-2 h-4 w-4" />
+              {exportLoading.users ? "Exportando..." : "Exportar Users"}
             </Button>
           </div>
           <Separator />

@@ -195,6 +195,25 @@ class ExamAttemptService {
     const response = await api.get(`/api/exams/${examId}/attempt-stats`);
     return response.data.data;
   }
+
+  // Export exam attempts to JSON
+  async exportExamAttempts() {
+    const response = await api.get("/api/exam-attempts/export-file");
+    return response.data;
+  }
+
+  // Import exam attempts from JSON file
+  async importExamAttempts(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/api/exam-attempts/import-file", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
 }
 
 export const examAttemptService = new ExamAttemptService();
