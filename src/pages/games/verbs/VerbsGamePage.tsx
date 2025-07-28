@@ -14,13 +14,7 @@ import { useVerbsGameStore } from "@/lib/store/useVerbsGameStore";
 import { useGameStats } from "./hooks/useGameStats";
 import { checkAnswer } from "./utils";
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 
 export default function VerbsGamePage() {
   // Zustand store
@@ -188,57 +182,59 @@ export default function VerbsGamePage() {
         <GameConfigModal onStartGame={handleStartGame} />
 
         {/* History Modal */}
-        <Dialog open={showHistoryModal} onOpenChange={setShowHistoryModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Historial de Partidas</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {history.length === 0 && (
-                <div className="text-muted-foreground">
-                  No hay partidas guardadas.
-                </div>
-              )}
-              {history.map((item, idx) => (
-                <div
-                  key={item.id + item.finishedAt}
-                  className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer"
-                  onClick={() => selectHistory(item)}
-                >
-                  <div>
-                    <div className="font-semibold text-sm">
-                      {new Date(item.finishedAt).toLocaleString()}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Dificultad: {item.config.difficulty}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-green-600">
-                      {item.score ?? 0}%
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        selectHistory(item);
-                      }}
-                    >
-                      Ver
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <DialogFooter>
+        <ModalNova
+          open={showHistoryModal}
+          onOpenChange={setShowHistoryModal}
+          title="Historial de Partidas"
+          size="2xl"
+          footer={
+            <>
               <Button variant="destructive" onClick={clearHistory}>
                 Borrar Historial
               </Button>
               <Button onClick={() => setShowHistoryModal(false)}>Cerrar</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </>
+          }
+        >
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {history.length === 0 && (
+              <div className="text-muted-foreground">
+                No hay partidas guardadas.
+              </div>
+            )}
+            {history.map((item, idx) => (
+              <div
+                key={item.id + item.finishedAt}
+                className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer"
+                onClick={() => selectHistory(item)}
+              >
+                <div>
+                  <div className="font-semibold text-sm">
+                    {new Date(item.finishedAt).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Dificultad: {item.config.difficulty}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-green-600">
+                    {item.score ?? 0}%
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectHistory(item);
+                    }}
+                  >
+                    Ver
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ModalNova>
 
         {/* Reusable Stats Modal for History */}
         <GameStatsModal
@@ -263,12 +259,10 @@ export default function VerbsGamePage() {
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
               <Button variant="outline" onClick={handleNewGame}>
-                <Settings className="h-4 w-4 mr-2" />
-                Nueva Partida
+                <Settings className="h-4 w-4" />
               </Button>
               <Button variant="outline" onClick={handleResetPage}>
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Limpiar
+                <RotateCcw className="h-4 w-4" />
               </Button>
             </div>
           </div>

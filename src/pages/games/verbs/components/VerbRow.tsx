@@ -6,12 +6,7 @@ import { Verb, VerbField } from "../types";
 import { WordDetailsModal } from "@/components/word-details";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -175,51 +170,52 @@ export function VerbRow({
 
       {/* Modal para palabra no encontrada */}
       {isModalOpen && !activeWord && !isSearching && (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="max-w-md border border-gray-600 shadow-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
-                Palabra no encontrada
-              </DialogTitle>
-            </DialogHeader>
-
-            <div className="text-center py-4">
-              <p className="text-sm text-muted-foreground mb-4">
-                La palabra "{currentWord}" no existe en la base de datos.
-              </p>
-              <Button
-                onClick={handleGenerateWord}
-                disabled={isGenerating}
-                className="w-full"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generando palabra...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="h-4 w-4 mr-2" />
-                    Generar palabra
-                  </>
-                )}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <ModalNova
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          title="Palabra no encontrada"
+          size="md"
+          height="h-auto"
+        >
+          <div className="text-center py-4 px-6">
+            <p className="text-sm text-muted-foreground mb-4">
+              La palabra "{currentWord}" no existe en la base de datos.
+            </p>
+            <Button
+              onClick={handleGenerateWord}
+              disabled={isGenerating}
+              className="w-full"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generando palabra...
+                </>
+              ) : (
+                <>
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Generar palabra
+                </>
+              )}
+            </Button>
+          </div>
+        </ModalNova>
       )}
 
       {/* Loading state */}
       {isModalOpen && isSearching && (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="max-w-md border border-gray-600 shadow-2xl">
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <span className="ml-2">Buscando palabra...</span>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <ModalNova
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          title="Buscando palabra..."
+          size="md"
+          height="h-auto"
+        >
+          <div className="flex items-center justify-center py-8 px-6">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span className="ml-2">Buscando palabra...</span>
+          </div>
+        </ModalNova>
       )}
     </>
   );

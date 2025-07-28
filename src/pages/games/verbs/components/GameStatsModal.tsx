@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -81,19 +74,20 @@ export function GameStatsModal({
     : "¡Felicitaciones por completar la partida!";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl border border-gray-600 shadow-2xl">
-        <DialogHeader className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Trophy className="h-8 w-8 text-yellow-500 mr-2" />
-            <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
-          </div>
-          <DialogDescription className="text-base">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-6">
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      description={description}
+      size="2xl"
+      footer={
+        <Button variant="outline" onClick={onClose} className="flex-1">
+          <XCircle className="h-4 w-4 mr-2" />
+          Cerrar
+        </Button>
+      }
+    >
+      <div className="space-y-6">
           {/* Score Display */}
           <div className="text-center">
             <div
@@ -200,14 +194,6 @@ export function GameStatsModal({
             </CardContent>
           </Card>
         </div>
-
-        <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
-            <XCircle className="h-4 w-4 mr-2" />
-            Cerrar
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+      </ModalNova>
+    );
+  }
