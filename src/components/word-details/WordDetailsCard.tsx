@@ -225,14 +225,18 @@ export function WordDetailsCard({
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as "info" | "chat")}
       >
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
           <TabsTrigger value="info">Información</TabsTrigger>
-          <TabsTrigger value="chat">Chat | {word.word}</TabsTrigger>
+          <TabsTrigger value="chat" className="flex items-center gap-2">
+            Chat
+            <span className="px-2 text-sm bg-primary/20 text-primary rounded-md capitalize">
+              {word.word}
+            </span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent
           value="info"
-          className="max-h-[calc(100dvh-12rem)] overflow-y-auto pr-2"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
@@ -439,7 +443,7 @@ export function WordDetailsCard({
           </SectionContainer>
 
           {/* Level Buttons */}
-          {showLevelButtons && (
+          {showLevelButtons && variant !== "modal" && (
             <div className="flex justify-center gap-2 mt-4">
               {(["easy", "medium", "hard"] as const).map((level) => (
                 <Button
@@ -466,7 +470,7 @@ export function WordDetailsCard({
           )}
         </TabsContent>
 
-        <TabsContent value="chat" className="h-[calc(100dvh-12rem)]">
+        <TabsContent value="chat">
           <WordChatTab word={word} />
         </TabsContent>
       </Tabs>

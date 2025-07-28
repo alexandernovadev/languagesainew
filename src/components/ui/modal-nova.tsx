@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 interface ModalNovaProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  title: string;
+  title?: string;
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
@@ -46,17 +46,19 @@ export function ModalNova({
         className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl`}
       >
         {/* Header Fijo */}
-        <DialogHeader className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
-          <DialogTitle className="text-2xl">{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
-        </DialogHeader>
+        {title && (
+          <DialogHeader className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
+            <DialogTitle className="text-2xl">{title}</DialogTitle>
+            {description && <DialogDescription>{description}</DialogDescription>}
+          </DialogHeader>
+        )}
 
         {/* Contenido Scrollable */}
         <div className="flex-grow overflow-y-auto">{children}</div>
 
         {/* Footer Fijo */}
         {footer && (
-          <div className="flex justify-end gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
+          <div className="flex justify-center gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
             {footer}
           </div>
         )}
