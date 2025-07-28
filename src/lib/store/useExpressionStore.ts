@@ -34,6 +34,7 @@ interface ExpressionStore {
 
   // Chat actions
   addChatMessage: (expressionId: string, message: string) => Promise<void>;
+  streamChatMessage: (expressionId: string, message: string, onChunk?: (chunk: string) => void) => Promise<void>;
   getChatHistory: (expressionId: string) => Promise<ChatMessage[]>;
   clearChatHistory: (expressionId: string) => Promise<void>;
 
@@ -139,12 +140,40 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
       const response = await expressionService.addChatMessage(expressionId, message);
       set({
         expressions: get().expressions.map((expr) =>
-          expr._id === expressionId ? response.data : expr
+          expr._id === expressionId ? response.data.expression : expr
         ),
       });
     } catch (error: any) {
       console.error("Error adding chat message:", error);
       toast.error("Error al enviar el mensaje");
+    }
+  },
+
+  streamChatMessage: async (expressionId, message, onChunk) => {
+    try {
+      const stream = await expressionService.streamChatMessage(expressionId, message);
+      
+      if (!stream) {
+        throw new Error('No stream received');
+      }
+
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        if (onChunk) {
+          onChunk(chunk);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error streaming chat message:", error);
+      toast.error("Error al enviar el mensaje");
+      throw error;
     }
   },
 

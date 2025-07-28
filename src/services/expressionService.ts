@@ -1,5 +1,7 @@
 import { api } from "./api";
 import { Expression, ChatMessage } from "../models/Expression";
+import { getAuthHeaders } from "@/utils/services";
+import { useUserStore } from "@/lib/store/user-store";
 
 export const expressionService = {
   // Get expressions with filters
@@ -50,6 +52,39 @@ export const expressionService = {
   // Chat methods
   addChatMessage: (expressionId: string, message: string) => 
     api.post(`/api/expressions/${expressionId}/chat`, { message }),
+
+  streamChatMessage: async (expressionId: string, message: string) => {
+    const baseURL = import.meta.env.VITE_BACK_URL;
+    const url = `${baseURL}/api/expressions/${expressionId}/chat/stream`;
+    
+    console.log('🔄 Streaming to:', url);
+    
+    // Get auth headers without Content-Type for streaming
+    const authToken = useUserStore.getState().token;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
+    }
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ message }),
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Stream error:', response.status, errorText);
+      throw new Error(`Failed to stream chat message: ${response.status} ${errorText}`);
+    }
+
+    return response.body;
+  },
 
   getChatHistory: (expressionId: string) => 
     api.get(`/api/expressions/${expressionId}/chat`),

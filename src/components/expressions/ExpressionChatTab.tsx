@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Send, Trash2 } from "lucide-react";
+import { Send, Trash2 } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import type { ChatMessage } from "@/models/Expression";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { TypingAnimation } from "@/components/common/TypingAnimation";
 import { toast } from "sonner";
+import ReactMarkdown from 'react-markdown';
 
 interface ExpressionChatTabProps {
   expression: Expression;
@@ -15,16 +17,36 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(expression?.chat || []);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { addChatMessage, actionLoading } = useExpressionStore();
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState("");
+  const { streamChatMessage, actionLoading } = useExpressionStore();
 
-  // Opciones por defecto
-  const defaultQuestions = [
-    "Explícame esto más a detalle",
-    "Dame ejemplos de uso",
-    "¿Cuándo se usa esta expresión?",
-    "Dame sinónimos",
-    "¿Es formal o informal?",
-    "¿Hay variaciones de esta expresión?"
+  // Opciones por defecto organizadas por categorías
+  const questionCategories = [
+    {
+      title: "Ejemplos",
+      icon: "💡",
+      questions: [
+        "Dame ejemplos de uso",
+        "Úsala en una conversación"
+      ]
+    },
+    {
+      title: "Contexto",
+      icon: "🎯", 
+      questions: [
+        "¿Cuándo se usa?",
+        "¿Es formal o informal?"
+      ]
+    },
+    {
+      title: "Detalles",
+      icon: "📚",
+      questions: [
+        "Explícame más a detalle",
+        "Dame sinónimos"
+      ]
+    }
   ];
 
   const handleDefaultQuestion = async (question: string) => {
@@ -36,21 +58,45 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
     if (!message.trim() || !expression) return;
     
     setIsLoading(true);
+    setIsStreaming(true);
+    setStreamingMessage("");
+
+    // Add user message immediately
+    const userMessage: ChatMessage = {
+      id: Math.random().toString(36).substr(2, 9),
+      role: "user",
+      content: message,
+      timestamp: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+
     try {
-      await addChatMessage(expression._id, message);
-      setInputValue("");
+      let fullMessage = "";
       
-      // Refresh messages from store
-      const updatedExpression = useExpressionStore.getState().expressions.find(
-        expr => expr._id === expression._id
-      );
-      if (updatedExpression) {
-        setMessages(updatedExpression.chat || []);
-      }
+      // Start streaming
+      await streamChatMessage(expression._id, message, (chunk: string) => {
+        fullMessage += chunk;
+        setStreamingMessage(fullMessage);
+      });
+
+      // Add final assistant message
+      const assistantMessage: ChatMessage = {
+        id: Math.random().toString(36).substr(2, 9),
+        role: "assistant", 
+        content: fullMessage,
+        timestamp: new Date().toISOString()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      setStreamingMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
+      toast.error("Error al enviar el mensaje");
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   };
 
@@ -73,38 +119,56 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Opciones por defecto */}
-      {messages.length === 0 && (
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Preguntas sugeridas:</h4>
-          <div className="grid grid-cols-1 gap-2">
-            {defaultQuestions.map((question, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => handleDefaultQuestion(question)}
-                disabled={isLoading}
-                className="justify-start text-left"
-              >
-                {question}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
-      
       {/* Historial de mensajes */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 border rounded-lg bg-muted/20">
-        {messages.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>No hay mensajes aún</p>
-            <p className="text-sm">Haz una pregunta sobre esta expresión</p>
+        {/* Opciones por defecto dentro del chat */}
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="grid grid-cols-3 gap-4 max-w-2xl">
+              {questionCategories.map((category, categoryIndex) => (
+                <div key={categoryIndex} className="text-center">
+                  <div className="mb-2">
+                    <div className="text-lg mb-1">{category.icon}</div>
+                    <h5 className="text-sm font-medium text-muted-foreground">{category.title}</h5>
+                  </div>
+                  <div className="space-y-2">
+                    {category.questions.map((question, questionIndex) => (
+                      <Button
+                        key={`${categoryIndex}-${questionIndex}`}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDefaultQuestion(question)}
+                        disabled={isLoading}
+                        className="w-full h-auto text-xs p-2 text-center leading-tight hover:bg-accent"
+                      >
+                        {question}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ) : (
-          messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))
+        )}
+        
+        {/* Mensajes del chat */}
+        {messages.map((message) => (
+          <ChatMessage key={message.id} message={message} />
+        ))}
+        
+        {/* Mensaje streaming */}
+        {isStreaming && (
+          <div className="flex justify-start">
+            <div className="max-w-[80%] p-3 rounded-lg bg-muted">
+              {streamingMessage ? (
+                <div className="text-sm">
+                  <ReactMarkdown>{streamingMessage}</ReactMarkdown>
+                </div>
+              ) : (
+                <TypingAnimation />
+              )}
+            </div>
+          </div>
         )}
       </div>
       
@@ -121,7 +185,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
           onClick={() => handleSendMessage(inputValue)} 
           disabled={isLoading || !inputValue.trim()}
         >
-          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          <Send className="h-4 w-4" />
         </Button>
         {messages.length > 0 && (
           <Button 
@@ -149,7 +213,24 @@ function ChatMessage({ message }: { message: ChatMessage }) {
           ? 'bg-primary text-primary-foreground' 
           : 'bg-muted'
       }`}>
-        <p className="text-sm">{message.content}</p>
+        <div className="text-sm">
+          {isUser ? (
+            <p>{message.content}</p>
+          ) : (
+            <ReactMarkdown 
+              components={{
+                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
+                li: ({ children }) => <li className="mb-1">{children}</li>,
+                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                em: ({ children }) => <em className="italic">{children}</em>,
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+          )}
+        </div>
         <p className="text-xs opacity-70 mt-1">
           {new Date(message.timestamp).toLocaleTimeString()}
         </p>
