@@ -215,7 +215,7 @@ export const wordService = {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await api.post(`/api/words/import/json`, formData, {
+    const res = await api.post(`/api/words/import-file`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
