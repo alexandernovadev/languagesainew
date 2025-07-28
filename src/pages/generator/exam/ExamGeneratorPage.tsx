@@ -66,6 +66,7 @@ export default function ExamGeneratorPage() {
         topic: filters.topic,
         level: filters.level,
         difficulty: filters.difficulty.toString(),
+        language: filters.userLang, // Agregar el idioma de los filtros
         questions: state.generatedExam.questions,
         examSlug: state.generatedExam.examSlug,
       });
@@ -189,7 +190,7 @@ export default function ExamGeneratorPage() {
       title: examTitle,
       slug: examSlug,
       description: `Examen generado sobre ${filters.topic}`,
-      language: "es",
+      language: filters.userLang || "en", // Usar userLang de los filtros o "en" como default
       level: filters.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: filters.topic,
       source: "ai" as const,

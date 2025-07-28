@@ -191,7 +191,7 @@ export default function LectureGeneratorPage() {
       time: 0, // No se calcula aquí, se hace en el backend
       level: data.level,
       typeWrite: data.typeWrite,
-      language: "es",
+      language: language, // Usar el estado language en lugar de hardcodear "es"
       img: "",
       content: generatedText,
     } as Lecture;

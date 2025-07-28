@@ -8,6 +8,7 @@ interface ExamStore {
     topic: string;
     level: string;
     difficulty: string;
+    language?: string; // Agregar campo de idioma
     questions: UnifiedExamQuestion[];
     examSlug?: string; // Slug generado por la IA
   } | null;
@@ -98,6 +99,7 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       const result = await examService.saveExamWithQuestions({
         ...exam,
         examSlug: exam.examSlug,
+        language: exam.language, // Pasar el idioma del examen
       });
       console.log('Examen guardado exitosamente:', result);
       set({ isSaving: false, saveError: null });

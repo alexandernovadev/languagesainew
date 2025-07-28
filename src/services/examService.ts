@@ -324,6 +324,7 @@ export const examService = {
     topic: string;
     questions: UnifiedExamQuestion[];
     examSlug?: string; // Nuevo campo para el slug generado por la IA
+    language?: string; // Agregar campo de idioma opcional
   }): Promise<any> {
     // Transformar las preguntas al formato esperado por la API
     const questions = examData.questions.map((question) => ({
@@ -341,7 +342,7 @@ export const examService = {
     const response = await api.post("/api/exams/with-questions", {
       title: examData.title,
       slug: examData.examSlug, // Incluir el slug generado por la IA
-      language: "es", // Por defecto español
+      language: examData.language || "en", // Usar el idioma proporcionado o "en" como default
       level: examData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: examData.topic,
       description: `Examen sobre ${examData.topic}`,

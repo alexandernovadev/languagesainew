@@ -37,7 +37,7 @@ export function LectureForm({
     defaultValues: {
       level: initialData.level || "",
       typeWrite: initialData.typeWrite || "",
-      language: initialData.language || "es",
+      language: initialData.language || "en", // Cambiar de "es" a "en" como default más neutral
       time: initialData.time || 0,
       content: initialData.content || "",
       img: initialData.img || "",
