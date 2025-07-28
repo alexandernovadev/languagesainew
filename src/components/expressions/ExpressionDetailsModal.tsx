@@ -27,7 +27,7 @@ export function ExpressionDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] border border-gray-600 shadow-2xl">
+      <DialogContent className="max-w-4xl h-[calc(100vh-2rem)] border border-gray-600 shadow-2xl mx-4 my-4">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">{expression.expression}</DialogTitle>
         </DialogHeader>
@@ -35,14 +35,14 @@ export function ExpressionDetailsModal({
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "chat")}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="info">Información</TabsTrigger>
-            <TabsTrigger value="chat">Chat con GPT</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="info" className="max-h-[60vh] overflow-y-auto pr-2">
+          <TabsContent value="info" className="h-[calc(100vh-12rem)] overflow-y-auto pr-2">
             <ExpressionInfoTab expression={expression} />
           </TabsContent>
           
-          <TabsContent value="chat" className="h-96">
+          <TabsContent value="chat" className="h-[calc(100vh-12rem)]">
             <ExpressionChatTab expression={expression} />
           </TabsContent>
         </Tabs>
