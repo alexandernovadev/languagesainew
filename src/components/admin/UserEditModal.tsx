@@ -2,19 +2,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { ModalNova } from '@/components/ui/modal-nova';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { X, Save, UserPlus, User as UserIcon } from 'lucide-react';
+import { Save, UserPlus, User as UserIcon } from 'lucide-react';
 import { User, UserCreate, UserUpdate } from '@/services/userService';
 
 // Validation schema
@@ -90,37 +85,26 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-        {/* Sticky Header */}
-        <DialogHeader className="sticky top-0 bg-background border-b pb-4">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center gap-2">
-              {isEditing ? (
-                <>
-                  <UserIcon className="h-5 w-5" />
-                  Editar Usuario
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-5 w-5" />
-                  Crear Usuario
-                </>
-              )}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClose}
-              className="h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </DialogHeader>
-
-        {/* Scrollable Content */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto py-4 space-y-6">
+    <ModalNova
+      open={isOpen}
+      onOpenChange={handleClose}
+      title={isEditing ? "Editar Usuario" : "Crear Usuario"}
+      size="2xl"
+      footer={
+        <div className="flex justify-end gap-2">
+          <Button
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            disabled={saving || !isValid}
+            className="flex items-center gap-2"
+          >
+            <Save className="h-4 w-4" />
+            {saving ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}
+          </Button>
+        </div>
+      }
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-6">
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-muted-foreground">Información Básica</h3>
@@ -285,23 +269,6 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
             </div>
           </div>
         </form>
-
-        {/* Sticky Footer */}
-        <div className="sticky bg-background border-t pt-4 flex justify-end gap-2">
-          <Button variant="outline" onClick={handleClose} disabled={saving}>
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            onClick={handleSubmit(onSubmit)}
-            disabled={saving || !isValid}
-            className="flex items-center gap-2"
-          >
-            <Save className="h-4 w-4" />
-            {saving ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-} 
+      </ModalNova>
+    );
+  } 

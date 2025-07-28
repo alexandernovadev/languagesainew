@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { ModalNova } from '@/components/ui/modal-nova';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Separator } from '@/components/ui/separator';
-import { X, Filter, RotateCcw } from 'lucide-react';
+import { Filter, RotateCcw, Check, Trash2 } from 'lucide-react';
 import { useUsers } from '@/hooks/useUsers';
 
 interface UserFiltersModalProps {
@@ -104,28 +99,30 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90dvh] flex flex-col border border-gray-600 shadow-2xl">
-        {/* Sticky Header */}
-        <DialogHeader className="sticky top-0 bg-background border-b pb-4">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filtros de Usuarios
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
+    <ModalNova
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Filtros de Usuarios"
+      size="2xl"
+      footer={
+        <div className="flex justify-between">
+          <Button
+            variant="outline"
+            onClick={handleClear}
+            className="flex items-center gap-2"
+          >
+            <Trash2 className="h-4 w-4" />
+            Limpiar
+          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleApply} disabled={!hasActiveFilters}>
+              <Check className="h-4 w-4" />
             </Button>
           </div>
-        </DialogHeader>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto py-4 space-y-6">
+        </div>
+      }
+    >
+      <div className="space-y-6 px-6">
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-muted-foreground">Información Básica</h3>
@@ -320,27 +317,6 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
             </div>
           </div>
         </div>
-
-        {/* Sticky Footer */}
-        <div className="sticky bg-background border-t pt-4 flex justify-between">
-          <Button
-            variant="outline"
-            onClick={handleClear}
-            className="flex items-center gap-2"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Limpiar Filtros
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button onClick={handleApply} disabled={!hasActiveFilters}>
-              Aplicar Filtros
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+    </ModalNova>
   );
 } 
