@@ -87,4 +87,23 @@ export const questionService = {
     );
     return res.data;
   },
+
+  // Export questions to JSON
+  async exportQuestions() {
+    const response = await api.get("/api/questions/export-file");
+    return response.data;
+  },
+
+  // Import questions from JSON file
+  async importQuestions(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/api/questions/import-file", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
 };

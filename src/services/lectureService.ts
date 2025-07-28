@@ -53,7 +53,7 @@ export const lectureService = {
   },
 
   async exportLectures() {
-    const res = await api.get(`/api/lectures/export-json`);
+    const res = await api.get(`/api/lectures/export-file`);
     return res.data;
   },
 

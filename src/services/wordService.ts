@@ -207,7 +207,7 @@ export const wordService = {
   },
 
   async exportWords() {
-    const res = await api.get(`/api/words/export/json`);
+    const res = await api.get(`/api/words/export-file`);
     return res.data;
   },
 

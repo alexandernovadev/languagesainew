@@ -372,4 +372,23 @@ export const examService = {
 
     return response.data;
   },
+
+  // Export exams to JSON
+  async exportExams() {
+    const response = await api.get("/api/exams/export-file");
+    return response.data;
+  },
+
+  // Import exams from JSON file
+  async importExams(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/api/exams/import-file", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
 };
