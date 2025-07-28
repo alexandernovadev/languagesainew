@@ -2,12 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, TrendingUp, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wordService } from "@/services/wordService";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalNova } from "@/components/ui/modal-nova";
 import { toast } from "sonner";
 
 interface ReviewStats {
@@ -50,16 +45,14 @@ export function AnkiStatsModal({ open, onOpenChange }: AnkiStatsModalProps) {
     : 0;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl border border-gray-600 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
-            Estadísticas de Repaso Anki
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="py-4">
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Estadísticas de Repaso Anki"
+      size="xl"
+      height="h-auto"
+    >
+      <div className="py-4 px-6">
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[...Array(4)].map((_, i) => (
@@ -135,7 +128,6 @@ export function AnkiStatsModal({ open, onOpenChange }: AnkiStatsModalProps) {
             </div>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
-  );
-} 
+      </ModalNova>
+    );
+  } 
