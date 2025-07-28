@@ -302,9 +302,9 @@ export function QuestionForm({
   };
 
   return (
-    <form id="question-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form id="question-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-2">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 sticky top-1 z-10">
           <TabsTrigger value="basic">Básico</TabsTrigger>
           <TabsTrigger value="content">Contenido</TabsTrigger>
           <TabsTrigger value="options">Opciones</TabsTrigger>
