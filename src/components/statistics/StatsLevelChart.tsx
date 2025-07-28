@@ -41,7 +41,7 @@ export function StatsLevelChart({ stats }: StatsLevelChartProps) {
           Lecturas disponibles por nivel de dificultad
         </p>
       </CardHeader>
-      <CardContent className="w-full min-w-0">
+      <CardContent className="w-full min-w-0 overflow-x-hidden">
         <ChartContainer config={config} className="h-[300px] w-full min-w-0">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

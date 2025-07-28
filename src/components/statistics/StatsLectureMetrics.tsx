@@ -38,7 +38,7 @@ export function StatsLectureMetrics({ lectureStats }: StatsLectureMetricsProps) 
   const imagePercentage = totalLectures > 0 ? (lectureStats.quality.withImages / totalLectures) * 100 : 0;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-x-hidden">
       {/* Tiempo Promedio */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

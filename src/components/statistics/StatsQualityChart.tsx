@@ -41,7 +41,7 @@ export function StatsQualityChart({ stats }: StatsQualityChartProps) {
             Porcentaje de lecturas con audio
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-hidden">
           <ChartContainer config={config} className="h-[200px]">
             <PieChart>
               <Pie
@@ -70,7 +70,7 @@ export function StatsQualityChart({ stats }: StatsQualityChartProps) {
             Porcentaje de lecturas con imágenes
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-hidden">
           <ChartContainer config={config} className="h-[200px]">
             <PieChart>
               <Pie

@@ -54,8 +54,8 @@ export default function DashboardLayout({
             </Button>
           )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4">
-          <div className="container mx-auto">{children}</div>
+        <main className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden">
+          <div className="container mx-auto overflow-x-hidden">{children}</div>
         </main>
       </SidebarInset>
       <LoginModal open={isOpen} setOpen={closeLoginModal} />

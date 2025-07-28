@@ -6,48 +6,41 @@ interface StatsLanguageChartProps {
   stats: {
     byLanguage: {
       lectures: Record<string, number>;
-      words: Record<string, number>;
     };
   };
 }
 
 export function StatsLanguageChart({ stats }: StatsLanguageChartProps) {
-  const languageData = Object.entries(stats.byLanguage.lectures).map(([language, count]) => ({
+  const data = Object.entries(stats.byLanguage.lectures).map(([language, count]) => ({
     language,
-    lectures: count,
-    words: stats.byLanguage.words[language] || 0,
+    count,
   }));
 
   const config = {
     language: {
       label: "Idioma",
     },
-    lectures: {
-      label: "Lecturas",
-      color: "#6366f1",
-    },
-    words: {
-      label: "Palabras",
-      color: "#34d399",
+    count: {
+      label: "Cantidad",
+      color: "#10b981", // Verde Tailwind
     },
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contenido por Idioma</CardTitle>
+        <CardTitle>Distribución por Idioma</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Distribución de lecturas y palabras por idioma
+          Lecturas disponibles por idioma
         </p>
       </CardHeader>
-      <CardContent className="w-full min-w-0">
+      <CardContent className="w-full min-w-0 overflow-x-hidden">
         <ChartContainer config={config} className="h-[300px] w-full min-w-0">
-          <BarChart data={languageData}>
+          <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="language" />
-            <YAxis />
-            <Bar dataKey="lectures" fill="#6366f1" name="Lecturas" />
-            <Bar dataKey="words" fill="#34d399" name="Palabras" />
+            <YAxis allowDecimals={false} />
+            <Bar dataKey="count" fill="#10b981" />
             <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
           </BarChart>
         </ChartContainer>
