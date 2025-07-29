@@ -3,17 +3,13 @@ import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Filter, X, Check, Trash2 } from "lucide-react";
-import { getAllLanguages } from "@/utils/common/language";
-import { getAllExamLevels } from "@/utils/common/examTypes";
+import { Filter, Check, Trash2 } from "lucide-react";
+import { ExamLevelFilter } from "./filters/ExamLevelFilter";
+import { ExamLanguageFilter } from "./filters/ExamLanguageFilter";
+import { StatusFilter } from "./history-filters/StatusFilter";
+import { DateRangeFilterBadge } from "./history-filters/DateRangeFilterBadge";
+import { ScoreRangeFilterBadge } from "./history-filters/ScoreRangeFilterBadge";
 
 interface ExamHistoryFilters {
   status: string;
@@ -107,103 +103,31 @@ export default function ExamHistoryFiltersModal({
         {/* Filtros Básicos */}
         <div>
           <h3 className="text-sm font-medium mb-3">Filtros Básicos</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="status">Estado</Label>
-              <Select
-                value={filters.status}
-                onValueChange={(value) => handleFilterChange("status", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="in_progress">En progreso</SelectItem>
-                  <SelectItem value="submitted">Enviado</SelectItem>
-                  <SelectItem value="graded">Calificado</SelectItem>
-                  <SelectItem value="abandoned">Abandonado</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-6">
+            <StatusFilter
+              value={filters.status}
+              onChange={(val) => handleFilterChange("status", val || "all")}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="level">Nivel</Label>
-              <Select
-                value={filters.level}
-                onValueChange={(value) => handleFilterChange("level", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {getAllExamLevels().map((level) => (
-                    <SelectItem key={level.value} value={level.value}>
-                      {level.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <ExamLevelFilter
+              value={filters.level}
+              onChange={(val) => handleFilterChange("level", val || "all")}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="language">Idioma</Label>
-              <Select
-                value={filters.language}
-                onValueChange={(value) => handleFilterChange("language", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {getAllLanguages().map((language) => (
-                    <SelectItem key={language.code} value={language.code}>
-                      {language.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <ExamLanguageFilter
+              value={filters.language}
+              onChange={(val) => handleFilterChange("language", val || "all")}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="dateRange">Rango de Fecha</Label>
-              <Select
-                value={filters.dateRange}
-                onValueChange={(value) => handleFilterChange("dateRange", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
-                  <SelectItem value="today">Hoy</SelectItem>
-                  <SelectItem value="week">Última semana</SelectItem>
-                  <SelectItem value="month">Último mes</SelectItem>
-                  <SelectItem value="year">Último año</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <DateRangeFilterBadge
+              value={filters.dateRange}
+              onChange={(val) => handleFilterChange("dateRange", val || "all")}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="scoreRange">Rango de Puntuación</Label>
-              <Select
-                value={filters.scoreRange}
-                onValueChange={(value) => handleFilterChange("scoreRange", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
-                  <SelectItem value="excellent">Excelente (90%+)</SelectItem>
-                  <SelectItem value="good">Bueno (80-89%)</SelectItem>
-                  <SelectItem value="average">Promedio (70-79%)</SelectItem>
-                  <SelectItem value="below">Por debajo (70%)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <ScoreRangeFilterBadge
+              value={filters.scoreRange}
+              onChange={(val) => handleFilterChange("scoreRange", val || "all")}
+            />
           </div>
         </div>
 

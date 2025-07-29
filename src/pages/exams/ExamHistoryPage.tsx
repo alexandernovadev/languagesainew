@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import {
   BarChart3,
@@ -66,6 +63,42 @@ export default function ExamHistoryPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
+  // ----- Active filters info -----
+  const hasActiveFilters =
+    Object.values(filters).some((v) => v && v !== "all") || !!searchTerm;
+
+  // Contar filtros activos (considerar multiples valores separados por coma)
+  const activeFiltersCount = React.useMemo(() => {
+    let count = 0;
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value && value !== "all") {
+        if (typeof value === "string" && value.includes(",")) {
+          count += value.split(",").length;
+        } else {
+          count += 1;
+        }
+      }
+    });
+    if (searchTerm) count += 1;
+    return count;
+  }, [filters, searchTerm]);
+
+  const getActiveFiltersDescription = React.useCallback(() => {
+    const desc: string[] = [];
+
+    if (filters.status && filters.status !== "all")
+      desc.push(`Estado: ${filters.status}`);
+    if (filters.level && filters.level !== "all") desc.push(`Nivel: ${filters.level}`);
+    if (filters.language && filters.language !== "all") desc.push(`Idioma: ${filters.language}`);
+    if (filters.dateRange && filters.dateRange !== "all")
+      desc.push(`Fecha: ${filters.dateRange}`);
+    if (filters.scoreRange && filters.scoreRange !== "all")
+      desc.push(`Puntuación: ${filters.scoreRange}`);
+    if (searchTerm) desc.push(`Búsqueda: "${searchTerm}"`);
+
+    return desc;
+  }, [filters, searchTerm]);
+
   // Load data on component mount
   useEffect(() => {
     loadData();
@@ -92,77 +125,78 @@ export default function ExamHistoryPage() {
   // Filter attempts based on current filters
   const filteredAttempts = (Array.isArray(attempts) ? attempts : []).filter(
     (attempt) => {
-      // Status filter
-      if (
-        filters.status &&
-        filters.status !== "all" &&
-        attempt.status !== filters.status
-      )
-        return false;
+      // Status filter (multi-select)
+      if (filters.status && filters.status !== "all") {
+        const allowed = filters.status.split(",");
+        if (!allowed.includes(attempt.status)) return false;
+      }
 
-      // Level filter
-      if (
-        filters.level &&
-        filters.level !== "all" &&
-        attempt.exam.level !== filters.level
-      )
-        return false;
+      // Level filter (multi-select)
+      if (filters.level && filters.level !== "all") {
+        const allowed = filters.level.split(",");
+        if (!allowed.includes(attempt.exam.level)) return false;
+      }
 
-      // Language filter
-      if (
-        filters.language &&
-        filters.language !== "all" &&
-        attempt.exam.language !== filters.language
-      )
-        return false;
+      // Language filter (multi-select)
+      if (filters.language && filters.language !== "all") {
+        const allowed = filters.language.split(",");
+        if (!allowed.includes(attempt.exam.language)) return false;
+      }
 
       // Date range filter
       if (filters.dateRange && filters.dateRange !== "all") {
-        const attemptDate = new Date(attempt.startTime);
-        const now = new Date();
-        const daysDiff = Math.floor(
-          (now.getTime() - attemptDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+        const ranges = filters.dateRange.split(",");
 
-        switch (filters.dateRange) {
-          case "today":
-            if (daysDiff > 0) return false;
-            break;
-          case "week":
-            if (daysDiff > 7) return false;
-            break;
-          case "month":
-            if (daysDiff > 30) return false;
-            break;
-          case "year":
-            if (daysDiff > 365) return false;
-            break;
-        }
+        // At least one range must match
+        const matchRange = (range: string): boolean => {
+          const attemptDate = new Date(attempt.startTime);
+          const now = new Date();
+          const daysDiff = Math.floor(
+            (now.getTime() - attemptDate.getTime()) / (1000 * 60 * 60 * 24)
+          );
+
+          switch (range) {
+            case "today":
+              return daysDiff === 0;
+            case "week":
+              return daysDiff <= 7;
+            case "month":
+              return daysDiff <= 30;
+            case "year":
+              return daysDiff <= 365;
+            default:
+              return false;
+          }
+        };
+
+        if (!ranges.some(matchRange)) return false;
       }
-
-      // Score range filter
+      // Score range filter (multi-select)
       if (
         filters.scoreRange &&
         filters.scoreRange !== "all" &&
         attempt.score !== undefined &&
         attempt.maxScore !== undefined
       ) {
+        const ranges = filters.scoreRange.split(",");
         const percentage = (attempt.score / attempt.maxScore) * 100;
 
-        switch (filters.scoreRange) {
-          case "excellent":
-            if (percentage < 90) return false;
-            break;
-          case "good":
-            if (percentage < 80 || percentage >= 90) return false;
-            break;
-          case "average":
-            if (percentage < 60 || percentage >= 80) return false;
-            break;
-          case "poor":
-            if (percentage >= 60) return false;
-            break;
-        }
+        const passRange = (range: string): boolean => {
+          switch (range) {
+            case "excellent":
+              return percentage >= 90;
+            case "good":
+              return percentage >= 80 && percentage < 90;
+            case "average":
+              return percentage >= 60 && percentage < 80;
+            case "poor":
+              return percentage < 60;
+            default:
+              return false;
+          }
+        };
+
+        if (!ranges.some(passRange)) return false;
       }
 
       // Search term filter
@@ -272,13 +306,35 @@ export default function ExamHistoryPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0"
+                    className="h-10 w-10 p-0 relative"
                   >
                     <SlidersHorizontal className="h-4 w-4" />
+                    {hasActiveFilters && (
+                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Filtrar historial</p>
+                  <div className="text-xs">
+                    {hasActiveFilters ? (
+                      <div>
+                        <div className="font-medium mb-1">
+                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                        </div>
+                        <div className="space-y-1">
+                          {getActiveFiltersDescription().map((d, idx) => (
+                            <div key={idx} className="text-muted-foreground">
+                              • {d}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>Filtrar historial</div>
+                    )}
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
