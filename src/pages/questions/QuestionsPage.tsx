@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useQuestionFilters } from "@/hooks/useQuestionFilters";
+import { Badge } from "@/components/ui/badge";
 
 export default function QuestionsPage() {
   const {
@@ -45,6 +47,9 @@ export default function QuestionsPage() {
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
+
+  // Hook para obtener información de filtros activos
+  const { activeFiltersCount, getActiveFiltersDescription } = useQuestionFilters();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -306,13 +311,37 @@ export default function QuestionsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0"
+                    className="h-10 w-10 p-0 relative"
                   >
                     <SlidersHorizontal className="h-4 w-4" />
+                    {activeFiltersCount > 0 && (
+                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Filtrar preguntas</p>
+                  <div className="text-xs">
+                    {activeFiltersCount > 0 ? (
+                      <div>
+                        <div className="font-medium mb-1">
+                          {activeFiltersCount} filtro
+                          {activeFiltersCount !== 1 ? "s" : ""} activo
+                          {activeFiltersCount !== 1 ? "s" : ""}
+                        </div>
+                        <div className="space-y-1">
+                          {getActiveFiltersDescription?.map((desc, index) => (
+                            <div key={index} className="text-muted-foreground">
+                              • {desc}
+                            </div>
+                          )) || []}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>Sin filtros activos</div>
+                    )}
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
