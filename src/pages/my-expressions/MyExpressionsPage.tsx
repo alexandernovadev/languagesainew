@@ -44,6 +44,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useExpressionFilters } from "@/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function MyExpressionsPage() {
   const {
@@ -77,6 +78,9 @@ export default function MyExpressionsPage() {
   // Hook para obtener información de filtros activos
   const { activeFiltersCount, getActiveFiltersDescription } =
     useExpressionFilters();
+  
+  // Hook para manejo de resultados
+  const { handleApiResult } = useResultHandler();
 
   useEffect(() => {
     getExpressions();
@@ -105,8 +109,7 @@ export default function MyExpressionsPage() {
         setDialogOpen(false);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("Error al crear la expresión");
+      handleApiResult(error, "Crear/Actualizar Expresión");
     }
   };
 
@@ -133,8 +136,7 @@ export default function MyExpressionsPage() {
         setDeleteDialogOpen(false);
         setSelectedExpression(null);
       } catch (error) {
-        console.error("Error deleting expression:", error);
-        toast.error("Error al eliminar la expresión");
+        handleApiResult(error, "Eliminar Expresión");
       }
     }
   };

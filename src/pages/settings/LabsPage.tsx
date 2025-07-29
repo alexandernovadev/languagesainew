@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { toast } from "sonner";
 import {
   Database,
   Users,
@@ -24,9 +23,9 @@ import { labsService } from "@/services/labsService";
 import { LabsSection } from "@/components/labs/labs-section";
 import { LabsActionCard } from "@/components/labs/labs-action-card";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
-import { LabsResultModal } from "@/components/labs/labs-result-modal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface ConfirmationState {
   isOpen: boolean;
@@ -34,12 +33,6 @@ interface ConfirmationState {
   title: string;
   description: string;
   onConfirm: () => void;
-}
-
-interface ResultModalState {
-  isOpen: boolean;
-  result: any;
-  actionName: string;
 }
 
 export default function LabsPage() {
@@ -51,11 +44,9 @@ export default function LabsPage() {
     description: "",
     onConfirm: () => {},
   });
-  const [resultModal, setResultModal] = useState<ResultModalState>({
-    isOpen: false,
-    result: null,
-    actionName: "",
-  });
+  
+  // Hook para manejo de resultados
+  const { handleApiResult } = useResultHandler();
 
   const handleAction = async (
     actionName: string,
@@ -88,25 +79,17 @@ export default function LabsPage() {
     try {
       const result = await actionFunction();
       
-      // Show result modal instead of toast
-      setResultModal({
-        isOpen: true,
-        result: result,
-        actionName: actionName,
-      });
+      // Show result using global handler
+      handleApiResult(result, actionName);
     } catch (error: any) {
       console.error(`Error in ${actionName}:`, error);
       
-      // Show error in modal
-      setResultModal({
-        isOpen: true,
-        result: {
-          success: false,
-          message: error.response?.data?.message || error.message || `Error en ${actionName}`,
-          data: error.response?.data || null
-        },
-        actionName: actionName,
-      });
+      // Show error using global handler
+      handleApiResult({
+        success: false,
+        message: error.response?.data?.message || error.message || `Error en ${actionName}`,
+        data: error.response?.data || null
+      }, actionName);
     } finally {
       setLoading(null);
     }
@@ -114,10 +97,6 @@ export default function LabsPage() {
 
   const closeConfirmation = () => {
     setConfirmation({ ...confirmation, isOpen: false });
-  };
-
-  const closeResultModal = () => {
-    setResultModal({ ...resultModal, isOpen: false });
   };
 
   return (
@@ -529,13 +508,7 @@ export default function LabsPage() {
         variant="danger"
       />
 
-      {/* Results Modal */}
-      <LabsResultModal
-        isOpen={resultModal.isOpen}
-        onClose={closeResultModal}
-        result={resultModal.result}
-        actionName={resultModal.actionName}
-      />
+
     </PageLayout>
   );
 }
