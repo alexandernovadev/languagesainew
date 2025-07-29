@@ -15,6 +15,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Search, X as XIcon, SlidersHorizontal, Eye } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 
@@ -275,18 +281,40 @@ export default function QuestionsPage() {
         description="Manage and create questions for language learning exercises and assessments."
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFiltersModalOpen(true)}
-              className="h-10 w-10 p-0"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-            </Button>
-            <Button onClick={() => openDialog()} className="sm:w-auto">
-              <Plus className="h-4 w-4 mr-2" />
-              Nueva Pregunta
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFiltersModalOpen(true)}
+                    className="h-10 w-10 p-0"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Filtrar preguntas</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => openDialog()}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Crear nueva pregunta</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         }
       />
