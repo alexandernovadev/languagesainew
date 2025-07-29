@@ -10,7 +10,7 @@ import { LectureCard } from "@/components/lectures/LectureCard";
 import { LecturePagination } from "@/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
 import type { Lecture } from "@/models/Lecture";
-import { Plus, RefreshCw, Search, X as XIcon } from "lucide-react";
+import { Plus, RefreshCw, Search, X as XIcon, SlidersHorizontal } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +25,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { LectureFiltersModal } from "@/components/forms/lecture-filters/LectureFiltersModal";
+import { useLectureFilters } from "@/hooks/useLectureFilters";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -38,7 +40,9 @@ export default function LecturesPage() {
     putLecture,
     deleteLecture,
     actionLoading,
+    setFilters,
   } = useLectureStore();
+  // setFilters already destructured
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
@@ -59,10 +63,20 @@ export default function LecturesPage() {
   // Estado para búsqueda local
   const [localSearch, setLocalSearch] = useState("");
 
+  // Filtros
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+  const {
+    filters: lectureFilters,
+    activeFiltersCount,
+    getActiveFiltersDescription,
+    hasActiveFilters,
+    clearFilters,
+  } = useLectureFilters();
+
   // Buscar cuando localSearch cambie (con debounce)
   useEffect(() => {
     const handler = setTimeout(() => {
-      getLectures(1, 10, localSearch);
+      getLectures(1, 10, localSearch, lectureFilters);
     }, 500);
     return () => clearTimeout(handler);
   }, [localSearch, getLectures]);
@@ -71,7 +85,7 @@ export default function LecturesPage() {
   useEffect(() => {
     const loadLectures = async () => {
       try {
-        await getLectures(1, 10);
+        await getLectures(1, 10, localSearch, lectureFilters);
         toast.success("Lecturas cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
@@ -91,7 +105,7 @@ export default function LecturesPage() {
 
   const handlePageChange = async (page: number) => {
     try {
-      await getLectures(page, 10, localSearch);
+      await getLectures(page, 10, localSearch, lectureFilters);
     } catch (error: any) {
       handleApiResult(error, "Cargar Página");
     }
@@ -164,7 +178,7 @@ export default function LecturesPage() {
 
   const handleRefresh = async () => {
     try {
-      await getLectures(1, 10, localSearch);
+      await getLectures(1, 10, localSearch, lectureFilters);
       toast.success("Lecturas actualizadas", {
         action: {
           label: <Eye className="h-4 w-4" />,
@@ -186,6 +200,12 @@ export default function LecturesPage() {
 
   const getSelectedLecture = () => {
     return lectures.find((lecture) => lecture._id === selectedLectureId);
+  };
+
+  // Handler filtro lecture
+  const handleFiltersChange = (filters: any) => {
+    setFilters(filters);
+    getLectures(1,10,localSearch,filters);
   };
 
   if (loading) {
@@ -239,6 +259,44 @@ export default function LecturesPage() {
         description="Gestiona y explora todas tus lecturas."
         actions={
           <div className="flex items-center gap-2">
+            {/* Botón filtros */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFiltersModalOpen(true)}
+                    className="h-10 w-10 p-0 relative"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                    {activeFiltersCount > 0 && (
+                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="text-xs">
+                    {activeFiltersCount > 0 ? (
+                      <div>
+                        <div className="font-medium mb-1">
+                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                        </div>
+                        <div className="space-y-1">
+                          {getActiveFiltersDescription.map((desc, idx)=>(
+                            <div key={idx} className="text-muted-foreground">• {desc}</div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>Sin filtros activos</div>
+                    )}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -409,6 +467,13 @@ export default function LecturesPage() {
           loading={actionLoading.delete}
         />
       </div>
+
+      {/* Modal de filtros */}
+      <LectureFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        onFiltersChange={handleFiltersChange}
+      />
     </PageLayout>
   );
 }

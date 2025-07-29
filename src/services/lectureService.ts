@@ -2,9 +2,20 @@ import { api } from "./api";
 import { Lecture } from "../models/Lecture";
 
 export const lectureService = {
-  async getLectures(page = 1, limit = 10, search = "") {
-    const searchParam = search.trim() ? `&search=${encodeURIComponent(search.trim())}` : "";
-    const res = await api.get(`/api/lectures?page=${page}&limit=${limit}${searchParam}`);
+  async getLectures(page = 1, limit = 10, search = "", filters: Record<string, any> = {}) {
+    const params = new URLSearchParams();
+    params.append("page", String(page));
+    params.append("limit", String(limit));
+
+    if (search.trim()) params.append("search", search.trim());
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== "" && value !== null) {
+        params.append(key, String(value));
+      }
+    });
+
+    const res = await api.get(`/api/lectures?${params.toString()}`);
     return res.data;
   },
 

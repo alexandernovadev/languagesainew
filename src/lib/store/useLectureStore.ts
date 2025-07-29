@@ -9,8 +9,10 @@ interface LectureStore {
   actionLoading: { [key: string]: boolean };
   totalPages: number;
   currentPage: number;
+  currentFilters: any;
 
-  getLectures: (page?: number, limit?: number, search?: string) => Promise<void>;
+  setFilters: (filters: any) => void;
+  getLectures: (page?: number, limit?: number, search?: string, filters?: any) => Promise<void>;
   getLectureById: (id: string) => Promise<void>;
   postLecture: (lectureData: Lecture) => Promise<Lecture>;
   putLecture: (id: string, lectureData: Lecture) => Promise<Lecture>;
@@ -21,7 +23,7 @@ interface LectureStore {
   ) => Promise<void>;
   deleteLecture: (id: string | number) => Promise<void>;
   updateUrlAudio: (id: string, urlAudio: string) => Promise<void>;
-  loadMoreLectures: (page: number, limit?: number, search?: string) => Promise<void>;
+  loadMoreLectures: (page: number, limit?: number, search?: string, filters?: any) => Promise<void>;
 }
 
 export const useLectureStore = create<LectureStore>((set, get) => ({
@@ -31,14 +33,19 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
   actionLoading: {},
   totalPages: 1,
   currentPage: 1,
+  currentFilters: {},
 
-  getLectures: async (page = 1, limit = 10, search = "") => {
+  setFilters: (filters: any) => {
+    set({ currentFilters: filters });
+  },
+
+  getLectures: async (page = 1, limit = 10, search = "", filters = get().currentFilters) => {
     set({
       loading: true,
       currentPage: page,
     });
     try {
-      const { data } = await lectureService.getLectures(page, limit, search);
+      const { data } = await lectureService.getLectures(page, limit, search, filters);
 
       set({
         lectures: data.data,
@@ -51,12 +58,12 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     }
   },
 
-  loadMoreLectures: async (page: number, limit = 10, search = "") => {
+  loadMoreLectures: async (page: number, limit = 10, search = "", filters = get().currentFilters) => {
     set({
       loading: true,
     });
     try {
-      const { data } = await lectureService.getLectures(page, limit, search);
+      const { data } = await lectureService.getLectures(page, limit, search, filters);
 
       set((state) => {
         const existingIds = new Set(
