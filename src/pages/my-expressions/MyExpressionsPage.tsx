@@ -217,28 +217,37 @@ export default function MyExpressionsPage() {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => openDialog()}
-              className="h-10 w-10 rounded-full"
-            >
-              <Plus className="h-5 w-5" />
-            </Button>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant="outline"
+                    size="sm"
                     onClick={() => setGeneratorModalOpen(true)}
-                    className="h-10 w-10 rounded-full"
+                    className="h-10 w-10 p-0"
                   >
-                    <Sparkles className="h-5 w-5" />
+                    <Sparkles className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Generar expresión con AI</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openDialog()}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Crear nueva expresión</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
