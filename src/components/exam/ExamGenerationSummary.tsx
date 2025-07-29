@@ -9,7 +9,6 @@ import {
   Sparkles,
   Brain,
   Zap,
-  Star,
 } from "lucide-react";
 import { ExamGeneratorFilters } from "@/hooks/useExamGenerator";
 import { getDifficultyLabel } from "./helpers/examUtils";
@@ -94,6 +93,17 @@ export function ExamGenerationSummary({ filters }: ExamGenerationSummaryProps) {
             </div>
             <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">
               {filters.topic || "No especificado"}
+            </p>
+          </div>
+
+          {/* Título del Examen */}
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-3 border border-slate-700 shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <FileText className="h-4 w-4 text-green-400" />
+              <h3 className="font-semibold text-green-400 text-sm">Título del Examen</h3>
+            </div>
+            <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">
+              Se generará automáticamente
             </p>
           </div>
 

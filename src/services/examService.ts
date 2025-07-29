@@ -11,7 +11,7 @@ export interface ExamGenerationParams {
 }
 
 export interface ExamGenerationResponse {
-  examTitle: string;
+  examTitle: string; // Mantenemos para compatibilidad, pero ahora viene del campo 'title' del backend
   examSlug: string;
   questions: UnifiedExamQuestion[];
 }
@@ -313,7 +313,13 @@ export const examService = {
       userLang: params.userLang || "es",
     });
 
-    return response.data;
+    // Procesar la respuesta para convertir 'title' a 'examTitle'
+    const aiResponse = response.data;
+    return {
+      examTitle: aiResponse.title || `Examen: ${params.topic}`,
+      examSlug: aiResponse.examSlug || 'exam-general',
+      questions: aiResponse.questions || []
+    };
   },
 
   // Save exam with questions
@@ -345,7 +351,7 @@ export const examService = {
       language: examData.language || "en", // Usar el idioma proporcionado o "en" como default
       level: examData.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: examData.topic,
-      description: `Examen sobre ${examData.topic}`,
+      description: `Examen: ${examData.title}`,
       source: "ai",
       attemptsAllowed: 3,
       timeLimit: 60, // 60 minutos por defecto
@@ -370,7 +376,13 @@ export const examService = {
       userLang: params.userLang || "es",
     });
 
-    return response.data;
+    // Procesar la respuesta para convertir 'title' a 'examTitle'
+    const aiResponse = response.data;
+    return {
+      examTitle: aiResponse.title || `Examen: ${params.topic}`,
+      examSlug: aiResponse.examSlug || 'exam-general',
+      questions: aiResponse.questions || []
+    };
   },
 
   // Export exams to JSON

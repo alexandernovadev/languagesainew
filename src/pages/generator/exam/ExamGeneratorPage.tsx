@@ -197,7 +197,6 @@ export default function ExamGeneratorPage() {
       _id: "temp",
       title: examTitle,
       slug: examSlug,
-      description: `Examen generado sobre ${filters.topic}`,
       language: filters.userLang || "en", // Usar userLang de los filtros o "en" como default
       level: filters.level as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
       topic: filters.topic,

@@ -107,7 +107,7 @@ export function useExamGenerator() {
       }));
 
       toast.success("¡Examen generado!", {
-        description: `Se generaron ${examData.questions.length} preguntas sobre "${filters.topic}"`,
+        description: `Se generaron ${examData.questions.length} preguntas para "${examData.examTitle}"`,
       });
     } catch (error) {
       const errorMessage =

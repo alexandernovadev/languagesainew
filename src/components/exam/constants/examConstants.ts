@@ -217,6 +217,7 @@ export const EXAM_VALIDATION_LIMITS = {
   minDifficulty: 1,
   maxDifficulty: 5,
   maxGrammarTopics: 10,
+  maxTopicLength: 1000,
 };
 
 // Progress thresholds for generation

@@ -48,12 +48,19 @@ export function ExamSummary({
 
         <CardContent className="space-y-6">
           {/* Información básica */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <h4 className="font-medium text-foreground">Tema</h4>
               <p className="text-sm text-muted-foreground">{filters.topic}</p>
             </div>
 
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">Título del Examen</h4>
+              <p className="text-sm text-muted-foreground font-medium">{exam.examTitle}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <h4 className="font-medium text-foreground">Nivel</h4>
               <Badge variant="outline">{getLevelLabel(filters.level)}</Badge>

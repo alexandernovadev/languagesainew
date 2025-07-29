@@ -229,6 +229,10 @@ export const validateExamFilters = (
     errors.push("El tema del examen es requerido");
   }
 
+  if (filters.topic && filters.topic.length > EXAM_VALIDATION_LIMITS.maxTopicLength) {
+    errors.push(`El tema del examen no puede exceder ${EXAM_VALIDATION_LIMITS.maxTopicLength} caracteres`);
+  }
+
   // Validación de temas de gramática
   if (filters.grammarTopics && !Array.isArray(filters.grammarTopics)) {
     errors.push("Los temas de gramática deben ser un array");

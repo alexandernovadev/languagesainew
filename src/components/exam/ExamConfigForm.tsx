@@ -97,7 +97,7 @@ export function ExamConfigForm({
                         disabled={isGenerating}
                       />
                       <span className="text-xs text-muted-foreground">
-                        {filters.topic.length} / 300 caracteres
+                        {filters.topic.length} / 1000 caracteres
                       </span>
                     </div>
                   }
