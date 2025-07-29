@@ -346,7 +346,7 @@ export default function ExamGeneratorPage() {
                   ))}
                 </div>
                 {/* Footer actions */}
-                <Card>
+                <Card className="sticky bottom-1 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border shadow-lg">
                   <CardContent className="pt-6">
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button
