@@ -226,6 +226,29 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                         ))}
                       </div>
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="spanishExpression">Expresión en Español</Label>
+                        <Input
+                          id="spanishExpression"
+                          value={formData.spanish?.expression || ""}
+                          onChange={(e) => handleSpanishChange("expression", e.target.value)}
+                          placeholder="¡Buena suerte!"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="spanishDefinition">Definición en Español</Label>
+                        <Textarea
+                          id="spanishDefinition"
+                          value={formData.spanish?.definition || ""}
+                          onChange={(e) => handleSpanishChange("definition", e.target.value)}
+                          placeholder="Expresión de deseo de éxito"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -235,7 +258,7 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                   <CardHeader>
                     <CardTitle>Información Avanzada</CardTitle>
                     <CardDescription>
-                      Tipos, ejemplos y traducción al español
+                      Tipos y ejemplos de la expresión
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -289,29 +312,6 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                           <Plus className="h-4 w-4 mr-2" />
                           Agregar Ejemplo
                         </Button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="spanishExpression">Expresión en Español</Label>
-                        <Input
-                          id="spanishExpression"
-                          value={formData.spanish?.expression || ""}
-                          onChange={(e) => handleSpanishChange("expression", e.target.value)}
-                          placeholder="¡Buena suerte!"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="spanishDefinition">Definición en Español</Label>
-                        <Textarea
-                          id="spanishDefinition"
-                          value={formData.spanish?.definition || ""}
-                          onChange={(e) => handleSpanishChange("definition", e.target.value)}
-                          placeholder="Expresión de deseo de éxito"
-                          rows={3}
-                        />
                       </div>
                     </div>
                   </CardContent>
