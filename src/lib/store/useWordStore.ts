@@ -615,7 +615,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
   getChatHistory: async (wordId) => {
     try {
       const response = await wordService.getChatHistory(wordId);
-      return response.data;
+      return response.data?.data || response.data || [];
     } catch (error: any) {
       console.error("Error getting chat history:", error);
       toast.error("Error al cargar el historial del chat");

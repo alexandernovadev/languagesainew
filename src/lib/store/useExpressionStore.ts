@@ -180,7 +180,7 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
   getChatHistory: async (expressionId) => {
     try {
       const response = await expressionService.getChatHistory(expressionId);
-      return response.data;
+      return response.data?.data || response.data || [];
     } catch (error: any) {
       console.error("Error getting chat history:", error);
       toast.error("Error al cargar el historial del chat");

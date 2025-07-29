@@ -14,13 +14,32 @@ interface WordChatTabProps {
 }
 
 export function WordChatTab({ word }: WordChatTabProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(word?.chat || []);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState("");
-  const { streamChatMessage, actionLoading } = useWordStore();
+  const { streamChatMessage, getChatHistory, actionLoading } = useWordStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load chat history when component mounts
+  useEffect(() => {
+    const loadChatHistory = async () => {
+      if (word?._id) {
+        try {
+          const chatHistory = await getChatHistory(word._id);
+          // Ensure we always set an array
+          setMessages(Array.isArray(chatHistory) ? chatHistory : []);
+        } catch (error) {
+          console.error("Error loading chat history:", error);
+          // Fallback to word.chat if available
+          setMessages(Array.isArray(word.chat) ? word.chat : []);
+        }
+      }
+    };
+
+    loadChatHistory();
+  }, [word?._id, getChatHistory]);
 
   // Auto-scroll to bottom when new messages are added or streaming
   const scrollToBottom = () => {
@@ -155,7 +174,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
         )}
 
         {/* Mensajes del chat */}
-        {messages.map((message) => (
+        {Array.isArray(messages) && messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
 

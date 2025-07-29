@@ -14,15 +14,32 @@ interface ExpressionChatTabProps {
 }
 
 export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(
-    expression?.chat || []
-  );
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState("");
-  const { streamChatMessage } = useExpressionStore();
+  const { streamChatMessage, getChatHistory } = useExpressionStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load chat history when component mounts
+  useEffect(() => {
+    const loadChatHistory = async () => {
+      if (expression?._id) {
+        try {
+          const chatHistory = await getChatHistory(expression._id);
+          // Ensure we always set an array
+          setMessages(Array.isArray(chatHistory) ? chatHistory : []);
+        } catch (error) {
+          console.error("Error loading chat history:", error);
+          // Fallback to expression.chat if available
+          setMessages(Array.isArray(expression.chat) ? expression.chat : []);
+        }
+      }
+    };
+
+    loadChatHistory();
+  }, [expression?._id, getChatHistory]);
 
   // Auto-scroll to bottom when new messages are added or streaming
   const scrollToBottom = () => {
@@ -157,7 +174,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
         )}
 
         {/* Mensajes del chat */}
-        {messages.map((message) => (
+        {Array.isArray(messages) && messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
 
