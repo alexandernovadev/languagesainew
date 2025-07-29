@@ -299,6 +299,7 @@ export default function LectureGeneratorPage() {
             />
             <Button
               type="submit"
+              form="lectureGeneratorForm"
               disabled={isGenerating || !isValid}
               className="gap-2"
               style={{ minWidth: 140 }}
@@ -321,7 +322,7 @@ export default function LectureGeneratorPage() {
 
       <div className="grid gap-6">
         {/* Generación principal */}
-        <form onSubmit={handleSubmit(handleGenerateText)}>
+        <form id="lectureGeneratorForm" onSubmit={handleSubmit(handleGenerateText)}>
           <Card>
             <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
