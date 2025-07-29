@@ -119,9 +119,9 @@ export function WordChatTab({ word }: WordChatTabProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 border rounded-lg bg-muted/20">
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {/* Opciones por defecto dentro del chat */}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full">
@@ -176,14 +176,15 @@ export function WordChatTab({ word }: WordChatTabProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input para nueva pregunta */}
-      <div className="mt-4 flex gap-2">
+      {/* Input para nueva pregunta - Sticky abajo */}
+      <div className="sticky bottom-0 flex gap-2 p-2 bg-background border-t">
         <Input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Pregunta algo sobre esta palabra..."
           disabled={isLoading}
           onKeyPress={handleKeyPress}
+          className="flex-1"
         />
         <Button
           onClick={() => handleSendMessage(inputValue)}
