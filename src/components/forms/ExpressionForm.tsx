@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,10 +17,14 @@ interface ExpressionFormProps {
   onSubmit: (data: Partial<Expression>) => Promise<void>;
 }
 
-export function ExpressionForm({
+export interface ExpressionFormRef {
+  submit: () => void;
+}
+
+export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>(({
   initialData = {},
   onSubmit,
-}: ExpressionFormProps) {
+}, ref) => {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imageProgress, setImageProgress] = useState(0);
 
@@ -119,6 +123,13 @@ export function ExpressionForm({
   const onSubmitForm = async (data: Partial<Expression>) => {
     await onSubmit(data);
   };
+
+  // Expose submit method to parent
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      handleSubmit(onSubmitForm)();
+    },
+  }));
 
   return (
     <div className="w-full">
@@ -400,4 +411,4 @@ export function ExpressionForm({
       </form>
     </div>
   );
-} 
+}); 

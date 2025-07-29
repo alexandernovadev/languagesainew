@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { Expression } from "@/models/Expression";
-import { ExpressionForm } from "@/components/forms/ExpressionForm";
+import { ExpressionForm, ExpressionFormRef } from "@/components/forms/ExpressionForm";
 import { ExpressionDetailsModal } from "@/components/expressions/ExpressionDetailsModal";
 import { ExpressionFiltersModal } from "@/components/forms/expression-filters/ExpressionFiltersModal";
 import { ExpressionGeneratorModal } from "@/components/expressions/ExpressionGeneratorModal";
@@ -72,6 +72,7 @@ export default function MyExpressionsPage() {
   const [localSearch, setLocalSearch] = useState("");
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
   const [generatorModalOpen, setGeneratorModalOpen] = useState(false);
+  const formRef = useRef<ExpressionFormRef>(null);
 
   // Hook para obtener información de filtros activos
   const { activeFiltersCount, getActiveFiltersDescription } =
@@ -531,16 +532,7 @@ export default function MyExpressionsPage() {
             </Button>
             <Button
               onClick={() => {
-                // Trigger form submission
-                const form = document.querySelector("form");
-                if (form) {
-                  const submitButton = form.querySelector(
-                    'button[type="submit"]'
-                  ) as HTMLButtonElement;
-                  if (submitButton) {
-                    submitButton.click();
-                  }
-                }
+                formRef.current?.submit();
               }}
               disabled={actionLoading.create || actionLoading.update}
               className="min-w-[100px]"
@@ -556,6 +548,7 @@ export default function MyExpressionsPage() {
       >
         <div className="px-6 py-4">
           <ExpressionForm
+            ref={formRef}
             initialData={selectedExpression || {}}
             onSubmit={handleFormSubmit}
           />
