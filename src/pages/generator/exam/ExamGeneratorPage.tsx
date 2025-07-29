@@ -181,10 +181,6 @@ export default function ExamGeneratorPage() {
     setShowTitleModal(true);
   };
 
-  const handleBackToConfig = () => {
-    setActiveTab("config");
-  };
-
   // Create a mock exam object for the ExamHeader component
   const createMockExamForHeader = () => {
     const currentExam = exam || state.generatedExam;
