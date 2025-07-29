@@ -30,7 +30,7 @@ const generatorFormSchema = z.object({
   prompt: z
     .string()
     .min(120, { message: "El tema debe tener al menos 120 caracteres." })
-    .max(300, { message: "El tema no debe exceder los 300 caracteres." }),
+    .max(600, { message: "El tema no debe exceder los 600 caracteres." }),
   typeWrite: z.string(),
   level: z.string(),
   difficulty: z.string(),
@@ -63,7 +63,12 @@ export default function LectureGeneratorPage() {
   const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
     type: "lecture",
     onTopicGenerated: (topic) => {
-      setValue("prompt", topic);
+      // Actualizar el campo y disparar validación para que
+      // isValid se actualice sin intervención manual.
+      setValue("prompt", topic, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     },
   });
 
@@ -347,7 +352,7 @@ export default function LectureGeneratorPage() {
                       disabled={isGenerating}
                     />
                     <p className={`text-xs text-muted-foreground`}>
-                      {watchedValues.prompt.length} / 300 caracteres
+                      {watchedValues.prompt.length} / 600 caracteres
                     </p>
                   </div>
                 </div>
