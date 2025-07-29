@@ -216,7 +216,7 @@ export function ResultProvider({ children }: { children: ReactNode }) {
           height="h-[95dvh]"
         >
           {/* Status Sticky */}
-          <div className="sticky top-0 bg-background border-b border-border px-6 py-4 -mx-6 -mt-6 mb-6 z-10 ">
+          <div className="sticky top-0 bg-background border-b border-border px-6 py-4 -mt-6 mb-6 z-10">
             <div className="flex items-center justify-between px-4 pb-3">
               <div className="flex items-center gap-2">
                 {getStatusIcon()}
