@@ -59,6 +59,14 @@ export default function LecturesPage() {
   // Estado para búsqueda local
   const [localSearch, setLocalSearch] = useState("");
 
+  // Buscar cuando localSearch cambie (con debounce)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      getLectures(1, 10, localSearch);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [localSearch, getLectures]);
+
   // Fetch lectures on mount
   useEffect(() => {
     const loadLectures = async () => {
@@ -83,7 +91,7 @@ export default function LecturesPage() {
 
   const handlePageChange = async (page: number) => {
     try {
-      await getLectures(page, 10);
+      await getLectures(page, 10, localSearch);
     } catch (error: any) {
       handleApiResult(error, "Cargar Página");
     }
@@ -156,7 +164,7 @@ export default function LecturesPage() {
 
   const handleRefresh = async () => {
     try {
-      await getLectures(1, 10);
+      await getLectures(1, 10, localSearch);
       toast.success("Lecturas actualizadas", {
         action: {
           label: <Eye className="h-4 w-4" />,

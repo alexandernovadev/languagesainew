@@ -2,8 +2,9 @@ import { api } from "./api";
 import { Lecture } from "../models/Lecture";
 
 export const lectureService = {
-  async getLectures(page = 1, limit = 10) {
-    const res = await api.get(`/api/lectures?page=${page}&limit=${limit}`);
+  async getLectures(page = 1, limit = 10, search = "") {
+    const searchParam = search.trim() ? `&search=${encodeURIComponent(search.trim())}` : "";
+    const res = await api.get(`/api/lectures?page=${page}&limit=${limit}${searchParam}`);
     return res.data;
   },
 
