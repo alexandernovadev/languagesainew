@@ -94,7 +94,6 @@ export default function MyWordsPage() {
       searchFirstRender.current = false;
       return;
     }
-    if (localSearch === "") return;
     const handler = setTimeout(() => {
       setSearchQuery(localSearch);
     }, 500); // 500ms debounce delay
