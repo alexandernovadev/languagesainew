@@ -50,8 +50,6 @@ interface UseExamsReturn {
 
   // Handlers
   handleFilterChange: (newFilters: ExamFilters) => void;
-  handleApplyFilters: () => void;
-  handleClearFilters: () => void;
   handleSearch: () => void;
   handleViewExam: (exam: Exam) => void;
   handleTakeExam: (exam: Exam) => void;
@@ -133,9 +131,7 @@ export function useExams(): UseExamsReturn {
       if (filters.createdBefore)
         params.append("createdBefore", filters.createdBefore);
 
-      console.log("Fetching exams with params:", params.toString());
       const response = await examService.getExams(params.toString());
-      console.log("API Response:", response);
 
       if (response && response.success && response.data) {
         setExams(response.data.data || []);
@@ -180,25 +176,6 @@ export function useExams(): UseExamsReturn {
   const handleFilterChange = (newFilters: ExamFilters) => {
     setFilters(newFilters);
     goToPage(1);
-  };
-
-  const handleApplyFilters = () => {
-    goToPage(1);
-    fetchExams().catch((error) => {
-      toast.error("Error al aplicar filtros", {
-        description: error.message || "No se pudieron aplicar los filtros",
-      });
-    });
-  };
-
-  const handleClearFilters = () => {
-    setFilters(defaultFilters);
-    goToPage(1);
-    fetchExams().catch((error) => {
-      toast.error("Error al limpiar filtros", {
-        description: error.message || "No se pudieron limpiar los filtros",
-      });
-    });
   };
 
   const handleSearch = () => {
@@ -351,8 +328,6 @@ export function useExams(): UseExamsReturn {
 
     // Handlers
     handleFilterChange,
-    handleApplyFilters,
-    handleClearFilters,
     handleSearch,
     handleViewExam,
     handleTakeExam,

@@ -5,13 +5,14 @@ import { ExamSearchAndFilters } from "@/components/exam/ExamSearchAndFilters";
 import { ExamTable } from "@/components/exam/ExamTable";
 import { ExamPagination } from "@/components/exam/ExamPagination";
 import { ExamPageSkeleton } from "@/components/exam/ExamPageSkeleton";
-import ExamFiltersModal from "@/components/exam/ExamFiltersModal";
+import { ExamFiltersModalNew } from "@/components/exam/ExamFiltersModalNew";
 import ExamViewModal from "@/components/exam/ExamViewModal";
 import { ExamEditModal } from "@/components/exam/ExamEditModal";
 import { ExamDeleteDialog } from "@/components/exam/ExamDeleteDialog";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { SlidersHorizontal, RefreshCw } from "lucide-react";
 import {
   Tooltip,
@@ -34,7 +35,6 @@ export default function ExamsPage() {
     isEditModalOpen,
     examToDelete,
     isDeleteDialogOpen,
-    hasActiveFilters,
 
     // Actions
     setSearchTerm,
@@ -43,8 +43,6 @@ export default function ExamsPage() {
 
     // Handlers
     handleFilterChange,
-    handleApplyFilters,
-    handleClearFilters,
     handleSearch,
     handleViewExam,
     handleTakeExam,
@@ -56,6 +54,29 @@ export default function ExamsPage() {
     fetchExams,
     goToPage,
   } = useExams();
+
+  // Calcular número de filtros activos directamente desde los filtros del store
+  const activeFiltersCount = Object.values(filters).filter(
+    (value) => value && value !== "all" && value !== "createdAt" && value !== "desc"
+  ).length;
+
+  // Obtener descripción de filtros activos
+  const getActiveFiltersDescription = () => {
+    const descriptions: string[] = [];
+
+    if (filters.level && filters.level !== "all") descriptions.push(`Nivel: ${filters.level}`);
+    if (filters.language && filters.language !== "all") descriptions.push(`Idioma: ${filters.language}`);
+    if (filters.topic && filters.topic !== "all") descriptions.push(`Tema: ${filters.topic}`);
+    if (filters.source && filters.source !== "all") descriptions.push(`Origen: ${filters.source}`);
+    if (filters.adaptive && filters.adaptive !== "all") descriptions.push(`Tipo: ${filters.adaptive === "true" ? "Adaptativo" : "No Adaptativo"}`);
+    if (filters.createdBy && filters.createdBy !== "all") descriptions.push(`Creado por: ${filters.createdBy}`);
+    if (filters.createdAfter) descriptions.push(`Creado después: ${filters.createdAfter}`);
+    if (filters.createdBefore) descriptions.push(`Creado antes: ${filters.createdBefore}`);
+    if (filters.sortBy && filters.sortBy !== "createdAt") descriptions.push(`Ordenar por: ${filters.sortBy}`);
+    if (filters.sortOrder && filters.sortOrder !== "desc") descriptions.push(`Orden: ${filters.sortOrder === "asc" ? "Ascendente" : "Descendente"}`);
+
+    return descriptions;
+  };
 
   if (loading) {
     return <ExamPageSkeleton />;
@@ -75,13 +96,37 @@ export default function ExamsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0"
+                    className="h-10 w-10 p-0 relative"
                   >
                     <SlidersHorizontal className="h-4 w-4" />
+                    {activeFiltersCount > 0 && (
+                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Filtrar exámenes</p>
+                  <div className="text-xs">
+                    {activeFiltersCount > 0 ? (
+                      <div>
+                        <div className="font-medium mb-1">
+                          {activeFiltersCount} filtro
+                          {activeFiltersCount !== 1 ? "s" : ""} activo
+                          {activeFiltersCount !== 1 ? "s" : ""}
+                        </div>
+                        <div className="space-y-1">
+                          {getActiveFiltersDescription().map((desc, index) => (
+                            <div key={index} className="text-muted-foreground">
+                              • {desc}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>Filtrar exámenes</div>
+                    )}
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -111,10 +156,6 @@ export default function ExamsPage() {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onSearch={handleSearch}
-        onFiltersClick={() => setIsFiltersModalOpen(true)}
-        onRefresh={fetchExams}
-        hasActiveFilters={hasActiveFilters}
-        loading={loading}
       />
 
       {/* Exams Table */}
@@ -149,13 +190,11 @@ export default function ExamsPage() {
       />
 
       {/* Modals and Dialogs */}
-      <ExamFiltersModal
-        isOpen={isFiltersModalOpen}
-        onClose={() => setIsFiltersModalOpen(false)}
+      <ExamFiltersModalNew
+        open={isFiltersModalOpen}
+        onOpenChange={setIsFiltersModalOpen}
         filters={filters}
         onFiltersChange={handleFilterChange}
-        onApplyFilters={handleApplyFilters}
-        onClearFilters={handleClearFilters}
       />
 
       <ExamViewModal
