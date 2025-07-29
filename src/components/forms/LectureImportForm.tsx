@@ -14,6 +14,7 @@ import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
@@ -31,6 +32,9 @@ export default function LectureImportForm() {
   const [validateOnly, setValidateOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   // Batch size handler
   const handleBatchSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,9 +82,7 @@ export default function LectureImportForm() {
         description: data.message || "Lectures imported successfully",
       });
     } catch (error: any) {
-      toast.error("Import error", {
-        description: error.message || "An error occurred during import",
-      });
+      handleApiResult(error, "Importar Lecturas");
     } finally {
       setLoading(false);
     }
