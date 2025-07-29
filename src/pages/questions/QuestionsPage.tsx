@@ -14,7 +14,7 @@ import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, X as XIcon, SlidersHorizontal, Eye } from "lucide-react";
+import { Plus, Search, X as XIcon, SlidersHorizontal, Eye, RefreshCw } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -206,6 +206,24 @@ export default function QuestionsPage() {
     [setFilters, getQuestions]
   );
 
+  const handleRefresh = async () => {
+    try {
+      await getQuestions();
+      toast.success("Preguntas actualizadas", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: questions, message: "Preguntas actualizadas" }, "Actualizar Preguntas")
+        },
+        cancel: {
+          label: <XIcon className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
+    } catch (error: any) {
+      handleApiResult(error, "Actualizar Preguntas");
+    }
+  };
+
   if (loading) {
     return (
       <PageLayout>
@@ -295,6 +313,24 @@ export default function QuestionsPage() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Filtrar preguntas</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    disabled={loading}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar preguntas</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

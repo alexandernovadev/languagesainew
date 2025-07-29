@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 import { useLectureStore } from "@/lib/store/useLectureStore";
 import { useLectureModals } from "@/hooks/useLectureModals";
@@ -9,7 +10,7 @@ import { LectureCard } from "@/components/lectures/LectureCard";
 import { LecturePagination } from "@/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
 import type { Lecture } from "@/models/Lecture";
-import { Plus, RotateCcw } from "lucide-react";
+import { Plus, RefreshCw, Search, X as XIcon } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,6 +55,9 @@ export default function LecturesPage() {
     openDeleteDialog,
     closeDeleteDialog,
   } = useLectureModals();
+
+  // Estado para búsqueda local
+  const [localSearch, setLocalSearch] = useState("");
 
   // Fetch lectures on mount
   useEffect(() => {
@@ -227,10 +231,6 @@ export default function LecturesPage() {
         description="Gestiona y explora todas tus lecturas."
         actions={
           <div className="flex items-center gap-2">
-            <Badge variant="outline">
-              Página {currentPage} de {totalPages} • {lectures.length}{" "}
-              lectures
-            </Badge>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -240,7 +240,7 @@ export default function LecturesPage() {
                     onClick={handleRefresh}
                     className="h-10 w-10 p-0"
                   >
-                    <RotateCcw className="h-4 w-4" />
+                    <RefreshCw className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -268,6 +268,29 @@ export default function LecturesPage() {
           </div>
         }
       />
+
+      {/* Search and Actions */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar lecturas..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            className="pl-8"
+          />
+          {localSearch && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocalSearch("")}
+              className="absolute right-1 top-1 h-6 w-6 p-0"
+            >
+              <XIcon className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Modal de creación */}
       <ModalNova
@@ -311,7 +334,7 @@ export default function LecturesPage() {
                   onClick={handleRefresh}
                   className="rounded-full"
                 >
-                  <RotateCcw className="h-4 w-4" />
+                  <RefreshCw className="h-4 w-4" />
                 </Button>
               </div>
             </div>

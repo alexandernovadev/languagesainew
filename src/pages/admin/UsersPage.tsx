@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Search,
-  Filter,
+  SlidersHorizontal,
   Plus,
   RefreshCw
 } from "lucide-react";
@@ -62,7 +62,7 @@ export default function UsersPage() {
         title="Usuarios"
         description="Gestiona los usuarios del sistema con permisos y roles."
         actions={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -70,20 +70,22 @@ export default function UsersPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsFiltersModalOpen(true)}
-                    className="flex items-center gap-2"
+                    className="h-10 w-10 p-0 relative"
                   >
-                    <Filter className="h-4 w-4" />
+                    <SlidersHorizontal className="h-4 w-4" />
                     {hasActiveFilters && (
-                      <Badge variant="secondary" className="ml-1">
-                        Activo
+                      <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                        !
                       </Badge>
                     )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Filtros</p>
+                  <p>Filtrar usuarios</p>
                 </TooltipContent>
               </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -91,26 +93,30 @@ export default function UsersPage() {
                     size="sm"
                     onClick={fetchUsers}
                     disabled={loading}
+                    className="h-10 w-10 p-0"
                   >
                     <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Actualizar</p>
+                  <p>Actualizar usuarios</p>
                 </TooltipContent>
               </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
+                    variant="default"
                     size="sm"
                     onClick={() => setIsEditModalOpen(true)}
-                    className="flex items-center gap-2"
+                    className="h-10 w-10 p-0"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Agregar Usuario</p>
+                  <p>Crear nuevo usuario</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -130,22 +136,6 @@ export default function UsersPage() {
             className="pl-10"
           />
         </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleSearch}
-              disabled={loading}
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Buscar</p>
-          </TooltipContent>
-        </Tooltip>
-
       </div>
 
       {/* Users Table */}

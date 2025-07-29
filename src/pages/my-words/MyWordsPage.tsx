@@ -29,7 +29,7 @@ import {
   Eye,
   X as XIcon,
   Lightbulb,
-  RotateCcw,
+  RefreshCw,
   SlidersHorizontal,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -263,6 +263,24 @@ export default function MyWordsPage() {
     setFilters(filters);
   };
 
+  const handleRefresh = async () => {
+    try {
+      await getWords();
+      toast.success("Palabras actualizadas", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: words, message: "Palabras actualizadas" }, "Actualizar Palabras")
+        },
+        cancel: {
+          label: <XIcon className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
+    } catch (error: any) {
+      handleApiResult(error, "Actualizar Palabras");
+    }
+  };
+
   return (
     <PageLayout>
       <PageHeader
@@ -270,25 +288,6 @@ export default function MyWordsPage() {
         description="Gestiona tu vocabulario personal."
         actions={
           <div className="flex items-center gap-2">
-            <div className="relative flex-1 max-w-2xl">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar palabra..."
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                className="pl-10 w-full pr-10"
-              />
-              {localSearch && (
-                <button
-                  type="button"
-                  onClick={() => setLocalSearch("")}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-foreground focus:outline-none"
-                  aria-label="Limpiar búsqueda"
-                >
-                  <XIcon className="h-5 w-5" />
-                </button>
-              )}
-            </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -330,17 +329,66 @@ export default function MyWordsPage() {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => openDialog()}
-              className="h-10 w-10 rounded-full"
-            >
-              <Plus className="h-5 w-5" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar palabras</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => openDialog()}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Crear nueva palabra</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         }
       />
+
+      {/* Search and Actions */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar palabras..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            className="pl-8"
+          />
+          {localSearch && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocalSearch("")}
+              className="absolute right-1 top-1 h-6 w-6 p-0"
+            >
+              <XIcon className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Tabla de palabras */}
       <Card className="!p-0 !m-0 shadow-none border-none">
@@ -516,7 +564,7 @@ export default function MyWordsPage() {
                               }
                               className="rounded-full"
                             >
-                              <RotateCcw className="h-4 w-4 mr-2" />
+                              <RefreshCw className="h-4 w-4 mr-2" />
                               Recargar
                             </Button>
                           </div>

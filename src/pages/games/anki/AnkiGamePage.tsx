@@ -25,6 +25,12 @@ import { useResultHandler } from "@/hooks/useResultHandler";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnkiStatsModal } from "@/components/games/anki/AnkiStatsModal";
 import { WordDetailsCard } from "@/components/word-details";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Declaraciones de tipos para Web Speech API
 declare global {
@@ -307,17 +313,59 @@ export default function AnkiGamePage() {
   };
 
   const actions = (
-    <>
-      <Button variant="outline" onClick={handleShuffle}>
-        <Shuffle className="h-4 w-4" />
-      </Button>
-      <Button variant="outline" onClick={handleReset}>
-        <RefreshCw className="h-4 w-4" />
-      </Button>
-      <Button variant="outline" onClick={() => setIsStatsModalOpen(true)}>
-        <BarChart3 className="h-4 w-4" />
-      </Button>
-    </>
+    <div className="flex items-center gap-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShuffle}
+              className="h-10 w-10 p-0"
+            >
+              <Shuffle className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Mezclar palabras</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              className="h-10 w-10 p-0"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Reiniciar juego</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsStatsModalOpen(true)}
+              className="h-10 w-10 p-0"
+            >
+              <BarChart3 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Ver estadísticas</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
   );
 
   const currentCard = useMemo(

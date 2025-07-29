@@ -30,6 +30,7 @@ import {
   Lightbulb,
   SlidersHorizontal,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -151,6 +152,24 @@ export default function MyExpressionsPage() {
     setFiltersModalOpen(false);
   };
 
+  const handleRefresh = async () => {
+    try {
+      await getExpressions();
+      toast.success("Expresiones actualizadas", {
+        action: {
+          label: <RefreshCw className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: expressions, message: "Expresiones actualizadas" }, "Actualizar Expresiones")
+        },
+        cancel: {
+          label: <XIcon className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
+    } catch (error: any) {
+      handleApiResult(error, "Actualizar Expresiones");
+    }
+  };
+
   return (
     <PageLayout>
       <PageHeader
@@ -158,25 +177,6 @@ export default function MyExpressionsPage() {
         description="Gestiona tus expresiones idiomáticas y frases"
         actions={
           <div className="flex items-center gap-2">
-            <div className="relative flex-1 max-w-2xl">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar expresión..."
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                className="pl-10 w-full pr-10"
-              />
-              {localSearch && (
-                <button
-                  type="button"
-                  onClick={() => setLocalSearch("")}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-foreground focus:outline-none"
-                  aria-label="Limpiar búsqueda"
-                >
-                  <XIcon className="h-5 w-5" />
-                </button>
-              )}
-            </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -223,6 +223,24 @@ export default function MyExpressionsPage() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={handleRefresh}
+                    disabled={loading}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar expresiones</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => setGeneratorModalOpen(true)}
                     className="h-10 w-10 p-0"
                   >
@@ -255,274 +273,239 @@ export default function MyExpressionsPage() {
         }
       />
 
-      <div className="space-y-4">
-        {/* Tabla */}
-        <Card>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Expresión</TableHead>
-                  <TableHead>Nivel</TableHead>
-                  <TableHead>Tipos</TableHead>
-                  <TableHead>Imagen</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  Array.from({ length: 5 }).map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <div className="space-y-2">
-                          <Skeleton className="h-4 w-32" />
-                          <Skeleton className="h-3 w-48" />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-6 w-16" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-24" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-10 w-10 rounded" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-8 w-24" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : expressions.length > 0 ? (
-                  expressions.map((expression) => (
-                    <TableRow key={expression._id}>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="font-medium cursor-help">
-                                  {capitalize(expression.expression)}
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{capitalize(expression.expression)}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="text-sm text-muted-foreground max-w-xs truncate cursor-help">
-                                  {expression.spanish?.definition || expression.definition}
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p className="max-w-xs">
-                                  {expression.spanish?.definition || expression.definition}
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <ExpressionLevelBadge
-                          level={expression.difficulty || "hard"}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {expression.type?.slice(0, 1).map((type, index) => (
-                            <Badge key={index} variant="secondary">
-                              {type}
-                            </Badge>
-                          ))}
-                          {expression.type && expression.type.length > 1 && (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Badge
-                                    variant="outline"
-                                    className="cursor-help"
-                                  >
-                                    +{expression.type.length - 1}
-                                  </Badge>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <div className="space-y-2">
-                                    <p className="font-medium text-xs">
-                                      Tipos adicionales:
-                                    </p>
-                                    <div className="flex flex-wrap gap-1">
-                                      {expression.type
-                                        .slice(1)
-                                        .map((type, index) => (
-                                          <Badge
-                                            key={index}
-                                            variant="secondary"
-                                            className="text-xs"
-                                          >
-                                            {type}
-                                          </Badge>
-                                        ))}
-                                    </div>
-                                    <p className="text-xs text-muted-foreground">
-                                      {expression.type.length} tipos en total
-                                    </p>
-                                  </div>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="w-10 h-10 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
-                          {expression.img ? (
-                            <img
-                              src={expression.img}
-                              alt={expression.expression}
-                              className="w-full h-full object-contain"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.style.display = "none";
-                                target.nextElementSibling?.classList.remove(
-                                  "hidden"
-                                );
-                              }}
-                            />
-                          ) : (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <div className="flex flex-col items-center justify-center text-muted-foreground cursor-help">
-                                    <span className="text-xs">NO</span>
-                                    <span className="text-xs">IMG</span>
-                                  </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="text-xs">Sin imagen asociada</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={() =>
-                                    viewExpressionDetails(expression)
-                                  }
-                                  className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-green-600 hover:text-green-700"
-                                >
-                                  <Lightbulb className="h-4 w-4" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Ver detalles</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={() => openDialog(expression)}
-                                  className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-yellow-600 hover:text-yellow-700"
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Editar</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  onClick={() => openDeleteDialog(expression)}
-                                  className="p-1 rounded-sm transition-all duration-200 hover:scale-110 text-red-600 hover:text-red-700"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Eliminar</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <div className="text-muted-foreground">
-                          {localSearch ? (
-                            <div className="space-y-4">
-                              <p>
-                                No se encontraron expresiones para "
-                                {localSearch}"
+      {/* Search and Actions */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar expresiones..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            className="pl-8"
+          />
+          {localSearch && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocalSearch("")}
+              className="absolute right-1 top-1 h-6 w-6 p-0"
+            >
+              <XIcon className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Tabla de expresiones */}
+      <Card>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Expresión</TableHead>
+                <TableHead>Nivel</TableHead>
+                <TableHead>Tipos</TableHead>
+                <TableHead>Imagen</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-48" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-10 w-10 rounded" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-8 w-24" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : expressions.length > 0 ? (
+                expressions.map((expression) => (
+                  <TableRow key={expression._id}>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="font-medium cursor-help">
+                                {capitalize(expression.expression)}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{capitalize(expression.expression)}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="text-sm text-muted-foreground max-w-xs truncate cursor-help">
+                                {expression.spanish?.definition || expression.definition}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                {expression.spanish?.definition || expression.definition}
                               </p>
-                            </div>
-                          ) : (
-                            <div className="space-y-4">
-                              <p>No hay expresiones aún</p>
-                              <Button onClick={() => openDialog()}>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Crear primera expresión
-                              </Button>
-                            </div>
-                          )}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <ExpressionLevelBadge
+                        level={expression.difficulty || "hard"}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {expression.type?.slice(0, 1).map((type, index) => (
+                          <Badge key={index} variant="secondary">
+                            {type}
+                          </Badge>
+                        ))}
+                        {expression.type && expression.type.length > 1 && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Badge
+                                  variant="outline"
+                                  className="cursor-help"
+                                >
+                                  +{expression.type.length - 1}
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <div className="space-y-1">
+                                  {expression.type.slice(1).map((type, index) => (
+                                    <div key={index}>{type}</div>
+                                  ))}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="w-12 h-12 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
+                        {expression.img ? (
+                          <img
+                            src={expression.img}
+                            alt={expression.expression}
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = "none";
+                              target.nextElementSibling?.classList.remove(
+                                "hidden"
+                              );
+                            }}
+                          />
+                        ) : null}
+                        <div className="hidden w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                          No img
                         </div>
                       </div>
                     </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => viewExpressionDetails(expression)}
+                          className="h-8 w-8 rounded-none text-green-600 hover:text-green-700 hover:bg-green-50"
+                        >
+                          <Lightbulb className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openDialog(expression)}
+                          className="h-8 w-8 rounded-none text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openDeleteDialog(expression)}
+                          className="h-8 w-8 rounded-none text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </Card>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8">
+                    <div className="space-y-4">
+                      <div className="text-muted-foreground">
+                        No hay expresiones disponibles
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={loadExpressions}
+                        className="rounded-full"
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Recargar
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
 
-        {/* Paginación */}
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              Mostrando {expressions.length} de {total} expresiones
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(currentPage - 1)}
-                disabled={currentPage <= 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="px-3 py-2 text-sm">
-                Página {currentPage} de {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            Mostrando {expressions.length} de {total} expresiones
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(currentPage - 1)}
+              disabled={currentPage <= 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="px-3 py-2 text-sm">
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Modal de formulario */}
       <ModalNova

@@ -17,7 +17,7 @@ import {
   TrendingUp,
   Target,
   Trophy,
-  Filter,
+  SlidersHorizontal,
   Search,
   RefreshCw,
   BookOpen,
@@ -34,6 +34,12 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import ExamHistoryFiltersModal from "@/components/exam/ExamHistoryFiltersModal";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExamHistoryFilters {
   status: string;
@@ -259,17 +265,43 @@ export default function ExamHistoryPage() {
         description="Revisa tu progreso y rendimiento en todos los exámenes"
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsFiltersModalOpen(true)}
-            >
-              <Filter className="h-4 w-4" />
-            </Button>
-            <Button onClick={loadData} disabled={loading}>
-              <RefreshCw
-                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-              />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsFiltersModalOpen(true)}
+                    className="h-10 w-10 p-0"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Filtrar historial</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={loadData}
+                    disabled={loading}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RefreshCw
+                      className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar historial</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         }
       />

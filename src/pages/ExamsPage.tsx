@@ -11,6 +11,14 @@ import { ExamEditModal } from "@/components/exam/ExamEditModal";
 import { ExamDeleteDialog } from "@/components/exam/ExamDeleteDialog";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { Button } from "@/components/ui/button";
+import { SlidersHorizontal, RefreshCw } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function ExamsPage() {
   const {
@@ -58,6 +66,45 @@ export default function ExamsPage() {
       <PageHeader
         title="Exámenes"
         description="Gestiona y crea exámenes personalizados para evaluar tu progreso."
+        actions={
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsFiltersModalOpen(true)}
+                    className="h-10 w-10 p-0"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Filtrar exámenes</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={fetchExams}
+                    disabled={loading}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar exámenes</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        }
       />
 
       <ExamSearchAndFilters

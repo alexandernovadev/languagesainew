@@ -10,6 +10,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function StatisticsDashboard() {
   const { stats, lectureStats, wordStats, loading, error, refetch } =
@@ -76,6 +83,24 @@ export function StatisticsDashboard() {
             Estadísticas generales de tu contenido de aprendizaje
           </p>
         </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={refetch}
+                disabled={loading}
+                className="h-10 w-10 p-0"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Actualizar estadísticas</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <StatsKPIs stats={stats} />

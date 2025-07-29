@@ -168,15 +168,24 @@ export default function VerbsGamePage() {
           title="Juego de Verbos"
           description="Practica los verbos irregulares y sus participios."
           actions={
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowHistoryModal(true)}
-                >
-                  Historial
-                </Button>
-              </div>
+            <div className="flex items-center gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowHistoryModal(true)}
+                      className="h-10 w-10 p-0"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Ver historial</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           }
         />
@@ -257,31 +266,41 @@ export default function VerbsGamePage() {
         title="Juego de Verbos"
         description="Practica los verbos irregulares y sus participios."
         actions={
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" onClick={handleNewGame}>
-                      <Play className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Nueva Partida</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" onClick={handleResetPage}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Limpiar</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNewGame}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Play className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Nueva partida</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleResetPage}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Limpiar página</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         }
       />
