@@ -30,10 +30,11 @@ export function ExpressionDetailsModal({
       size="4xl"
       height="h-[calc(100dvh-2rem)]"
     >
-      <div className="p-4">
+      <div className="p-4 h-full flex flex-col">
         <Tabs
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as "info" | "chat")}
+          className="h-full flex flex-col"
         >
           <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
             <TabsTrigger value="info">Información</TabsTrigger>
@@ -45,11 +46,11 @@ export function ExpressionDetailsModal({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="info" className="pr-2">
+          <TabsContent value="info" className="pr-2 flex-1">
             <ExpressionInfoTab expression={expression} />
           </TabsContent>
 
-          <TabsContent value="chat">
+          <TabsContent value="chat" className="flex-1">
             <ExpressionChatTab expression={expression} />
           </TabsContent>
         </Tabs>
