@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function ExportSettingsPage() {
   const [exportLoading, setExportLoading] = useState<{
@@ -26,6 +27,9 @@ export default function ExportSettingsPage() {
     users: boolean;
   }>({ words: false, lectures: false, exams: false, questions: false, attempts: false, expressions: false, users: false });
 
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
+
   const handleExportWords = async () => {
     setExportLoading((prev) => ({ ...prev, words: true }));
     try {
@@ -35,9 +39,7 @@ export default function ExportSettingsPage() {
         description: "Las palabras se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar las palabras",
-      });
+      handleApiResult(error, "Exportar Palabras");
     } finally {
       setExportLoading((prev) => ({ ...prev, words: false }));
     }
@@ -52,9 +54,7 @@ export default function ExportSettingsPage() {
         description: "Las lecturas se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar las lecturas",
-      });
+      handleApiResult(error, "Exportar Lecturas");
     } finally {
       setExportLoading((prev) => ({ ...prev, lectures: false }));
     }
@@ -69,9 +69,7 @@ export default function ExportSettingsPage() {
         description: "Los exámenes se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar los exámenes",
-      });
+      handleApiResult(error, "Exportar Exámenes");
     } finally {
       setExportLoading((prev) => ({ ...prev, exams: false }));
     }
@@ -86,9 +84,7 @@ export default function ExportSettingsPage() {
         description: "Las preguntas se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar las preguntas",
-      });
+      handleApiResult(error, "Exportar Preguntas");
     } finally {
       setExportLoading((prev) => ({ ...prev, questions: false }));
     }
@@ -103,9 +99,7 @@ export default function ExportSettingsPage() {
         description: "Los intentos de examen se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar los intentos de examen",
-      });
+      handleApiResult(error, "Exportar Intentos");
     } finally {
       setExportLoading((prev) => ({ ...prev, attempts: false }));
     }
@@ -120,9 +114,7 @@ export default function ExportSettingsPage() {
         description: "Las expressions se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar las expressions",
-      });
+      handleApiResult(error, "Exportar Expressions");
     } finally {
       setExportLoading((prev) => ({ ...prev, expressions: false }));
     }
@@ -137,9 +129,7 @@ export default function ExportSettingsPage() {
         description: "Los usuarios se han exportado correctamente",
       });
     } catch (error: any) {
-      toast.error("Error al exportar", {
-        description: error.message || "No se pudieron exportar los usuarios",
-      });
+      handleApiResult(error, "Exportar Usuarios");
     } finally {
       setExportLoading((prev) => ({ ...prev, users: false }));
     }

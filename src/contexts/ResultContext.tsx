@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { ModalNova } from '@/components/ui/modal-nova';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { XCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { XCircle, AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { toast } from "sonner";
+import { formatDateTimeSpanish } from "@/utils/common/time/formatDate";
 
 interface ApiResult {
   success: boolean;
@@ -42,12 +43,22 @@ export function ResultProvider({ children }: { children: ReactNode }) {
 
   const showResult = (resultData: any, context?: string) => {
     // Determinar si es éxito o error
-    const isSuccess = resultData.success !== false && !resultData.error;
-    
+    // Si tiene success: false, error, o es un objeto de error de axios, es un error
+    const isSuccess =
+      resultData.success !== false &&
+      !resultData.error &&
+      !resultData.message?.includes("Error") &&
+      !resultData.response?.status?.toString().startsWith("4") &&
+      !resultData.response?.status?.toString().startsWith("5");
+
     // Extraer información del resultado de API
     const apiResult: ApiResult = {
       success: isSuccess,
-      message: resultData.message || resultData.response?.data?.message || (isSuccess ? 'Operación exitosa' : 'Error desconocido'),
+      message:
+        resultData.message ||
+        resultData.response?.data?.message ||
+        resultData.error ||
+        (isSuccess ? "Operación exitosa" : "Error desconocido"),
       status: resultData.response?.status,
       statusText: resultData.response?.statusText,
       url: resultData.config?.url,
@@ -77,7 +88,7 @@ export function ResultProvider({ children }: { children: ReactNode }) {
   };
 
   const hideResult = () => {
-    setResult(prev => ({ ...prev, isOpen: false }));
+    setResult((prev) => ({ ...prev, isOpen: false }));
   };
 
   const clearResult = () => {
@@ -111,7 +122,7 @@ export function ResultProvider({ children }: { children: ReactNode }) {
             <div className="space-y-2">
               {data.map((item, index) => (
                 <div key={index} className="text-sm p-2 rounded border">
-                  {typeof item === 'object' ? (
+                  {typeof item === "object" ? (
                     <pre className="text-xs overflow-x-auto">
                       {JSON.stringify(item, null, 2)}
                     </pre>
@@ -133,43 +144,43 @@ export function ResultProvider({ children }: { children: ReactNode }) {
 
   const renderSummary = () => {
     const summaryItems = [];
-    
+
     if (result.result) {
       if (result.result.status) {
-        summaryItems.push({ 
-          label: "Status", 
-          value: `${result.result.status} ${result.result.statusText || ''}`, 
-          variant: result.result.success ? "default" : "destructive" 
+        summaryItems.push({
+          label: "Status",
+          value: `${result.result.status} ${result.result.statusText || ""}`,
+          variant: result.result.success ? "default" : "destructive",
         });
       }
       if (result.result.method) {
-        summaryItems.push({ 
-          label: "Método", 
-          value: result.result.method.toUpperCase(), 
-          variant: "default" 
+        summaryItems.push({
+          label: "Método",
+          value: result.result.method.toUpperCase(),
+          variant: "default",
         });
       }
       if (result.result.context) {
-        summaryItems.push({ 
-          label: "Contexto", 
-          value: result.result.context, 
-          variant: "secondary" 
+        summaryItems.push({
+          label: "Contexto",
+          value: result.result.context,
+          variant: "secondary",
         });
       }
-      if (result.result.timestamp) {
-        summaryItems.push({ 
-          label: "Timestamp", 
-          value: result.result.timestamp.toLocaleString(), 
-          variant: "outline" 
-        });
-      }
+              if (result.result.timestamp) {
+          summaryItems.push({
+            label: "Timestamp",
+            value: formatDateTimeSpanish(result.result.timestamp),
+            variant: "outline",
+          });
+        }
     }
 
     if (summaryItems.length === 0) return null;
 
     return (
       <Card className="mb-4">
-        <CardHeader className="pb-2">
+        <CardHeader className="py-2">
           <CardTitle className="text-sm font-medium">Resumen</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
@@ -185,8 +196,10 @@ export function ResultProvider({ children }: { children: ReactNode }) {
     );
   };
 
-    return (
-    <ResultContext.Provider value={{ result, showResult, hideResult, clearResult }}>
+  return (
+    <ResultContext.Provider
+      value={{ result, showResult, hideResult, clearResult }}
+    >
       {children}
 
       {/* Modal de Resultado Global */}
@@ -194,55 +207,74 @@ export function ResultProvider({ children }: { children: ReactNode }) {
         <ModalNova
           open={result.isOpen}
           onOpenChange={hideResult}
-          title={`Resultado: ${result.result.context || 'API'}`}
+          title={
+            result.result.success
+              ? `Resultado: ${result.result.context || "API"}`
+              : `Error: ${result.result.context || "API"}`
+          }
           description={result.result.message}
           height="h-[95dvh]"
         >
-          <div className="space-y-4 p-6">
-              {/* Status */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {getStatusIcon()}
-                  <span className="font-medium">{result.result.context || 'Resultado de API'}</span>
-                </div>
-                {getStatusBadge()}
+          {/* Status Sticky */}
+          <div className="sticky top-0 bg-background border-b border-border px-6 py-4 -mx-6 -mt-6 mb-6 z-10 ">
+            <div className="flex items-center justify-between px-4 pb-3">
+              <div className="flex items-center gap-2">
+                {getStatusIcon()}
+                <span className="font-medium">
+                  {result.result.context || "Resultado de API"}
+                </span>
               </div>
+              {getStatusBadge()}
+            </div>
+          </div>
 
-              <div className="space-y-4">
-                {/* Summary */}
-                {renderSummary()}
+          {/* Content */}
+          <div className="px-6 space-y-4 mt-3 pt-5">
+            {/* Summary */}
+            {renderSummary()}
 
-                {/* Request Details */}
-                {result.result.url && renderDataSection("Detalles de la Petición", {
-                  URL: result.result.url,
-                  Método: result.result.method?.toUpperCase(),
-                  Status: `${result.result.status} ${result.result.statusText || ''}`,
-                  Timestamp: result.result.timestamp.toLocaleString()
-                })}
+            {/* Request Details */}
+                         {result.result.url &&
+               renderDataSection("Detalles de la Petición", {
+                 URL: result.result.url,
+                 Método: result.result.method?.toUpperCase(),
+                 Status: `${result.result.status} ${
+                   result.result.statusText || ""
+                 }`,
+                 Timestamp: formatDateTimeSpanish(result.result.timestamp),
+               })}
 
-                {/* Server Response */}
-                {result.result.response && renderDataSection("Respuesta del Servidor", result.result.response)}
+            {/* Server Response */}
+            {result.result.response &&
+              renderDataSection(
+                "Respuesta del Servidor",
+                result.result.response
+              )}
 
-                {/* Data */}
-                {result.result.data && renderDataSection("Datos", result.result.data)}
+            {/* Data */}
+            {result.result.data &&
+              renderDataSection("Datos", result.result.data)}
 
-                {/* Stack Trace (solo en desarrollo) */}
-                {import.meta.env.DEV && result.result.stack && renderDataSection("Stack Trace", result.result.stack)}
+            {/* Stack Trace (solo en desarrollo) */}
+            {import.meta.env.DEV &&
+              result.result.stack &&
+              renderDataSection("Stack Trace", result.result.stack)}
 
-                {/* Raw Result Data */}
-                {result.result && (
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium">Datos Completos</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <pre className="text-xs p-2 rounded overflow-x-auto border">
-                        {JSON.stringify(result.result, null, 2)}
-                      </pre>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+            {/* Raw Result Data */}
+            {result.result && (
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Datos Completos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <pre className="text-xs p-2 rounded overflow-x-auto border">
+                    {JSON.stringify(result.result, null, 2)}
+                  </pre>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </ModalNova>
       )}
@@ -253,7 +285,7 @@ export function ResultProvider({ children }: { children: ReactNode }) {
 export function useResultHandler() {
   const context = useContext(ResultContext);
   if (context === undefined) {
-    throw new Error('useResultHandler must be used within a ResultProvider');
+    throw new Error("useResultHandler must be used within a ResultProvider");
   }
   return context;
-} 
+}

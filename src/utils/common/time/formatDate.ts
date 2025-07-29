@@ -86,4 +86,20 @@ export const formatRelativeTime = (date: string | Date): string => {
     const years = Math.floor(diffInDays / 365);
     return years === 1 ? "hace 1 año" : `hace ${years} años`;
   }
+};
+
+/**
+ * Formats a date to show date and time in Spanish format
+ * 
+ * @param date - The date to format (string or Date object)
+ * @returns Formatted date and time string in Spanish
+ * 
+ * @example
+ * ```typescript
+ * formatDateTimeSpanish("2024-01-15T21:32:17.808Z");
+ * // Returns: "Lunes, 15 de enero de 2024 a las 9:32 PM"
+ * ```
+ */
+export const formatDateTimeSpanish = (date: string | Date): string => {
+  return formatDateToSpanish(date, "EEEE, d 'de' MMMM 'de' yyyy 'a las' h:mm a");
 }; 
