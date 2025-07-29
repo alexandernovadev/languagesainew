@@ -16,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
+import { useResultHandler } from "@/hooks/useResultHandler";
+import { Eye, X } from "lucide-react";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -30,6 +32,9 @@ export default function LecturesPage() {
     deleteLecture,
     actionLoading,
   } = useLectureStore();
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const {
     isAddModalOpen,
@@ -49,9 +54,18 @@ export default function LecturesPage() {
     const loadLectures = async () => {
       try {
         await getLectures(1, 10);
-        toast.success("Lecturas cargadas exitosamente");
+        toast.success("Lecturas cargadas exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: lectures, message: "Lecturas cargadas exitosamente" }, "Cargar Lecturas")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
       } catch (error: any) {
-        toast.error(error.message || "Error al cargar las lecturas");
+        handleApiResult(error, "Cargar Lecturas");
       }
     };
     loadLectures();
@@ -61,7 +75,7 @@ export default function LecturesPage() {
     try {
       await getLectures(page, 10);
     } catch (error: any) {
-      toast.error(error.message || "Error al cargar la página");
+      handleApiResult(error, "Cargar Página");
     }
   };
 
@@ -70,10 +84,19 @@ export default function LecturesPage() {
   ) => {
     try {
       await postLecture(data as Lecture);
-      toast.success("Lectura creada exitosamente");
+      toast.success("Lectura creada exitosamente", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Lectura creada exitosamente" }, "Crear Lectura")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
       closeAddModal();
     } catch (error: any) {
-      toast.error(error.message || "Error al crear la lectura");
+      handleApiResult(error, "Crear Lectura");
     }
   };
 
@@ -83,10 +106,19 @@ export default function LecturesPage() {
     if (selectedLectureId) {
       try {
         await putLecture(selectedLectureId, data as Lecture);
-        toast.success("Lectura actualizada exitosamente");
+        toast.success("Lectura actualizada exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data, message: "Lectura actualizada exitosamente" }, "Actualizar Lectura")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
         closeEditModal();
       } catch (error: any) {
-        toast.error(error.message || "Error al actualizar la lectura");
+        handleApiResult(error, "Actualizar Lectura");
       }
     }
   };
@@ -95,10 +127,19 @@ export default function LecturesPage() {
     if (selectedLectureId) {
       try {
         await deleteLecture(selectedLectureId);
-        toast.success("Lectura eliminada exitosamente");
+        toast.success("Lectura eliminada exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: { id: selectedLectureId }, message: "Lectura eliminada exitosamente" }, "Eliminar Lectura")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
         closeDeleteDialog();
       } catch (error: any) {
-        toast.error(error.message || "Error al eliminar la lectura");
+        handleApiResult(error, "Eliminar Lectura");
       }
     }
   };
@@ -106,9 +147,18 @@ export default function LecturesPage() {
   const handleRefresh = async () => {
     try {
       await getLectures(1, 10);
-      toast.success("Lecturas actualizadas");
+      toast.success("Lecturas actualizadas", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: lectures, message: "Lecturas actualizadas" }, "Actualizar Lecturas")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(error.message || "Error al actualizar las lecturas");
+      handleApiResult(error, "Actualizar Lecturas");
     }
   };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Eye, Volume2 } from "lucide-react";
+import { RefreshCw, Eye, Volume2, X } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
@@ -8,6 +8,7 @@ import { SPEECH_RATES } from "../../speechRates";
 import { formatDateShort } from "@/utils/common/time";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 
@@ -36,6 +37,9 @@ export function WordDetailsCard({
     actionLoading,
   } = useWordStore();
 
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
 
@@ -58,9 +62,18 @@ export function WordDetailsCard({
 
     try {
       await updateWordLevel(word._id, level);
-      toast.success(`Nivel actualizado a ${level}`);
+      toast.success(`Nivel actualizado a ${level}`, {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { level }, message: `Nivel actualizado a ${level}` }, "Actualizar Nivel")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar nivel: ${error.message}`);
+      handleApiResult(error, "Actualizar Nivel");
     }
   };
 
@@ -69,9 +82,18 @@ export function WordDetailsCard({
 
     try {
       await updateWordImage(word._id, word.word, word.img || "");
-      toast.success("Imagen actualizada");
+      toast.success("Imagen actualizada", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { word: word.word }, message: "Imagen actualizada" }, "Actualizar Imagen")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar imagen: ${error.message}`);
+      handleApiResult(error, "Actualizar Imagen");
     }
   };
 
@@ -85,9 +107,18 @@ export function WordDetailsCard({
         "en",
         (word.examples || []).join("\n")
       );
-      toast.success("Ejemplos actualizados");
+      toast.success("Ejemplos actualizados", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { examples: word.examples }, message: "Ejemplos actualizados" }, "Actualizar Ejemplos")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar ejemplos: ${error.message}`);
+      handleApiResult(error, "Actualizar Ejemplos");
     }
   };
 
@@ -101,9 +132,18 @@ export function WordDetailsCard({
         "en",
         (word.sinonyms || []).join("\n")
       );
-      toast.success("Sinónimos actualizados");
+      toast.success("Sinónimos actualizados", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { synonyms: word.sinonyms }, message: "Sinónimos actualizados" }, "Actualizar Sinónimos")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar sinónimos: ${error.message}`);
+      handleApiResult(error, "Actualizar Sinónimos");
     }
   };
 
@@ -117,9 +157,18 @@ export function WordDetailsCard({
         "en",
         (word.codeSwitching || []).join("\n")
       );
-      toast.success("Code-switching actualizado");
+      toast.success("Code-switching actualizado", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { codeSwitching: word.codeSwitching }, message: "Code-switching actualizado" }, "Actualizar Code-switching")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar code-switching: ${error.message}`);
+      handleApiResult(error, "Actualizar Code-switching");
     }
   };
 
@@ -133,9 +182,18 @@ export function WordDetailsCard({
         "en",
         (word.type || []).join("\n")
       );
-      toast.success("Tipos actualizados");
+      toast.success("Tipos actualizados", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { types: word.type }, message: "Tipos actualizados" }, "Actualizar Tipos")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error: any) {
-      toast.error(`Error al actualizar tipos: ${error.message}`);
+      handleApiResult(error, "Actualizar Tipos");
     }
   };
 

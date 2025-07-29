@@ -30,9 +30,11 @@ import {
   Trash2,
   Tag,
   ListOrdered,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { examService, Exam } from "@/services/examService";
+import { useResultHandler } from "@/hooks/useResultHandler";
 import { questionTypes } from "@/data/questionTypes";
 import { getAllLanguages } from "@/utils/common/language";
 import {
@@ -510,6 +512,9 @@ export function ExamEditModal({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
+
   useEffect(() => {
     if (exam) {
       console.log("Exam data received:", {
@@ -970,6 +975,14 @@ export function ExamEditModal({
         }
         toast.success("Examen y preguntas actualizados exitosamente", {
           description: `"${formData.title}" ha sido actualizado completamente`,
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: { exam: formData, questions }, message: `"${formData.title}" ha sido actualizado completamente` }, "Actualizar Examen")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
       } catch (questionError: any) {
         console.error("Error updating questions:", questionError);
@@ -980,12 +993,9 @@ export function ExamEditModal({
       }
       onExamUpdated();
       onClose();
-    } catch (error: any) {
-      console.error("Error updating exam:", error);
-      toast.error("Error al actualizar examen", {
-        description: error.message || "No se pudo actualizar el examen",
-      });
-    } finally {
+          } catch (error: any) {
+        handleApiResult(error, "Actualizar Examen");
+      } finally {
       setLoading(false);
     }
   };

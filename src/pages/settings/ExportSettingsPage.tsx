@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, BookOpen, ClipboardList, HelpCircle, Target, MessageSquare, Users } from "lucide-react";
+import { FileText, BookOpen, ClipboardList, HelpCircle, Target, MessageSquare, Users, Eye, X } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { lectureService } from "@/services/lectureService";
 import { examService } from "@/services/examService";
@@ -37,6 +37,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "words-export");
       toast.success("Exportación exitosa", {
         description: "Las palabras se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Las palabras se han exportado correctamente" }, "Exportar Palabras")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Palabras");
@@ -52,6 +60,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "lectures-export");
       toast.success("Exportación exitosa", {
         description: "Las lecturas se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Las lecturas se han exportado correctamente" }, "Exportar Lecturas")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Lecturas");
@@ -67,6 +83,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "exams-export");
       toast.success("Exportación exitosa", {
         description: "Los exámenes se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Los exámenes se han exportado correctamente" }, "Exportar Exámenes")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Exámenes");
@@ -82,6 +106,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "questions-export");
       toast.success("Exportación exitosa", {
         description: "Las preguntas se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Las preguntas se han exportado correctamente" }, "Exportar Preguntas")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Preguntas");
@@ -97,6 +129,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "exam-attempts-export");
       toast.success("Exportación exitosa", {
         description: "Los intentos de examen se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Los intentos de examen se han exportado correctamente" }, "Exportar Intentos")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Intentos");
@@ -112,6 +152,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "expressions-export");
       toast.success("Exportación exitosa", {
         description: "Las expressions se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Las expressions se han exportado correctamente" }, "Exportar Expressions")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Expressions");
@@ -127,6 +175,14 @@ export default function ExportSettingsPage() {
       downloadJSON(data, "users-export");
       toast.success("Exportación exitosa", {
         description: "Los usuarios se han exportado correctamente",
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: "Los usuarios se han exportado correctamente" }, "Exportar Usuarios")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Exportar Usuarios");

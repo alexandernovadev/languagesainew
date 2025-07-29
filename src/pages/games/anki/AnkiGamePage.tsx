@@ -10,6 +10,8 @@ import {
   Loader2,
   Wand2,
   BarChart3,
+  Eye,
+  X,
 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -19,6 +21,7 @@ import { wordService } from "@/services/wordService";
 import { SPEECH_RATES } from "../../../speechRates";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
+import { useResultHandler } from "@/hooks/useResultHandler";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnkiStatsModal } from "@/components/games/anki/AnkiStatsModal";
 import { WordDetailsCard } from "@/components/word-details";
@@ -89,6 +92,9 @@ export default function AnkiGamePage() {
     actionLoading,
   } = useWordStore();
 
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
+
   // Estado local para palabras mezcladas
   const [shuffledWords, setShuffledWords] = useState(words);
 
@@ -99,9 +105,18 @@ export default function AnkiGamePage() {
     const fetchWords = async () => {
       try {
         await getWordsForReview(20); // Usar el nuevo método de repaso inteligente
-        toast.success("Tarjetas de Anki cargadas exitosamente");
+        toast.success("Tarjetas de Anki cargadas exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: words, message: "Tarjetas de Anki cargadas exitosamente" }, "Cargar Tarjetas Anki")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
       } catch (error: any) {
-        toast.error(error.message || "Error al cargar tarjetas");
+        handleApiResult(error, "Cargar Tarjetas Anki");
       }
     };
     fetchWords();
@@ -242,13 +257,20 @@ export default function AnkiGamePage() {
         // También actualizar el nivel tradicional para compatibilidad
         await updateWordLevel(shuffledWords[gameStats.currentIndex]._id, level);
         
-        toast.success(`Palabra marcada como '${level}'`);
+        toast.success(`Palabra marcada como '${level}'`, {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: { level, word: shuffledWords[gameStats.currentIndex] }, message: `Palabra marcada como '${level}'` }, "Marcar Palabra")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
         gameStats.next();
         setIsFlipped(false);
       } catch (error: any) {
-        toast.error(
-          error.message || "Error al actualizar el nivel de la palabra"
-        );
+        handleApiResult(error, "Marcar Palabra");
       }
     }
   };
@@ -265,11 +287,20 @@ export default function AnkiGamePage() {
     
     try {
       await updateWordImage(currentWord._id, currentWord.word, currentWord.img || "");
-      toast.success(`¡Imagen generada exitosamente para "${currentWord.word}"!`);
+      toast.success(`¡Imagen generada exitosamente para "${currentWord.word}"!`, {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { word: currentWord.word }, message: `¡Imagen generada exitosamente para "${currentWord.word}"!` }, "Generar Imagen")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
       // Recargar las palabras para obtener la imagen actualizada
       await getWordsForReview(20);
     } catch (error: any) {
-      toast.error(`Error al generar imagen para "${currentWord.word}": ${error.message || "Error desconocido"}`);
+      handleApiResult(error, "Generar Imagen");
     } finally {
       setIsGeneratingImage(false);
     }

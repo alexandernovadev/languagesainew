@@ -46,6 +46,7 @@ import { SPEECH_RATES } from "../../speechRates";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useWordFilters } from "@/hooks/useWordFilters";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function MyWordsPage() {
   const {
@@ -64,6 +65,9 @@ export default function MyWordsPage() {
     setFilters,
     generateWord,
   } = useWordStore();
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -104,11 +108,18 @@ export default function MyWordsPage() {
     const loadWords = async () => {
       try {
         await getWords();
-        toast.success("Palabras cargadas exitosamente");
-      } catch (error: any) {
-        toast.error("Error al cargar palabras", {
-          description: error.message || "No se pudieron cargar las palabras",
+        toast.success("Palabras cargadas exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: words, message: "Palabras cargadas exitosamente" }, "Cargar Palabras")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
+      } catch (error: any) {
+        handleApiResult(error, "Cargar Palabras");
       }
     };
     loadWords();
@@ -135,11 +146,27 @@ export default function MyWordsPage() {
           description: `La palabra "${
             data.word || selectedWord.word
           }" ha sido actualizada correctamente`,
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data, message: `La palabra "${data.word || selectedWord.word}" ha sido actualizada correctamente` }, "Actualizar Palabra")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
       } else {
         await createWord(data as Omit<Word, "_id">);
         toast.success("Palabra creada", {
           description: `La palabra "${data.word}" ha sido agregada a tu vocabulario`,
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data, message: `La palabra "${data.word}" ha sido agregada a tu vocabulario` }, "Crear Palabra")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
       }
       setDialogOpen(false);
@@ -172,6 +199,14 @@ export default function MyWordsPage() {
         await deleteWord(selectedWord._id);
         toast.success("Palabra eliminada", {
           description: `La palabra "${selectedWord.word}" ha sido eliminada`,
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: selectedWord, message: `La palabra "${selectedWord.word}" ha sido eliminada` }, "Eliminar Palabra")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
         setDeleteDialogOpen(false);
         setSelectedWord(null);
@@ -200,6 +235,14 @@ export default function MyWordsPage() {
       await generateWord(localSearch);
       toast.success("Palabra generada", {
         description: `La palabra "${localSearch}" ha sido generada y agregada a tu vocabulario`,
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { word: localSearch }, message: `La palabra "${localSearch}" ha sido generada y agregada a tu vocabulario` }, "Generar Palabra")
+        },
+        cancel: {
+          label: <XIcon className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
       await getWords();
     } catch (error: any) {

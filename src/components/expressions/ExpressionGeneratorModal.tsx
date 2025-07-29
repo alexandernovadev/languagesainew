@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Save, RefreshCw, X } from "lucide-react";
+import { Loader2, Sparkles, Save, RefreshCw, X, Eye } from "lucide-react";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface ExpressionGeneratorModalProps {
   open: boolean;
@@ -38,6 +39,9 @@ export function ExpressionGeneratorModal({
     actionLoading,
   } = useExpressionStore();
 
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
+
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       toast.error("Por favor ingresa un prompt");
@@ -55,10 +59,19 @@ export function ExpressionGeneratorModal({
 
     try {
       await createExpression(generatedExpression);
-      toast.success("Expresión guardada exitosamente");
+      toast.success("Expresión guardada exitosamente", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: generatedExpression, message: "Expresión guardada exitosamente" }, "Guardar Expresión")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
       handleClose();
     } catch (error) {
-      console.error("Error saving expression:", error);
+      handleApiResult(error, "Guardar Expresión");
     }
   };
 
@@ -70,7 +83,16 @@ export function ExpressionGeneratorModal({
 
     const result = await generateExpression(prompt);
     if (result) {
-      toast.success("Expresión regenerada exitosamente");
+      toast.success("Expresión regenerada exitosamente", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: result, message: "Expresión regenerada exitosamente" }, "Regenerar Expresión")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     }
   };
 

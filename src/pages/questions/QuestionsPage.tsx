@@ -14,8 +14,9 @@ import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, X as XIcon, SlidersHorizontal } from "lucide-react";
+import { Plus, Search, X as XIcon, SlidersHorizontal, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function QuestionsPage() {
   const {
@@ -35,6 +36,9 @@ export default function QuestionsPage() {
     errors,
     clearErrors,
   } = useQuestionStore();
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,11 +73,18 @@ export default function QuestionsPage() {
     const loadQuestions = async () => {
       try {
         await getQuestions();
-        toast.success("Preguntas cargadas exitosamente");
-      } catch (error: any) {
-        toast.error("Error al cargar las preguntas", {
-          description: error.message || "No se pudieron cargar las preguntas",
+        toast.success("Preguntas cargadas exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: questions, message: "Preguntas cargadas exitosamente" }, "Cargar Preguntas")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
         });
+      } catch (error: any) {
+        handleApiResult(error, "Cargar Preguntas");
       }
     };
     loadQuestions();
@@ -97,17 +108,34 @@ export default function QuestionsPage() {
     try {
       if (isEditing && selectedQuestion) {
         await updateQuestion(selectedQuestion._id, data);
-        toast.success("Pregunta actualizada correctamente");
+        toast.success("Pregunta actualizada correctamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data, message: "Pregunta actualizada correctamente" }, "Actualizar Pregunta")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
       } else {
         await createQuestion(data);
-        toast.success("Pregunta creada correctamente");
+        toast.success("Pregunta creada correctamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data, message: "Pregunta creada correctamente" }, "Crear Pregunta")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
       }
       setDialogOpen(false);
       // Recargar las preguntas después de crear/actualizar
       getQuestions();
     } catch (error) {
-      toast.error("Error al crear la pregunta");
-      console.error(error);
+      handleApiResult(error, "Crear/Actualizar Pregunta");
     }
   };
 
@@ -133,11 +161,20 @@ export default function QuestionsPage() {
         await deleteQuestion(selectedQuestion._id);
         setDeleteDialogOpen(false);
         setSelectedQuestion(null);
-        toast.success("Pregunta eliminada correctamente");
+        toast.success("Pregunta eliminada correctamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: selectedQuestion, message: "Pregunta eliminada correctamente" }, "Eliminar Pregunta")
+          },
+          cancel: {
+            label: <XIcon className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
         // Recargar las preguntas después de eliminar
         getQuestions();
       } catch (error) {
-        toast.error("Error al eliminar la pregunta");
+        handleApiResult(error, "Eliminar Pregunta");
       }
     }
   };
