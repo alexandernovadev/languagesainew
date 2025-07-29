@@ -18,6 +18,12 @@ import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Eye, X } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -220,59 +226,78 @@ export default function LecturesPage() {
         title="Lecturas"
         description="Gestiona y explora todas tus lecturas."
         actions={
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">
-                Página {currentPage} de {totalPages} • {lectures.length}{" "}
-                lectures
-              </Badge>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={openAddModal}
-                className="h-10 w-10 rounded-full"
-              >
-                <Plus className="h-5 w-5" />
-              </Button>
-              <ModalNova
-                open={isAddModalOpen}
-                onOpenChange={closeAddModal}
-                title="Crear Nueva Lectura"
-                description="Crea una nueva lectura para tu biblioteca. Completa todos los campos para una mejor experiencia."
-                footer={
-                  <>
-                    <Button type="button" variant="ghost" onClick={closeAddModal}>
-                      Cancelar
-                    </Button>
-                    <Button
-                      type="submit"
-                      form="lecture-form"
-                      disabled={actionLoading.post}
-                    >
-                      {actionLoading.post ? "Creando..." : "Crear Lectura"}
-                    </Button>
-                  </>
-                }
-              >
-                <LectureForm
-                  onSubmit={handleAddLecture}
-                  onCancel={closeAddModal}
-                  loading={actionLoading.post}
-                  submitText="Crear Lectura"
-                />
-              </ModalNova>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRefresh}
-                className="rounded-full"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">
+              Página {currentPage} de {totalPages} • {lectures.length}{" "}
+              lectures
+            </Badge>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    className="h-10 w-10 p-0"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actualizar lecturas</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={openAddModal}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Crear nueva lectura</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         }
       />
+
+      {/* Modal de creación */}
+      <ModalNova
+        open={isAddModalOpen}
+        onOpenChange={closeAddModal}
+        title="Crear Nueva Lectura"
+        description="Crea una nueva lectura para tu biblioteca. Completa todos los campos para una mejor experiencia."
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={closeAddModal}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              form="lecture-form"
+              disabled={actionLoading.post}
+            >
+              {actionLoading.post ? "Creando..." : "Crear Lectura"}
+            </Button>
+          </>
+        }
+      >
+        <LectureForm
+          onSubmit={handleAddLecture}
+          onCancel={closeAddModal}
+          loading={actionLoading.post}
+          submitText="Crear Lectura"
+        />
+      </ModalNova>
+
       <div className="space-y-6">
         {/* Grid de lecturas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
