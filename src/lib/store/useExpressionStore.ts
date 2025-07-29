@@ -60,10 +60,10 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
     try {
       const response = await expressionService.getExpressions(filters);
       set({
-        expressions: response.data.data,
-        total: response.data.total,
-        totalPages: response.data.pages,
-        currentPage: response.data.page,
+        expressions: response.data.data.data,
+        total: response.data.data.total,
+        totalPages: response.data.data.pages,
+        currentPage: response.data.data.page,
       });
     } catch (error: any) {
       console.error("Error fetching expressions:", error);
@@ -78,7 +78,7 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
     try {
       const response = await expressionService.createExpression(data);
       set({
-        expressions: [response.data, ...get().expressions],
+        expressions: [response.data.data, ...get().expressions],
         actionLoading: { ...get().actionLoading, create: false },
       });
       toast.success("Expresión creada exitosamente");
@@ -95,7 +95,7 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
       const response = await expressionService.updateExpression(id, data);
       set({
         expressions: get().expressions.map((expr) =>
-          expr._id === id ? response.data : expr
+          expr._id === id ? response.data.data : expr
         ),
         actionLoading: { ...get().actionLoading, update: false },
       });
@@ -140,7 +140,7 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
       const response = await expressionService.addChatMessage(expressionId, message);
       set({
         expressions: get().expressions.map((expr) =>
-          expr._id === expressionId ? response.data.expression : expr
+          expr._id === expressionId ? response.data.data.expression : expr
         ),
       });
     } catch (error: any) {
