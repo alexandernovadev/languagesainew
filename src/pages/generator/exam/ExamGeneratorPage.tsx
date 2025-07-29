@@ -26,6 +26,7 @@ import { ExamEditModal } from "@/components/exam/ExamEditModal";
 import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
 import { ExamHeader } from "@/components/exam/ExamHeader";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function ExamGeneratorPage() {
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ export default function ExamGeneratorPage() {
 
   const [activeTab, setActiveTab] = useState("config");
   const [showTitleModal, setShowTitleModal] = useState(false);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   // Sync exam data with store when exam is generated
   useEffect(() => {
@@ -121,9 +125,7 @@ export default function ExamGeneratorPage() {
           }
         } catch (error) {
           console.error("Error loading exam for editing:", error);
-          toast.error("Error", {
-            description: "No se pudo cargar el examen para edición",
-          });
+          handleApiResult(error, "Cargar Examen para Edición");
         }
       }
     };
@@ -170,7 +172,7 @@ export default function ExamGeneratorPage() {
       });
       navigate("/exams");
     } catch (error) {
-      // The error is already handled in the store
+      handleApiResult(error, "Guardar Examen");
     }
   };
 

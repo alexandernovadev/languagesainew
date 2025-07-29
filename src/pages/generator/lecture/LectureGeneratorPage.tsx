@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 import ReactMarkdown from "react-markdown";
 import { Save, BookOpen, Loader2, Settings } from "lucide-react";
 import { useTopicGenerator } from "@/hooks/useTopicGenerator";
@@ -54,6 +55,9 @@ export default function LectureGeneratorPage() {
     Record<string, { word: string }[]>
   >({});
   const [isLoadingWords, setIsLoadingWords] = useState(false);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   // Topic generator hook
   const { isGenerating: isGeneratingTopic, generateTopic } = useTopicGenerator({
@@ -125,6 +129,7 @@ export default function LectureGeneratorPage() {
               wordsByType[type] = words;
             } catch (error) {
               console.error(`Error loading ${type} words:`, error);
+              handleApiResult(error, `Cargar Palabras ${type}`);
               wordsByType[type] = [];
             }
           })
@@ -133,6 +138,7 @@ export default function LectureGeneratorPage() {
         setPreloadedWords(wordsByType);
       } catch (error) {
         console.error("Error loading words:", error);
+        handleApiResult(error, "Cargar Palabras");
       } finally {
         setIsLoadingWords(false);
       }
@@ -189,7 +195,7 @@ export default function LectureGeneratorPage() {
 
       toast.success("¡Lectura generada exitosamente!");
     } catch (error: any) {
-      toast.error(error.message || "Error al generar la lectura");
+      handleApiResult(error, "Generar Lectura");
     } finally {
       setIsGenerating(false);
     }
@@ -218,7 +224,7 @@ export default function LectureGeneratorPage() {
       toast.success("¡Lectura guardada exitosamente!");
       navigate("/lectures");
     } catch (error: any) {
-      toast.error(error.message || "Error al guardar la lectura");
+      handleApiResult(error, "Guardar Lectura");
     } finally {
       setIsSaving(false);
     }
