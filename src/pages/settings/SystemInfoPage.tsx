@@ -9,7 +9,9 @@ import { timeAgo } from "@/utils/common/time/timeAgo";
 import packageJson from "../../../package.json";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
+import { Eye, X } from "lucide-react";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface BackendInfo {
   date: string;
@@ -20,6 +22,9 @@ export default function SystemInfoPage() {
   const [backendInfo, setBackendInfo] = useState<BackendInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   // Get frontend build date from package.json
   const frontendBuildDate =
@@ -34,14 +39,23 @@ export default function SystemInfoPage() {
 
         if (data.success) {
           setBackendInfo(data.data);
-          toast.success("Información del sistema cargada exitosamente");
+          toast.success("Información del sistema cargada exitosamente", {
+            action: {
+              label: <Eye className="h-4 w-4" />,
+              onClick: () => handleApiResult({ success: true, data: data.data, message: "Información del sistema cargada exitosamente" }, "Cargar Información del Sistema")
+            },
+            cancel: {
+              label: <X className="h-4 w-4" />,
+              onClick: () => toast.dismiss()
+            }
+          });
         } else {
           setError("Error al obtener información del backend");
-          toast.error("Error al obtener información del backend");
+          handleApiResult({ success: false, message: "Error al obtener información del backend" }, "Cargar Información del Sistema");
         }
       } catch (err) {
         setError("No se pudo conectar con el backend");
-        toast.error("No se pudo conectar con el backend");
+        handleApiResult(err, "Cargar Información del Sistema");
       } finally {
         setLoading(false);
       }

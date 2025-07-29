@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, FileText, Wand2, Loader2 } from "lucide-react";
+import { Settings, FileText, Wand2, Loader2, Eye, X } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Lecture } from "@/models/Lecture";
 import { lectureLevels } from "@/data/lectureLevels";
@@ -26,6 +26,7 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { getAllLanguages } from "@/utils/common/language";
 import { api } from "@/services/api";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface LectureFormProps {
   initialData?: Partial<Lecture>;
@@ -46,6 +47,9 @@ export function LectureForm({
 }: LectureFormProps) {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imageProgress, setImageProgress] = useState(0);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const {
     register,
@@ -109,13 +113,21 @@ export function LectureForm({
       if (response.data.success) {
         // Actualizar el input con la nueva URL
         setValue("img", response.data.data.img);
-        toast.success("Imagen generada exitosamente");
+        toast.success("Imagen generada exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () => handleApiResult({ success: true, data: { imageUrl: response.data.data.img }, message: "Imagen generada exitosamente" }, "Generar Imagen")
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss()
+          }
+        });
       } else {
         throw new Error("Error al generar imagen");
       }
     } catch (error: any) {
-      console.error("Error generating image:", error);
-      toast.error(error.response?.data?.message || "Error al generar imagen");
+      handleApiResult(error, "Generar Imagen");
     } finally {
       setIsGeneratingImage(false);
       setImageProgress(0);

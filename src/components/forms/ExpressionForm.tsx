@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Plus, Loader2, Wand2 } from "lucide-react";
+import { X, Plus, Loader2, Wand2, Eye } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface ExpressionFormProps {
   initialData?: Partial<Expression>;
@@ -27,6 +28,9 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
 }, ref) => {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imageProgress, setImageProgress] = useState(0);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const {
     register,
@@ -84,10 +88,18 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
       const mockImageUrl = `https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=${encodeURIComponent(formData.expression)}`;
       
       setValue("img", mockImageUrl);
-      toast.success("Imagen generada exitosamente");
+      toast.success("Imagen generada exitosamente", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { imageUrl: mockImageUrl }, message: "Imagen generada exitosamente" }, "Generar Imagen")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error) {
-      console.error("Error generating image:", error);
-      toast.error("Error al generar la imagen");
+      handleApiResult(error, "Generar Imagen");
     } finally {
       setIsGeneratingImage(false);
       setImageProgress(0);

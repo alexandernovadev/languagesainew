@@ -29,6 +29,7 @@ import { SPEECH_RATES } from "../../speechRates";
 import { getLanguageInfo } from "@/utils/common/language";
 import { toast } from "sonner";
 import { WordDetailsModal } from "@/components/word-details";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +47,9 @@ export default function LectureDetailPage() {
   const [foundWord, setFoundWord] = useState<Word | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   useEffect(() => {
     if (id) {
@@ -128,6 +132,14 @@ export default function LectureDetailPage() {
 
       toast.success("Palabra generada", {
         description: `La palabra "${modalWord}" ha sido generada exitosamente`,
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { word: generatedWord }, message: `La palabra "${modalWord}" ha sido generada exitosamente` }, "Generar Palabra")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
 
       // Usar directamente la palabra generada
@@ -139,10 +151,7 @@ export default function LectureDetailPage() {
         console.log("Estado foundWord después de actualizar:", foundWord);
       }, 100);
     } catch (error: any) {
-      console.error("Error al generar palabra:", error);
-      toast.error("Error al generar palabra", {
-        description: error.message || "No se pudo generar la palabra",
-      });
+      handleApiResult(error, "Generar Palabra");
     } finally {
       setIsGenerating(false);
     }

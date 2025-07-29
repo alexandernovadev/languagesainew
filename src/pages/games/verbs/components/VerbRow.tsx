@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, X } from "lucide-react";
 import { Verb, VerbField } from "../types";
 import { WordDetailsModal } from "@/components/word-details";
 import { useWordStore } from "@/lib/store/useWordStore";
@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface VerbRowProps {
   verb: Verb;
@@ -33,6 +34,9 @@ export function VerbRow({
   const [isSearching, setIsSearching] = useState(false);
   const [currentWord, setCurrentWord] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   const openWordModal = async (word: string) => {
     setIsModalOpen(true);
@@ -74,14 +78,19 @@ export function VerbRow({
 
       toast.success("Palabra generada", {
         description: `La palabra "${currentWord}" ha sido generada exitosamente`,
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { word: generatedWord }, message: `La palabra "${currentWord}" ha sido generada exitosamente` }, "Generar Palabra")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
       });
 
       // activeWord se actualiza automáticamente en el store
     } catch (error: any) {
-      console.error("Error al generar palabra:", error);
-      toast.error("Error al generar palabra", {
-        description: error.message || "No se pudo generar la palabra",
-      });
+      handleApiResult(error, "Generar Palabra");
     } finally {
       setIsGenerating(false);
     }

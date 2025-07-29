@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Trash2 } from "lucide-react";
+import { Send, Trash2, Eye, X } from "lucide-react";
 import { Word } from "@/models/Word";
 import type { ChatMessage } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { TypingAnimation } from "@/components/common/TypingAnimation";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface WordChatTabProps {
   word: Word;
@@ -21,6 +22,9 @@ export function WordChatTab({ word }: WordChatTabProps) {
   const [streamingMessage, setStreamingMessage] = useState("");
   const { streamChatMessage, getChatHistory, actionLoading } = useWordStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Hook para manejo de errores
+  const { handleApiResult } = useResultHandler();
 
   // Load chat history when component mounts
   useEffect(() => {
@@ -131,9 +135,18 @@ export function WordChatTab({ word }: WordChatTabProps) {
     try {
       await useWordStore.getState().clearChatHistory(word._id);
       setMessages([]);
-      toast.success("Chat limpiado");
+      toast.success("Chat limpiado", {
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data: { messages: [] }, message: "Chat limpiado" }, "Limpiar Chat")
+        },
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        }
+      });
     } catch (error) {
-      console.error("Error clearing chat:", error);
+      handleApiResult(error, "Limpiar Chat");
     }
   };
 
