@@ -14,6 +14,7 @@ import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { Eye, X } from "lucide-react";
 
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
@@ -79,6 +80,14 @@ export default function QuestionImportForm() {
       setResult(data);
       toast.success("Import successful", {
         description: data.message || "Questions imported successfully",
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        },
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: data.message || "Questions imported successfully" }, "Importar Preguntas")
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Importar Preguntas");

@@ -15,6 +15,7 @@ import { FileInputButton } from "@/components/ui/FileInputButton";
 import WordImportResult from "./WordImportResult";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { Eye, X } from "lucide-react";
 
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
@@ -80,6 +81,15 @@ export default function WordImportForm() {
       setResult(data);
       toast.success("Import successful", {
         description: data.message || "Words imported successfully",
+        className: "border border-white",
+        cancel: {
+          label: <X className="h-4 w-4" />,
+          onClick: () => toast.dismiss()
+        },
+        action: {
+          label: <Eye className="h-4 w-4" />,
+          onClick: () => handleApiResult({ success: true, data, message: data.message || "Words imported successfully" }, "Importar Palabras")
+        }
       });
     } catch (error: any) {
       handleApiResult(error, "Importar Palabras");
