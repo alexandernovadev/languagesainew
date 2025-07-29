@@ -13,8 +13,8 @@ export function ExamSearchAndFilters({
   onSearch,
 }: ExamSearchAndFiltersProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mb-6">
-      <div className="flex gap-2 flex-1">
+    <div className="flex flex-col sm:flex-row gap-4 mx-2">
+      <div className="flex gap-2 flex-1 mb-3">
         <Input
           placeholder="Buscar exámenes..."
           value={searchTerm}
