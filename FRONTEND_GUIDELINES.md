@@ -122,6 +122,11 @@ export function MyComponent() {
 - [ ] Keep files focused and not too long
 - [ ] Use proper import organization
 - [ ] Implement success toast with Eye/X buttons
+- [ ] Add loading states for async operations
+- [ ] Implement proper error boundaries
+- [ ] Add accessibility attributes (aria-labels, roles)
+- [ ] Consider mobile responsiveness
+- [ ] Update component documentation
 
 ## 🔗 Related Files
 
