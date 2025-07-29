@@ -238,7 +238,7 @@ export default function MyExpressionsPage() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="default"
                     size="sm"
                     onClick={() => openDialog()}
                     className="h-10 w-10 p-0"
