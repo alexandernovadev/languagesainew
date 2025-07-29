@@ -367,3 +367,19 @@ body {
   border-color: hsl(var(--destructive)) !important;
   box-shadow: 0 0 20px hsl(var(--destructive) / 0.4) !important;
 }
+
+/* Eliminar outline de modales */
+[data-radix-dialog-content] {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+[data-radix-dialog-content]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+[data-radix-dialog-content]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

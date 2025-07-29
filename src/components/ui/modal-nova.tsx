@@ -43,7 +43,7 @@ export function ModalNova({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl`}
+        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0`}
       >
         {/* Header Fijo */}
         {title && (
