@@ -24,6 +24,7 @@ interface WordStore {
   setPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: Partial<WordFilters>) => void;
+  clearFilters: () => void;
   retry: () => void;
   getWordById: (id: string) => Promise<void>;
   getWordByName: (word: string) => Promise<void>;
@@ -89,9 +90,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
   currentPage: 1,
   searchQuery: "",
   total: 0,
-  currentFilters: {
-    type: "phrasal verb" // Filtro por defecto para phrasal verbs
-  },
+  currentFilters: {},
 
   getWords: async (
     page = get().currentPage,
@@ -134,12 +133,21 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   setSearchQuery: (query: string) => {
     set({ searchQuery: query, currentPage: 1 });
-    get().getWords(1, 6, get().currentFilters);
+    // Cuando hay búsqueda, usar solo el filtro de búsqueda, ignorando otros filtros
+    const filtersToUse = query ? { wordUser: query } : get().currentFilters;
+    get().getWords(1, 6, filtersToUse);
   },
 
   setFilters: (filters: Partial<WordFilters>) => {
     set({ currentFilters: filters, currentPage: 1 });
     get().getWords(1, 6, filters);
+  },
+
+  clearFilters: () => {
+    set({ currentFilters: {}, currentPage: 1 });
+    // Mantener la búsqueda actual si existe
+    const filtersToUse = get().searchQuery ? { wordUser: get().searchQuery } : {};
+    get().getWords(1, 6, filtersToUse);
   },
 
   retry: () => {

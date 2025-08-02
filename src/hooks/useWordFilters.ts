@@ -3,11 +3,9 @@ import { WordFilters } from "@/components/forms/word-filters/types";
 import { useWordStore } from "@/lib/store/useWordStore";
 
 export function useWordFilters() {
-  const { currentFilters } = useWordStore();
+  const { currentFilters, clearFilters: clearStoreFilters } = useWordStore();
 
-  const [filters, setFilters] = useState<WordFilters>({
-    type: "phrasal verb", // Filtro por defecto para phrasal verbs
-  });
+  const [filters, setFilters] = useState<WordFilters>({});
   const [booleanFilters, setBooleanFilters] = useState<Record<string, boolean>>(
     {}
   );
@@ -22,9 +20,7 @@ export function useWordFilters() {
   // Inicializar con filtros por defecto si no hay filtros en el store
   useEffect(() => {
     if (!currentFilters || Object.keys(currentFilters).length === 0) {
-      setFilters({
-        type: "phrasal verb", // Filtro por defecto para phrasal verbs
-      });
+      setFilters({});
     }
   }, [currentFilters]);
 
@@ -48,7 +44,8 @@ export function useWordFilters() {
   const clearFilters = useCallback(() => {
     setFilters({});
     setBooleanFilters({});
-  }, []);
+    clearStoreFilters(); // Limpiar también los filtros del store
+  }, [clearStoreFilters]);
 
   // Obtener filtros combinados para la API
   const combinedFilters = useMemo(() => {
