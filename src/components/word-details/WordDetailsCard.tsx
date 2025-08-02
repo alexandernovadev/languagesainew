@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Eye, Volume2, X } from "lucide-react";
 import { Word } from "@/models/Word";
@@ -20,7 +20,158 @@ interface WordDetailsCardProps {
   showAudioButtons?: boolean;
 }
 
-export function WordDetailsCard({
+// Componente memoizado para SectionContainer
+const SectionContainer = memo(({
+  children,
+  className = "",
+  loading = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  loading?: boolean;
+}) => (
+  <div className="mb-4">
+    {loading ? (
+      <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
+        <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
+      </div>
+    ) : (
+      <div
+        className={cn(
+          "p-4 rounded-lg border bg-zinc-900/40 border-zinc-800",
+          className
+        )}
+      >
+        {children}
+      </div>
+    )}
+  </div>
+));
+
+SectionContainer.displayName = "SectionContainer";
+
+// Componente memoizado para SectionHeader
+const SectionHeader = memo(({
+  title,
+  onRefresh,
+  loading = false,
+  icon,
+  showRefreshButtons = true,
+}: {
+  title: string;
+  onRefresh?: () => void;
+  loading?: boolean;
+  icon?: string;
+  showRefreshButtons?: boolean;
+}) => (
+  <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center gap-2">
+      {icon && <span className="text-lg">{icon}</span>}
+      <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide">
+        {title}
+      </h3>
+    </div>
+    {onRefresh && showRefreshButtons && (
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRefresh();
+        }}
+        disabled={loading}
+        className={cn(
+          "h-6 w-6 p-0 transition-all duration-300",
+          loading
+            ? "bg-zinc-800/80 border border-green-400/40"
+            : "bg-zinc-800/50 hover:bg-zinc-700/50"
+        )}
+      >
+        <RefreshCw
+          className={cn(
+            "h-3 w-3 transition-all duration-300",
+            loading ? "animate-spin text-green-400" : "text-zinc-400"
+          )}
+        />
+      </Button>
+    )}
+  </div>
+));
+
+SectionHeader.displayName = "SectionHeader";
+
+// Componente memoizado para LevelButtons
+const LevelButtons = memo(({
+  onUpdateLevel,
+  loading,
+}: {
+  onUpdateLevel: (level: "easy" | "medium" | "hard") => void;
+  loading: boolean;
+}) => (
+  <div className="flex justify-center gap-2 mt-4">
+    {(["easy", "medium", "hard"] as const).map((level) => (
+      <Button
+        key={level}
+        onClick={() => onUpdateLevel(level)}
+        disabled={loading}
+        variant="outline"
+        size="sm"
+        className={cn(
+          "capitalize px-3 py-1 text-xs",
+          level === "easy" &&
+            "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
+          level === "medium" &&
+            "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
+          level === "hard" &&
+            "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
+          loading && "opacity-50"
+        )}
+      >
+        {level}
+      </Button>
+    ))}
+  </div>
+));
+
+LevelButtons.displayName = "LevelButtons";
+
+// Componente memoizado para AudioButtons
+const AudioButtons = memo(({
+  onSpeak,
+  onSpeakSlow,
+  isPlaying,
+}: {
+  onSpeak: () => void;
+  onSpeakSlow: () => void;
+  isPlaying: boolean;
+}) => (
+  <div className="flex items-center gap-2">
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={onSpeak}
+      disabled={isPlaying}
+      className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+    >
+      <Volume2
+        className={cn("h-3 w-3", isPlaying && "animate-pulse")}
+      />
+    </Button>
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={onSpeakSlow}
+      disabled={isPlaying}
+      className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+    >
+      🐢
+    </Button>
+  </div>
+));
+
+AudioButtons.displayName = "AudioButtons";
+
+export const WordDetailsCard = memo(function WordDetailsCard({
   word,
   variant = "full",
   showLevelButtons = true,
@@ -43,7 +194,8 @@ export function WordDetailsCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
 
-  const speakWord = (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
+  // Memoizar funciones de manejo de eventos
+  const speakWord = useCallback((rate = SPEECH_RATES.NORMAL, language = "en-US") => {
     if (isPlaying) return;
 
     setIsPlaying(true);
@@ -55,9 +207,12 @@ export function WordDetailsCard({
     utterance.onerror = () => setIsPlaying(false);
 
     speechSynthesis.speak(utterance);
-  };
+  }, [word.word, isPlaying]);
 
-  const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
+  const handleSpeakNormal = useCallback(() => speakWord(), [speakWord]);
+  const handleSpeakSlow = useCallback(() => speakWord(SPEECH_RATES.SUPERSLOW), [speakWord]);
+
+  const handleUpdateLevel = useCallback(async (level: "easy" | "medium" | "hard") => {
     if (!word._id) return;
 
     try {
@@ -75,9 +230,9 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Nivel");
     }
-  };
+  }, [word._id, updateWordLevel, handleApiResult]);
 
-  const handleRefreshImage = async () => {
+  const handleRefreshImage = useCallback(async () => {
     if (!word._id) return;
 
     try {
@@ -95,9 +250,9 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Imagen");
     }
-  };
+  }, [word._id, word.word, word.img, updateWordImage, handleApiResult]);
 
-  const handleRefreshExamples = async () => {
+  const handleRefreshExamples = useCallback(async () => {
     if (!word._id) return;
 
     try {
@@ -120,9 +275,9 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Ejemplos");
     }
-  };
+  }, [word._id, word.word, word.examples, updateWordExamples, handleApiResult]);
 
-  const handleRefreshSynonyms = async () => {
+  const handleRefreshSynonyms = useCallback(async () => {
     if (!word._id) return;
 
     try {
@@ -145,9 +300,9 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Sinónimos");
     }
-  };
+  }, [word._id, word.word, word.sinonyms, updateWordSynonyms, handleApiResult]);
 
-  const handleRefreshCodeSwitching = async () => {
+  const handleRefreshCodeSwitching = useCallback(async () => {
     if (!word._id) return;
 
     try {
@@ -170,9 +325,9 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Code-switching");
     }
-  };
+  }, [word._id, word.word, word.codeSwitching, updateWordCodeSwitching, handleApiResult]);
 
-  const handleRefreshTypes = async () => {
+  const handleRefreshTypes = useCallback(async () => {
     if (!word._id) return;
 
     try {
@@ -195,93 +350,26 @@ export function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Tipos");
     }
-  };
+  }, [word._id, word.word, word.type, updateWordTypes, handleApiResult]);
 
-  const SectionContainer = ({
-    children,
-    className = "",
-    loading = false,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-    loading?: boolean;
-  }) => (
-    <div className="mb-4">
-      {loading ? (
-        <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
-          <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
-        </div>
-      ) : (
-        <div
-          className={cn(
-            "p-4 rounded-lg border bg-zinc-900/40 border-zinc-800",
-            className
-          )}
-        >
-          {children}
-        </div>
-      )}
-    </div>
-  );
+  // Memoizar valores computados
+  const isCompact = useMemo(() => variant === "compact", [variant]);
+  
+  const containerClassName = useMemo(() => cn(
+    "bg-zinc-950 text-zinc-100",
+    isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
+  ), [isCompact, variant]);
 
-  const SectionHeader = ({
-    title,
-    onRefresh,
-    loading = false,
-    icon,
-  }: {
-    title: string;
-    onRefresh?: () => void;
-    loading?: boolean;
-    icon?: string;
-  }) => (
-    <div className="flex items-center justify-between mb-3">
-      <div className="flex items-center gap-2">
-        {icon && <span className="text-lg">{icon}</span>}
-        <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide">
-          {title}
-        </h3>
-      </div>
-      {onRefresh && showRefreshButtons && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRefresh();
-          }}
-          disabled={loading}
-          className={cn(
-            "h-6 w-6 p-0 transition-all duration-300",
-            loading
-              ? "bg-zinc-800/80 border border-green-400/40"
-              : "bg-zinc-800/50 hover:bg-zinc-700/50"
-          )}
-        >
-          <RefreshCw
-            className={cn(
-              "h-3 w-3 transition-all duration-300",
-              loading ? "animate-spin text-green-400" : "text-zinc-400"
-            )}
-          />
-        </Button>
-      )}
-    </div>
-  );
-
-  const isCompact = variant === "compact";
+  const handleTabChange = useCallback((value: string) => {
+    setActiveTab(value as "info" | "chat");
+  }, []);
 
   return (
-    <div
-      className={cn(
-        "bg-zinc-950 text-zinc-100",
-        isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
-      )}
-    >
+    <div className={containerClassName}>
       {/* Tabs */}
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as "info" | "chat")}
+        onValueChange={handleTabChange}
       >
         <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
           <TabsTrigger value="info">Información</TabsTrigger>
@@ -309,28 +397,11 @@ export function WordDetailsCard({
               </div>
             </div>
             {showAudioButtons && (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => speakWord()}
-                  disabled={isPlaying}
-                  className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-                >
-                  <Volume2
-                    className={cn("h-3 w-3", isPlaying && "animate-pulse")}
-                  />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => speakWord(SPEECH_RATES.SUPERSLOW)}
-                  disabled={isPlaying}
-                  className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-                >
-                  🐢
-                </Button>
-              </div>
+              <AudioButtons
+                onSpeak={handleSpeakNormal}
+                onSpeakSlow={handleSpeakSlow}
+                isPlaying={isPlaying}
+              />
             )}
           </div>
 
@@ -356,7 +427,7 @@ export function WordDetailsCard({
           {/* Spanish Translation */}
           {word.spanish && (
             <SectionContainer>
-              <SectionHeader title="Traducción" icon="🇪🇸" />
+              <SectionHeader title="Traducción" icon="🇪🇸" showRefreshButtons={showRefreshButtons} />
               <h3 className="text-lg font-bold text-blue-400 capitalize mb-1">
                 {word.spanish.word}
               </h3>
@@ -373,6 +444,7 @@ export function WordDetailsCard({
               icon="🖼️"
               onRefresh={handleRefreshImage}
               loading={actionLoading.updateImage}
+              showRefreshButtons={showRefreshButtons}
             />
             <div className="relative flex justify-center">
               {word.img ? (
@@ -400,6 +472,7 @@ export function WordDetailsCard({
                 icon="💬"
                 onRefresh={handleRefreshExamples}
                 loading={actionLoading.updateExamples}
+                showRefreshButtons={showRefreshButtons}
               />
               <div className="space-y-2">
                 {word.examples.map((example, index) => (
@@ -422,6 +495,7 @@ export function WordDetailsCard({
                 icon="🔀"
                 onRefresh={handleRefreshCodeSwitching}
                 loading={actionLoading.updateCodeSwitching}
+                showRefreshButtons={showRefreshButtons}
               />
               <div className="space-y-2">
                 {word.codeSwitching.map((example, index) => (
@@ -444,6 +518,7 @@ export function WordDetailsCard({
                 icon="🔗"
                 onRefresh={handleRefreshSynonyms}
                 loading={actionLoading.updateSynonyms}
+                showRefreshButtons={showRefreshButtons}
               />
               <div className="flex flex-wrap gap-2">
                 {word.sinonyms.map((synonym, index) => (
@@ -466,6 +541,7 @@ export function WordDetailsCard({
                 icon="🏷️"
                 onRefresh={handleRefreshTypes}
                 loading={actionLoading.updateTypes}
+                showRefreshButtons={showRefreshButtons}
               />
               <div className="flex flex-wrap gap-2">
                 {word.type.map((type, index) => (
@@ -502,29 +578,10 @@ export function WordDetailsCard({
 
           {/* Level Buttons */}
           {showLevelButtons && variant !== "modal" && (
-            <div className="flex justify-center gap-2 mt-4">
-              {(["easy", "medium", "hard"] as const).map((level) => (
-                <Button
-                  key={level}
-                  onClick={() => handleUpdateLevel(level)}
-                  disabled={actionLoading.updateLevel}
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "capitalize px-3 py-1 text-xs",
-                    level === "easy" &&
-                      "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
-                    level === "medium" &&
-                      "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
-                    level === "hard" &&
-                      "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
-                    actionLoading.updateLevel && "opacity-50"
-                  )}
-                >
-                  {level}
-                </Button>
-              ))}
-            </div>
+            <LevelButtons
+              onUpdateLevel={handleUpdateLevel}
+              loading={actionLoading.updateLevel}
+            />
           )}
         </TabsContent>
 
@@ -534,4 +591,4 @@ export function WordDetailsCard({
       </Tabs>
     </div>
   );
-}
+});
