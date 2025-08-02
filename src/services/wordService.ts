@@ -143,8 +143,7 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(`/api/ai/update-word-examples`, {
-      wordId,
+    const res = await api.post(`/api/ai/update-word-examples/${wordId}`, {
       word,
       language,
       oldExamples,
@@ -158,8 +157,7 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(`/api/ai/update-word-code-switching`, {
-      wordId,
+    const res = await api.post(`/api/ai/update-word-examples-code-switching/${wordId}`, {
       word,
       language,
       oldExamples,
@@ -173,8 +171,7 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(`/api/ai/update-word-synonyms`, {
-      wordId,
+    const res = await api.post(`/api/ai/update-word-synonyms/${wordId}`, {
       word,
       language,
       oldExamples,
@@ -188,8 +185,7 @@ export const wordService = {
     language: string,
     oldExamples: string
   ) {
-    const res = await api.post(`/api/ai/update-word-types`, {
-      wordId,
+    const res = await api.post(`/api/ai/update-word-types/${wordId}`, {
       word,
       language,
       oldExamples,
@@ -198,9 +194,8 @@ export const wordService = {
   },
 
   async updateWordImage(wordId: string, word: string, imgOld: string = "") {
-    const res = await api.post(`/api/ai/update-word-image`, {
-      wordId,
-      word,
+    const res = await api.post(`/api/ai/generate-image-word/${wordId}`, {
+      word: word,
       imgOld,
     });
     return res.data;
