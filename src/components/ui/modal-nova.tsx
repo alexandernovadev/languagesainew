@@ -45,12 +45,18 @@ export function ModalNova({
       <DialogContent
         className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0`}
       >
+        {/* Título oculto para accesibilidad */}
+        <DialogHeader className="sr-only">
+          <DialogTitle>{title || "Modal"}</DialogTitle>
+          <DialogDescription>{description || "Contenido del modal"}</DialogDescription>
+        </DialogHeader>
+
         {/* Header Fijo */}
         {title && (
-          <DialogHeader className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
-            <DialogTitle className="text-2xl">{title}</DialogTitle>
-            {description && <DialogDescription>{description}</DialogDescription>}
-          </DialogHeader>
+          <div className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
+            <h2 className="text-2xl font-semibold">{title}</h2>
+            {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+          </div>
         )}
 
         {/* Contenido Scrollable */}
