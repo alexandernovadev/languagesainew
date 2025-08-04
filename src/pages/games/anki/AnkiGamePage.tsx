@@ -140,20 +140,46 @@ export default function AnkiGamePage() {
 
   // Trackear palabras ya vistas para evitar bucles
   const viewedWordsRef = useRef<Set<string>>(new Set());
+  const seenUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Actualizar contador "seen" cuando el usuario ve una tarjeta
+  // Función optimizada para actualizar "seen" con debounce
+  const updateSeenWithDebounce = useCallback((wordId: string) => {
+    if (!wordId || viewedWordsRef.current.has(wordId)) return;
+    
+    // Marcar como vista inmediatamente para evitar bucles
+    viewedWordsRef.current.add(wordId);
+    
+    // Limpiar timeout anterior si existe
+    if (seenUpdateTimeoutRef.current) {
+      clearTimeout(seenUpdateTimeoutRef.current);
+    }
+    
+    // Crear nuevo timeout para actualizar
+    seenUpdateTimeoutRef.current = setTimeout(async () => {
+      try {
+        await wordService.incrementWordSeen(wordId);
+      } catch (error) {
+        console.error('Error incrementing word seen:', error);
+      }
+    }, 1000); // 1 segundo de debounce
+  }, []);
+
+  // Actualizar contador "seen" cuando el usuario ve una tarjeta (optimizado)
   useEffect(() => {
     const currentCard = shuffledWords[gameStats.currentIndex];
-    if (currentCard?._id && !viewedWordsRef.current.has(currentCard._id)) {
-      // Marcar como vista para evitar bucles
-      viewedWordsRef.current.add(currentCard._id);
-      
-      // Llamar directamente al servicio sin usar el store para evitar bucles
-      wordService.incrementWordSeen(currentCard._id).catch((error: any) => {
-        console.error('Error incrementing word seen:', error);
-      });
+    if (currentCard?._id) {
+      updateSeenWithDebounce(currentCard._id);
     }
-  }, [gameStats.currentIndex, shuffledWords]);
+  }, [gameStats.currentIndex, shuffledWords, updateSeenWithDebounce]);
+
+  // Cleanup al desmontar el componente
+  useEffect(() => {
+    return () => {
+      if (seenUpdateTimeoutRef.current) {
+        clearTimeout(seenUpdateTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Estados para reconocimiento de voz
   const [isRecording, setIsRecording] = useState(false);
