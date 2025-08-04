@@ -430,7 +430,7 @@ export default function AnkiGamePage() {
               }}
             >
               {/* Frente */}
-              <Card className="flip-card-front absolute inset-0 w-full h-full backface-hidden rounded-2xl shadow-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 p-0">
+              <Card className="flip-card-front absolute inset-0 w-full h-full backface-hidden rounded-2xl shadow-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 overflow-hidden p-0">
                 {isGeneratingImage ? (
                   // Skeleton durante generación
                   <div className="absolute inset-0 w-full h-full z-0">
