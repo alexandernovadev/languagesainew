@@ -380,6 +380,7 @@ export function ExamTakingPage() {
           timeRemaining={timeRemaining}
           isTimerRunning={isTimerRunning}
           formatTimeRemaining={formatTimeRemaining}
+          examTitle={exam.title}
           onFinish={
             currentQuestionIndex + 1 === totalQuestions
               ? () => setShowSubmissionModal(true)

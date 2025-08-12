@@ -18,6 +18,7 @@ import {
   Minimize2,
   Eye,
   EyeOff,
+  Grid3X3,
 } from "lucide-react";
 import { Question } from "./types";
 import { cn } from "@/utils/common/classnames/cn";
@@ -44,6 +45,7 @@ interface ExamQuestionTakingProps {
   isTimerRunning?: boolean;
   formatTimeRemaining?: (seconds: number) => string;
   onFinish?: () => void;
+  examTitle?: string; // Agregar el título del examen
 }
 
 // Componente reutilizable para opciones tipo tarjeta con radio
@@ -103,6 +105,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
   isTimerRunning,
   formatTimeRemaining,
   onFinish,
+  examTitle, // Agregar el título del examen
 }) => {
   const [showValidation, setShowValidation] = useState(false);
 
@@ -312,7 +315,7 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
     <div
       className={cn(
         "transition-all duration-300",
-        isFullScreen ? "fixed inset-0 z-50 bg-background" : "relative"
+        isFullScreen ? "fixed inset-0 z-50 bg-background p-6" : "relative"
       )}
     >
       {/* Header */}
@@ -365,6 +368,29 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
           )}
         </div>
       </div>
+
+      {/* Progress Section - Solo visible en pantalla completa */}
+      {isFullScreen && (
+        <div className="mb-6 p-4">
+          <div className="mb-3">
+            <h1 className="text-xl font-bold">{examTitle}</h1>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {answeredQuestions.length} de {totalQuestions} respondidas
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate && onNavigate(questionNumber - 1)}
+              className="flex items-center gap-1 shadow-md text-xs px-3 py-1"
+            >
+              <Grid3X3 className="h-4 w-4" />
+              Navegar
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Question Card */}
       <Card className="mb-6">
