@@ -12,6 +12,8 @@ import {
   BarChart3,
   Eye,
   X,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -31,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/utils/common/classnames";
 
 // Declaraciones de tipos para Web Speech API
 declare global {
@@ -106,6 +109,9 @@ export default function AnkiGamePage() {
 
   // Estado para el modal de estadísticas
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+
+  // Estado para full screen
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -391,6 +397,27 @@ export default function AnkiGamePage() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              className="h-10 w-10 p-0"
+            >
+              {isFullScreen ? (
+                <Minimize2 className="h-4 w-4" />
+              ) : (
+                <Maximize2 className="h-4 w-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{isFullScreen ? "Salir de pantalla completa" : "Pantalla completa"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 
@@ -428,19 +455,45 @@ export default function AnkiGamePage() {
   if (!shuffledWords.length) return <div>No hay tarjetas para practicar.</div>;
 
   return (
-    <PageLayout>
+    <PageLayout className={isFullScreen ? "" : "space-y-6"}>
       <PageHeader
         title="Juego Anki"
         description="Practica vocabulario con tarjetas interactivas"
         actions={actions}
       />
       
-              <div className="flex flex-col flex-1 min-h-0 h-[calc(100dvh-180px)] items-center w-full py-0 my-0">
+      <div className={cn(
+        "flex flex-col flex-1 min-h-0 transition-all duration-300 CARRO m-0",
+        isFullScreen 
+          ? "fixed top-0 left-0 w-screen h-screen z-50 m-0 bg-background p-6" 
+          : "h-[calc(100dvh-180px)] items-center w-full py-0 m-0"
+      )}>
         {/* Indicador de progreso compacto */}
-        <span className="text-xs text-muted-foreground rounded px-2 shadow-sm  mb-1 py-0">
+        <span className={cn(
+          "text-xs text-muted-foreground rounded px-2 shadow-sm py-0 PERRO",
+          isFullScreen ? "mb-4 mt-6 text-center block" : "mb-1"
+        )}>
           {gameStats.currentIndex + 1}/{shuffledWords.length}
         </span>
-        <div className="flex-1 flex items-center justify-center w-full max-w-lg min-h-0">
+
+        {/* Botón de salir - Solo visible en pantalla completa */}
+        {isFullScreen && (
+          <div className="flex justify-end mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFullScreen(false)}
+              className="bg-background/80 backdrop-blur-sm hover:bg-background"
+            >
+              Salir
+            </Button>
+          </div>
+        )}
+
+        <div className={cn(
+          "flex-1 flex items-center justify-center w-full min-h-0",
+          isFullScreen ? "max-w-7xl h-full" : "max-w-lg"
+        )}>
           <div
             className={`flip-card group w-full h-full max-h-full cursor-pointer ${
               isFlipped ? "flipped" : ""
@@ -554,7 +607,10 @@ export default function AnkiGamePage() {
         </div>
 
         {/* Card de reconocimiento de voz */}
-        <Card className="w-full max-w-lg mx-1 p-2 mb-1">
+        <Card className={cn(
+          "w-full mx-1 p-2 mb-1",
+          isFullScreen ? "max-w-6xl" : "max-w-lg"
+        )}>
           <div className="flex items-center gap-2">
             {/* Micrófono - 20% */}
             <div className="flex justify-center">
@@ -623,7 +679,10 @@ export default function AnkiGamePage() {
           )}
         </Card>
         {/* Botones SIEMPRE abajo */}
-        <div className="flex justify-center gap-4 mt-2 mb-2 w-full">
+        <div className={cn(
+          "flex justify-center gap-4 mt-2 mb-2 w-full",
+          isFullScreen ? "max-w-6xl p-5" : ""
+        )}>
           <Button
             variant="outline"
             onClick={handlePrevious}
