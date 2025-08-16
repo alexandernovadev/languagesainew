@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo } from "react";
+import { useState, useCallback, useMemo, memo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Eye, Volume2, X } from "lucide-react";
 import { Word } from "@/models/Word";
@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
+import { useTextSelection } from "@/hooks/useTextSelection";
+import { TextSelectionTooltip } from "@/components/common";
 
 interface WordDetailsCardProps {
   word: Word;
@@ -99,6 +101,21 @@ const SectionHeader = memo(({
 ));
 
 SectionHeader.displayName = "SectionHeader";
+
+// Componente memoizado para SelectableTextContainer
+const SelectableTextContainer = memo(({
+  children,
+  containerRef,
+}: {
+  children: React.ReactNode;
+  containerRef?: React.RefObject<HTMLDivElement>;
+}) => (
+  <div ref={containerRef} className="relative text-selectable">
+    {children}
+  </div>
+));
+
+SelectableTextContainer.displayName = "SelectableTextContainer";
 
 // Componente memoizado para LevelButtons
 const LevelButtons = memo(({
@@ -193,6 +210,12 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
+
+  // Ref para el contenedor de selección de texto
+  const selectionContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Hook para manejo de selección de texto
+  const { selection, hideSelection, keepVisible } = useTextSelection(selectionContainerRef);
 
   // Memoizar funciones de manejo de eventos
   const speakWord = useCallback((rate = SPEECH_RATES.NORMAL, language = "en-US") => {
@@ -417,11 +440,13 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Definition */}
           {word.definition && (
-            <SectionContainer>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                {word.definition}
-              </p>
-            </SectionContainer>
+            <SelectableTextContainer containerRef={selectionContainerRef}>
+              <SectionContainer>
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  {word.definition}
+                </p>
+              </SectionContainer>
+            </SelectableTextContainer>
           )}
 
           {/* Spanish Translation */}
@@ -466,25 +491,27 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Examples */}
           {word.examples && word.examples.length > 0 && (
-            <SectionContainer loading={actionLoading.updateExamples}>
-              <SectionHeader
-                title="Ejemplos"
-                icon="💬"
-                onRefresh={handleRefreshExamples}
-                loading={actionLoading.updateExamples}
-                showRefreshButtons={showRefreshButtons}
-              />
-              <div className="space-y-2">
-                {word.examples.map((example, index) => (
-                  <p
-                    key={index}
-                    className="text-sm text-zinc-300 leading-relaxed"
-                  >
-                    • {example}
-                  </p>
-                ))}
-              </div>
-            </SectionContainer>
+            <SelectableTextContainer containerRef={selectionContainerRef}>
+              <SectionContainer loading={actionLoading.updateExamples}>
+                <SectionHeader
+                  title="Ejemplos"
+                  icon="💬"
+                  onRefresh={handleRefreshExamples}
+                  loading={actionLoading.updateExamples}
+                  showRefreshButtons={showRefreshButtons}
+                />
+                <div className="space-y-2">
+                  {word.examples.map((example, index) => (
+                    <p
+                      key={index}
+                      className="text-sm text-zinc-300 leading-relaxed"
+                    >
+                      • {example}
+                    </p>
+                  ))}
+                </div>
+              </SectionContainer>
+            </SelectableTextContainer>
           )}
 
           {/* Code Switching */}
@@ -589,6 +616,15 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           <WordChatTab word={word} />
         </TabsContent>
       </Tabs>
+
+      {/* Tooltip de selección de texto */}
+      <TextSelectionTooltip
+        text={selection.text}
+        rect={selection.rect}
+        isVisible={selection.isVisible}
+        onHide={hideSelection}
+        onKeepVisible={keepVisible}
+      />
     </div>
   );
 });
