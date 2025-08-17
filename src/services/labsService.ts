@@ -38,105 +38,105 @@ export interface CleanerResponse {
 class LabsService {
   // Database Operations
   async updateWordsLevel(data: UpdateWordsLevelRequest): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/words/update-level", data);
+    const response = await api.post("/api/labs/words/update-level", data);
     return response.data;
   }
 
   async resetWordsSeenCount(
     data: ResetWordsSeenRequest = { seen: 0 }
   ): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/words/reset-seen", data);
+    const response = await api.post("/api/labs/words/reset-seen", data);
     return response.data;
   }
 
   async updateLecturesLanguage(data: UpdateLecturesLanguageRequest): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/lectures/update-language", data);
+    const response = await api.post("/api/labs/lectures/update-language", data);
     return response.data;
   }
 
   async recalculateLecturesTime(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/lectures/recalculate-time");
+    const response = await api.post("/api/labs/lectures/recalculate-time");
     return response.data;
   }
 
   // User Management
   async createAdminUser(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/users/create-admin");
+    const response = await api.post("/api/labs/users/create-admin");
     return response.data;
   }
 
   async createTestUsers(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/users/create-test-users");
+    const response = await api.post("/api/labs/users/create-test-users");
     return response.data;
   }
 
   // Data Seeding
   async seedInitialData(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/seed/initial-data");
+    const response = await api.post("/api/labs/seed/initial-data");
     return response.data;
   }
 
   async seedQuestionsFromJson(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/seed/questions");
+    const response = await api.post("/api/labs/seed/questions");
     return response.data;
   }
 
   // Backup & Maintenance
   async createBackup(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/backup/create");
+    const response = await api.post("/api/labs/backup/create");
     return response.data;
   }
 
   async clearAllData(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/data/clear-all");
+    const response = await api.delete("/api/labs/data/clear-all");
     return response.data;
   }
 
   // Migration
   async migrateWordsToReviewSystem(): Promise<LabsResponse> {
-    const response = await api.post("/api/fixes/migrate/words-to-review");
+    const response = await api.post("/api/labs/migrate/words-to-review");
     return response.data;
   }
 
   // Statistics
   async getDatabaseStats(): Promise<LabsResponse> {
-    const response = await api.get("/api/fixes/stats/database");
+    const response = await api.get("/api/labs/stats/database");
     return response.data;
   }
 
   // Cleaner Functions (DANGEROUS - requires authentication)
   async cleanExamAttempts(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/exam-attempts");
+    const response = await api.delete("/api/labs/clean/exam-attempts");
     return response.data;
   }
 
   async cleanExams(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/exams");
+    const response = await api.delete("/api/labs/clean/exams");
     return response.data;
   }
 
   async cleanQuestions(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/questions");
+    const response = await api.delete("/api/labs/clean/questions");
     return response.data;
   }
 
   async cleanWords(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/words");
+    const response = await api.delete("/api/labs/clean/words");
     return response.data;
   }
 
   async cleanLectures(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/lectures");
+    const response = await api.delete("/api/labs/clean/lectures");
     return response.data;
   }
 
   async cleanExpressions(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/expressions");
+    const response = await api.delete("/api/labs/clean/expressions");
     return response.data;
   }
 
   async cleanUsers(): Promise<LabsResponse> {
-    const response = await api.delete("/api/fixes/clean/users");
+    const response = await api.delete("/api/labs/clean/users");
     return response.data;
   }
 }
