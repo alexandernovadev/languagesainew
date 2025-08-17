@@ -1,84 +1,51 @@
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send, Trash2, Eye, X } from "lucide-react";
 import { Word } from "@/models/Word";
 import type { ChatMessage } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
-import { TypingAnimation } from "@/components/common/TypingAnimation";
-import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionTooltip } from "@/components/common";
+import {
+  useChatLogic,
+  DefaultQuestionsGrid,
+  ChatMessage as ChatMessageComponent,
+  StreamingMessage,
+  ChatInput,
+  createChatMessage,
+  clearChatWithToast,
+} from "@/components/common/ChatInterface";
 
 interface WordChatTabProps {
   word: Word;
 }
 
 export function WordChatTab({ word }: WordChatTabProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState("");
-  const { streamChatMessage, getChatHistory, actionLoading } = useWordStore();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  const { streamChatMessage, getChatHistory, clearChatHistory } = useWordStore();
+  
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
 
-  // Ref para el contenedor de selección de texto del chat
-  const chatSelectionContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Hook para manejo de selección de texto en el chat
-  const { selection, hideSelection, keepVisible } = useTextSelection(chatSelectionContainerRef);
-
-  // Load chat history when component mounts
-  useEffect(() => {
-    const loadChatHistory = async () => {
-      if (word?._id) {
-        try {
-          const chatHistory = await getChatHistory(word._id);
-          // Ensure we always set an array
-          setMessages(Array.isArray(chatHistory) ? chatHistory : []);
-        } catch (error) {
-          console.error("Error loading chat history:", error);
-          // Fallback to word.chat if available
-          setMessages(Array.isArray(word.chat) ? word.chat : []);
-        }
-      }
-    };
-
-    loadChatHistory();
-  }, [word?._id, getChatHistory]);
-
-  // Auto-scroll to bottom when new messages are added or streaming
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, streamingMessage, isStreaming]);
-
-  // Opciones por defecto organizadas por categorías
-  const questionCategories = [
-    {
-      title: "Ejemplos",
-      icon: "💡",
-      questions: ["Dame ejemplos de uso", "Úsala en una conversación"],
-    },
-    {
-      title: "Contexto",
-      icon: "🎯",
-      questions: ["¿Cuándo se usa?", "¿Es formal o informal?"],
-    },
-    {
-      title: "Detalles",
-      icon: "📚",
-      questions: ["Explícame más a detalle", "Dame sinónimos"],
-    },
-  ];
+  // Usar el hook personalizado para la lógica del chat
+  const {
+    messages,
+    setMessages,
+    inputValue,
+    setInputValue,
+    isLoading,
+    setIsLoading,
+    isStreaming,
+    setIsStreaming,
+    streamingMessage,
+    setStreamingMessage,
+    messagesEndRef,
+    chatSelectionContainerRef,
+    selection,
+    hideSelection,
+    keepVisible,
+  } = useChatLogic(
+    word,
+    word._id,
+    getChatHistory,
+    word.chat
+  );
 
   const handleDefaultQuestion = async (question: string) => {
     setInputValue(question);
@@ -93,13 +60,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
     setStreamingMessage("");
 
     // Add user message immediately
-    const userMessage: ChatMessage = {
-      id: Math.random().toString(36).substr(2, 9),
-      role: "user",
-      content: message,
-      timestamp: new Date().toISOString(),
-    };
-
+    const userMessage = createChatMessage("user", message);
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
 
@@ -113,135 +74,66 @@ export function WordChatTab({ word }: WordChatTabProps) {
       });
 
       // Add final assistant message
-      const assistantMessage: ChatMessage = {
-        id: Math.random().toString(36).substr(2, 9),
-        role: "assistant",
-        content: fullMessage,
-        timestamp: new Date().toISOString(),
-      };
-
+      const assistantMessage = createChatMessage("assistant", fullMessage);
       setMessages((prev) => [...prev, assistantMessage]);
       setStreamingMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Error al enviar el mensaje");
     } finally {
       setIsLoading(false);
       setIsStreaming(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage(inputValue);
-    }
-  };
-
-  const clearChat = async () => {
-    try {
-      await useWordStore.getState().clearChatHistory(word._id);
-      setMessages([]);
-      toast.success("Chat limpiado", {
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { messages: [] }, message: "Chat limpiado" }, "Limpiar Chat")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-    } catch (error) {
-      handleApiResult(error, "Limpiar Chat");
-    }
+  const handleClearChat = async () => {
+    await clearChatWithToast(
+      clearChatHistory,
+      word._id,
+      setMessages,
+      handleApiResult
+    );
   };
 
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
-      <div ref={chatSelectionContainerRef} className="flex-1 p-4 space-y-4 overflow-y-auto text-selectable">
+      <div
+        ref={chatSelectionContainerRef}
+        className="flex-1 p-4 space-y-4 overflow-y-auto text-selectable"
+      >
         {/* Opciones por defecto dentro del chat */}
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="grid grid-cols-3 gap-4 max-w-2xl">
-              {questionCategories.map((category, categoryIndex) => (
-                <div key={categoryIndex} className="text-center">
-                  <div className="mb-2">
-                    <div className="text-lg mb-1">{category.icon}</div>
-                    <h5 className="text-sm font-medium text-muted-foreground">
-                      {category.title}
-                    </h5>
-                  </div>
-                  <div className="space-y-2">
-                    {category.questions.map((question, questionIndex) => (
-                      <Button
-                        key={`${categoryIndex}-${questionIndex}`}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDefaultQuestion(question)}
-                        disabled={isLoading}
-                        className="w-full h-auto text-xs p-2 text-center leading-tight hover:bg-accent"
-                      >
-                        {question}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DefaultQuestionsGrid
+            onQuestionClick={handleDefaultQuestion}
+            isLoading={isLoading}
+          />
         )}
 
         {/* Mensajes del chat */}
-        {Array.isArray(messages) && messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
+        {Array.isArray(messages) &&
+          messages.map((message) => (
+            <ChatMessageComponent
+              key={message.id}
+              message={message}
+              enableMarkdown={false}
+            />
+          ))}
 
         {/* Mensaje streaming */}
-        {isStreaming && (
-          <div className="flex justify-start">
-            <div className="w-full p-3 rounded-lg bg-muted/30">
-              {streamingMessage ? (
-                <div className="text-sm whitespace-pre-wrap">
-                  {streamingMessage}
-                </div>
-              ) : (
-                <TypingAnimation />
-              )}
-            </div>
-          </div>
-        )}
+        {isStreaming && <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={false} />}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input para nueva pregunta - Sticky abajo */}
-      <div className="sticky bottom-0 flex gap-2 p-2 bg-background border-t">
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Pregunta algo sobre esta palabra..."
-          disabled={isLoading}
-          onKeyPress={handleKeyPress}
-          className="flex-1"
-        />
-        <Button
-          onClick={() => handleSendMessage(inputValue)}
-          disabled={isLoading || !inputValue.trim()}
-        >
-          <Send className="h-4 w-4" />
-        </Button>
-        {messages.length > 0 && (
-          <Button
-            variant="outline"
-            onClick={clearChat}
-            disabled={isLoading}
-            title="Limpiar chat"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      {/* Input para nueva pregunta */}
+      <ChatInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        onSendMessage={handleSendMessage}
+        onClearChat={handleClearChat}
+        placeholder="Pregunta algo sobre esta palabra..."
+        isLoading={isLoading}
+        hasMessages={messages.length > 0}
+      />
 
       {/* Tooltip de selección de texto para el chat */}
       <TextSelectionTooltip
@@ -251,36 +143,6 @@ export function WordChatTab({ word }: WordChatTabProps) {
         onHide={hideSelection}
         onKeepVisible={keepVisible}
       />
-    </div>
-  );
-}
-
-// Componente para mostrar un mensaje individual
-function ChatMessage({ message }: { message: ChatMessage }) {
-  const isUser = message.role === "user";
-
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`p-3 rounded-lg ${
-          isUser
-            ? "max-w-[80%] bg-primary/70 text-primary-foreground"
-            : "w-full bg-muted/30"
-        }`}
-      >
-        <div className="text-sm">
-          {isUser ? (
-            <p>{message.content}</p>
-          ) : (
-            <div className="whitespace-pre-wrap">
-              {message.content}
-            </div>
-          )}
-        </div>
-        <p className="text-xs opacity-70 mt-1">
-          {new Date(message.timestamp).toLocaleTimeString()}
-        </p>
-      </div>
     </div>
   );
 }
