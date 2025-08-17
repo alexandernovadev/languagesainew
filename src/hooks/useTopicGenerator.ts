@@ -19,7 +19,7 @@ export function useTopicGenerator({
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/ai/generate-topic-stream`,
+          `${import.meta.env.VITE_BACK_URL}/api/ai/generate-topic-stream`,
           {
             method: "POST",
             headers: getAuthHeaders(),

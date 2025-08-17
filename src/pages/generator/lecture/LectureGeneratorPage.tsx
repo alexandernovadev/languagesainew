@@ -27,10 +27,14 @@ import { LectureGeneratorConfigModal } from "@/components/forms/LectureGenerator
 import { wordService } from "@/services/wordService";
 
 const generatorFormSchema = z.object({
+  // Permitir vacío (random). Si no está vacío, mínimo 120 caracteres
   prompt: z
     .string()
-    .min(120, { message: "El tema debe tener al menos 120 caracteres." })
-    .max(600, { message: "El tema no debe exceder los 600 caracteres." }),
+    .max(600, { message: "El tema no debe exceder los 600 caracteres." })
+    .refine((val) => val.trim().length === 0 || val.trim().length >= 120, {
+      message:
+        "El tema debe tener al menos 120 caracteres o estar vacío para generar aleatorio.",
+    }),
   typeWrite: z.string(),
   level: z.string(),
   difficulty: z.string(),
@@ -158,13 +162,15 @@ export default function LectureGeneratorPage() {
 
     try {
       // Usar fetch para streaming ya que axios no maneja streaming fácilmente
+      const promptToSend = (data.prompt || "").trim();
       const response = await fetch(
         `${import.meta.env.VITE_BACK_URL}/api/ai/generate-text`,
         {
           method: "POST",
           headers: getAuthHeaders(),
           body: JSON.stringify({
-            prompt: data.prompt,
+            // Allow empty prompt → backend will generate random; if not empty, use user's ideas
+            prompt: promptToSend,
             level: data.level,
             typeWrite: data.typeWrite,
             language,
