@@ -22,6 +22,7 @@ interface LectureFiltersModalProps {
 export function LectureFiltersModal({ open, onOpenChange, onFiltersChange }: LectureFiltersModalProps) {
   const {
     filters,
+    combinedFilters,
     updateFilter,
     clearFilters,
     hasActiveFilters,
@@ -31,7 +32,7 @@ export function LectureFiltersModal({ open, onOpenChange, onFiltersChange }: Lec
   } = useLectureFilters();
 
   const handleApply = () => {
-    onFiltersChange(filters);
+    onFiltersChange(combinedFilters);
     onOpenChange(false);
   };
 

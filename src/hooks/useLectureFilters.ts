@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useLectureStore } from "@/lib/store/useLectureStore";
 
 interface LectureFilters {
   level?: string;
@@ -15,8 +16,30 @@ interface LectureFilters {
 }
 
 export function useLectureFilters() {
+  const { currentFilters, setFilters: setStoreFilters } = useLectureStore();
+
   const [filters, setFilters] = useState<LectureFilters>({});
   const [booleanFilters, setBooleanFilters] = useState<Record<string, boolean>>({});
+
+  // Sync from store to local hook state (like words hook)
+  useEffect(() => {
+    if (currentFilters && Object.keys(currentFilters).length > 0) {
+      setFilters(currentFilters);
+      // Boolean filters may be present in store as string 'true'; coerce
+      const bools: Record<string, boolean> = {};
+      Object.entries(currentFilters).forEach(([k, v]) => {
+        if (k === "hasImg" || k === "hasUrlAudio") {
+          bools[k] = v === true || v === "true";
+        }
+      });
+      // Always set, so clearing in store resets local booleans too
+      setBooleanFilters(bools);
+    } else {
+      // When store filters are cleared, reset local state as well
+      setFilters({});
+      setBooleanFilters({});
+    }
+  }, [currentFilters]);
 
   const updateFilter = useCallback((key: keyof LectureFilters, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -28,7 +51,10 @@ export function useLectureFilters() {
 
   const clearFilters = useCallback(() => {
     setFilters({});
-  }, []);
+    setBooleanFilters({});
+    // Clear in store so other hook instances (e.g., in page) update too
+    setStoreFilters({});
+  }, [setStoreFilters]);
 
   const hasActiveFilters = useMemo(() => {
     const basic = Object.values(filters).some((v)=>v!==undefined&&v!==""&&v!==null);
@@ -56,6 +82,15 @@ export function useLectureFilters() {
      Object.values(booleanFilters).forEach(v=>{if(v) c++;});
      return c;
    },[activeFiltersCount,booleanFilters]);
+
+  // Combined filters to send to API
+  const combinedFilters = useMemo(() => {
+    const apiFilters: Record<string, any> = { ...filters };
+    Object.entries(booleanFilters).forEach(([k, v]) => {
+      if (v) apiFilters[k] = v;
+    });
+    return apiFilters;
+  }, [filters, booleanFilters]);
 
   const getActiveFiltersDescription = useMemo(() => {
     const desc: string[] = [];
@@ -89,12 +124,23 @@ export function useLectureFilters() {
           desc.push(`${key}: ${value}`);
       }
     });
+    // Boolean descriptions
+    Object.entries(booleanFilters).forEach(([key, value]) => {
+      if (value) {
+        const labels: Record<string, string> = {
+          hasImg: "Con imagen",
+          hasUrlAudio: "Con audio",
+        };
+        desc.push(labels[key] || key);
+      }
+    });
     return desc;
   }, [filters, booleanFilters]);
 
   return {
     filters,
     booleanFilters,
+    combinedFilters,
     updateFilter,
     updateBooleanFilter,
     clearFilters,
