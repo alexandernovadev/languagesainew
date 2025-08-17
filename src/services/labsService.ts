@@ -106,17 +106,17 @@ class LabsService {
 
   // Cleaner Functions (DANGEROUS - requires authentication)
   async cleanExamAttempts(): Promise<LabsResponse> {
-    const response = await api.delete("/api/cleaner/exam-attempts");
+    const response = await api.delete("/api/fixes/clean/exam-attempts");
     return response.data;
   }
 
   async cleanExams(): Promise<LabsResponse> {
-    const response = await api.delete("/api/cleaner/exams");
+    const response = await api.delete("/api/fixes/clean/exams");
     return response.data;
   }
 
   async cleanQuestions(): Promise<LabsResponse> {
-    const response = await api.delete("/api/cleaner/questions");
+    const response = await api.delete("/api/fixes/clean/questions");
     return response.data;
   }
 
