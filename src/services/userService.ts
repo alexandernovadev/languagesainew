@@ -1,10 +1,12 @@
 import { api } from "./api";
 
+export type UserRole = 'admin' | 'teacher' | 'student';
+
 export interface User {
   _id: string;
   username: string;
   email: string;
-  role: string;
+  role: UserRole;
   firstName?: string;
   lastName?: string;
   image?: string;
@@ -21,7 +23,7 @@ export interface UserCreate {
   username: string;
   email: string;
   password: string;
-  role: string;
+  role: UserRole;
   firstName?: string;
   lastName?: string;
   image?: string;
@@ -35,7 +37,7 @@ export interface UserUpdate {
   username?: string;
   email?: string;
   password?: string;
-  role?: string;
+  role?: UserRole;
   firstName?: string;
   lastName?: string;
   image?: string;

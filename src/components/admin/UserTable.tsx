@@ -33,10 +33,12 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
     switch (role.toLowerCase()) {
       case 'admin':
         return 'destructive';
-      case 'user':
-        return 'default';
-      default:
+      case 'teacher':
         return 'secondary';
+      case 'student':
+        return 'outline';
+      default:
+        return 'default';
     }
   };
 

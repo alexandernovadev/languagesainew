@@ -11,6 +11,8 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getLanguageInfo } from "@/utils/common/language";
 import {
   User,
   Mail,
@@ -38,28 +40,38 @@ export default function ProfilePage() {
   } = useForm({
     mode: "onChange",
     defaultValues: {
+      username: user?.username || "",
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       email: user?.email || "",
+      language: user?.language || "es",
+      phone: user?.phone || "",
+      address: user?.address || "",
     },
   });
 
   const handleSave = (data: {
+    username: string;
     firstName: string;
     lastName: string;
     email: string;
+    language: string;
+    phone: string;
+    address: string;
   }) => {
     if (!user) return;
     setUser({
       _id: user._id,
-      username: user.username,
+      username: data.username,
       email: data.email,
       role: user.role,
       firstName: data.firstName,
       lastName: data.lastName,
       image: newImage,
-      language: user.language,
+      language: data.language,
       isActive: user.isActive,
+      phone: data.phone,
+      address: data.address,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
@@ -141,6 +153,9 @@ export default function ProfilePage() {
                       ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
                       : ""}
                   </span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/10 text-secondary border border-secondary/30">
+                    {getLanguageInfo(user?.language || "es").flag} {getLanguageInfo(user?.language || "es").name}
+                  </span>
                   <span
                     className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
                       user?.isActive
@@ -155,11 +170,20 @@ export default function ProfilePage() {
               </div>
               {/* Columna derecha: formulario de edición */}
               <div className="flex-1 flex flex-col gap-4 items-center md:items-start justify-center">
-                <span className="font-semibold text-lg mb-2">
-                  Información Personal
-                </span>
+                <span className="font-semibold text-lg mb-2">Información Personal</span>
                 <form className="w-full" onSubmit={handleSubmit(handleSave)}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="username">Usuario</Label>
+                      <Input
+                        id="username"
+                        disabled={!editing}
+                        {...register("username", {
+                          required: "El usuario es obligatorio",
+                          minLength: { value: 3, message: "Mínimo 3 caracteres" },
+                        })}
+                      />
+                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="firstName">Nombre</Label>
                       <Input
@@ -210,6 +234,41 @@ export default function ProfilePage() {
                         {errors.email.message as string}
                       </span>
                     )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="language">Idioma</Label>
+                      <Select
+                        value={user?.language}
+                        onValueChange={(value) => editing && (register("language").onChange({ target: { value } } as any), (user && (user.language = value)))}
+                      >
+                        <SelectTrigger disabled={!editing}>
+                          <SelectValue placeholder="Seleccionar idioma" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[
+                            { code: 'es', name: 'Español', flag: '🇪🇸' },
+                            { code: 'en', name: 'Inglés', flag: '🇬🇧' },
+                            { code: 'fr', name: 'Francés', flag: '🇫🇷' },
+                            { code: 'de', name: 'Alemán', flag: '🇩🇪' },
+                            { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+                            { code: 'pt', name: 'Portugués', flag: '🇵🇹' },
+                          ].map((lang) => (
+                            <SelectItem key={lang.code} value={lang.code}>
+                              {lang.flag} {lang.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Teléfono</Label>
+                      <Input id="phone" disabled={!editing} {...register("phone")} />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="address">Dirección</Label>
+                      <Input id="address" disabled={!editing} {...register("address")} />
+                    </div>
                   </div>
                   <div className="flex gap-2 mt-2 w-full justify-end">
                     {editing ? (

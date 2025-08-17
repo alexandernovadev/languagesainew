@@ -187,7 +187,8 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
                         <SelectContent>
                           <SelectItem value="all">Todos los roles</SelectItem>
                           <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="user">User</SelectItem>
+                          <SelectItem value="teacher">Teacher</SelectItem>
+                          <SelectItem value="student">Student</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

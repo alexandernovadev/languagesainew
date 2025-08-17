@@ -9,7 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { Save, UserPlus, User as UserIcon } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Save, UserPlus, User as UserIcon, Settings, Phone } from 'lucide-react';
 import { User, UserCreate, UserUpdate } from '@/services/userService';
 
 // Validation schema
@@ -17,10 +18,10 @@ const userSchema = z.object({
   username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres').optional(),
-  role: z.enum(['admin', 'user']),
+  role: z.enum(['admin', 'teacher', 'student']),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  language: z.enum(['es', 'en']),
+  language: z.enum(['es', 'en', 'fr', 'de', 'it', 'pt']),
   isActive: z.boolean().default(true),
   address: z.string().optional(),
   phone: z.string().optional(),
@@ -52,10 +53,10 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
       username: user?.username || '',
       email: user?.email || '',
       password: '',
-      role: (user?.role as 'admin' | 'user') || 'user',
+      role: (user?.role as 'admin' | 'teacher' | 'student') || 'student',
       firstName: user?.firstName || '',
       lastName: user?.lastName || '',
-      language: (user?.language as 'es' | 'en') || 'es',
+      language: (user?.language as 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt') || 'es',
       isActive: user?.isActive ?? true,
       address: user?.address || '',
       phone: user?.phone || '',
@@ -90,6 +91,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
       onOpenChange={handleClose}
       title={isEditing ? "Editar Usuario" : "Crear Usuario"}
       size="2xl"
+      height="h-auto"
       footer={
         <div className="flex justify-end gap-2">
           <Button
@@ -105,10 +107,28 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Información Básica</h3>
-            <div className="grid grid-cols-2 gap-4">
+        <Tabs defaultValue="basic" className="w-full">
+          <TabsList className="grid grid-cols-4 w-full">
+            <TabsTrigger value="basic" className="flex items-center gap-2">
+              <UserIcon className="h-4 w-4" />
+              Básico
+            </TabsTrigger>
+            <TabsTrigger value="personal" className="flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              Personal
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Rol y Config
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              Contacto
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="basic" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 my-6">
               <div className="space-y-2">
                 <Label htmlFor="username">Nombre de Usuario *</Label>
                 <Input
@@ -164,14 +184,10 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 )}
               </div>
             )}
-          </div>
+          </TabsContent>
 
-          <Separator />
-
-          {/* Personal Information */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Información Personal</h3>
-            <div className="grid grid-cols-2 gap-4">
+          <TabsContent value="personal" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 my-6">
               <div className="space-y-2">
                 <Label htmlFor="firstName">Nombre</Label>
                 <Input
@@ -189,26 +205,23 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 />
               </div>
             </div>
-          </div>
+          </TabsContent>
 
-          <Separator />
-
-          {/* Role and Settings */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Rol y Configuración</h3>
-            <div className="grid grid-cols-2 gap-4">
+          <TabsContent value="settings" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 my-6">
               <div className="space-y-2">
                 <Label htmlFor="role">Rol *</Label>
                 <Select
                   value={watchedRole}
-                  onValueChange={(value: 'admin' | 'user') => setValue('role', value)}
+                  onValueChange={(value: 'admin' | 'teacher' | 'student') => setValue('role', value)}
                 >
                   <SelectTrigger className={errors.role ? 'border-red-500' : ''}>
                     <SelectValue placeholder="Seleccionar rol" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">Usuario</SelectItem>
                     <SelectItem value="admin">Administrador</SelectItem>
+                    <SelectItem value="teacher">Profesor</SelectItem>
+                    <SelectItem value="student">Estudiante</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.role && (
@@ -219,14 +232,18 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="language">Idioma *</Label>
                 <Select
                   value={watch('language')}
-                  onValueChange={(value: 'es' | 'en') => setValue('language', value)}
+                  onValueChange={(value: 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt') => setValue('language', value)}
                 >
                   <SelectTrigger className={errors.language ? 'border-red-500' : ''}>
                     <SelectValue placeholder="Seleccionar idioma" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="es">Español</SelectItem>
-                    <SelectItem value="en">Inglés</SelectItem>
+                    <SelectItem value="es">🇪🇸 Español</SelectItem>
+                    <SelectItem value="en">🇬🇧 Inglés</SelectItem>
+                    <SelectItem value="fr">🇫🇷 Francés</SelectItem>
+                    <SelectItem value="de">🇩🇪 Alemán</SelectItem>
+                    <SelectItem value="it">🇮🇹 Italiano</SelectItem>
+                    <SelectItem value="pt">🇵🇹 Portugués</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.language && (
@@ -242,14 +259,10 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
               />
               <Label htmlFor="isActive">Usuario Activo</Label>
             </div>
-          </div>
+          </TabsContent>
 
-          <Separator />
-
-          {/* Contact Information */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Información de Contacto</h3>
-            <div className="space-y-4">
+          <TabsContent value="contact" className="space-y-4">
+            <div className="space-y-4 my-6">
               <div className="space-y-2">
                 <Label htmlFor="phone">Teléfono</Label>
                 <Input
@@ -267,8 +280,9 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 />
               </div>
             </div>
-          </div>
-        </form>
+          </TabsContent>
+        </Tabs>
+      </form>
       </ModalNova>
     );
   } 

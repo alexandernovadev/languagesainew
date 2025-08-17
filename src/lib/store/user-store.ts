@@ -8,7 +8,7 @@ const normalizeUser = (user: any): User => ({
   _id: user._id,
   username: user.username || '',
   email: user.email || '',
-  role: user.role || 'user',
+  role: user.role || 'student',
   firstName: user.firstName,
   lastName: user.lastName,
   image: user.image,
