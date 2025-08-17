@@ -87,8 +87,6 @@ export default function MyWordsPage() {
 
   const dots = useAnimatedDots();
 
-  // Evitar fetch duplicado por filtros al montar
-  const filtersFirstRender = useRef(true);
   // Evitar fetch duplicado por búsqueda local al montar
   const searchFirstRender = useRef(true);
 
@@ -268,12 +266,8 @@ export default function MyWordsPage() {
     }
   };
 
-  // Handler para filtros que ignora el primer render
+  // Handler para filtros: aplicar siempre
   const handleFiltersChange = (filters: any) => {
-    if (filtersFirstRender.current) {
-      filtersFirstRender.current = false;
-      return;
-    }
     setFilters(filters);
   };
 
