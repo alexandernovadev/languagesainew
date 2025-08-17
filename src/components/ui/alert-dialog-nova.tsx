@@ -1,4 +1,5 @@
 import React from "react";
+import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +22,7 @@ interface AlertDialogNovaProps {
   cancelText?: string;
   loading?: boolean;
   confirmClassName?: string;
+  shouldAutoCloseOnConfirm?: boolean;
 }
 
 export function AlertDialogNova({
@@ -33,7 +35,8 @@ export function AlertDialogNova({
   confirmText = "Confirmar",
   cancelText = "Cancelar",
   loading = false,
-  confirmClassName = "btn-delete-danger",
+  confirmClassName = "",
+  shouldAutoCloseOnConfirm = true,
 }: AlertDialogNovaProps) {
   const handleCancel = () => {
     if (onCancel) {
@@ -43,7 +46,14 @@ export function AlertDialogNova({
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!loading) {
+          onOpenChange(next);
+        }
+      }}
+    >
       <AlertDialogContent className="shadow-2xl rounded-xl">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
@@ -55,13 +65,25 @@ export function AlertDialogNova({
           <AlertDialogCancel onClick={handleCancel} disabled={loading}>
             {cancelText}
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className={confirmClassName}
-            disabled={loading}
-          >
-            {loading ? "Procesando..." : confirmText}
-          </AlertDialogAction>
+          {shouldAutoCloseOnConfirm ? (
+            <AlertDialogAction
+              onClick={onConfirm}
+              className={confirmClassName}
+              disabled={loading}
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading ? "Procesando..." : confirmText}
+            </AlertDialogAction>
+          ) : (
+            <button
+              onClick={onConfirm}
+              className={confirmClassName}
+              disabled={loading}
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />}
+              {loading ? "Procesando..." : confirmText}
+            </button>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

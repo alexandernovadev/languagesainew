@@ -30,6 +30,7 @@ import {
   X as XIcon,
   Lightbulb,
   RefreshCw,
+  Stars,
   SlidersHorizontal,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -78,6 +79,8 @@ export default function MyWordsPage() {
   const [localSearch, setLocalSearch] = useState("");
   const [generating, setGenerating] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+  const [generateModalOpen, setGenerateModalOpen] = useState(false);
+  const [generateInput, setGenerateInput] = useState("");
 
   // Hook para obtener información de filtros activos
   const { activeFiltersCount, getActiveFiltersDescription } = useWordFilters();
@@ -229,14 +232,24 @@ export default function MyWordsPage() {
   };
 
   const handleGenerateWord = async () => {
+    const prompt = generateInput || localSearch;
+    
+    // Validar que haya al menos 2 caracteres
+    if (!prompt || prompt.trim().length < 2) {
+      toast.error("Input inválido", {
+        description: "Debes escribir al menos 2 caracteres para generar una palabra",
+      });
+      return;
+    }
+
     setGenerating(true);
     try {
-      await generateWord(localSearch);
+      await generateWord(prompt);
       toast.success("Palabra generada", {
-        description: `La palabra "${localSearch}" ha sido generada y agregada a tu vocabulario`,
+        description: `La palabra "${prompt}" ha sido generada y agregada a tu vocabulario`,
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { word: localSearch }, message: `La palabra "${localSearch}" ha sido generada y agregada a tu vocabulario` }, "Generar Palabra")
+          onClick: () => handleApiResult({ success: true, data: { word: prompt }, message: `La palabra "${prompt}" ha sido generada y agregada a tu vocabulario` }, "Generar Palabra")
         },
         cancel: {
           label: <XIcon className="h-4 w-4" />,
@@ -244,6 +257,8 @@ export default function MyWordsPage() {
         }
       });
       await getWords();
+      setGenerateModalOpen(false);
+      setGenerateInput("");
     } catch (error: any) {
       toast.error("Error al generar palabra", {
         description: error.message || "No se pudo generar la palabra",
@@ -325,6 +340,24 @@ export default function MyWordsPage() {
                       <div>Sin filtros activos</div>
                     )}
                   </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {/* Generate Word */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setGenerateModalOpen(true)}
+                    className="h-10 w-10 p-0"
+                  >
+                    <Stars className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Generar palabra</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -702,6 +735,49 @@ export default function MyWordsPage() {
         open={filtersModalOpen}
         onOpenChange={setFiltersModalOpen}
         onFiltersChange={handleFiltersChange}
+      />
+
+      {/* Generar Palabra Alert */}
+      <AlertDialogNova
+        open={generateModalOpen}
+        onOpenChange={setGenerateModalOpen}
+        title="Generar palabra"
+        description={
+          <div className="space-y-2 pt-2">
+            <Input
+              placeholder="Escribe la palabra o prompt..."
+              value={generateInput}
+              onChange={(e) => setGenerateInput(e.target.value)}
+            />
+            {!generateInput && localSearch && (
+              <p className="text-xs text-muted-foreground">Se usará la búsqueda actual: "{localSearch}"</p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              {generateInput ? (
+                generateInput.trim().length < 2 ? (
+                  <span className="text-orange-500">⚠️ Mínimo 2 caracteres requeridos</span>
+                ) : (
+                  <span className="text-green-500">✅ Input válido</span>
+                )
+              ) : localSearch ? (
+                localSearch.trim().length < 2 ? (
+                  <span className="text-orange-500">⚠️ Búsqueda actual muy corta (mínimo 2 caracteres)</span>
+                ) : (
+                  <span className="text-green-500">✅ Se usará la búsqueda actual</span>
+                )
+              ) : (
+                <span className="text-muted-foreground">Escribe al menos 2 caracteres</span>
+              )}
+            </p>
+          </div>
+        }
+        onConfirm={handleGenerateWord}
+        confirmText={generating ? "Generando..." : "Generar palabra"}
+        cancelText="Cancelar"
+        loading={generating}
+        confirmClassName="btn-green-action"
+        shouldAutoCloseOnConfirm={false}
+        confirmDisabled={generating || (!generateInput && !localSearch) || (generateInput && generateInput.trim().length < 2) || (localSearch && localSearch.trim().length < 2)}
       />
     </PageLayout>
   );
