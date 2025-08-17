@@ -104,7 +104,7 @@ export function LectureCard({
                       variant="ghost"
                       size="icon"
                       onClick={() => onView(lecture._id)}
-                      className="h-8 w-8 rounded-md text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 border border-transparent hover:border-blue-700/30 transition-all duration-200"
+                      className="h-8 w-8 rounded-md text-green-400 hover:text-green-300 hover:bg-green-900/20 border border-transparent hover:border-green-700/30 transition-all duration-200"
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
