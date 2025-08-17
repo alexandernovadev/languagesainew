@@ -54,6 +54,11 @@ class LabsService {
     return response.data;
   }
 
+  async recalculateLecturesTime(): Promise<LabsResponse> {
+    const response = await api.post("/api/fixes/lectures/recalculate-time");
+    return response.data;
+  }
+
   // User Management
   async createAdminUser(): Promise<LabsResponse> {
     const response = await api.post("/api/fixes/users/create-admin");

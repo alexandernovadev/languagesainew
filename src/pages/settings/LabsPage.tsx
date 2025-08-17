@@ -26,6 +26,7 @@ import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { Clock } from "lucide-react";
 
 interface ConfirmationState {
   isOpen: boolean;
@@ -164,6 +165,24 @@ export default function LabsPage() {
               )
             }
             loading={loading === "updateLecturesLanguage"}
+            variant="info"
+          />
+
+          <LabsActionCard
+            title="Recalcular Tiempo de Lecturas"
+            description="Recalcula el campo 'time' de todas las lecturas según su contenido (200 wpm, mínimo 1 min si hay texto)"
+            category="Database"
+            icon={Clock}
+            onAction={() =>
+              handleAction(
+                "recalculateLecturesTime",
+                () => labsService.recalculateLecturesTime(),
+                true,
+                "Recalcular Tiempo de Lecturas",
+                "¿Recalcular el tiempo de lectura para todas las lecturas? Esto actualizará el campo 'time' basado en la longitud del contenido."
+              )
+            }
+            loading={loading === "recalculateLecturesTime"}
             variant="info"
           />
         </LabsSection>
