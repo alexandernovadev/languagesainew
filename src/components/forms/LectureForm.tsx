@@ -62,7 +62,7 @@ export function LectureForm({
       level: initialData.level || "",
       typeWrite: initialData.typeWrite || "",
       language: initialData.language || "en",
-      time: initialData.time || 0,
+      time: initialData.time || 1,
       content: initialData.content || "",
       img: initialData.img || "",
     },
@@ -74,7 +74,8 @@ export function LectureForm({
     formData.content &&
     formData.level &&
     formData.language &&
-    formData.typeWrite;
+    formData.typeWrite &&
+    formData.time > 0;
 
   // Función para generar imagen con AI
   const handleGenerateImage = async () => {
@@ -139,12 +140,17 @@ export function LectureForm({
   ) => {
     if (isFormValid) {
       await onSubmit(data);
+    } else {
+      toast.error("Por favor completa todos los campos requeridos", {
+        description: "Nivel, tipo de contenido, idioma, contenido y duración (mayor a 0) son obligatorios"
+      });
     }
   };
 
   return (
     <div className="flex flex-col h-full">
       <form
+        id="lecture-form"
         onSubmit={handleSubmit(onSubmitForm)}
         className="flex flex-col h-full"
       >
@@ -245,7 +251,9 @@ export function LectureForm({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="time">Duración (min)</Label>
+                      <Label htmlFor="time">
+                        Duración (min) <span className="text-red-500">*</span>
+                      </Label>
                       <Input
                         id="time"
                         type="number"

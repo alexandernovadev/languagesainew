@@ -26,12 +26,12 @@ export const lectureService = {
 
   async postLecture(lectureData: Lecture) {
     const res = await api.post(`/api/lectures`, lectureData);
-    return res.data;
+    return res.data.data; // Extraer solo los datos de la lectura
   },
 
   async updateLecture(id: string, lectureData: Partial<Lecture>) {
     const res = await api.put(`/api/lectures/${id}`, lectureData);
-    return res.data;
+    return res.data.data; // Extraer solo los datos de la lectura
   },
 
   async deleteLecture(id: string | number) {
@@ -71,7 +71,7 @@ export const lectureService = {
 
   async putLecture(id: string, lectureData: Lecture) {
     const res = await api.put(`/api/lectures/${id}`, lectureData);
-    return res.data;
+    return res.data.data; // Extraer solo los datos de la lectura
   },
 
   async putLectureImage(id: string, lectureString: string, imgOld: string) {

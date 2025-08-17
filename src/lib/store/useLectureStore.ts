@@ -170,6 +170,8 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     });
     try {
       const data = await lectureService.putLecture(id, lectureData);
+      
+      // Actualizar el estado inmediatamente
       set((state) => ({
         lectures: state.lectures.map((lecture) =>
           lecture._id === id ? data : lecture

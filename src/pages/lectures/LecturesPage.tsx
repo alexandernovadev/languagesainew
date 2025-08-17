@@ -137,11 +137,11 @@ export default function LecturesPage() {
   ) => {
     if (selectedLectureId) {
       try {
-        await putLecture(selectedLectureId, data as Lecture);
+        const updatedLecture = await putLecture(selectedLectureId, data as Lecture);
         toast.success("Lectura actualizada exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data, message: "Lectura actualizada exitosamente" }, "Actualizar Lectura")
+            onClick: () => handleApiResult({ success: true, data: updatedLecture, message: "Lectura actualizada exitosamente" }, "Actualizar Lectura")
           },
           cancel: {
             label: <X className="h-4 w-4" />,
@@ -149,6 +149,8 @@ export default function LecturesPage() {
           }
         });
         closeEditModal();
+        // Recargar las lecturas para asegurar sincronización
+        await getLectures(currentPage, 10, localSearch, lectureFilters);
       } catch (error: any) {
         handleApiResult(error, "Actualizar Lectura");
       }
@@ -199,7 +201,9 @@ export default function LecturesPage() {
   };
 
   const getSelectedLecture = () => {
-    return lectures.find((lecture) => lecture._id === selectedLectureId);
+    // Obtener la lectura del store para asegurar datos actualizados
+    const storeState = useLectureStore.getState();
+    return storeState.lectures.find((lecture) => lecture._id === selectedLectureId);
   };
 
   // Handler filtro lecture
