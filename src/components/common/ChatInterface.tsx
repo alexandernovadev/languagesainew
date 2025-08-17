@@ -113,30 +113,45 @@ export function DefaultQuestionsGrid({
 }) {
   const questionCategories = [
     {
-      title: "Ejemplos",
-      icon: "💡",
-      questions: ["Dame ejemplos de uso", "Úsala en una conversación"],
-    },
-    {
-      title: "Contexto",
+      title: "Uso y Contexto",
       icon: "🎯",
-      questions: ["¿Cuándo se usa?", "¿Es formal o informal?"],
+      questions: [
+        "¿Es formal o informal?",
+        "¿Cuándo se usa normalmente?",
+        "¿En qué situaciones es apropiado?",
+        "¿Hay contextos donde NO se debe usar?"
+      ],
     },
     {
-      title: "Detalles",
+      title: "Significado y Variaciones",
       icon: "📚",
-      questions: ["Explícame más a detalle", "Dame sinónimos"],
+      questions: [
+        "¿Cuántos significados tiene?",
+        "¿Cuáles son las variaciones?",
+        "¿Hay sinónimos o antónimos?",
+        "¿Cómo cambia el significado según el contexto?"
+      ],
+    },
+    {
+      title: "Ejemplos y Práctica",
+      icon: "💡",
+      questions: [
+        "Dame 5 ejemplos de uso",
+        "Úsala en una conversación real",
+        "¿Cómo la usarías en el trabajo?",
+        "¿Y en una conversación casual?"
+      ],
     },
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <div className="grid grid-cols-3 gap-4 max-w-2xl">
+    <div className="flex flex-col items-center justify-center h-full p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 w-full max-w-6xl">
         {questionCategories.map((category, categoryIndex) => (
           <div key={categoryIndex} className="text-center">
-            <div className="mb-2">
-              <div className="text-lg mb-1">{category.icon}</div>
-              <h5 className="text-sm font-medium text-muted-foreground">
+            <div className="mb-3">
+              <div className="text-xl md:text-2xl mb-2">{category.icon}</div>
+              <h5 className="text-xs md:text-sm font-medium text-muted-foreground mb-3">
                 {category.title}
               </h5>
             </div>
@@ -148,7 +163,7 @@ export function DefaultQuestionsGrid({
                   size="sm"
                   onClick={() => onQuestionClick(question)}
                   disabled={isLoading}
-                  className="w-full h-auto text-xs p-2 text-center leading-tight hover:bg-accent"
+                  className="w-full h-auto text-xs p-2 text-center leading-tight hover:bg-accent break-words"
                 >
                   {question}
                 </Button>
