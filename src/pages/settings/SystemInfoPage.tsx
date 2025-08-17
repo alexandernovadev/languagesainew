@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDateToSpanish } from "@/utils/common/time/formatDate";
+import { formatDateToSpanish, formatDateSpanishBogotaWithTime } from "@/utils/common/time/formatDate";
 import { timeAgo } from "@/utils/common/time/timeAgo";
 import packageJson from "../../../package.json";
 import { useState, useEffect } from "react";
@@ -108,7 +108,7 @@ export default function SystemInfoPage() {
               ) : backendInfo ? (
                 <div className="flex flex-col items-end text-right">
                   <span className="text-sm text-muted-foreground">
-                    {formatDateToSpanish(backendInfo.date)}
+                    {formatDateSpanishBogotaWithTime(backendInfo.date)}
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {timeAgo(backendInfo.date)}
@@ -125,7 +125,7 @@ export default function SystemInfoPage() {
               <span className="text-sm font-medium">Last Update Frontend</span>
               <div className="flex flex-col items-end text-right">
                 <span className="text-sm text-muted-foreground">
-                  {formatDateToSpanish(frontendBuildDate)}
+                  {formatDateSpanishBogotaWithTime(frontendBuildDate)}
                 </span>
                 <span className="text-xs text-muted-foreground">
                   {timeAgo(frontendBuildDate)}

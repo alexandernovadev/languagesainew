@@ -103,3 +103,53 @@ export const formatRelativeTime = (date: string | Date): string => {
 export const formatDateTimeSpanish = (date: string | Date): string => {
   return formatDateToSpanish(date, "EEEE, d 'de' MMMM 'de' yyyy 'a las' h:mm a");
 }; 
+
+/**
+ * Formats a date to Spanish with 12h time and seconds for Bogotá timezone
+ * Output example: "Domingo, 17 de agosto de 2025 | 02:15 34segs PM"
+ */
+export const formatDateSpanishBogotaWithTime = (date: string | Date): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  try {
+    const timeZone = "America/Bogota";
+
+    const dateFormatter = new Intl.DateTimeFormat("es-CO", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone,
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat("es-CO", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZone,
+    });
+
+    const dateParts = dateFormatter.formatToParts(dateObj);
+    const weekday = (dateParts.find(p => p.type === "weekday")?.value || "")
+      .replace(/^./, c => c.toUpperCase());
+    const day = dateParts.find(p => p.type === "day")?.value || "";
+    const month = dateParts.find(p => p.type === "month")?.value || "";
+    const year = dateParts.find(p => p.type === "year")?.value || "";
+
+    const timeParts = timeFormatter.formatToParts(dateObj);
+    const hour = timeParts.find(p => p.type === "hour")?.value || "";
+    const minute = timeParts.find(p => p.type === "minute")?.value || "";
+    const second = timeParts.find(p => p.type === "second")?.value || "";
+    const dayPeriodRaw = timeParts.find(p => p.type === "dayPeriod")?.value || "";
+    const dayPeriod = dayPeriodRaw.toLowerCase().startsWith("p") ? "PM" : "AM";
+    const millis = dateObj.getMilliseconds();
+    const centis = String(Math.floor(millis / 10)).padStart(2, "0");
+
+    const dateText = `${weekday}, ${day} de ${month} de ${year}`;
+    const timeText = `${hour}:${minute}::${second}:${centis} ${dayPeriod}`;
+    return `${dateText} | ${timeText}`;
+  } catch (error) {
+    console.error("Error formatting Bogotá date/time:", error);
+    return formatDateToSpanish(dateObj);
+  }
+};
