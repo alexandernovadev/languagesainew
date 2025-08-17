@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
   Shuffle,
   RefreshCw,
-  Loader2,
-  Wand2,
   BarChart3,
   Eye,
   X,
@@ -20,7 +19,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { wordService } from "@/services/wordService";
-import { SPEECH_RATES } from "../../../speechRates";
+
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
@@ -50,9 +49,13 @@ interface AudioButtonsProps {
   className?: string;
 }
 
-const AudioButtons = ({ word, size = "md", className = "" }: AudioButtonsProps) => {
+const AudioButtons = ({
+  word,
+  size = "md",
+  className = "",
+}: AudioButtonsProps) => {
   const buttonSize = size === "sm" ? "w-8 h-8" : "w-10 h-10";
-  
+
   const speakWord = (rate: number) => {
     if (word) {
       const utterance = new window.SpeechSynthesisUtterance(word);
@@ -68,7 +71,7 @@ const AudioButtons = ({ word, size = "md", className = "" }: AudioButtonsProps) 
         className={`${buttonSize} flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition`}
         onClick={(e) => {
           e.stopPropagation();
-          speakWord(SPEECH_RATES.NORMAL);
+          speakWord(1); // Velocidad normal
         }}
         title="Escuchar pronunciación normal"
         type="button"
@@ -79,7 +82,7 @@ const AudioButtons = ({ word, size = "md", className = "" }: AudioButtonsProps) 
         className={`${buttonSize} flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full border border-white transition`}
         onClick={(e) => {
           e.stopPropagation();
-          speakWord(SPEECH_RATES.SUPERSLOW);
+          speakWord(0.5); // Velocidad lenta
         }}
         title="Escuchar pronunciación lenta"
         type="button"
@@ -97,7 +100,6 @@ export default function AnkiGamePage() {
     loading,
     updateWordLevel,
     updateWordReview,
-    updateWordImage,
     actionLoading,
   } = useWordStore();
 
@@ -120,12 +122,20 @@ export default function AnkiGamePage() {
         toast.success("Tarjetas de Anki cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: words, message: "Tarjetas de Anki cargadas exitosamente" }, "Cargar Tarjetas Anki")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data: words,
+                  message: "Tarjetas de Anki cargadas exitosamente",
+                },
+                "Cargar Tarjetas Anki"
+              ),
           },
           cancel: {
             label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
       } catch (error: any) {
         handleApiResult(error, "Cargar Tarjetas Anki");
@@ -151,21 +161,21 @@ export default function AnkiGamePage() {
   // Función optimizada para actualizar "seen" con debounce
   const updateSeenWithDebounce = useCallback((wordId: string) => {
     if (!wordId || viewedWordsRef.current.has(wordId)) return;
-    
+
     // Marcar como vista inmediatamente para evitar bucles
     viewedWordsRef.current.add(wordId);
-    
+
     // Limpiar timeout anterior si existe
     if (seenUpdateTimeoutRef.current) {
       clearTimeout(seenUpdateTimeoutRef.current);
     }
-    
+
     // Crear nuevo timeout para actualizar
     seenUpdateTimeoutRef.current = setTimeout(async () => {
       try {
         await wordService.incrementWordSeen(wordId);
       } catch (error) {
-        console.error('Error incrementing word seen:', error);
+        console.error("Error incrementing word seen:", error);
       }
     }, 1000); // 1 segundo de debounce
   }, []);
@@ -192,7 +202,6 @@ export default function AnkiGamePage() {
   const [recognizedText, setRecognizedText] = useState("");
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   // Verificar soporte para reconocimiento de voz
   useEffect(() => {
@@ -273,7 +282,7 @@ export default function AnkiGamePage() {
         // Convertir el nivel a dificultad y calidad para el sistema de repaso
         let difficulty = 3;
         let quality = 3;
-        
+
         switch (level) {
           case "easy":
             difficulty = 1;
@@ -290,57 +299,38 @@ export default function AnkiGamePage() {
         }
 
         // Actualizar usando el nuevo sistema de repaso
-        await updateWordReview(shuffledWords[gameStats.currentIndex]._id, difficulty, quality);
-        
+        await updateWordReview(
+          shuffledWords[gameStats.currentIndex]._id,
+          difficulty,
+          quality
+        );
+
         // También actualizar el nivel tradicional para compatibilidad
         await updateWordLevel(shuffledWords[gameStats.currentIndex]._id, level);
-        
+
         toast.success(`Palabra marcada como '${level}'`, {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: { level, word: shuffledWords[gameStats.currentIndex] }, message: `Palabra marcada como '${level}'` }, "Marcar Palabra")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data: { level, word: shuffledWords[gameStats.currentIndex] },
+                  message: `Palabra marcada como '${level}'`,
+                },
+                "Marcar Palabra"
+              ),
           },
           cancel: {
             label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
         gameStats.next();
         setIsFlipped(false);
       } catch (error: any) {
         handleApiResult(error, "Marcar Palabra");
       }
-    }
-  };
-
-  const handleGenerateImage = async () => {
-    const currentWord = shuffledWords[gameStats.currentIndex];
-    if (!currentWord?._id) {
-      toast.error("No hay palabra seleccionada");
-      return;
-    }
-
-    setIsGeneratingImage(true);
-    toast.info(`Generando imagen para "${currentWord.word}"...`);
-    
-    try {
-      await updateWordImage(currentWord._id, currentWord.word, currentWord.img || "");
-      toast.success(`¡Imagen generada exitosamente para "${currentWord.word}"!`, {
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { word: currentWord.word }, message: `¡Imagen generada exitosamente para "${currentWord.word}"!` }, "Generar Imagen")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-      // Recargar las palabras para obtener la imagen actualizada
-      await getWordsForReview(20);
-    } catch (error: any) {
-      handleApiResult(error, "Generar Imagen");
-    } finally {
-      setIsGeneratingImage(false);
     }
   };
 
@@ -414,7 +404,11 @@ export default function AnkiGamePage() {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{isFullScreen ? "Salir de pantalla completa" : "Pantalla completa"}</p>
+            <p>
+              {isFullScreen
+                ? "Salir de pantalla completa"
+                : "Pantalla completa"}
+            </p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -461,20 +455,61 @@ export default function AnkiGamePage() {
         description="Practica vocabulario con tarjetas interactivas"
         actions={actions}
       />
-      
-      <div className={cn(
-        "flex flex-col flex-1 min-h-0 transition-all duration-300 CARRO m-0",
-        isFullScreen 
-          ? "fixed top-0 left-0 w-screen h-screen z-50 m-0 bg-background p-6" 
-          : "h-[calc(100dvh-180px)] items-center w-full py-0 m-0"
-      )}>
-        {/* Indicador de progreso compacto */}
-        <span className={cn(
-          "text-xs text-muted-foreground rounded px-2 shadow-sm py-0 PERRO",
-          isFullScreen ? "mb-4 mt-6 text-center block" : "mb-1"
-        )}>
-          {gameStats.currentIndex + 1}/{shuffledWords.length}
-        </span>
+
+      <div
+        className={cn(
+          "flex flex-col flex-1 min-h-0 transition-all duration-300 CARRO m-0",
+          isFullScreen
+            ? "fixed top-0 left-0 w-screen h-screen z-50 m-0 bg-background p-6"
+            : "h-[calc(100dvh-180px)] items-center w-full py-0 m-0"
+        )}
+      >
+        {/* Indicador de progreso con botón FLIP y navegación */}
+        <div
+          className={cn(
+            "flex items-center justify-between w-full px-2",
+            isFullScreen ? "mb-4 mt-6 max-w-6xl" : "mb-1 max-w-lg"
+          )}
+        >
+          {/* Botón Anterior */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePrevious}
+            disabled={gameStats.currentIndex === 0}
+            className="h-7 px-2 text-xs"
+          >
+            <ChevronLeft className="h-3 w-3" />
+          </Button>
+
+          {/* Contador y FLIP centrados */}
+          <div className="flex items-center gap-3">
+            <Badge variant="secondary" className="text-xs font-medium px-3 py-1">
+              {gameStats.currentIndex + 1}/{shuffledWords.length}
+            </Badge>
+
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleFlip}
+              className="h-7 px-2 text-xs font-medium bg-green-600 hover:bg-green-700 text-white transition-colors"
+            >
+              <RotateCcw className="h-3 w-3 mr-1" />
+              FLIP
+            </Button>
+          </div>
+
+          {/* Botón Siguiente */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNext}
+            disabled={gameStats.currentIndex === shuffledWords.length - 1}
+            className="h-7 px-2 text-xs"
+          >
+            <ChevronRight className="h-3 w-3" />
+          </Button>
+        </div>
 
         {/* Botón de salir - Solo visible en pantalla completa */}
         {isFullScreen && (
@@ -490,15 +525,16 @@ export default function AnkiGamePage() {
           </div>
         )}
 
-        <div className={cn(
-          "flex-1 flex items-center justify-center w-full min-h-0",
-          isFullScreen ? "max-w-7xl h-full" : "max-w-lg"
-        )}>
+        <div
+          className={cn(
+            "flex-1 flex items-center justify-center w-full min-h-0",
+            isFullScreen ? "max-w-7xl h-full" : "max-w-lg"
+          )}
+        >
           <div
-            className={`flip-card group w-full h-full max-h-full cursor-pointer ${
+            className={`flip-card group w-full h-full max-h-full ${
               isFlipped ? "flipped" : ""
             }`}
-            onClick={handleFlip}
             style={{ perspective: 1200 }}
           >
             <div
@@ -510,24 +546,7 @@ export default function AnkiGamePage() {
             >
               {/* Frente */}
               <Card className="flip-card-front absolute inset-0 w-full h-full backface-hidden rounded-2xl shadow-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 overflow-hidden p-0">
-                {isGeneratingImage ? (
-                  // Skeleton durante generación
-                  <div className="absolute inset-0 w-full h-full z-0">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 animate-pulse flex items-center justify-center">
-                      <div className="flex flex-col items-center space-y-4">
-                        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        <div className="text-center">
-                          <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                            Generando imagen...
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {currentCard?.word}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : currentCard?.img ? (
+                {currentCard?.img ? (
                   <img
                     src={currentCard.img}
                     alt={currentCard.word}
@@ -549,10 +568,6 @@ export default function AnkiGamePage() {
                   )}
                   <AudioButtons word={currentCard?.word} />
                 </div>
-                <div className="relative z-20 flex items-center text-xs text-muted-foreground mt-2 opacity-70 justify-center">
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Haz clic para voltear
-                </div>
               </Card>
               {/* Reverso */}
               <Card
@@ -560,46 +575,11 @@ export default function AnkiGamePage() {
                 style={{ transform: "rotateY(180deg)" }}
               >
                 {/* Cabecera fija */}
-                <div className="w-full flex justify-between items-center px-4 py-1 bg-transparent z-10">
-                  <span className="font-bold text-lg capitalize text-white">{currentCard?.spanish?.word}</span>
-                  <div className="flex items-center gap-2">
-              
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleGenerateImage}
-                      disabled={isGeneratingImage}
-                      className="h-8 w-8 p-0 text-white hover:bg-white/20"
-                      title="Generar imagen con AI"
-                    >
-                      {isGeneratingImage ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Wand2 className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-sm text-zinc-200">
-                      <span role="img" aria-label="visto">👁️</span> {currentCard?.seen ?? 0}
-                    </span>
-                    <AudioButtons word={currentCard?.word} size="sm" />
-                  </div>
-                </div>
+
                 <div className="flex-1 w-full h-full overflow-y-auto">
                   {currentCard && (
-                    <WordDetailsCard
-                      word={currentCard}
-                      variant="compact"
-                      showLevelButtons={false}
-                      showRefreshButtons={false}
-                      showAudioButtons={false}
-                    />
+                    <WordDetailsCard word={currentCard} variant="compact" />
                   )}
-                </div>
-                <div className="flex items-center text-xs text-muted-foreground mt-2 opacity-70 pb-1">
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Haz clic para voltear
                 </div>
               </Card>
             </div>
@@ -607,10 +587,12 @@ export default function AnkiGamePage() {
         </div>
 
         {/* Card de reconocimiento de voz */}
-        <Card className={cn(
-          "w-full mx-1 p-2 mb-1",
-          isFullScreen ? "max-w-6xl" : "max-w-lg"
-        )}>
+        <Card
+          className={cn(
+            "w-full mx-1 p-2 mb-1",
+            isFullScreen ? "max-w-6xl" : "max-w-lg"
+          )}
+        >
           <div className="flex items-center gap-2">
             {/* Micrófono - 20% */}
             <div className="flex justify-center">
@@ -678,65 +660,13 @@ export default function AnkiGamePage() {
             </div>
           )}
         </Card>
-        {/* Botones SIEMPRE abajo */}
-        <div className={cn(
-          "flex justify-center gap-4 mt-2 mb-2 w-full",
-          isFullScreen ? "max-w-6xl p-5" : ""
-        )}>
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={gameStats.currentIndex === 0}
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-          </Button>
 
-          {isFlipped && (
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => handleSetLevel("easy")}
-                disabled={actionLoading.updateLevel}
-                className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
-                title="Marcar como fácil"
-              >
-                Easy
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => handleSetLevel("medium")}
-                disabled={actionLoading.updateLevel}
-                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
-                title="Marcar como medio"
-              >
-                Medium
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => handleSetLevel("hard")}
-                disabled={actionLoading.updateLevel}
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-                title="Marcar como difícil"
-              >
-                Hard
-              </Button>
-            </div>
-          )}
-
-          <Button
-            variant="outline"
-            onClick={handleNext}
-            disabled={gameStats.currentIndex === shuffledWords.length - 1}
-          >
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
-        </div>
       </div>
 
       {/* Modal de estadísticas */}
-      <AnkiStatsModal 
-        open={isStatsModalOpen} 
-        onOpenChange={setIsStatsModalOpen} 
+      <AnkiStatsModal
+        open={isStatsModalOpen}
+        onOpenChange={setIsStatsModalOpen}
       />
     </PageLayout>
   );
