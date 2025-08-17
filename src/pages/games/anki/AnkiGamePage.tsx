@@ -157,6 +157,7 @@ export default function AnkiGamePage() {
   // Trackear palabras ya vistas para evitar bucles
   const viewedWordsRef = useRef<Set<string>>(new Set());
   const seenUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const backScrollRef = useRef<HTMLDivElement | null>(null);
 
   // Función optimizada para actualizar "seen" con debounce
   const updateSeenWithDebounce = useCallback((wordId: string) => {
@@ -179,6 +180,13 @@ export default function AnkiGamePage() {
       }
     }, 1000); // 1 segundo de debounce
   }, []);
+
+  // Resetear el scroll del reverso al cambiar de tarjeta
+  useEffect(() => {
+    if (backScrollRef.current) {
+      backScrollRef.current.scrollTop = 0;
+    }
+  }, [gameStats.currentIndex]);
 
   // Actualizar contador "seen" cuando el usuario ve una tarjeta (optimizado)
   useEffect(() => {
@@ -573,6 +581,7 @@ export default function AnkiGamePage() {
               <div
                 className="flip-card-back absolute inset-0 w-full h-full backface-hidden overflow-y-auto p-0"
                 style={{ transform: "rotateY(180deg)" }}
+                ref={backScrollRef}
               >
                 {currentCard && (
                   <WordDetailsCard word={currentCard} variant="compact" />
