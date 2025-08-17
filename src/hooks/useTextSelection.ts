@@ -6,7 +6,7 @@ interface TextSelectionInfo {
   isVisible: boolean;
 }
 
-export const useTextSelection = (containerRef?: React.RefObject<HTMLElement>) => {
+export const useTextSelection = (containerRef?: React.RefObject<HTMLElement | null>) => {
   const [selection, setSelection] = useState<TextSelectionInfo>({
     text: '',
     rect: null,

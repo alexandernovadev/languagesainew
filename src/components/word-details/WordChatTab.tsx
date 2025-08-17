@@ -7,8 +7,9 @@ import type { ChatMessage } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { TypingAnimation } from "@/components/common/TypingAnimation";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useTextSelection } from "@/hooks/useTextSelection";
+import { TextSelectionTooltip } from "@/components/common";
 
 interface WordChatTabProps {
   word: Word;
@@ -25,6 +26,12 @@ export function WordChatTab({ word }: WordChatTabProps) {
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
+
+  // Ref para el contenedor de selección de texto del chat
+  const chatSelectionContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Hook para manejo de selección de texto en el chat
+  const { selection, hideSelection, keepVisible } = useTextSelection(chatSelectionContainerRef);
 
   // Load chat history when component mounts
   useEffect(() => {
@@ -153,7 +160,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+      <div ref={chatSelectionContainerRef} className="flex-1 p-4 space-y-4 overflow-y-auto text-selectable">
         {/* Opciones por defecto dentro del chat */}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full">
@@ -196,8 +203,8 @@ export function WordChatTab({ word }: WordChatTabProps) {
           <div className="flex justify-start">
             <div className="w-full p-3 rounded-lg bg-muted/30">
               {streamingMessage ? (
-                <div className="text-sm">
-                  <ReactMarkdown>{streamingMessage}</ReactMarkdown>
+                <div className="text-sm whitespace-pre-wrap">
+                  {streamingMessage}
                 </div>
               ) : (
                 <TypingAnimation />
@@ -235,6 +242,15 @@ export function WordChatTab({ word }: WordChatTabProps) {
           </Button>
         )}
       </div>
+
+      {/* Tooltip de selección de texto para el chat */}
+      <TextSelectionTooltip
+        text={selection.text}
+        rect={selection.rect}
+        isVisible={selection.isVisible}
+        onHide={hideSelection}
+        onKeepVisible={keepVisible}
+      />
     </div>
   );
 }
@@ -256,26 +272,9 @@ function ChatMessage({ message }: { message: ChatMessage }) {
           {isUser ? (
             <p>{message.content}</p>
           ) : (
-            <ReactMarkdown
-              components={{
-                p: ({ children }) => (
-                  <p className="mb-2 last:mb-0">{children}</p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc pl-4 mb-2">{children}</ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal pl-4 mb-2">{children}</ol>
-                ),
-                li: ({ children }) => <li className="mb-1">{children}</li>,
-                strong: ({ children }) => (
-                  <strong className="font-semibold">{children}</strong>
-                ),
-                em: ({ children }) => <em className="italic">{children}</em>,
-              }}
-            >
+            <div className="whitespace-pre-wrap">
               {message.content}
-            </ReactMarkdown>
+            </div>
           )}
         </div>
         <p className="text-xs opacity-70 mt-1">
