@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Accordion,
   AccordionContent,
@@ -217,8 +217,9 @@ export function GrammarTopicsSelector({
         <Separator />
 
         {/* Categories */}
-        <div className="border rounded-lg">
-          <div className="p-4">
+        <ScrollArea className="h-[420px]">
+          <div className="border rounded-lg">
+            <div className="p-4">
               <Accordion
                 type="multiple"
                 value={expandedCategories}
@@ -292,6 +293,8 @@ export function GrammarTopicsSelector({
               </Accordion>
             </div>
           </div>
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
         </CardContent>
       </Card>
     );
