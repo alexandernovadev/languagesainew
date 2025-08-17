@@ -570,18 +570,14 @@ export default function AnkiGamePage() {
                 </div>
               </Card>
               {/* Reverso */}
-              <Card
-                className="flip-card-back absolute inset-0 w-full h-full backface-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-primary/10 to-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between items-center p-0"
+              <div
+                className="flip-card-back absolute inset-0 w-full h-full backface-hidden overflow-y-auto p-0"
                 style={{ transform: "rotateY(180deg)" }}
               >
-                {/* Cabecera fija */}
-
-                <div className="flex-1 w-full h-full overflow-y-auto">
-                  {currentCard && (
-                    <WordDetailsCard word={currentCard} variant="compact" />
-                  )}
-                </div>
-              </Card>
+                {currentCard && (
+                  <WordDetailsCard word={currentCard} variant="compact" />
+                )}
+              </div>
             </div>
           </div>
         </div>
