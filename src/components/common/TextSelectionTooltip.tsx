@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { SelectionSpeakerButton } from './SelectionSpeakerButton';
+import { AddExpressionButton } from './AddExpressionButton';
+import { AddWordButton } from './AddWordButton';
 import { cn } from '@/utils/common/classnames';
 
 interface TooltipPosition {
@@ -38,8 +40,8 @@ export const TextSelectionTooltip = ({
     }
 
     // Posición exactamente arriba de donde comienza la selección
-    const tooltipWidth = 40; // Ancho aproximado del botón
-    const tooltipHeight = 40; // Alto aproximado del botón
+    const tooltipWidth = 140; // Ancho aproximado para 3 botones
+    const tooltipHeight = 48; // Alto aproximado del tooltip
     const offset = 8; // Separación entre el texto y el tooltip
 
     // Calcular posición X: centrada en el inicio de la selección
@@ -125,19 +127,38 @@ export const TextSelectionTooltip = ({
       <div className={cn(
         "bg-zinc-900/95 backdrop-blur-sm border border-zinc-700/50",
         "rounded-lg shadow-2xl shadow-black/50",
-        "p-1.5",
+        "p-2",
         "before:absolute before:bottom-full before:left-1/2 before:-translate-x-1/2",
         "before:border-4 before:border-transparent before:border-b-zinc-700/50",
         "after:absolute after:bottom-full after:left-1/2 after:-translate-x-1/2",
         "after:border-4 after:border-transparent after:border-b-zinc-900/95",
         "after:translate-y-px"
       )}>
-        <SelectionSpeakerButton
-          text={text}
-          onComplete={handleSpeechComplete}
-          onKeepVisible={onKeepVisible}
-          className="shadow-sm"
-        />
+        {/* Container de botones */}
+        <div className="flex items-center gap-2">
+          <SelectionSpeakerButton
+            text={text}
+            onComplete={handleSpeechComplete}
+            onKeepVisible={onKeepVisible}
+            className="shadow-sm"
+          />
+          
+          <div className="w-px h-6 bg-zinc-600/50" />
+          
+          <AddExpressionButton
+            text={text}
+            onComplete={handleSpeechComplete}
+            onKeepVisible={onKeepVisible}
+            className="shadow-sm"
+          />
+          
+          <AddWordButton
+            text={text}
+            onComplete={handleSpeechComplete}
+            onKeepVisible={onKeepVisible}
+            className="shadow-sm"
+          />
+        </div>
       </div>
     </div>
   );
