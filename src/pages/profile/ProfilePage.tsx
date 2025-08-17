@@ -11,7 +11,8 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallbackClient } from "@/components/ui/avatar-fallback-client";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LanguageSelect } from "@/components/ui/LanguageSelect";
+import type { AllowedLanguageCode } from "@/constants/identity";
 import { getLanguageInfo } from "@/utils/common/language";
 import {
   User,
@@ -238,28 +239,15 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                     <div className="space-y-2">
                       <Label htmlFor="language">Idioma</Label>
-                      <Select
-                        value={user?.language}
-                        onValueChange={(value) => editing && (register("language").onChange({ target: { value } } as any), (user && (user.language = value)))}
-                      >
-                        <SelectTrigger disabled={!editing}>
-                          <SelectValue placeholder="Seleccionar idioma" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[
-                            { code: 'es', name: 'Español', flag: '🇪🇸' },
-                            { code: 'en', name: 'Inglés', flag: '🇬🇧' },
-                            { code: 'fr', name: 'Francés', flag: '🇫🇷' },
-                            { code: 'de', name: 'Alemán', flag: '🇩🇪' },
-                            { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-                            { code: 'pt', name: 'Portugués', flag: '🇵🇹' },
-                          ].map((lang) => (
-                            <SelectItem key={lang.code} value={lang.code}>
-                              {lang.flag} {lang.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <LanguageSelect
+                        value={(user?.language || 'es') as AllowedLanguageCode}
+                        onChange={(value: AllowedLanguageCode) => {
+                          if (!editing) return;
+                          register("language").onChange({ target: { value } } as any);
+                          if (user) user.language = value;
+                        }}
+                        disabled={!editing}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">Teléfono</Label>

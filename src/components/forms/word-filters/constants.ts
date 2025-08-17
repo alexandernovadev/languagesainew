@@ -9,6 +9,9 @@ export const WORD_LEVELS = [
 export const LANGUAGES = [
   { value: "es", label: "Español", icon: "🇪🇸" },
   { value: "en", label: "Inglés", icon: "🇬🇧" },
+  { value: "fr", label: "Francés", icon: "🇫🇷" },
+  { value: "de", label: "Alemán", icon: "🇩🇪" },
+  { value: "it", label: "Italiano", icon: "🇮🇹" },
   { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 

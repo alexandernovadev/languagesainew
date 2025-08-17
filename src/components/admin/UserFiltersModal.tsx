@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LanguageSelect } from '@/components/ui/LanguageSelect';
+import type { AllowedLanguageCode } from '@/constants/identity';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -211,19 +213,16 @@ export function UserFiltersModal({ isOpen, onClose }: UserFiltersModalProps) {
                   </div>
                   <div className="space-y-2 mt-4">
                     <Label htmlFor="language">Idioma</Label>
-                    <Select
-                      value={localFilters.language}
-                      onValueChange={(value) => handleLocalFilterChange('language', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar idioma" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos los idiomas</SelectItem>
-                        <SelectItem value="es">Español</SelectItem>
-                        <SelectItem value="en">Inglés</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="flex gap-2 items-center">
+                      <LanguageSelect
+                        value={(localFilters.language === 'all' ? 'es' : localFilters.language) as AllowedLanguageCode}
+                        onChange={(value) => handleLocalFilterChange('language', value)}
+                        disabled={false}
+                      />
+                      <Button variant="outline" type="button" onClick={() => handleLocalFilterChange('language', 'all')}>
+                        Todos
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

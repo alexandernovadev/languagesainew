@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ModalNova } from "@/components/ui/modal-nova";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
 import { WordsSelector } from "@/components/forms/WordsSelector";
 import { Settings, BookOpen, FileText } from "lucide-react";
+import { getAllowedLanguages } from "@/constants/identity";
 
 interface LectureGeneratorConfigModalProps {
   open: boolean;
@@ -43,11 +38,7 @@ interface LectureGeneratorConfigModalProps {
   lectureTypes: { value: string; label: string }[];
 }
 
-const LANG_OPTIONS = [
-  { value: "es", label: "Español" },
-  { value: "en", label: "Inglés" },
-  { value: "pt", label: "Portugués" },
-];
+const LANG_OPTIONS = getAllowedLanguages().map(l => ({ value: l.code, label: `${l.flag} ${l.name}` }));
 
 export const LectureGeneratorConfigModal: React.FC<
   LectureGeneratorConfigModalProps

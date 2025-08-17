@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getAllowedLanguages } from "@/constants/identity";
 import { X, Plus, Loader2, Wand2, Eye } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
@@ -187,9 +188,10 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                             <SelectValue placeholder="Seleccionar idioma" />
                           </SelectTrigger>
                           <SelectContent>
-                            {expressionLanguages.map(lang => (
-                              <SelectItem key={lang.value} value={lang.value}>
-                                {lang.label}
+                            {getAllowedLanguages().map(lang => (
+                              <SelectItem key={lang.code} value={lang.code}>
+                                <span className="mr-1">{lang.flag}</span>
+                                {lang.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

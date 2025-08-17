@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LanguageSelect } from '@/components/ui/LanguageSelect';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -230,22 +231,11 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
               </div>
               <div className="space-y-2">
                 <Label htmlFor="language">Idioma *</Label>
-                <Select
+                <LanguageSelect
                   value={watch('language')}
-                  onValueChange={(value: 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt') => setValue('language', value)}
-                >
-                  <SelectTrigger className={errors.language ? 'border-red-500' : ''}>
-                    <SelectValue placeholder="Seleccionar idioma" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="es">🇪🇸 Español</SelectItem>
-                    <SelectItem value="en">🇬🇧 Inglés</SelectItem>
-                    <SelectItem value="fr">🇫🇷 Francés</SelectItem>
-                    <SelectItem value="de">🇩🇪 Alemán</SelectItem>
-                    <SelectItem value="it">🇮🇹 Italiano</SelectItem>
-                    <SelectItem value="pt">🇵🇹 Portugués</SelectItem>
-                  </SelectContent>
-                </Select>
+                  onChange={(value) => setValue('language', value)}
+                  disabled={false}
+                />
                 {errors.language && (
                   <p className="text-sm text-red-500">{errors.language.message}</p>
                 )}

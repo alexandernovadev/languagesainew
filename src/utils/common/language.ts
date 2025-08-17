@@ -123,6 +123,14 @@ export const getAllLanguages = (): LanguageInfo[] => {
   return Object.values(languages);
 };
 
+// Allowed languages aligned with backend enum (User model)
+export const allowedLanguageCodes = ["es", "en", "fr", "de", "it", "pt"] as const;
+export type AllowedLanguageCode = typeof allowedLanguageCodes[number];
+
+export const getAllowedLanguages = (): LanguageInfo[] => {
+  return allowedLanguageCodes.map(code => languages[code]).filter(Boolean);
+};
+
 /**
  * Get languages by region
  * @param region - Region name (e.g., 'europe', 'asia', 'africa')

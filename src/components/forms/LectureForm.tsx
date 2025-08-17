@@ -23,7 +23,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { Lecture } from "@/models/Lecture";
 import { lectureLevels } from "@/data/lectureLevels";
 import { lectureTypes } from "@/data/lectureTypes";
-import { getAllLanguages } from "@/utils/common/language";
+import { getAllowedLanguages } from "@/constants/identity";
 import { api } from "@/services/api";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
@@ -236,7 +236,7 @@ export function LectureForm({
                           <SelectValue placeholder="Selecciona un idioma" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getAllLanguages().map((lang: any) => (
+                          {getAllowedLanguages().map((lang: any) => (
                             <SelectItem key={lang.code} value={lang.code}>
                               <div className="flex items-center gap-2">
                                 <span className="text-lg">{lang.flag}</span>

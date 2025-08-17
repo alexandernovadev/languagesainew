@@ -1,12 +1,6 @@
-// Language options for exam explanations
-export const LANGUAGE_OPTIONS = [
-  { value: "es", label: "Español" },
-  { value: "en", label: "English" },
-  { value: "fr", label: "Français" },
-  { value: "de", label: "Deutsch" },
-  { value: "it", label: "Italiano" },
-  { value: "pt", label: "Português" },
-];
+// Language options for exam explanations (from central allowed languages)
+import { getAllowedLanguages } from "@/constants/identity";
+export const LANGUAGE_OPTIONS = getAllowedLanguages().map(l => ({ value: l.code, label: `${l.flag} ${l.name}` }));
 
 // Suggested topic categories - 100% Grammar focused
 export const TOPIC_CATEGORIES = {

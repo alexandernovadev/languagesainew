@@ -1,17 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { getAllowedLanguages } from "@/constants/identity";
 
 interface ExamLanguageFilterProps {
   value?: string;
   onChange: (value: string | undefined) => void;
 }
 
-const examLanguages = [
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "en", name: "Inglés", flag: "🇺🇸" },
-  { code: "pt", name: "Portugués", flag: "🇵🇹" },
-  { code: "fr", name: "Francés", flag: "🇫🇷" },
-];
+const examLanguages = getAllowedLanguages();
 
 export function ExamLanguageFilter({ value, onChange }: ExamLanguageFilterProps) {
   const selectedLanguages = value && value !== "all" ? value.split(",") : [];
