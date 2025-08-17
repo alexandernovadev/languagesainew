@@ -145,17 +145,17 @@ export function DefaultQuestionsGrid({
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 w-full max-w-6xl">
+    <div className="flex flex-col items-center justify-center h-full p-1 md:p-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-2 lg:gap-3 w-full max-w-6xl">
         {questionCategories.map((category, categoryIndex) => (
-          <div key={categoryIndex} className="text-center">
-            <div className="mb-3">
-              <div className="text-xl md:text-2xl mb-2">{category.icon}</div>
-              <h5 className="text-xs md:text-sm font-medium text-muted-foreground mb-3">
+          <div key={categoryIndex} className="text-center min-w-0">
+            <div className="mb-1 md:mb-2">
+              <div className="text-base md:text-lg lg:text-xl mb-1">{category.icon}</div>
+              <h5 className="text-xs font-medium text-muted-foreground mb-1 md:mb-2 truncate">
                 {category.title}
               </h5>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {category.questions.map((question, questionIndex) => (
                 <Button
                   key={`${categoryIndex}-${questionIndex}`}
@@ -163,9 +163,10 @@ export function DefaultQuestionsGrid({
                   size="sm"
                   onClick={() => onQuestionClick(question)}
                   disabled={isLoading}
-                  className="w-full h-auto text-xs p-2 text-center leading-tight hover:bg-accent break-words"
+                  className="w-full h-auto text-xs p-1 text-center leading-tight hover:bg-accent min-h-[2.5rem] md:min-h-[2.75rem] chat-question-button"
+                  title={question}
                 >
-                  {question}
+                  <span className="line-clamp-1 px-0.5">{question}</span>
                 </Button>
               ))}
             </div>

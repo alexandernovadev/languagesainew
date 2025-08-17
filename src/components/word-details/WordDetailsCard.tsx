@@ -396,11 +396,8 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       >
         <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
           <TabsTrigger value="info">Información</TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center gap-2">
+          <TabsTrigger value="chat">
             Chat
-            <span className="px-2 text-sm bg-primary/20 text-primary rounded-md capitalize">
-              {word.word}
-            </span>
           </TabsTrigger>
         </TabsList>
 

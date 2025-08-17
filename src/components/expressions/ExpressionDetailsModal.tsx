@@ -26,7 +26,7 @@ export function ExpressionDetailsModal({
     <ModalNova
       open={open}
       onOpenChange={onClose}
-      title={capitalize(expression.expression)}
+      title={`${capitalize(expression.expression)} - ${expression.spanish?.expression || 'Sin traducción'}`}
       size="4xl"
       height="h-[calc(100dvh-2rem)]"
     >
@@ -38,11 +38,8 @@ export function ExpressionDetailsModal({
         >
           <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
             <TabsTrigger value="info">Información</TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2">
+            <TabsTrigger value="chat">
               Chat
-              <Badge variant="secondary" className="text-xs">
-                {capitalize(expression.expression)}
-              </Badge>
             </TabsTrigger>
           </TabsList>
 

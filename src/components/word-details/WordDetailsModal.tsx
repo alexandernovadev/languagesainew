@@ -64,11 +64,12 @@ export function WordDetailsModal({
     <ModalNova
       open={open}
       onOpenChange={onOpenChange}
-      size="2xl"
-      height="h-[90dvh]"
+      title={`${word.word.charAt(0).toUpperCase() + word.word.slice(1)} - ${word.spanish?.word || 'Sin traducción'}`}
+      size="4xl"
+      height="h-[calc(100dvh-2rem)]"
       footer={levelButtons}
     >
-      <div className="p-4">
+      <div className="p-4 h-full">
         <WordDetailsCard
           word={word}
           variant="modal"
