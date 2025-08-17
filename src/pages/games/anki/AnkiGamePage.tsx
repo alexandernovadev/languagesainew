@@ -460,7 +460,7 @@ export default function AnkiGamePage() {
         className={cn(
           "flex flex-col flex-1 min-h-0 transition-all duration-300 CARRO m-0",
           isFullScreen
-            ? "fixed top-0 left-0 w-screen h-screen z-50 m-0 bg-background p-6"
+            ? "fixed top-0 left-0 w-screen h-dvh z-50 m-0 bg-background p-6"
             : "h-[calc(100dvh-180px)] items-center w-full py-0 m-0"
         )}
       >
@@ -511,18 +511,18 @@ export default function AnkiGamePage() {
           </Button>
         </div>
 
-        {/* Botón de salir - Solo visible en pantalla completa */}
+        {/* Botón de salir - flotante, no ocupa espacio en el layout */}
         {isFullScreen && (
-          <div className="flex justify-end mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsFullScreen(false)}
-              className="bg-background/80 backdrop-blur-sm hover:bg-background"
-            >
-              Salir
-            </Button>
-          </div>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setIsFullScreen(false)}
+            aria-label="Salir de pantalla completa"
+            title="Salir"
+            className="absolute top-0 right-0 h-8 w-8 p-0 rounded-md bg-red-600 hover:bg-red-700 text-white shadow-sm"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         )}
 
         <div
