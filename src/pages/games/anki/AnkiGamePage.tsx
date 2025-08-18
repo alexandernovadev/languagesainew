@@ -500,7 +500,7 @@ export default function AnkiGamePage() {
               variant="default"
               size="sm"
               onClick={handleFlip}
-              className="h-7 px-2 text-xs font-medium bg-green-600 hover:bg-green-700 text-white transition-colors"
+              className="h-7 px-2 text-xs font-medium"
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               FLIP
@@ -527,7 +527,7 @@ export default function AnkiGamePage() {
             onClick={() => setIsFullScreen(false)}
             aria-label="Salir de pantalla completa"
             title="Salir"
-            className="absolute top-0 right-0 h-8 w-8 p-0 rounded-md bg-red-600 hover:bg-red-700 text-white shadow-sm"
+            className="absolute top-0 right-0 h-8 w-8 p-0 rounded-md shadow-sm"
           >
             <X className="h-4 w-4" />
           </Button>

@@ -422,7 +422,9 @@ export const ExamQuestionTaking: React.FC<ExamQuestionTakingProps> = ({
           <Button
             onClick={onFinish}
             disabled={!isValidAnswer()}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-base font-semibold rounded-md shadow disabled:bg-gray-400 disabled:cursor-not-allowed"
+            variant="default"
+            size="lg"
+            className="flex items-center gap-2"
           >
             Finalizar Examen
           </Button>

@@ -60,6 +60,7 @@ export function ExamSubmissionModal({
       title={status.title}
       description={status.description}
       size="md"
+      height="h-auto"
       footer={
         <div className="flex gap-2">
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
@@ -68,11 +69,7 @@ export function ExamSubmissionModal({
           <Button
             onClick={onSubmit}
             disabled={isSubmitting}
-            className={
-              completionPercentage === 100
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-yellow-600 hover:bg-yellow-700 text-white"
-            }
+            variant={completionPercentage === 100 ? "default" : "secondary"}
           >
             {isSubmitting ? (
               <>
@@ -86,7 +83,7 @@ export function ExamSubmissionModal({
         </div>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-4 p-4">
           {/* Progress Summary */}
           <div className="bg-card border border-border p-4 rounded-lg">
             <div className="flex justify-between items-center mb-2">
