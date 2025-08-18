@@ -21,6 +21,7 @@ import { getLanguageInfo } from "@/utils/common/language";
 import { lectureTypes } from "@/data/lectureTypes";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 interface LectureCardProps {
   lecture: Lecture;
@@ -49,7 +50,7 @@ export function LectureCard({
       })
     : "";
 
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 
   return (
     <TooltipProvider>

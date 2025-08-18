@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { capitalize } from "../string/capitalize";
 
 /**
  * Formats a date string or Date object to Spanish format
@@ -29,7 +30,7 @@ export const formatDateToSpanish = (
     });
     
     // Capitalize first letter
-    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    return capitalize(formattedDate);
   } catch (error) {
     console.error("Error formatting date:", error);
     return "Fecha inválida";

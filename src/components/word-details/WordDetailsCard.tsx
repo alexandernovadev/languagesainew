@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionTooltip } from "@/components/common";
+import { capitalize } from "@/utils";
 
 interface WordDetailsCardProps {
   word: Word;
@@ -108,7 +109,7 @@ const SelectableTextContainer = memo(({
   containerRef,
 }: {
   children: React.ReactNode;
-  containerRef?: React.RefObject<HTMLDivElement>;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 }) => (
   <div ref={containerRef} className="relative text-selectable">
     {children}
@@ -428,7 +429,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           {/* Word & Pronunciation */}
           <div className="mb-4">
             <h1 className="text-2xl font-bold text-white capitalize mb-1">
-              {word.word}
+              {capitalize(word.word)}
             </h1>
             <p className="text-sm text-purple-400 font-mono">
               {word.IPA || "/ˈwɜːd/"}
@@ -440,7 +441,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
             <SelectableTextContainer containerRef={selectionContainerRef}>
               <SectionContainer>
                 <p className="text-sm text-zinc-300 leading-relaxed">
-                  {word.definition}
+                  {capitalize(word.definition)}
                 </p>
               </SectionContainer>
             </SelectableTextContainer>
@@ -451,10 +452,10 @@ export const WordDetailsCard = memo(function WordDetailsCard({
             <SectionContainer>
               <SectionHeader title="Traducción" icon="🇪🇸" showRefreshButtons={showRefreshButtons} />
               <h3 className="text-lg font-bold text-blue-400 capitalize mb-1">
-                {word.spanish.word}
+                {capitalize(word.spanish.word)}
               </h3>
               <p className="text-sm text-zinc-300 leading-relaxed">
-                {word.spanish.definition}
+                {capitalize(word.spanish.definition)}
               </p>
             </SectionContainer>
           )}

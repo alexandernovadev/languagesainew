@@ -14,6 +14,7 @@ import { useState } from "react";
 import { LanguageSelect } from "@/components/ui/LanguageSelect";
 import type { AllowedLanguageCode } from "@/constants/identity";
 import { getLanguageInfo } from "@/utils/common/language";
+import { capitalize } from "@/utils/common/string/capitalize";
 import {
   User,
   Mail,
@@ -151,7 +152,7 @@ export default function ProfilePage() {
                       <Shield className="h-3 w-3 mr-1 text-primary" />
                     )}{" "}
                     {user?.role
-                      ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+                      ? capitalize(user.role)
                       : ""}
                   </span>
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/10 text-secondary border border-secondary/30">

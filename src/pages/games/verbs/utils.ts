@@ -2,6 +2,7 @@ import { Verb, VerbField, InputFields, GameConfig, GameSession } from "./types";
 import { irregularVerbs } from "./data";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 export function getRandomField(): VerbField {
   const fields: VerbField[] = ["infinitive", "past", "participle"];
@@ -101,7 +102,7 @@ export function formatDateToSpanish(date: Date): string {
 }
 
 export function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return capitalize(str);
 }
 
 // Game statistics utilities

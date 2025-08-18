@@ -12,6 +12,7 @@ import { useResultHandler } from "@/hooks/useResultHandler";
 import { ArrowLeftRight, Loader2 } from "lucide-react";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionTooltip } from "@/components/common/TextSelectionTooltip";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 export default function TranslatorPage() {
   const [sourceLang, setSourceLang] = useState<AllowedLanguageCode | "auto">("es");
@@ -54,7 +55,7 @@ export default function TranslatorPage() {
   };
 
   
-  const displayOutput = outputText ? outputText.charAt(0).toUpperCase() + outputText.slice(1) : "";
+  const displayOutput = outputText ? capitalize(outputText) : "";
 
   return (
     <PageLayout>

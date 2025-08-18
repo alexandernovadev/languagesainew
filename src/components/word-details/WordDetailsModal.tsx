@@ -5,6 +5,7 @@ import { WordDetailsCard } from "./WordDetailsCard";
 import { cn } from "@/utils/common/classnames";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { toast } from "sonner";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 interface WordDetailsModalProps {
   word: Word;
@@ -60,12 +61,13 @@ export function WordDetailsModal({
     </div>
   ) : undefined;
 
-  // TODO , ya ahy un metdo para capitalizar
   return (
     <ModalNova
       open={open}
       onOpenChange={onOpenChange}
-      title={`${word.word.charAt(0).toUpperCase() + word.word.slice(1)} - ${word.spanish?.word || 'Sin traducción'}`}
+      title={`${capitalize(word.word)} | ${capitalize(
+        word.spanish?.word || "Sin traducción"
+      )}`}
       size="4xl"
       height="h-[calc(100dvh-2rem)]"
       footer={levelButtons}

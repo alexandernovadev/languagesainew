@@ -26,6 +26,7 @@ import { Book, Sparkles, ListPlus, Wand2, Loader2, Eye, X } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/services/api";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 interface WordFormProps {
   initialData?: Partial<Word>;
@@ -241,7 +242,7 @@ export function WordForm({
                     <SelectContent>
                       {wordLevels.map((level) => (
                         <SelectItem key={level} value={level}>
-                          {level.charAt(0).toUpperCase() + level.slice(1)}
+                          {capitalize(level)}
                         </SelectItem>
                       ))}
                     </SelectContent>
