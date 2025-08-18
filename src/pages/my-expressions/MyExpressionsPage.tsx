@@ -508,7 +508,7 @@ export default function MyExpressionsPage() {
 
       {/* Paginación */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-end items-center w-full">
           <div className="flex gap-2">
             <Button
               variant="outline"
