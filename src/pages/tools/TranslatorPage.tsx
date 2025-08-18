@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { LanguageSelect } from "@/components/ui/LanguageSelect";
 import type { AllowedLanguageCode } from "@/constants/identity";
 import { translatorService } from "@/services/translatorService";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { ArrowLeftRight, Loader2, Plus } from "lucide-react";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { ExpressionForm } from "@/components/forms/ExpressionForm";
-import { WordForm } from "@/components/forms/WordForm";
-import type { Expression } from "@/models/Expression";
+import { ArrowLeftRight, Loader2 } from "lucide-react";
+import { useTextSelection } from "@/hooks/useTextSelection";
+import { TextSelectionTooltip } from "@/components/common/TextSelectionTooltip";
 
 export default function TranslatorPage() {
   const [sourceLang, setSourceLang] = useState<AllowedLanguageCode | "auto">("es");
@@ -23,8 +20,9 @@ export default function TranslatorPage() {
   const [outputText, setOutputText] = useState("");
   const [loading, setLoading] = useState(false);
   const { handleApiResult } = useResultHandler();
-  const [openExpr, setOpenExpr] = useState(false);
-  const [openWord, setOpenWord] = useState(false);
+  const outputRef = useRef<HTMLDivElement | null>(null);
+  const { selection, hideSelection, keepVisible } = useTextSelection(outputRef);
+  
 
   const handleSwap = () => {
     if (sourceLang === "auto") return;
@@ -55,7 +53,7 @@ export default function TranslatorPage() {
     }
   };
 
-  const isWordLike = inputText.trim().split(/\s+/).length <= 2;
+  
   const displayOutput = outputText ? outputText.charAt(0).toUpperCase() + outputText.slice(1) : "";
 
   return (
@@ -95,14 +93,36 @@ export default function TranslatorPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Textarea value={inputText} onChange={(e) => setInputText(e.target.value)} rows={8} placeholder="Type or paste text..." />
+              <Textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                rows={12}
+                placeholder="Type or paste text..."
+                className="resize-none h-[300px]"
+              />
             </div>
             <div className="space-y-2">
-              <Textarea value={displayOutput} readOnly rows={8} placeholder="Translation will appear here..." />
+              <div
+                ref={outputRef}
+                aria-label="Translation output"
+                className="h-[300px] overflow-auto rounded-md border bg-background p-2 whitespace-pre-wrap break-words"
+              >
+                {displayOutput}
+              </div>
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
+          {/* Tooltip for text selection in output */}
+          <TextSelectionTooltip
+            text={selection.text}
+            rect={selection.rect}
+            isVisible={selection.isVisible}
+            onHide={hideSelection}
+            onKeepVisible={keepVisible}
+            showAddButtons
+          />
+
+          <div className="flex justify-start items-center">
             <div className="flex items-center gap-2">
               <Button onClick={() => handleTranslate("normal")} disabled={loading || !inputText.trim() || (sourceLang !== "auto" && sourceLang === targetLang)}>
                 {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traduciendo...</> : "Traducir"}
@@ -111,36 +131,8 @@ export default function TranslatorPage() {
                 {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traduciendo...</> : "Traducir con sentido"}
               </Button>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" disabled={!outputText} onClick={() => setOpenExpr(true)}>
-                <Plus className="h-4 w-4 mr-2" /> Add Expression
-              </Button>
-              <Button variant="outline" disabled={!outputText} onClick={() => setOpenWord(true)}>
-                <Plus className="h-4 w-4 mr-2" /> Add Word
-              </Button>
-            </div>
           </div>
-          <Separator />
-          <ModalNova open={openExpr} onOpenChange={setOpenExpr} title="Add Expression">
-            <ExpressionForm
-              initialData={{
-                expression: isWordLike ? "" : outputText,
-                definition: "",
-                language: targetLang,
-              } as Partial<Expression>}
-              onSubmit={async () => setOpenExpr(false)}
-            />
-          </ModalNova>
-          <ModalNova open={openWord} onOpenChange={setOpenWord} title="Add Word">
-            <WordForm
-              initialData={{
-                word: isWordLike ? outputText : "",
-                language: targetLang,
-              } as any}
-              onSubmit={async () => setOpenWord(false)}
-              onCancel={() => setOpenWord(false)}
-            />
-          </ModalNova>
+          
         </CardContent>
       </Card>
     </PageLayout>

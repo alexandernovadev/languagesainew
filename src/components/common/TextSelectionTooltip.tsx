@@ -17,6 +17,7 @@ interface TextSelectionTooltipProps {
   isVisible: boolean;
   onHide: () => void;
   onKeepVisible: () => void;
+  showAddButtons?: boolean;
 }
 
 export const TextSelectionTooltip = ({
@@ -24,7 +25,8 @@ export const TextSelectionTooltip = ({
   rect,
   isVisible,
   onHide,
-  onKeepVisible
+  onKeepVisible,
+  showAddButtons = true,
 }: TextSelectionTooltipProps) => {
   const [position, setPosition] = useState<TooltipPosition>({
     x: 0,
@@ -96,9 +98,7 @@ export const TextSelectionTooltip = ({
   }, [isVisible, calculatePosition]);
 
   const handleSpeechComplete = useCallback(() => {
-    // NO ocultar el tooltip después de reproducir el audio
-    // El tooltip permanecerá visible hasta que el usuario haga clic fuera
-    // o seleccione otro texto
+    // Mantener el tooltip visible tras reproducir audio
   }, []);
 
   const handleMouseEnter = useCallback(() => {
@@ -142,22 +142,23 @@ export const TextSelectionTooltip = ({
             onKeepVisible={onKeepVisible}
             className="shadow-sm"
           />
-          
-          <div className="w-px h-6 bg-zinc-600/50" />
-          
-          <AddExpressionButton
-            text={text}
-            onComplete={handleSpeechComplete}
-            onKeepVisible={onKeepVisible}
-            className="shadow-sm"
-          />
-          
-          <AddWordButton
-            text={text}
-            onComplete={handleSpeechComplete}
-            onKeepVisible={onKeepVisible}
-            className="shadow-sm"
-          />
+          {showAddButtons && (
+            <>
+              <div className="w-px h-6 bg-zinc-600/50" />
+              <AddExpressionButton
+                text={text}
+                onComplete={handleSpeechComplete}
+                onKeepVisible={onKeepVisible}
+                className="shadow-sm"
+              />
+              <AddWordButton
+                text={text}
+                onComplete={handleSpeechComplete}
+                onKeepVisible={onKeepVisible}
+                className="shadow-sm"
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
