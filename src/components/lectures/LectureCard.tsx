@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TruncatedText } from "@/components/common/TruncatedText";
+// Removed char-based truncation; we'll show tooltip on visual overflow
 import { Eye, Edit, Trash2, BookOpen, Calendar } from "lucide-react";
 import type { Lecture } from "@/models/Lecture";
 import { getMarkdownTitle } from "@/utils/common/string";
@@ -73,15 +73,16 @@ export function LectureCard({
           </div>
         </div>
         <CardHeader className="pb-3 flex-grow">
-          <TruncatedText
-            text={title}
-            maxLength={80}
-            className="line-clamp-2 text-xl font-semibold"
-          >
-            <CardTitle className="line-clamp-2 text-xl font-semibold cursor-default">
-              {title}
-            </CardTitle>
-          </TruncatedText>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <CardTitle className="line-clamp-2 text-xl font-semibold cursor-help">
+                {title}
+              </CardTitle>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-md">
+              <p className="text-sm">{title}</p>
+            </TooltipContent>
+          </Tooltip>
           <CardDescription className="line-clamp-2 text-sm">
             {typeLabel}
           </CardDescription>
