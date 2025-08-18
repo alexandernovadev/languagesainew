@@ -60,6 +60,7 @@ export function WordDetailsModal({
     </div>
   ) : undefined;
 
+  // TODO , ya ahy un metdo para capitalizar
   return (
     <ModalNova
       open={open}
