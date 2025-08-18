@@ -275,11 +275,11 @@ function FiltersContent({
               <div className="space-y-2">
                 <Label className="text-sm">Imagen</Label>
                 <Select
-                  value={filters.hasImage ?? ""}
+                  value={filters.hasImage ?? "all"}
                   onValueChange={(v) =>
                     updateFilter(
                       "hasImage",
-                      v === "" ? undefined : (v as "true" | "false")
+                      v === "all" ? undefined : (v as "true" | "false")
                     )
                   }
                 >
@@ -287,7 +287,7 @@ function FiltersContent({
                     <SelectValue placeholder="Todas" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="true">Con imagen</SelectItem>
                     <SelectItem value="false">Sin imagen</SelectItem>
                   </SelectContent>

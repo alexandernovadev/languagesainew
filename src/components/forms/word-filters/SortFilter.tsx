@@ -23,7 +23,7 @@ export function SortFilter({
   return (
     <div className="flex gap-2">
       <Select
-        value={sortBy || ""}
+        value={sortBy || "none"}
         onValueChange={(val) =>
           onSortByChange(val === "none" ? undefined : val)
         }
@@ -42,8 +42,8 @@ export function SortFilter({
       </Select>
 
       <Select
-        value={sortOrder || ""}
-        onValueChange={(val) => onSortOrderChange(val === "" ? undefined : val)}
+        value={sortOrder || "asc"}
+        onValueChange={(val) => onSortOrderChange(val === "asc" ? undefined : val)}
       >
         <SelectTrigger className="w-32">
           <SelectValue placeholder="Seleccionar orden" />
