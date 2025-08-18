@@ -13,6 +13,7 @@ import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { expressionService } from "@/services/expressionService";
 
 interface ExpressionFormProps {
   initialData?: Partial<Expression>;
@@ -76,29 +77,35 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
         });
       }, 200);
 
-      // TODO: Call AI image generation service
-      // const response = await expressionService.generateImage(formData.expression);
-      
-      // For now, simulate a delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      const response = await expressionService.updateExpressionImage(
+        (initialData as any)?._id || "temp",
+        formData.expression,
+        formData.img || ""
+      );
+
       clearInterval(progressInterval);
       setImageProgress(100);
 
-      // Mock image URL
-      const mockImageUrl = `https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=${encodeURIComponent(formData.expression)}`;
-      
-      setValue("img", mockImageUrl);
-      toast.success("Imagen generada exitosamente", {
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { imageUrl: mockImageUrl }, message: "Imagen generada exitosamente" }, "Generar Imagen")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
+      const data = response.data;
+      if (data?.success && data?.data?.img) {
+        setValue("img", data.data.img);
+        toast.success("Imagen generada exitosamente", {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () =>
+              handleApiResult(
+                { success: true, data: { imageUrl: data.data.img }, message: "Imagen generada exitosamente" },
+                "Generar Imagen"
+              ),
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss(),
+          },
+        });
+      } else {
+        throw new Error("Error al generar imagen");
+      }
     } catch (error) {
       handleApiResult(error, "Generar Imagen");
     } finally {
