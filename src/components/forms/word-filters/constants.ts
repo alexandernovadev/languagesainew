@@ -1,5 +1,5 @@
 import { FilterGroup } from "./types";
-import { WORD_TYPES } from "@/utils/constants/wordTypes";
+import { WORD_TYPES as BASE_WORD_TYPES } from "@/utils/constants/wordTypes";
 
 export const WORD_LEVELS = [
   { value: "easy", label: "Fácil" },
@@ -17,11 +17,14 @@ export const LANGUAGES = [
 ];
 
 // Usar las constantes centralizadas en lugar de duplicar
-export const WORD_TYPES_FOR_FILTERS = WORD_TYPES.map(type => ({
+export const WORD_TYPES_FOR_FILTERS = BASE_WORD_TYPES.map(type => ({
   value: type.key,
   label: type.key, // Usar la clave como label para consistencia
   spanishLabel: type.label
 }));
+
+// Alias para compatibilidad con componentes que importan { WORD_TYPES } de este módulo
+export { WORD_TYPES_FOR_FILTERS as WORD_TYPES };
 
 export const SORT_OPTIONS = [
   { value: "word", label: "Palabra" },
