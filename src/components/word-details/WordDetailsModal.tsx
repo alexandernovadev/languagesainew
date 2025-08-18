@@ -1,10 +1,8 @@
 import { ModalNova } from "@/components/ui/modal-nova";
-import { Button } from "@/components/ui/button";
 import { Word } from "@/models/Word";
 import { WordDetailsCard } from "./WordDetailsCard";
-import { cn } from "@/utils/common/classnames";
+import { LevelButtons } from "@/components/common/LevelButtons";
 import { useWordStore } from "@/lib/store/useWordStore";
-import { toast } from "sonner";
 import { capitalize } from "@/utils/common/string/capitalize";
 
 interface WordDetailsModalProps {
@@ -24,40 +22,25 @@ export function WordDetailsModal({
 }: WordDetailsModalProps) {
   const { updateWordLevel, actionLoading } = useWordStore();
 
+  // Función wrapper para adaptar la interfaz
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
     if (!word._id) return;
-
     try {
       await updateWordLevel(word._id, level);
-      toast.success(`Nivel actualizado a ${level}`);
     } catch (error: any) {
-      toast.error(`Error al actualizar nivel: ${error.message}`);
+      console.error("Error updating level:", error);
     }
   };
 
-  const levelButtons = showLevelButtons ? (
-    <div className="flex justify-center gap-2 w-full">
-      {(["easy", "medium", "hard"] as const).map((level) => (
-        <Button
-          key={level}
-          onClick={() => handleUpdateLevel(level)}
-          disabled={actionLoading.updateLevel}
-          variant="outline"
-          size="sm"
-          className={cn(
-            "capitalize px-3 py-1 text-xs",
-            level === "easy" &&
-              "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
-            level === "medium" &&
-              "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
-            level === "hard" &&
-              "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
-            actionLoading.updateLevel && "opacity-50"
-          )}
-        >
-          {level}
-        </Button>
-      ))}
+  // Crear el footer con los botones de nivel solo si se solicitan
+  const footerContent = showLevelButtons ? (
+    <div className="w-full">
+      <LevelButtons
+        onUpdateLevel={handleUpdateLevel}
+        loading={actionLoading.updateLevel}
+        currentLevel={word.level}
+        variant="modal"
+      />
     </div>
   ) : undefined;
 
@@ -70,7 +53,7 @@ export function WordDetailsModal({
       )}`}
       size="4xl"
       height="h-[calc(100dvh-2rem)]"
-      footer={levelButtons}
+      footer={footerContent}
     >
       <div className="p-4 h-full">
         <WordDetailsCard

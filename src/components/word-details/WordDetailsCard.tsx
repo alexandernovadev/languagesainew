@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionTooltip } from "@/components/common";
+import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
 
 interface WordDetailsCardProps {
@@ -118,40 +119,7 @@ const SelectableTextContainer = memo(({
 
 SelectableTextContainer.displayName = "SelectableTextContainer";
 
-// Componente memoizado para LevelButtons
-const LevelButtons = memo(({
-  onUpdateLevel,
-  loading,
-}: {
-  onUpdateLevel: (level: "easy" | "medium" | "hard") => void;
-  loading: boolean;
-}) => (
-  <div className="flex justify-center gap-2 mt-4">
-    {(["easy", "medium", "hard"] as const).map((level) => (
-      <Button
-        key={level}
-        onClick={() => onUpdateLevel(level)}
-        disabled={loading}
-        variant="outline"
-        size="sm"
-        className={cn(
-          "capitalize px-3 py-1 text-xs",
-          level === "easy" &&
-            "border-green-600 text-green-400 hover:bg-green-600 hover:text-white",
-          level === "medium" &&
-            "border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white",
-          level === "hard" &&
-            "border-red-600 text-red-400 hover:bg-red-600 hover:text-white",
-          loading && "opacity-50"
-        )}
-      >
-        {level}
-      </Button>
-    ))}
-  </div>
-));
 
-LevelButtons.displayName = "LevelButtons";
 
 // Componente memoizado para AudioButtons
 const AudioButtons = memo(({
@@ -604,10 +572,12 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           </SectionContainer>
 
           {/* Level Buttons */}
-          {showLevelButtons && variant !== "modal" && (
+          {showLevelButtons && (
             <LevelButtons
               onUpdateLevel={handleUpdateLevel}
               loading={actionLoading.updateLevel}
+              currentLevel={word.level}
+              variant={variant}
             />
           )}
         </TabsContent>
