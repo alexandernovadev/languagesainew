@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo, useRef } from "react";
+import { useState, useCallback, useMemo, memo, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Eye, Volume2, X } from "lucide-react";
 import { Word } from "@/models/Word";
@@ -171,6 +171,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     updateWordSynonyms,
     updateWordCodeSwitching,
     updateWordTypes,
+    incrementWordSeen,
     actionLoading,
   } = useWordStore();
 
@@ -185,6 +186,13 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   
   // Hook para manejo de selección de texto
   const { selection, hideSelection, keepVisible } = useTextSelection(selectionContainerRef);
+
+  // Incrementar seen cuando se ve la palabra
+  useEffect(() => {
+    if (word._id) {
+      incrementWordSeen(word._id);
+    }
+  }, [word._id, incrementWordSeen]);
 
   // Memoizar funciones de manejo de eventos
   const speakWord = useCallback((rate = SPEECH_RATES.NORMAL, language = "en-US") => {
