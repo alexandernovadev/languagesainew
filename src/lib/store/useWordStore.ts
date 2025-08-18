@@ -36,7 +36,11 @@ interface WordStore {
   getRecentHardOrMediumWords: () => Promise<void>;
   // Nuevos métodos para sistema de repaso inteligente
   getWordsForReview: (limit?: number) => Promise<void>;
-  updateWordReview: (wordId: string, difficulty: number, quality: number) => Promise<any>;
+  updateWordReview: (
+    wordId: string,
+    difficulty: number,
+    quality: number
+  ) => Promise<any>;
   getReviewStats: () => Promise<any>;
   clearErrors: () => void;
   setActiveWord: (word: Word | null) => void;
@@ -75,7 +79,11 @@ interface WordStore {
 
   // Chat actions
   addChatMessage: (wordId: string, message: string) => Promise<void>;
-  streamChatMessage: (wordId: string, message: string, onChunk?: (chunk: string) => void) => Promise<void>;
+  streamChatMessage: (
+    wordId: string,
+    message: string,
+    onChunk?: (chunk: string) => void
+  ) => Promise<void>;
   getChatHistory: (wordId: string) => Promise<ChatMessage[]>;
   clearChatHistory: (wordId: string) => Promise<void>;
 }
@@ -146,7 +154,9 @@ export const useWordStore = create<WordStore>((set, get) => ({
   clearFilters: () => {
     set({ currentFilters: {}, currentPage: 1 });
     // Mantener la búsqueda actual si existe
-    const filtersToUse = get().searchQuery ? { wordUser: get().searchQuery } : {};
+    const filtersToUse = get().searchQuery
+      ? { wordUser: get().searchQuery }
+      : {};
     get().getWords(1, 6, filtersToUse);
   },
 
@@ -332,20 +342,34 @@ export const useWordStore = create<WordStore>((set, get) => ({
       set({ errors: error.message, loading: false });
     }
   },
-  updateWordReview: async (wordId: string, difficulty: number, quality: number) => {
+  updateWordReview: async (
+    wordId: string,
+    difficulty: number,
+    quality: number
+  ) => {
     set({
       actionLoading: { ...get().actionLoading, updateReview: true },
       errors: null,
     });
     try {
-      const { data } = await wordService.updateWordReview(wordId, difficulty, quality);
+      const { data } = await wordService.updateWordReview(
+        wordId,
+        difficulty,
+        quality
+      );
       set((state) => ({
         words: state.words.map((word) =>
-          word._id === wordId ? { ...word, review: data.review, updatedAt: data.updatedAt } : word
+          word._id === wordId
+            ? { ...word, review: data.review, updatedAt: data.updatedAt }
+            : word
         ),
         activeWord:
           state.activeWord && state.activeWord._id === wordId
-            ? { ...state.activeWord, review: data.review, updatedAt: data.updatedAt }
+            ? {
+                ...state.activeWord,
+                review: data.review,
+                updatedAt: data.updatedAt,
+              }
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateReview: false },
       }));
@@ -560,16 +584,13 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   generateWord: async (prompt: string) => {
     try {
-      console.log("Generando JSON para palabra:", prompt);
       const { data } = await wordService.generateWordJSON(prompt);
-      console.log("JSON generado:", data);
-      
-      // El backend ya creó la palabra, solo necesitamos actualizar el estado
+
       set((state) => ({
         words: [...state.words, data],
         activeWord: data,
       }));
-      
+
       console.log("Palabra creada exitosamente:", data);
       return data;
     } catch (error) {
@@ -595,9 +616,9 @@ export const useWordStore = create<WordStore>((set, get) => ({
   streamChatMessage: async (wordId, message, onChunk) => {
     try {
       const stream = await wordService.streamChatMessage(wordId, message);
-      
+
       if (!stream) {
-        throw new Error('No stream received');
+        throw new Error("No stream received");
       }
 
       const reader = stream.getReader();
@@ -605,9 +626,9 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         const chunk = decoder.decode(value);
         if (onChunk) {
           onChunk(chunk);
