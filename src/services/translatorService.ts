@@ -5,10 +5,11 @@ export interface TranslateRequest {
   text: string;
   sourceLang: AllowedLanguageCode | "auto";
   targetLang: AllowedLanguageCode;
+  mode?: "normal" | "sense";
 }
 
 export const translatorService = {
-  async translateStream({ text, sourceLang, targetLang }: TranslateRequest, onChunk: (chunk: string) => void): Promise<void> {
+  async translateStream({ text, sourceLang, targetLang, mode = "normal" }: TranslateRequest, onChunk: (chunk: string) => void): Promise<void> {
     const response = await fetch(`${import.meta.env.VITE_BACK_URL}/api/ai/translate`, {
       method: "POST",
       headers: {
@@ -17,7 +18,7 @@ export const translatorService = {
           ? { Authorization: `Bearer ${JSON.parse(localStorage.getItem("user-storage") || "{}").state?.token}` }
           : {}),
       },
-      body: JSON.stringify({ text, sourceLang, targetLang }),
+      body: JSON.stringify({ text, sourceLang, targetLang, mode }),
     });
 
     if (!response.body) {

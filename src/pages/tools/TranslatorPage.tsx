@@ -36,14 +36,14 @@ export default function TranslatorPage() {
     setOutputText("");
   };
 
-  const handleTranslate = async () => {
+  const handleTranslate = async (mode: "normal" | "sense" = "normal") => {
     try {
       if (!inputText.trim()) return;
       if (sourceLang !== "auto" && sourceLang === targetLang) return;
       setLoading(true);
       setOutputText("");
       await translatorService.translateStream(
-        { text: inputText, sourceLang, targetLang },
+        { text: inputText, sourceLang, targetLang, mode },
         (chunk) => setOutputText((prev) => prev + chunk)
       );
     } catch (error) {
@@ -101,9 +101,14 @@ export default function TranslatorPage() {
           </div>
 
           <div className="flex justify-between items-center">
-            <Button onClick={handleTranslate} disabled={loading || !inputText.trim() || (sourceLang !== "auto" && sourceLang === targetLang)}>
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Translating...</> : "Translate"}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => handleTranslate("normal")} disabled={loading || !inputText.trim() || (sourceLang !== "auto" && sourceLang === targetLang)}>
+                {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traduciendo...</> : "Traducir"}
+              </Button>
+              <Button variant="secondary" onClick={() => handleTranslate("sense")} disabled={loading || !inputText.trim() || (sourceLang !== "auto" && sourceLang === targetLang)}>
+                {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traduciendo...</> : "Traducir con sentido"}
+              </Button>
+            </div>
             <div className="flex gap-2">
               <Button variant="outline" disabled={!outputText} onClick={() => setOpenExpr(true)}>
                 <Plus className="h-4 w-4 mr-2" /> Add Expression
