@@ -98,6 +98,21 @@ body {
   * {
     @apply border-border;
   }
+
+  /* Botones deshabilitados muestran cursor not-allowed */
+  button:disabled,
+  button[disabled],
+  .btn:disabled,
+  .btn[disabled],
+  [role="button"]:disabled,
+  [role="button"][disabled] {
+    cursor: not-allowed !important;
+  }
+
+  /* También para elementos con disabled attribute */
+  [disabled] {
+    cursor: not-allowed !important;
+  }
   body {
     @apply bg-background text-foreground overflow-x-hidden;
   }

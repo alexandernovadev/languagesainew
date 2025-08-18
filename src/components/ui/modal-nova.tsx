@@ -42,25 +42,25 @@ export function ModalNova({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0 select-none`}
-        style={{
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          MozUserSelect: 'none',
-          msUserSelect: 'none'
-        }}
+        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0`}
       >
         {/* Título oculto para accesibilidad */}
         <DialogHeader className="sr-only">
           <DialogTitle>{title || "Modal"}</DialogTitle>
-          <DialogDescription>{description || "Contenido del modal"}</DialogDescription>
+          <DialogDescription>
+            {description || "Contenido del modal"}
+          </DialogDescription>
         </DialogHeader>
 
         {/* Header Fijo */}
         {title && (
           <div className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
             <h2 className="text-2xl font-semibold select-none">{title}</h2>
-            {description && <p className="text-sm text-muted-foreground mt-1 select-none">{description}</p>}
+            {description && (
+              <p className="text-sm text-muted-foreground mt-1 select-none">
+                {description}
+              </p>
+            )}
           </div>
         )}
 
