@@ -115,7 +115,7 @@ export function MyComponent() {
 - [ ] Dark theme only (no light colors)
 - [ ] Use component variants (no custom classes)
 - [ ] Use NOVA modals/alerts
-- [ ] Implement try-catch with handleApiResult
+- [ ] Implement try-cadtch with handleApiResult
 - [ ] Use `/api` prefix in services
 - [ ] Write in English for API/services
 - [ ] Organize code properly (DRY)
