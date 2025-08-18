@@ -28,12 +28,14 @@ export default function TranslatorPage() {
 
   const handleSwap = () => {
     if (sourceLang === "auto") return;
+    const prevInput = inputText;
+    const prevOutput = outputText;
     const newSource = targetLang;
     const newTarget = sourceLang;
-    setSourceLang(newTarget);
-    setTargetLang(newSource);
-    setInputText(outputText);
-    setOutputText("");
+    setSourceLang(newSource);
+    setTargetLang(newTarget as AllowedLanguageCode);
+    setInputText(prevOutput);
+    setOutputText(prevInput);
   };
 
   const handleTranslate = async (mode: "normal" | "sense" = "normal") => {
