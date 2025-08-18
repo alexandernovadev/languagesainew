@@ -12,6 +12,7 @@ interface ExpressionStore {
     update?: boolean;
     delete?: boolean;
     generate?: boolean;
+    updateImage?: boolean;
   };
   currentPage: number;
   totalPages: number;
@@ -41,6 +42,9 @@ interface ExpressionStore {
   // AI Generation actions
   generateExpression: (prompt: string, options?: any) => Promise<Expression | null>;
   clearGeneratedExpression: () => void;
+
+  // Image update actions
+  updateExpressionImage: (expressionId: string, expressionString: string, imgOld?: string) => Promise<void>;
 }
 
 export const useExpressionStore = create<ExpressionStore>((set, get) => ({
@@ -229,5 +233,23 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
 
   clearGeneratedExpression: () => {
     set({ generatedExpression: null });
+  },
+
+  updateExpressionImage: async (expressionId, expressionString, imgOld) => {
+    set({ actionLoading: { ...get().actionLoading, updateImage: true } });
+    try {
+      const response = await expressionService.updateExpressionImage(expressionId, expressionString, imgOld);
+      set({
+        expressions: get().expressions.map((expr) =>
+          expr._id === expressionId ? response.data.data : expr
+        ),
+        actionLoading: { ...get().actionLoading, updateImage: false },
+      });
+      toast.success("Imagen actualizada exitosamente");
+    } catch (error: any) {
+      console.error("Error updating expression image:", error);
+      toast.error("Error al actualizar la imagen");
+      set({ actionLoading: { ...get().actionLoading, updateImage: false } });
+    }
   },
 })); 

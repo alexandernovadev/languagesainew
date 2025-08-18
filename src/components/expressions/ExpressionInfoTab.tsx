@@ -2,11 +2,15 @@ import { memo, useRef } from "react";
 import { Expression } from "@/models/Expression";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { formatDateShort } from "@/utils/common/time/formatDate";
 import { getLanguageInfo } from "@/utils/common/language";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionTooltip } from "@/components/common";
+import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { toast } from "sonner";
 
 interface ExpressionInfoTabProps {
   expression: Expression;
@@ -77,6 +81,24 @@ export const ExpressionInfoTab = memo(function ExpressionInfoTab({
 
   // Hook personalizado para manejo de selección de texto en múltiples contenedores
   const { selection, hideSelection, keepVisible } = useTextSelection();
+
+  // Store para actualizar imagen
+  const { updateExpressionImage, actionLoading } = useExpressionStore();
+
+  // Función para actualizar imagen
+  const handleUpdateImage = async () => {
+    if (!expression._id) return;
+
+    try {
+      await updateExpressionImage(
+        expression._id,
+        expression.expression,
+        expression.img || ""
+      );
+    } catch (error: any) {
+      toast.error("Error al actualizar la imagen");
+    }
+  };
 
   // Función para verificar si la selección está en cualquiera de nuestros contenedores
   const isSelectionInOurContainers = () => {
@@ -205,7 +227,7 @@ export const ExpressionInfoTab = memo(function ExpressionInfoTab({
       )}
 
       {/* Imagen */}
-      {expression.img && (
+      {expression.img ? (
         <SectionContainer>
           <SectionHeader title="Imagen" icon="🖼️" />
           <div className="relative flex justify-center">
@@ -214,6 +236,51 @@ export const ExpressionInfoTab = memo(function ExpressionInfoTab({
               alt={expression.expression}
               className="w-full max-w-xs rounded-lg max-h-96 object-contain border border-zinc-700"
             />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleUpdateImage}
+              disabled={actionLoading.updateImage}
+              className="absolute top-2 right-2 h-8 w-8 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700/50"
+            >
+              <RefreshCw 
+                className={cn(
+                  "h-4 w-4 transition-all duration-300",
+                  actionLoading.updateImage 
+                    ? "animate-spin text-green-400" 
+                    : "text-zinc-400"
+                )} 
+              />
+            </Button>
+          </div>
+        </SectionContainer>
+      ) : (
+        <SectionContainer>
+          <SectionHeader title="Imagen" icon="🖼️" />
+          <div className="flex flex-col items-center justify-center py-8 space-y-4">
+            <div className="w-full max-w-xs h-48 rounded-lg bg-zinc-800/50 border border-zinc-700 flex items-center justify-center">
+              <div className="text-center text-zinc-500">
+                <div className="text-2xl mb-2">🖼️</div>
+                <div className="text-xs">Sin imagen</div>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleUpdateImage}
+              disabled={actionLoading.updateImage}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw 
+                className={cn(
+                  "h-4 w-4 transition-all duration-300",
+                  actionLoading.updateImage 
+                    ? "animate-spin text-green-400" 
+                    : "text-zinc-400"
+                )} 
+              />
+              {actionLoading.updateImage ? "Generando..." : "Generar Imagen"}
+            </Button>
           </div>
         </SectionContainer>
       )}

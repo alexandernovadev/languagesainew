@@ -92,4 +92,11 @@ export const expressionService = {
 
   generateExpression: (prompt: string, options?: any) =>
     api.post("/api/expressions/generate", { prompt, options }),
+
+  // Update expression image
+  updateExpressionImage: (expressionId: string, expressionString: string, imgOld?: string) =>
+    api.put(`/api/expressions/${expressionId}/image`, {
+      expressionString,
+      imgOld,
+    }),
 };
