@@ -115,12 +115,12 @@ export function WordChatTab({ word }: WordChatTabProps) {
             <ChatMessageComponent
               key={message.id}
               message={message}
-              enableMarkdown={false}
+              enableMarkdown={true}
             />
           ))}
 
         {/* Mensaje streaming */}
-        {isStreaming && <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={false} />}
+        {isStreaming && <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={true} />}
         <div ref={messagesEndRef} />
       </div>
 
