@@ -537,25 +537,27 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Synonyms */}
           {word.sinonyms && word.sinonyms.length > 0 && (
-            <SectionContainer loading={actionLoading.updateSynonyms}>
-              <SectionHeader
-                title="Sinónimos"
-                icon="🔗"
-                onRefresh={handleRefreshSynonyms}
-                loading={actionLoading.updateSynonyms}
-                showRefreshButtons={showRefreshButtons}
-              />
-              <div className="flex flex-wrap gap-2">
-                {word.sinonyms.map((synonym, index) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
-                  >
-                    {synonym}
-                  </span>
-                ))}
-              </div>
-            </SectionContainer>
+            <SelectableTextContainer containerRef={selectionContainerRef}>
+              <SectionContainer loading={actionLoading.updateSynonyms}>
+                <SectionHeader
+                  title="Sinónimos"
+                  icon="🔗"
+                  onRefresh={handleRefreshSynonyms}
+                  loading={actionLoading.updateSynonyms}
+                  showRefreshButtons={showRefreshButtons}
+                />
+                <div className="flex flex-wrap gap-2">
+                  {word.sinonyms.map((synonym, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
+                    >
+                      {synonym}
+                    </span>
+                  ))}
+                </div>
+              </SectionContainer>
+            </SelectableTextContainer>
           )}
 
           {/* Word Types */}
