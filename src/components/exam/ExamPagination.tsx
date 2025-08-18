@@ -15,7 +15,7 @@ export function ExamPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex justify-center mt-8">
+    <div className="flex justify-end mt-8 w-full">
       <div className="flex gap-2">
         <Button
           variant="outline"
