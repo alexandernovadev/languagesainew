@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -22,11 +23,13 @@ import {
 import { Word } from "@/models/Word";
 import { wordLevels } from "@/data/wordLevels";
 import { EditableList } from "./EditableList";
-import { Book, Sparkles, ListPlus, Wand2, Loader2, Eye, X } from "lucide-react";
+import { Book, Sparkles, ListPlus, Wand2, Loader2, Eye, X, Stars } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/services/api";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { capitalize } from "@/utils/common/string/capitalize";
+import { getAllLanguages } from "@/utils/common/language";
+import { WORD_TYPES } from "@/utils/constants/wordTypes";
 
 interface WordFormProps {
   initialData?: Partial<Word>;
@@ -65,6 +68,13 @@ export function WordForm({
       language: "en",
       spanish: { word: "", definition: "" },
       img: "",
+      type: [],
+      lastReviewed: undefined,
+      nextReview: undefined,
+      reviewCount: 0,
+      difficulty: 3,
+      interval: 1,
+      easeFactor: 2.5,
       ...initialData,
     },
   });
@@ -83,7 +93,7 @@ export function WordForm({
     reset(dataWithArrays);
   }, [initialData, reset]);
 
-  const isFormValid = formData.word && formData.spanish?.word;
+  const isFormValid = formData.word && formData.spanish?.word && formData.spanish?.definition;
 
   const onSubmitForm = (data: Partial<Word>) => {
     if (isFormValid) {
@@ -166,7 +176,7 @@ export function WordForm({
       <div className="flex-grow overflow-y-auto px-1 min-h-0">
         <Tabs defaultValue="basic" className="space-y-4">
           <div className="px-4 pt-4">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="basic">
                 <Book className="h-4 w-4 mr-2" />
                 Información Básica
@@ -174,6 +184,10 @@ export function WordForm({
               <TabsTrigger value="advanced">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Campos Avanzados
+              </TabsTrigger>
+              <TabsTrigger value="anki">
+                <Stars className="h-4 w-4 mr-2" />
+                Sistema Anki
               </TabsTrigger>
             </TabsList>
           </div>
@@ -208,12 +222,111 @@ export function WordForm({
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="type">Tipos de Palabra</Label>
+                    <Card>
+                      <CardContent className="p-3">
+                        <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                          {WORD_TYPES.map((type) => (
+                            <div key={type.key} className="flex items-start space-x-2 p-1.5 rounded-md hover:bg-muted/50 transition-colors">
+                              <Checkbox
+                                id={`type-${type.key}`}
+                                checked={formData.type?.includes(type.key) || false}
+                                onCheckedChange={(checked) => {
+                                  const currentTypes = formData.type || [];
+                                  if (checked) {
+                                    handleChange("type", [...currentTypes, type.key]);
+                                  } else {
+                                    handleChange("type", currentTypes.filter(t => t !== type.key));
+                                  }
+                                }}
+                              />
+                              <label 
+                                htmlFor={`type-${type.key}`}
+                                className="flex flex-col cursor-pointer flex-1 min-w-0"
+                              >
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-base">{type.icon}</span>
+                                  <span className="font-medium text-sm">{type.label}</span>
+                                </div>
+                                <span className="text-xs text-muted-foreground ml-5">
+                                  {type.key}
+                                </span>
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <p className="text-xs text-muted-foreground">
+                      Selecciona uno o más tipos gramaticales para esta palabra
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="language">Idioma</Label>
+                      <Select
+                        value={formData.language}
+                        onValueChange={(value) => handleChange("language", value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona un idioma">
+                            {formData.language && (() => {
+                              const lang = getAllLanguages().find(l => l.code === formData.language);
+                              return lang ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg">{lang.flag}</span>
+                                  <span>{lang.name}</span>
+                                </div>
+                              ) : formData.language;
+                            })()}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getAllLanguages().map((lang) => (
+                            <SelectItem key={lang.code} value={lang.code}>
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{lang.flag}</span>
+                                <span>{lang.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="seen">Contador de Vistas</Label>
+                      <Input
+                        id="seen"
+                        type="number"
+                        min="0"
+                        {...register("seen", { valueAsNumber: true })}
+                        placeholder="0"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Número de veces que se ha visto esta palabra
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="definition">Definición (Inglés)</Label>
                   <Textarea
                     id="definition"
                     {...register("definition")}
                     placeholder="Escribe una definición detallada aquí..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="spanish-definition">Definición (Español)</Label>
+                  <Textarea
+                    id="spanish-definition"
+                    value={formData.spanish?.definition || ""}
+                    onChange={(e) =>
+                      handleSpanishChange("definition", e.target.value)
+                    }
+                    placeholder="Escribe una definición detallada en español..."
                   />
                 </div>
               </CardContent>
@@ -304,91 +417,98 @@ export function WordForm({
                 />
               </CardContent>
             </Card>
+          </TabsContent>
 
+          <TabsContent value="anki" className="pt-2 space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Imagen</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Stars className="h-5 w-5" /> Sistema de Repaso Inteligente
+                </CardTitle>
                 <CardDescription>
-                  Añade una imagen representativa para la palabra (URL).
+                  Configuración para el sistema de repaso tipo Anki.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                  <div className="md:col-span-1">
-                    <Label>Vista Previa</Label>
-                    <div className="mt-2 w-full aspect-video rounded-md border flex items-center justify-center bg-muted relative overflow-hidden">
-                      {isGeneratingImage ? (
-                        // Skeleton durante generación
-                        <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
-                          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                          <p className="text-sm text-muted-foreground">
-                            Generando imagen...
-                          </p>
-                          {imageProgress > 0 && (
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className="bg-primary h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${imageProgress}%` }}
-                              ></div>
-                            </div>
-                          )}
-                        </div>
-                      ) : formData.img ? (
-                        <img
-                          src={formData.img}
-                          alt={formData.word || "Word image"}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-muted-foreground">
-                          <img
-                            src="/placeholder.svg"
-                            alt="No image available"
-                            className="w-20 h-20 opacity-50"
-                          />
-                          <p className="text-sm mt-2">Sin imagen</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="md:col-span-2 space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="img">URL de la Imagen</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="img"
-                          {...register("img")}
-                          placeholder="https://ejemplo.com/imagen.jpg"
-                          disabled={isGeneratingImage}
-                          className="flex-1"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={handleGenerateImage}
-                          disabled={isGeneratingImage || !formData.word}
-                          className="whitespace-nowrap"
-                        >
-                          {isGeneratingImage ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Generando...
-                            </>
-                          ) : (
-                            <>
-                              <Wand2 className="h-4 w-4 mr-2" />
-                              Generar con AI
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                      {!formData.word && (
-                        <p className="text-xs text-muted-foreground">
-                          Necesitas una palabra para generar una imagen
-                        </p>
-                      )}
-                    </div>
-                  </div>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="difficulty">Nivel de Dificultad (1-5)</Label>
+                  <Select
+                    value={formData.difficulty?.toString() || "3"}
+                    onValueChange={(value) => handleChange("difficulty", parseInt(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona dificultad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 - Muy Fácil</SelectItem>
+                      <SelectItem value="2">2 - Fácil</SelectItem>
+                      <SelectItem value="3">3 - Medio</SelectItem>
+                      <SelectItem value="4">4 - Difícil</SelectItem>
+                      <SelectItem value="5">5 - Muy Difícil</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="interval">Intervalo de Repaso (días)</Label>
+                  <Input
+                    id="interval"
+                    type="number"
+                    min="1"
+                    max="365"
+                    {...register("interval", { valueAsNumber: true })}
+                    placeholder="1"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="easeFactor">Factor de Facilidad</Label>
+                  <Input
+                    id="easeFactor"
+                    type="number"
+                    min="1.3"
+                    max="5.0"
+                    step="0.1"
+                    {...register("easeFactor", { valueAsNumber: true })}
+                    placeholder="2.5"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Factor que determina qué tan fácil es recordar la palabra (1.3 - 5.0)
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="reviewCount">Contador de Repasos</Label>
+                  <Input
+                    id="reviewCount"
+                    type="number"
+                    min="0"
+                    {...register("reviewCount", { valueAsNumber: true })}
+                    placeholder="0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastReviewed">Último Repaso</Label>
+                  <Input
+                    id="lastReviewed"
+                    type="date"
+                    {...register("lastReviewed")}
+                    value={formData.lastReviewed ? new Date(formData.lastReviewed).toISOString().split('T')[0] : ''}
+                    onChange={(e) => {
+                      const date = e.target.value ? new Date(e.target.value).toISOString() : undefined;
+                      handleChange("lastReviewed", date);
+                    }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="nextReview">Próximo Repaso</Label>
+                  <Input
+                    id="nextReview"
+                    type="date"
+                    {...register("nextReview")}
+                    value={formData.nextReview ? new Date(formData.nextReview).toISOString().split('T')[0] : ''}
+                    onChange={(e) => {
+                      const date = e.target.value ? new Date(e.target.value).toISOString() : undefined;
+                      handleChange("nextReview", date);
+                    }}
+                  />
                 </div>
               </CardContent>
             </Card>

@@ -1,4 +1,5 @@
 import { FilterGroup } from "./types";
+import { WORD_TYPES } from "@/utils/constants/wordTypes";
 
 export const WORD_LEVELS = [
   { value: "easy", label: "Fácil" },
@@ -15,47 +16,12 @@ export const LANGUAGES = [
   { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 
-export const WORD_TYPES = [
-  { value: "noun", label: "Noun", spanishLabel: "Sustantivo" },
-  { value: "verb", label: "Verb", spanishLabel: "Verbo" },
-  { value: "adjective", label: "Adjective", spanishLabel: "Adjetivo" },
-  { value: "adverb", label: "Adverb", spanishLabel: "Adverbio" },
-  {
-    value: "personal pronoun",
-    label: "Personal Pronoun",
-    spanishLabel: "Pronombre Personal",
-  },
-  {
-    value: "possessive pronoun",
-    label: "Possessive Pronoun",
-    spanishLabel: "Pronombre Posesivo",
-  },
-  { value: "preposition", label: "Preposition", spanishLabel: "Preposición" },
-  { value: "conjunction", label: "Conjunction", spanishLabel: "Conjunción" },
-  { value: "determiner", label: "Determiner", spanishLabel: "Determinante" },
-  { value: "article", label: "Article", spanishLabel: "Artículo" },
-  { value: "quantifier", label: "Quantifier", spanishLabel: "Cuantificador" },
-  {
-    value: "interjection",
-    label: "Interjection",
-    spanishLabel: "Interjección",
-  },
-  {
-    value: "auxiliary verb",
-    label: "Auxiliary Verb",
-    spanishLabel: "Verbo Auxiliar",
-  },
-  { value: "modal verb", label: "Modal Verb", spanishLabel: "Verbo Modal" },
-  { value: "infinitive", label: "Infinitive", spanishLabel: "Infinitivo" },
-  { value: "participle", label: "Participle", spanishLabel: "Participio" },
-  { value: "gerund", label: "Gerund", spanishLabel: "Gerundio" },
-  {
-    value: "phrasal verb",
-    label: "Phrasal Verb",
-    spanishLabel: "Verbo Frasal",
-  },
-  { value: "other", label: "Other", spanishLabel: "Otro" },
-];
+// Usar las constantes centralizadas en lugar de duplicar
+export const WORD_TYPES_FOR_FILTERS = WORD_TYPES.map(type => ({
+  value: type.key,
+  label: type.key, // Usar la clave como label para consistencia
+  spanishLabel: type.label
+}));
 
 export const SORT_OPTIONS = [
   { value: "word", label: "Palabra" },

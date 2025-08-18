@@ -771,7 +771,6 @@ export default function MyWordsPage() {
         loading={generating}
         confirmClassName="btn-green-action"
         shouldAutoCloseOnConfirm={false}
-        confirmDisabled={generating || (!generateInput && !localSearch) || (generateInput && generateInput.trim().length < 2) || (localSearch && localSearch.trim().length < 2)}
       />
     </PageLayout>
   );
