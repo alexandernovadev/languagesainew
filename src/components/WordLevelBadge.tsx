@@ -15,7 +15,7 @@ export function WordLevelBadge({
         };
       case "medium":
         return {
-          variant: "secondary" as const,
+          variant: "blue" as const,
         };
       case "hard":
         return {

@@ -42,18 +42,12 @@ export function ModalNova({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0 select-none pointer-events-none`}
-        onPointerDown={(e) => e.preventDefault()}
-        onSelect={(e) => e.preventDefault()}
-        onFocus={(e) => e.target.blur()}
-        tabIndex={-1}
-        unselectable="on"
+        className={`${sizeClasses[size]} ${height} flex flex-col p-0 shadow-2xl rounded-xl focus:outline-none focus:ring-0 select-none`}
         style={{
           userSelect: 'none',
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
-          msUserSelect: 'none',
-          pointerEvents: 'none'
+          msUserSelect: 'none'
         }}
       >
         {/* Título oculto para accesibilidad */}
@@ -64,18 +58,18 @@ export function ModalNova({
 
         {/* Header Fijo */}
         {title && (
-          <div className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left pointer-events-auto">
+          <div className="pt-4 px-6 pb-4 border-b border-border flex-shrink-0 text-left">
             <h2 className="text-2xl font-semibold select-none">{title}</h2>
             {description && <p className="text-sm text-muted-foreground mt-1 select-none">{description}</p>}
           </div>
         )}
 
         {/* Contenido Scrollable */}
-        <div className="flex-grow overflow-y-auto pointer-events-auto">{children}</div>
+        <div className="flex-grow overflow-y-auto">{children}</div>
 
         {/* Footer Fijo */}
         {footer && (
-          <div className="flex justify-end gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl pointer-events-auto">
+          <div className="flex justify-end gap-2 py-3 border-t border-border shrink-0 bg-background px-6 rounded-b-xl">
             {footer}
           </div>
         )}
