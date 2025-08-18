@@ -34,7 +34,13 @@ interface ImportResultSummary {
 }
 
 interface ImportResult {
-  totalLectures: number;
+  totalItems?: number;
+  totalExpressions?: number;
+  totalLectures?: number;
+  totalWords?: number;
+  totalExams?: number;
+  totalQuestions?: number;
+  totalAttempts?: number;
   totalBatches: number;
   totalValid: number;
   totalInvalid: number;
@@ -45,6 +51,11 @@ interface ImportResult {
   totalSkipped: number;
   batches: BatchResult[];
   summary: ImportResultSummary;
+}
+
+interface ImportResultProps {
+  result: { data: ImportResult; message: string };
+  type: "expressions" | "lectures" | "words" | "exams" | "questions" | "attempts";
 }
 
 function statusColor(status: string) {
@@ -93,14 +104,35 @@ function badgeStyle(label: string) {
   }
 }
 
-export default function LectureImportResult({
-  result,
-}: {
-  result: { data: ImportResult; message: string };
-}) {
+function getTypeLabel(type: string): string {
+  const labels = {
+    expressions: "Expressions",
+    lectures: "Lectures",
+    words: "Words",
+    exams: "Exams",
+    questions: "Questions",
+    attempts: "Attempts"
+  };
+  return labels[type as keyof typeof labels] || "Items";
+}
+
+function getTotalItems(data: ImportResult): number {
+  return data.totalItems || 
+         data.totalExpressions || 
+         data.totalLectures || 
+         data.totalWords || 
+         data.totalExams || 
+         data.totalQuestions || 
+         data.totalAttempts || 
+         0;
+}
+
+export default function ImportResult({ result, type }: ImportResultProps) {
   if (!result || !result.data) return null;
   const data = result.data;
   const summary = data.summary;
+  const typeLabel = getTypeLabel(type);
+  const totalItems = getTotalItems(data);
 
   // Flatten all results with batch info
   const allRows: (ProcessingResult & { batchIndex: number })[] = [];
@@ -122,7 +154,7 @@ export default function LectureImportResult({
         {/* Resumen global */}
         <div className="flex flex-wrap gap-3 mb-6 items-center text-sm">
           <span>
-            Total Lectures: <b>{data.totalLectures}</b>
+            Total {typeLabel}: <b>{totalItems}</b>
           </span>
           <span className={badgeStyle("Inserted")}>
             Inserted: {data.totalInserted}

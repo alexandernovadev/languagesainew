@@ -12,7 +12,7 @@ import { useState } from "react";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
-import WordImportResult from "./WordImportResult";
+import ImportResult from "./ImportResult";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Eye, X } from "lucide-react";
@@ -190,7 +190,7 @@ export default function WordImportForm() {
       </Button>
 
       {/* Feedback/result area */}
-      {result && <WordImportResult result={result} />}
+      {result && <ImportResult result={result} type="words" />}
     </form>
   );
 }

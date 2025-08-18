@@ -12,6 +12,7 @@ import { useState } from "react";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
+import ImportResult from "./ImportResult";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Eye, X } from "lucide-react";
@@ -188,28 +189,7 @@ export default function QuestionImportForm() {
       </Button>
 
       {/* Feedback/result area */}
-      {result && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-semibold mb-2">Import Results</h4>
-          <div className="text-sm space-y-1">
-            <p>Total: {result.data?.totalItems || result.totalQuestions}</p>
-            {result.data?.totalInserted && (
-              <p>Inserted: {result.data.totalInserted}</p>
-            )}
-            {result.data?.totalUpdated && (
-              <p>Updated: {result.data.totalUpdated}</p>
-            )}
-            {result.data?.totalSkipped && (
-              <p>Skipped: {result.data.totalSkipped}</p>
-            )}
-            {result.data?.totalErrors && (
-              <p className="text-red-600">Errors: {result.data.totalErrors}</p>
-            )}
-            {result.valid && <p>Valid: {result.valid}</p>}
-            {result.invalid && <p className="text-red-600">Invalid: {result.invalid}</p>}
-          </div>
-        </div>
-      )}
+      {result && <ImportResult result={result} type="questions" />}
     </form>
   );
 } 

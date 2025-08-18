@@ -509,9 +509,6 @@ export default function MyExpressionsPage() {
       {/* Paginación */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            Mostrando {expressions.length} de {total} expresiones
-          </p>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -522,7 +519,7 @@ export default function MyExpressionsPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="px-3 py-2 text-sm">
-              Página {currentPage} de {totalPages}
+              Página {currentPage} de {totalPages} ({total} expresiones)
             </span>
             <Button
               variant="outline"

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import LectureImportResult from "./LectureImportResult";
+import ImportResult from "./ImportResult";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
 import { FileInputButton } from "@/components/ui/FileInputButton";
@@ -189,7 +189,7 @@ export default function LectureImportForm() {
       </Button>
 
       {/* Feedback/result area (to be implemented) */}
-      {result && <LectureImportResult result={result} />}
+      {result && <ImportResult result={result} type="lectures" />}
     </form>
   );
 }
