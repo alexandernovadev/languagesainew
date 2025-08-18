@@ -73,7 +73,6 @@ export const SORT_ORDERS = [
 ];
 
 export const BOOLEAN_FILTERS = [
-  { value: "hasImage", label: "Con Imagen" },
   { value: "hasExamples", label: "Con Ejemplos" },
   { value: "hasSynonyms", label: "Con Sinónimos" },
   { value: "hasCodeSwitching", label: "Con Code-Switching" },

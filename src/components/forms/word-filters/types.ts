@@ -15,8 +15,8 @@ export interface WordFilters {
   seenMin?: number;
   seenMax?: number;
 
-  // Filtros booleanos
-  hasImage?: boolean;
+  // Filtro de imagen: "true" | "false" | undefined (tri-estado)
+  hasImage?: "true" | "false";
   hasExamples?: boolean;
   hasSynonyms?: boolean;
   hasCodeSwitching?: boolean;

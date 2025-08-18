@@ -141,6 +141,8 @@ export function useWordFilters() {
           descriptions.push(
             `${key === "seenMin" ? "Mín" : "Máx"} vistas: ${value}`
           );
+        } else if (key === "hasImage") {
+          descriptions.push(`Imagen: ${value === "true" ? "Con" : "Sin"}`);
         } else if (key === "sortBy") {
           descriptions.push(`Ordenar por: ${value}`);
         } else if (key === "sortOrder") {
@@ -155,7 +157,6 @@ export function useWordFilters() {
     Object.entries(booleanFilters).forEach(([key, value]) => {
       if (value === true) {
         const labels: Record<string, string> = {
-          hasImage: "Con imagen",
           hasExamples: "Con ejemplos",
           hasSynonyms: "Con sinónimos",
           hasCodeSwitching: "Con code-switching",

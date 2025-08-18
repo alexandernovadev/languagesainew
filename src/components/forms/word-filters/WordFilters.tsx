@@ -17,6 +17,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import {
   Filter,
   X,
@@ -269,12 +271,37 @@ function FiltersContent({
 
           <div>
             <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
-            <BooleanFilters
-              values={booleanFilters}
-              onChange={(key, value) => {
-                updateBooleanFilter(key, value);
-              }}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm">Imagen</Label>
+                <Select
+                  value={filters.hasImage ?? ""}
+                  onValueChange={(v) =>
+                    updateFilter(
+                      "hasImage",
+                      v === "" ? undefined : (v as "true" | "false")
+                    )
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="true">Con imagen</SelectItem>
+                    <SelectItem value="false">Sin imagen</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <BooleanFilters
+                  values={booleanFilters}
+                  onChange={(key, value) => {
+                    updateBooleanFilter(key, value);
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </TabsContent>
