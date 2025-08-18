@@ -126,7 +126,7 @@ export function DefaultQuestionsGrid({
       title: "Significado y Variaciones",
       icon: "📚",
       questions: [
-        "¿Cuántos significados tiene?",
+        "¿Tiene  mas significados que el que me diste?",
         "¿Cuáles son las variaciones?",
         "¿Hay sinónimos o antónimos?",
         "¿Cómo cambia el significado según el contexto?"
@@ -146,16 +146,16 @@ export function DefaultQuestionsGrid({
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-1 md:p-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-2 lg:gap-3 w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 lg:gap-4 w-full max-w-6xl">
         {questionCategories.map((category, categoryIndex) => (
           <div key={categoryIndex} className="text-center min-w-0">
-            <div className="mb-1 md:mb-2">
+            <div className="mb-2 md:mb-3">
               <div className="text-base md:text-lg lg:text-xl mb-1">{category.icon}</div>
-              <h5 className="text-xs font-medium text-muted-foreground mb-1 md:mb-2 truncate">
+              <h5 className="text-xs font-medium text-muted-foreground mb-2 md:mb-3 truncate">
                 {category.title}
               </h5>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {category.questions.map((question, questionIndex) => (
                 <Button
                   key={`${categoryIndex}-${questionIndex}`}
@@ -163,10 +163,10 @@ export function DefaultQuestionsGrid({
                   size="sm"
                   onClick={() => onQuestionClick(question)}
                   disabled={isLoading}
-                  className="w-full h-auto text-xs p-1 text-center leading-tight hover:bg-accent min-h-[2.5rem] md:min-h-[2.75rem] chat-question-button"
+                  className="w-full h-auto text-xs p-3 text-center leading-relaxed hover:bg-accent min-h-[3rem] md:min-h-[3.5rem] chat-question-button"
                   title={question}
                 >
-                  <span className="line-clamp-1 px-0.5">{question}</span>
+                  <span className="px-1 break-words whitespace-normal">{question}</span>
                 </Button>
               ))}
             </div>
