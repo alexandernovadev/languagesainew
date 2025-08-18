@@ -131,7 +131,7 @@ body {
     color: hsl(var(--primary));
   }
 
-  /* Mejoras para scroll horizontal en tablas */
+  /* Mejoras para scroll horizontal en tablas - solo cuando sea necesario */
   .table-container {
     overflow-x: auto;
     overflow-y: visible;
@@ -158,8 +158,8 @@ body {
     background: hsl(var(--primary) / 0.8);
   }
 
-  /* Asegurar que las tablas mantengan su ancho mínimo */
-  .table-container table {
+  /* Solo aplicar width: max-content cuando sea realmente necesario */
+  .table-container.table-scroll-horizontal table {
     min-width: 100%;
     width: max-content;
   }

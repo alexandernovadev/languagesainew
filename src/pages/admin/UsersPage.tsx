@@ -149,15 +149,13 @@ export default function UsersPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="table-container">
-            <UserTable
-              users={users}
-              onEdit={handleEditUser}
-              onDelete={handleDeleteUser}
-              loading={loading}
-              searchQuery={searchTerm}
-            />
-          </div>
+          <UserTable
+            users={users}
+            onEdit={handleEditUser}
+            onDelete={handleDeleteUser}
+            loading={loading}
+            searchQuery={searchTerm}
+          />
         </CardContent>
       </Card>
 

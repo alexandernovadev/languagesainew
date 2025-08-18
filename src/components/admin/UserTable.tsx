@@ -80,12 +80,12 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
       <TableHeader>
         <TableRow>
           <TableHead className="w-12">#</TableHead>
-          <TableHead>Usuario</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Rol</TableHead>
-          <TableHead>Estado</TableHead>
-          <TableHead>Idioma</TableHead>
-          <TableHead>Último Login</TableHead>
+          <TableHead className="min-w-[200px]">Usuario</TableHead>
+          <TableHead className="min-w-[180px]">Email</TableHead>
+          <TableHead className="w-24">Rol</TableHead>
+          <TableHead className="w-20">Estado</TableHead>
+          <TableHead className="w-20">Idioma</TableHead>
+          <TableHead className="min-w-[120px]">Último Login</TableHead>
           <TableHead className="w-32 text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
@@ -95,26 +95,26 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
             <TableCell className="font-medium">
               {index + 1}
             </TableCell>
-            <TableCell>
+            <TableCell className="min-w-0">
               <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 flex-shrink-0">
                   <AvatarImage src={user.image} />
                   <AvatarFallback className="text-xs">
                     {getInitials(user.firstName, user.lastName, user.username)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col">
-                  <span className="font-medium">{user.username}</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-medium truncate">{user.username}</span>
                   {user.firstName && user.lastName && (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground truncate">
                       {user.firstName} {user.lastName}
                     </span>
                   )}
                 </div>
               </div>
             </TableCell>
-            <TableCell>
-              <span className="text-sm">{user.email}</span>
+            <TableCell className="min-w-0">
+              <span className="text-sm truncate block">{user.email}</span>
             </TableCell>
             <TableCell>
               <Badge variant={getRoleBadgeVariant(user.role)}>

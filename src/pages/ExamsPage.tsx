@@ -169,17 +169,15 @@ export default function ExamsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0 pb-4">
-          <div className="table-container">
-            <ExamTable
-              exams={exams}
-              onView={handleViewExam}
-              onEdit={handleEditExam}
-              onRemove={handleRemoveExam}
-              onTake={handleTakeExam}
-              loading={loading}
-              searchQuery={searchTerm}
-            />
-          </div>
+          <ExamTable
+            exams={exams}
+            onView={handleViewExam}
+            onEdit={handleEditExam}
+            onRemove={handleRemoveExam}
+            onTake={handleTakeExam}
+            loading={loading}
+            searchQuery={searchTerm}
+          />
         </CardContent>
       </Card>
 
