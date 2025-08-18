@@ -39,10 +39,14 @@ const routeNameMapping: { [key: string]: string } = {
   "/settings/logs": "Registros",
   "/admin": "Admin",
   "/admin/users": "Usuarios",
+  
+  // Tools
+  "/tools": "Tools",
+  "/tools/translator": "Traductor",
 };
 
 // Rutas que no deberían ser clickeables (solo grupos de navegación)
-const nonClickableRoutes = ["/admin", "/settings", "/generator", "/games"];
+const nonClickableRoutes = ["/admin", "/settings", "/generator", "/games", "/tools"];
 
 export function DynamicBreadcrumb() {
   const location = useLocation();

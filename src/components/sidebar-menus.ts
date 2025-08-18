@@ -16,6 +16,7 @@ import {
   Brain,
   BookOpenCheck,
   Quote,
+  Languages,
 } from "lucide-react";
 
 export const menuItems = [
@@ -66,6 +67,11 @@ export const generatorItems = [
     title: "Generador de Lecturas",
     url: "/generator/lecture",
     icon: BookOpenCheck,
+  },
+  {
+    title: "Traductor",
+    url: "/tools/translator",
+    icon: Languages,
   },
 ];
 

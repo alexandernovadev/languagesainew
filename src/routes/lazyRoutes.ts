@@ -25,3 +25,4 @@ export const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
 export const LogsSettingsPage = lazy(() => import("../pages/settings/LogsSettingsPage"));
 export const LabsPage = lazy(() => import("../pages/settings/LabsPage"));
 export const UsersPage = lazy(() => import("../pages/admin/UsersPage")); 
+export const TranslatorPage = lazy(() => import("../pages/tools/TranslatorPage"));

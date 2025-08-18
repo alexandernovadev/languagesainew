@@ -33,6 +33,7 @@ import {
   LogsSettingsPage,
   LabsPage,
   UsersPage,
+  TranslatorPage,
 } from "./routes";
 
 // Componente para manejar rutas desconocidas
@@ -87,6 +88,7 @@ export default function App() {
                   <Route path="/questions" element={<QuestionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin/users" element={<UsersPage />} />
+                  <Route path="/tools/translator" element={<TranslatorPage />} />
 
                   {/* Catch-all route para rutas desconocidas */}
                   <Route path="*" element={<NotFoundRedirect />} />
