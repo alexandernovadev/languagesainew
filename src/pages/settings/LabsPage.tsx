@@ -117,7 +117,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Actualizar Nivel de Palabras"
             description="Actualiza el nivel de todas las palabras a un valor específico (easy, medium, hard)"
-            category="Database"
             icon={DatabaseIcon}
             onAction={() =>
               handleAction(
@@ -135,7 +134,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Resetear Contador 'Seen'"
             description="Establece el contador 'seen' de todas las palabras a 0"
-            category="Database"
             icon={RefreshCw}
             onAction={() =>
               handleAction(
@@ -153,7 +151,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Actualizar Idioma de Lecturas"
             description="Establece el idioma de todas las lecturas a un valor específico"
-            category="Database"
             icon={FileText}
             onAction={() =>
               handleAction(
@@ -171,7 +168,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Recalcular Tiempo de Lecturas"
             description="Recalcula el campo 'time' de todas las lecturas según su contenido (200 wpm, mínimo 1 min si hay texto)"
-            category="Database"
             icon={Clock}
             onAction={() =>
               handleAction(
@@ -196,7 +192,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Crear Usuario Administrador"
             description="Crea un usuario administrador para desarrollo y pruebas"
-            category="Users"
             icon={UserPlus}
             onAction={() =>
               handleAction(
@@ -214,7 +209,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Crear 5 Usuarios de Prueba"
             description="Crea 5 usuarios de prueba con diferentes idiomas para testing"
-            category="Users"
             icon={Users}
             onAction={() =>
               handleAction(
@@ -239,7 +233,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Seed de Datos Iniciales"
             description="Ejecuta el seed de datos iniciales para desarrollo"
-            category="Seeding"
             icon={Seedling}
             onAction={() =>
               handleAction(
@@ -257,7 +250,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Seed de Preguntas desde JSON"
             description="Carga preguntas desde archivo JSON"
-            category="Seeding"
             icon={FileText}
             onAction={() =>
               handleAction(
@@ -282,7 +274,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Crear Backup"
             description="Crea un backup de todas las colecciones de la base de datos"
-            category="Backup"
             icon={Save}
             onAction={() =>
               handleAction(
@@ -300,7 +291,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Limpiar Todos los Datos"
             description="Elimina TODAS las palabras y lecturas de la base de datos"
-            category="Maintenance"
             icon={Eraser}
             onAction={() =>
               handleAction(
@@ -326,7 +316,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Migrar Palabras al Sistema de Revisión"
             description="Migra las palabras al sistema de revisión (servicio no implementado aún)"
-            category="Migration"
             icon={RefreshCw}
             onAction={() =>
               handleAction(
@@ -351,7 +340,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Obtener Estadísticas de BD"
             description="Obtiene estadísticas básicas de la base de datos para desarrollo"
-            category="Statistics"
             icon={BarChart}
             onAction={() =>
               handleAction(
@@ -375,7 +363,6 @@ export default function LabsPage() {
           <LabsActionCard
             title="Eliminar Todos los Intentos de Examen"
             description="Elimina TODOS los intentos de examen de la base de datos"
-            category="Cleaner"
             icon={Trash}
             onAction={() =>
               handleAction(
@@ -388,14 +375,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanExamAttempts"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todos los Exámenes"
             description="Elimina TODOS los exámenes y sus intentos asociados"
-            category="Cleaner"
             icon={FileX}
             onAction={() =>
               handleAction(
@@ -408,14 +393,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanExams"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todas las Preguntas"
             description="Elimina TODAS las preguntas de la base de datos"
-            category="Cleaner"
             icon={ClipboardList}
             onAction={() =>
               handleAction(
@@ -428,14 +411,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanQuestions"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todas las Palabras"
             description="Elimina TODAS las palabras de la base de datos"
-            category="Cleaner"
             icon={FileText}
             onAction={() =>
               handleAction(
@@ -448,14 +429,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanWords"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todas las Lecturas"
             description="Elimina TODAS las lecturas de la base de datos"
-            category="Cleaner"
             icon={FileText}
             onAction={() =>
               handleAction(
@@ -468,14 +447,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanLectures"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todas las Expresiones"
             description="Elimina TODAS las expresiones de la base de datos"
-            category="Cleaner"
             icon={FileText}
             onAction={() =>
               handleAction(
@@ -488,14 +465,12 @@ export default function LabsPage() {
             }
             loading={loading === "cleanExpressions"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
 
           <LabsActionCard
             title="Eliminar Todos los Usuarios"
             description="Elimina TODOS los usuarios excepto el actual"
-            category="Cleaner"
             icon={Users}
             onAction={() =>
               handleAction(
@@ -508,7 +483,6 @@ export default function LabsPage() {
             }
             loading={loading === "cleanUsers"}
             dangerous={true}
-            requiresAuth={true}
             variant="danger"
           />
         </LabsSection>
