@@ -20,10 +20,12 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
   onClose
 }: TextSelectionMenuProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isCreatingWord, setIsCreatingWord] = useState(false);
+  const [isCreatingExpression, setIsCreatingExpression] = useState(false);
 
   // Stores para crear palabras y expresiones
   const { generateWord } = useWordStore();
-  const { generateExpression } = useExpressionStore();
+  const { generateExpression, createExpression } = useExpressionStore();
 
   // Funciones internas del menú
   const handleSpeakText = useCallback((text: string) => {
@@ -50,24 +52,42 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
   }, [isPlaying]);
 
   const handleCreateWord = useCallback(async (text: string) => {
+    if (isCreatingWord) return; // Evitar clics múltiples
+    
+    setIsCreatingWord(true);
     try {
       await generateWord(text.trim());
       toast.success(`📖 Palabra "${text}" creada exitosamente`);
       onClose?.();
     } catch (error) {
       toast.error("Error al crear la palabra");
+    } finally {
+      setIsCreatingWord(false);
     }
-  }, [generateWord, onClose]);
+  }, [generateWord, onClose, isCreatingWord]);
 
   const handleCreateExpression = useCallback(async (text: string) => {
+    if (isCreatingExpression) return; // Evitar clics múltiples
+    
+    setIsCreatingExpression(true);
     try {
-      await generateExpression(text.trim());
-      toast.success(`📝 Expresión "${text}" creada exitosamente`);
-      onClose?.();
+      // Primero generar la expresión
+      const generatedExpression = await generateExpression(text.trim());
+      
+      if (generatedExpression) {
+        // Luego guardarla en la base de datos
+        await createExpression(generatedExpression);
+        toast.success(`📝 Expresión "${text}" creada exitosamente`);
+        onClose?.();
+      } else {
+        throw new Error("No se pudo generar la expresión");
+      }
     } catch (error) {
       toast.error("Error al crear la expresión");
+    } finally {
+      setIsCreatingExpression(false);
     }
-  }, [generateExpression, onClose]);
+  }, [generateExpression, createExpression, onClose, isCreatingExpression]);
 
   if (!show || !position || !selectedText) {
     return null;
@@ -110,29 +130,37 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
       {/* Crear Palabra */}
       <button
         onClick={() => handleAction(() => handleCreateWord(selectedText))}
+        disabled={isCreatingWord}
         className={cn(
           "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
           "hover:bg-zinc-800 transition-colors duration-150",
-          "text-green-400 hover:text-green-300"
+          "text-green-400 hover:text-green-300",
+          isCreatingWord && "opacity-50 cursor-not-allowed"
         )}
         title="Crear palabra"
       >
-        <Hash className="h-4 w-4" />
-        <span className="text-xs">Palabra</span>
+        <Hash className={cn("h-4 w-4", isCreatingWord && "animate-spin")} />
+        <span className="text-xs">
+          {isCreatingWord ? "Creando..." : "Palabra"}
+        </span>
       </button>
 
       {/* Crear Expresión */}
       <button
         onClick={() => handleAction(() => handleCreateExpression(selectedText))}
+        disabled={isCreatingExpression}
         className={cn(
           "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
           "hover:bg-zinc-800 transition-colors duration-150",
-          "text-yellow-400 hover:text-yellow-300"
+          "text-yellow-400 hover:text-yellow-300",
+          isCreatingExpression && "opacity-50 cursor-not-allowed"
         )}
         title="Crear expresión"
       >
-        <FileText className="h-4 w-4" />
-        <span className="text-xs">Expresión</span>
+        <FileText className={cn("h-4 w-4", isCreatingExpression && "animate-spin")} />
+        <span className="text-xs">
+          {isCreatingExpression ? "Creando..." : "Expresión"}
+        </span>
       </button>
 
       {/* Flecha hacia abajo */}
