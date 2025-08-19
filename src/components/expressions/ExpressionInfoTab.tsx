@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/utils/common/classnames";
 import { formatDateShort } from "@/utils/common/time/formatDate";
 import { getLanguageInfo } from "@/utils/common/language";
-import { useTextSelection } from "@/hooks/useTextSelection";
-import { TextSelectionTooltip } from "@/components/common";
+
 
 interface ExpressionInfoTabProps {
   expression: Expression;
@@ -75,28 +74,7 @@ export const ExpressionInfoTab = memo(function ExpressionInfoTab({
   const contextRef = useRef<HTMLDivElement>(null);
   const examplesRef = useRef<HTMLDivElement>(null);
 
-  // Hook personalizado para manejo de selección de texto en múltiples contenedores
-  const { selection, hideSelection, keepVisible } = useTextSelection();
 
-  // Función para verificar si la selección está en cualquiera de nuestros contenedores
-  const isSelectionInOurContainers = () => {
-    const windowSelection = window.getSelection();
-    if (!windowSelection || windowSelection.rangeCount === 0) return false;
-
-    const range = windowSelection.getRangeAt(0);
-    const containers = [definitionRef, contextRef, examplesRef];
-
-    return containers.some(
-      (ref) =>
-        ref.current && ref.current.contains(range.commonAncestorContainer)
-    );
-  };
-
-  // Filtrar la selección solo si está en nuestros contenedores
-  const filteredSelection = {
-    ...selection,
-    isVisible: selection.isVisible && isSelectionInOurContainers(),
-  };
 
   return (
     <div className="space-y-4">
@@ -240,14 +218,7 @@ export const ExpressionInfoTab = memo(function ExpressionInfoTab({
           </div>
       </SectionContainer>
 
-      {/* Tooltip de selección de texto */}
-      <TextSelectionTooltip
-        text={filteredSelection.text}
-        rect={filteredSelection.rect}
-        isVisible={filteredSelection.isVisible}
-        onHide={hideSelection}
-        onKeepVisible={keepVisible}
-      />
+
     </div>
   );
 });

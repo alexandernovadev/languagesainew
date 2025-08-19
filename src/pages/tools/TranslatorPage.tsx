@@ -10,8 +10,7 @@ import type { AllowedLanguageCode } from "@/constants/identity";
 import { translatorService } from "@/services/translatorService";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { ArrowLeftRight, Loader2 } from "lucide-react";
-import { useTextSelection } from "@/hooks/useTextSelection";
-import { TextSelectionTooltip } from "@/components/common/TextSelectionTooltip";
+
 import { capitalize } from "@/utils/common/string/capitalize";
 
 export default function TranslatorPage() {
@@ -22,7 +21,7 @@ export default function TranslatorPage() {
   const [loading, setLoading] = useState(false);
   const { handleApiResult } = useResultHandler();
   const outputRef = useRef<HTMLDivElement | null>(null);
-  const { selection, hideSelection, keepVisible } = useTextSelection(outputRef);
+
   
 
   const handleSwap = () => {
@@ -113,15 +112,7 @@ export default function TranslatorPage() {
             </div>
           </div>
 
-          {/* Tooltip for text selection in output */}
-          <TextSelectionTooltip
-            text={selection.text}
-            rect={selection.rect}
-            isVisible={selection.isVisible}
-            onHide={hideSelection}
-            onKeepVisible={keepVisible}
-            showAddButtons
-          />
+
 
           <div className="flex justify-start items-center">
             <div className="flex items-center gap-2">

@@ -11,8 +11,8 @@ import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
-import { useTextSelection } from "@/hooks/useTextSelection";
-import { TextSelectionTooltip } from "@/components/common";
+
+
 import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
 
@@ -181,11 +181,9 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
 
-  // Ref para el contenedor de selección de texto
-  const selectionContainerRef = useRef<HTMLDivElement>(null);
+
   
-  // Hook para manejo de selección de texto
-  const { selection, hideSelection, keepVisible } = useTextSelection(selectionContainerRef);
+
 
   // Incrementar seen cuando se ve la palabra
   useEffect(() => {
@@ -414,13 +412,11 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Definition */}
           {word.definition && (
-            <SelectableTextContainer containerRef={selectionContainerRef}>
-              <SectionContainer>
-                <p className="text-sm text-zinc-300 leading-relaxed">
-                  {capitalize(word.definition)}
-                </p>
-              </SectionContainer>
-            </SelectableTextContainer>
+            <SectionContainer>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                {capitalize(word.definition)}
+              </p>
+            </SectionContainer>
           )}
 
           {/* Spanish Translation */}
@@ -465,27 +461,25 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Examples */}
           {word.examples && word.examples.length > 0 && (
-            <SelectableTextContainer containerRef={selectionContainerRef}>
-              <SectionContainer loading={actionLoading.updateExamples}>
-                <SectionHeader
-                  title="Ejemplos"
-                  icon="💬"
-                  onRefresh={handleRefreshExamples}
-                  loading={actionLoading.updateExamples}
-                  showRefreshButtons={showRefreshButtons}
-                />
-                <div className="space-y-2">
-                  {word.examples.map((example, index) => (
-                    <p
-                      key={index}
-                      className="text-sm text-zinc-300 leading-relaxed"
-                    >
-                      • {example}
-                    </p>
-                  ))}
-                </div>
-              </SectionContainer>
-            </SelectableTextContainer>
+            <SectionContainer loading={actionLoading.updateExamples}>
+              <SectionHeader
+                title="Ejemplos"
+                icon="💬"
+                onRefresh={handleRefreshExamples}
+                loading={actionLoading.updateExamples}
+                showRefreshButtons={showRefreshButtons}
+              />
+              <div className="space-y-2">
+                {word.examples.map((example, index) => (
+                  <p
+                    key={index}
+                    className="text-sm text-zinc-300 leading-relaxed"
+                  >
+                    • {example}
+                  </p>
+                ))}
+              </div>
+            </SectionContainer>
           )}
 
           {/* Code Switching */}
@@ -513,27 +507,25 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Synonyms */}
           {word.sinonyms && word.sinonyms.length > 0 && (
-            <SelectableTextContainer containerRef={selectionContainerRef}>
-              <SectionContainer loading={actionLoading.updateSynonyms}>
-                <SectionHeader
-                  title="Sinónimos"
-                  icon="🔗"
-                  onRefresh={handleRefreshSynonyms}
-                  loading={actionLoading.updateSynonyms}
-                  showRefreshButtons={showRefreshButtons}
-                />
-                <div className="flex flex-wrap gap-2">
-                  {word.sinonyms.map((synonym, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
-                    >
-                      {synonym}
-                    </span>
-                  ))}
-                </div>
-              </SectionContainer>
-            </SelectableTextContainer>
+            <SectionContainer loading={actionLoading.updateSynonyms}>
+              <SectionHeader
+                title="Sinónimos"
+                icon="🔗"
+                onRefresh={handleRefreshSynonyms}
+                loading={actionLoading.updateSynonyms}
+                showRefreshButtons={showRefreshButtons}
+              />
+              <div className="flex flex-wrap gap-2">
+                {word.sinonyms.map((synonym, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
+                  >
+                    {synonym}
+                  </span>
+                ))}
+              </div>
+            </SectionContainer>
           )}
 
           {/* Word Types */}
@@ -595,14 +587,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
         </TabsContent>
       </Tabs>
 
-      {/* Tooltip de selección de texto */}
-      <TextSelectionTooltip
-        text={selection.text}
-        rect={selection.rect}
-        isVisible={selection.isVisible}
-        onHide={hideSelection}
-        onKeepVisible={keepVisible}
-      />
+
     </div>
   );
 });
