@@ -517,4 +517,40 @@ body {
 
 /* Utilidades de line-clamp para evitar desbordes de texto */
 
+/* Estilos para selección de texto */
+.text-selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
 
+.text-selectable::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+.text-selectable::-moz-selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+/* Mejoras para el menú de selección */
+.selection-menu-arrow {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Animación para el gradiente que se mueve */
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 2s ease infinite;
+  background-size: 200% 200%;
+}

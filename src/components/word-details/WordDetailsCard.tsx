@@ -11,7 +11,8 @@ import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
-
+import { useTextSelection } from "@/hooks/useTextSelection";
+import { TextSelectionMenu } from "@/components/common/TextSelectionMenu";
 
 import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
@@ -181,8 +182,16 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
 
+  // Ref para la sección de ejemplos
+  const examplesRef = useRef<HTMLDivElement>(null);
 
-  
+  // Hook para selección de texto en ejemplos
+  const { selectedText, menuPosition, showMenu, clearSelection } = useTextSelection({
+    containerRef: examplesRef,
+    onTextSelected: (text) => {
+      console.log('Texto seleccionado en ejemplos:', text);
+    }
+  });
 
 
   // Incrementar seen cuando se ve la palabra
@@ -362,6 +371,51 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     setActiveTab(value as "info" | "chat");
   }, []);
 
+  // Funciones para el menú de selección de texto
+  const handleSpeakText = useCallback((text: string) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = SPEECH_RATES.NORMAL;
+    utterance.lang = "en-US";
+
+    utterance.onend = () => setIsPlaying(false);
+    utterance.onerror = () => setIsPlaying(false);
+
+    speechSynthesis.speak(utterance);
+    
+    toast.success(`🔊 "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, {
+      description: "Reproduciendo audio...",
+    });
+  }, [isPlaying]);
+
+  const handleCreateWord = useCallback((text: string) => {
+    toast.success(`📖 Crear palabra: "${text}"`, {
+      description: "Se abrirá el formulario de nueva palabra",
+      action: {
+        label: "Crear",
+        onClick: () => {
+          // Aquí se podría abrir un modal o navegar a crear palabra
+          console.log('Crear palabra con texto:', text);
+        }
+      }
+    });
+  }, []);
+
+  const handleCreateExpression = useCallback((text: string) => {
+    toast.success(`📝 Crear expresión: "${text}"`, {
+      description: "Se abrirá el formulario de nueva expresión",
+      action: {
+        label: "Crear",
+        onClick: () => {
+          // Aquí se podría abrir un modal o navegar a crear expresión
+          console.log('Crear expresión con texto:', text);
+        }
+      }
+    });
+  }, []);
+
   return (
     <div className={containerClassName}>
       {/* Tabs */}
@@ -469,11 +523,15 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 loading={actionLoading.updateExamples}
                 showRefreshButtons={showRefreshButtons}
               />
-              <div className="space-y-2">
+              <div 
+                ref={examplesRef}
+                className="space-y-2 relative"
+              >
                 {word.examples.map((example, index) => (
                   <p
                     key={index}
-                    className="text-sm text-zinc-300 leading-relaxed"
+                    className="text-sm text-zinc-300 leading-relaxed cursor-text select-text"
+                    style={{ userSelect: 'text' }}
                   >
                     • {example}
                   </p>
@@ -587,7 +645,16 @@ export const WordDetailsCard = memo(function WordDetailsCard({
         </TabsContent>
       </Tabs>
 
-
+      {/* Menú de selección de texto */}
+      <TextSelectionMenu
+        selectedText={selectedText}
+        position={menuPosition}
+        show={showMenu}
+        onSpeak={handleSpeakText}
+        onCreateWord={handleCreateWord}
+        onCreateExpression={handleCreateExpression}
+        onClose={clearSelection}
+      />
     </div>
   );
 });
