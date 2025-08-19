@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   RotateCcw,
   ChevronLeft,
@@ -196,6 +197,11 @@ export default function AnkiGamePage() {
       updateSeenWithDebounce(currentCard._id);
     }
   }, [gameStats.currentIndex, shuffledWords, updateSeenWithDebounce]);
+
+  // Limpiar input de reconocimiento de voz al cambiar de tarjeta
+  useEffect(() => {
+    setRecognizedText("");
+  }, [gameStats.currentIndex]);
 
   // Cleanup al desmontar el componente
   useEffect(() => {
@@ -541,11 +547,25 @@ export default function AnkiGamePage() {
 
           {/* Mobile/Tablet: Solo input con placeholder */}
           <div className="md:hidden">
-            <input
-              type="text"
-              placeholder="Usa el micrófono de tu dispositivo para hablar..."
-              className="w-full p-3 border rounded-lg bg-background text-sm"
-            />
+            <div className="relative w-full">
+              <Input
+                type="text"
+                placeholder="Usa el micrófono de tu dispositivo para hablar..."
+                className="w-full p-3 pr-10 text-sm"
+                value={recognizedText}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecognizedText(e.target.value)}
+              />
+              {recognizedText && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
+                  onClick={() => setRecognizedText("")}
+                >
+                  ✕
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Mensaje de soporte */}
