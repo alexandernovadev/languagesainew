@@ -545,7 +545,6 @@ export default function AnkiGamePage() {
               type="text"
               placeholder="Usa el micrófono de tu dispositivo para hablar..."
               className="w-full p-3 border rounded-lg bg-background text-sm"
-              readOnly
             />
           </div>
 
