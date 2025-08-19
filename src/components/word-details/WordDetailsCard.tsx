@@ -13,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionMenu } from "@/components/common/TextSelectionMenu";
-import { withTextSelection } from "@/components/common/withTextSelection";
 
 import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
