@@ -18,4 +18,4 @@ export {
   clearChatWithToast,
   type ChatMessage as ChatMessageType,
   type ChatInterfaceProps,
-} from "./ChatInterface";
+} from "@/components/chat";

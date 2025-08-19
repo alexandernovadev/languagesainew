@@ -1,8 +1,6 @@
 import { Expression } from "@/models/Expression";
-import type { ChatMessage } from "@/models/Expression";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { TextSelectionTooltip } from "@/components/common";
 import {
   useChatLogic,
   DefaultQuestionsGrid,
@@ -11,15 +9,16 @@ import {
   ChatInput,
   createChatMessage,
   clearChatWithToast,
-} from "@/components/common/ChatInterface";
+} from "@/components/chat";
 
 interface ExpressionChatTabProps {
   expression: Expression;
 }
 
 export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
-  const { streamChatMessage, getChatHistory, clearChatHistory } = useExpressionStore();
-  
+  const { streamChatMessage, getChatHistory, clearChatHistory } =
+    useExpressionStore();
+
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
 
@@ -36,16 +35,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
     streamingMessage,
     setStreamingMessage,
     messagesEndRef,
-    chatSelectionContainerRef,
-    selection,
-    hideSelection,
-    keepVisible,
-  } = useChatLogic(
-    expression,
-    expression._id,
-    getChatHistory,
-    expression.chat
-  );
+  } = useChatLogic(expression, expression._id, getChatHistory, expression.chat);
 
   const handleDefaultQuestion = async (question: string) => {
     setInputValue(question);
@@ -97,10 +87,7 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
-      <div
-        ref={chatSelectionContainerRef}
-        className="flex-1 p-4 space-y-4 overflow-y-auto text-selectable"
-      >
+      <div className="flex-1 p-4 overflow-y-auto [&>*]:m-0 [&>*]:p-0">
         {/* Opciones por defecto dentro del chat */}
         {messages.length === 0 && (
           <DefaultQuestionsGrid
@@ -120,7 +107,12 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
           ))}
 
         {/* Mensaje streaming */}
-        {isStreaming && <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={true} />}
+        {isStreaming && (
+          <StreamingMessage
+            streamingMessage={streamingMessage}
+            enableMarkdown={true}
+          />
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -133,15 +125,6 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
         placeholder="Pregunta algo sobre esta expresión..."
         isLoading={isLoading}
         hasMessages={messages.length > 0}
-      />
-
-      {/* Tooltip de selección de texto para el chat */}
-      <TextSelectionTooltip
-        text={selection.text}
-        rect={selection.rect}
-        isVisible={selection.isVisible}
-        onHide={hideSelection}
-        onKeepVisible={keepVisible}
       />
     </div>
   );

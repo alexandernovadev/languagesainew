@@ -1,8 +1,6 @@
 import { Word } from "@/models/Word";
-import type { ChatMessage } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { TextSelectionTooltip } from "@/components/common";
 import {
   useChatLogic,
   DefaultQuestionsGrid,
@@ -11,7 +9,7 @@ import {
   ChatInput,
   createChatMessage,
   clearChatWithToast,
-} from "@/components/common/ChatInterface";
+} from "@/components/chat";
 
 interface WordChatTabProps {
   word: Word;
@@ -36,10 +34,6 @@ export function WordChatTab({ word }: WordChatTabProps) {
     streamingMessage,
     setStreamingMessage,
     messagesEndRef,
-    chatSelectionContainerRef,
-    selection,
-    hideSelection,
-    keepVisible,
   } = useChatLogic(
     word,
     word._id,
@@ -97,10 +91,7 @@ export function WordChatTab({ word }: WordChatTabProps) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
-      <div
-        ref={chatSelectionContainerRef}
-        className="flex-1 p-4 space-y-4 overflow-y-auto text-selectable"
-      >
+      <div className="flex-1 p-4 overflow-y-auto [&>*]:m-0 [&>*]:p-0">
         {/* Opciones por defecto dentro del chat */}
         {messages.length === 0 && (
           <DefaultQuestionsGrid
@@ -120,7 +111,9 @@ export function WordChatTab({ word }: WordChatTabProps) {
           ))}
 
         {/* Mensaje streaming */}
-        {isStreaming && <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={true} />}
+        {isStreaming && (
+          <StreamingMessage streamingMessage={streamingMessage} enableMarkdown={true} />
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -133,15 +126,6 @@ export function WordChatTab({ word }: WordChatTabProps) {
         placeholder="Pregunta algo sobre esta palabra..."
         isLoading={isLoading}
         hasMessages={messages.length > 0}
-      />
-
-      {/* Tooltip de selección de texto para el chat */}
-      <TextSelectionTooltip
-        text={selection.text}
-        rect={selection.rect}
-        isVisible={selection.isVisible}
-        onHide={hideSelection}
-        onKeepVisible={keepVisible}
       />
     </div>
   );

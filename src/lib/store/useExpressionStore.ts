@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { Expression, ChatMessage } from "../../models/Expression";
+import { Expression } from "../../models/Expression";
+import type { ChatMessage } from "../../models/Expression";
 import { expressionService } from "../../services/expressionService";
 import { toast } from "sonner";
 

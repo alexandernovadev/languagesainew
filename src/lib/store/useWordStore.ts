@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { wordService } from "../../services/wordService";
-import { Word, ChatMessage } from "../../models/Word";
+import { Word } from "../../models/Word";
+import type { ChatMessage } from "../../models/Word";
 import { WordFilters } from "@/components/forms/word-filters/types";
 import { toast } from "sonner";
 
