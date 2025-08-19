@@ -6,78 +6,121 @@ interface TextSelectionMenuPosition {
 }
 
 interface UseTextSelectionOptions {
-  onTextSelected?: (selectedText: string) => void;
+  onTextSelected?: (selectedText: string, containerId?: string) => void;
   containerRef?: React.RefObject<HTMLElement | null>;
+  containerRefs?: React.RefObject<HTMLElement | null>[];
 }
 
 export const useTextSelection = (options: UseTextSelectionOptions = {}) => {
-  const { onTextSelected, containerRef } = options;
+  const { onTextSelected, containerRef, containerRefs } = options;
   const [selectedText, setSelectedText] = useState<string>('');
   const [menuPosition, setMenuPosition] = useState<TextSelectionMenuPosition | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [activeContainerId, setActiveContainerId] = useState<string>('');
 
   // Throttle para optimizar el scroll
   const throttleRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Función para obtener el ID del contenedor
+  const getContainerId = useCallback((element: HTMLElement): string => {
+    if (containerRefs && containerRefs.length > 0) {
+      for (let i = 0; i < containerRefs.length; i++) {
+        if (containerRefs[i]?.current === element) {
+          return `container-${i}`;
+        }
+      }
+    }
+    return 'default';
+  }, [containerRefs]);
+
+  // Función para verificar si un elemento está dentro de algún contenedor válido
+  const isWithinValidContainer = useCallback((element: Node): boolean => {
+    if (containerRef?.current) {
+      return containerRef.current.contains(element);
+    }
+    
+    if (containerRefs && containerRefs.length > 0) {
+      return containerRefs.some(ref => ref.current?.contains(element));
+    }
+    
+    return true; // Si no hay contenedores específicos, permitir en todo el documento
+  }, [containerRef, containerRefs]);
 
   const handleSelectionChange = useCallback(() => {
     const selection = window.getSelection();
     const text = selection?.toString().trim() || '';
 
     if (text.length > 0 && selection && selection.rangeCount > 0) {
-      // Si hay un contenedor específico, verificar que la selección esté dentro de él
-      if (containerRef?.current) {
-        const range = selection.getRangeAt(0);
-        const isWithinContainer = containerRef.current.contains(range.commonAncestorContainer);
-        
-        if (!isWithinContainer) {
-          setShowMenu(false);
-          setSelectedText('');
-          return;
-        }
+      const range = selection.getRangeAt(0);
+      
+      // Verificar que la selección esté dentro de un contenedor válido
+      if (!isWithinValidContainer(range.commonAncestorContainer)) {
+        setShowMenu(false);
+        setSelectedText('');
+        setActiveContainerId('');
+        return;
       }
 
       try {
-        const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
-        // Calcular posición del menú relativa al contenedor
-        let menuPosition: TextSelectionMenuPosition;
+        // Encontrar el contenedor activo para calcular la posición
+        let activeContainer: HTMLElement | null = null;
+        let containerId = '';
         
         if (containerRef?.current) {
-          const containerRect = containerRef.current.getBoundingClientRect();
-          menuPosition = {
-            x: rect.left - containerRect.left,
-            y: rect.top - containerRect.top - 25  // Un poco más abajo
-          };
-        } else {
-          // Fallback a posición absoluta al documento
-          menuPosition = {
-            x: rect.left + window.scrollX + (rect.width / 2),
-            y: rect.top + window.scrollY - 10
-          };
+          activeContainer = containerRef.current;
+          containerId = 'default';
+        } else if (containerRefs && containerRefs.length > 0) {
+          for (let i = 0; i < containerRefs.length; i++) {
+            if (containerRefs[i]?.current?.contains(range.commonAncestorContainer)) {
+              activeContainer = containerRefs[i].current;
+              containerId = `container-${i}`;
+              break;
+            }
+          }
         }
+        
+        if (!activeContainer) {
+          setShowMenu(false);
+          setSelectedText('');
+          setActiveContainerId('');
+          return;
+        }
+
+        // Calcular posición del menú relativa al contenedor activo
+        const containerRect = activeContainer.getBoundingClientRect();
+        const menuPosition: TextSelectionMenuPosition = {
+          x: rect.left - containerRect.left,
+          y: rect.top - containerRect.top - 25
+        };
 
         setSelectedText(text);
         setMenuPosition(menuPosition);
         setShowMenu(true);
+        setActiveContainerId(containerId);
 
-        // Callback opcional
-        onTextSelected?.(text);
+        // Callback con el ID del contenedor
+        onTextSelected?.(text, containerId);
       } catch (error) {
         console.error('Error handling text selection:', error);
         setShowMenu(false);
+        setSelectedText('');
+        setActiveContainerId('');
       }
     } else {
       setShowMenu(false);
       setSelectedText('');
       setMenuPosition(null);
+      setActiveContainerId('');
     }
-  }, [onTextSelected, containerRef]);
+  }, [onTextSelected, isWithinValidContainer, containerRef, containerRefs]);
 
   const clearSelection = useCallback(() => {
     setShowMenu(false);
     setSelectedText('');
     setMenuPosition(null);
+    setActiveContainerId('');
     window.getSelection()?.removeAllRanges();
   }, []);
 
@@ -102,68 +145,73 @@ export const useTextSelection = (options: UseTextSelectionOptions = {}) => {
       }
       
       throttleRef.current = setTimeout(() => {
-        if (showMenu && selectedText) {
+        if (showMenu && selectedText && activeContainerId) {
           const selection = window.getSelection();
           if (selection && selection.rangeCount > 0) {
             try {
               const range = selection.getRangeAt(0);
               const rect = range.getBoundingClientRect();
               
-                             // Actualizar posición del menú relativa al contenedor
-               let newPosition: TextSelectionMenuPosition;
-               
-               if (containerRef?.current) {
-                 const containerRect = containerRef.current.getBoundingClientRect();
-                 newPosition = {
-                   x: rect.left - containerRect.left,
-                   y: rect.top - containerRect.top - 35  // Un poco más abajo
-                 };
-               } else {
-                 // Fallback a posición absoluta al documento
-                 newPosition = {
-                   x: rect.left + window.scrollX + (rect.width / 2),
-                   y: rect.top + window.scrollY - 10
-                 };
-               }
+              // Encontrar el contenedor activo
+              let activeContainer: HTMLElement | null = null;
               
-              setMenuPosition(newPosition);
+              if (containerRef?.current) {
+                activeContainer = containerRef.current;
+              } else if (containerRefs && containerRefs.length > 0) {
+                const containerIndex = parseInt(activeContainerId.split('-')[1]);
+                activeContainer = containerRefs[containerIndex]?.current || null;
+              }
+              
+              if (activeContainer) {
+                const containerRect = activeContainer.getBoundingClientRect();
+                const newPosition: TextSelectionMenuPosition = {
+                  x: rect.left - containerRect.left,
+                  y: rect.top - containerRect.top - 35
+                };
+                setMenuPosition(newPosition);
+              }
             } catch (error) {
-              // Si hay error, mantener el menú pero no actualizar posición
               console.warn('Error updating menu position on scroll:', error);
             }
           }
         }
-      }, 10); // Throttle de 10ms para suavidad
+      }, 10);
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('scroll', handleScroll, { passive: true });
     
     // También escuchar scroll en contenedores con scroll
-    if (containerRef?.current) {
-      containerRef.current.addEventListener('scroll', handleScroll, { passive: true });
-    }
+    const allContainers = containerRef ? [containerRef] : (containerRefs || []);
+    allContainers.forEach(ref => {
+      if (ref?.current) {
+        ref.current.addEventListener('scroll', handleScroll, { passive: true });
+      }
+    });
 
     return () => {
       document.removeEventListener('selectionchange', handleSelectionChange);
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll);
       
-      if (containerRef?.current) {
-        containerRef.current.removeEventListener('scroll', handleScroll);
-      }
+      allContainers.forEach(ref => {
+        if (ref?.current) {
+          ref.current.removeEventListener('scroll', handleScroll);
+        }
+      });
       
       // Limpiar throttle
       if (throttleRef.current) {
         clearTimeout(throttleRef.current);
       }
     };
-  }, [handleSelectionChange, showMenu, menuPosition, clearSelection, selectedText, containerRef]);
+  }, [handleSelectionChange, showMenu, menuPosition, clearSelection, selectedText, activeContainerId, containerRef, containerRefs]);
 
   return {
     selectedText,
     menuPosition,
     showMenu,
-    clearSelection
+    clearSelection,
+    activeContainerId
   };
 };

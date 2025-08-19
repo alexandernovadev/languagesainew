@@ -26,135 +26,139 @@ interface WordDetailsCardProps {
 }
 
 // Componente memoizado para SectionContainer
-const SectionContainer = memo(({
-  children,
-  className = "",
-  loading = false,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  loading?: boolean;
-}) => (
-  <div className="mb-4">
-    {loading ? (
-      <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
-        <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
-      </div>
-    ) : (
-      <div
-        className={cn(
-          "p-4 rounded-lg border bg-zinc-900/40 border-zinc-800",
-          className
-        )}
-      >
-        {children}
-      </div>
-    )}
-  </div>
-));
+const SectionContainer = memo(
+  ({
+    children,
+    className = "",
+    loading = false,
+  }: {
+    children: React.ReactNode;
+    className?: string;
+    loading?: boolean;
+  }) => (
+    <div className="mb-4">
+      {loading ? (
+        <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
+          <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "p-4 rounded-lg border bg-zinc-900/40 border-zinc-800",
+            className
+          )}
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  )
+);
 
 SectionContainer.displayName = "SectionContainer";
 
 // Componente memoizado para SectionHeader
-const SectionHeader = memo(({
-  title,
-  onRefresh,
-  loading = false,
-  icon,
-  showRefreshButtons = true,
-}: {
-  title: string;
-  onRefresh?: () => void;
-  loading?: boolean;
-  icon?: string;
-  showRefreshButtons?: boolean;
-}) => (
-  <div className="flex items-center justify-between mb-3">
-    <div className="flex items-center gap-2">
-      {icon && <span className="text-lg">{icon}</span>}
-      <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide">
-        {title}
-      </h3>
-    </div>
-    {onRefresh && showRefreshButtons && (
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRefresh();
-        }}
-        disabled={loading}
-        className={cn(
-          "h-6 w-6 p-0 transition-all duration-300",
-          loading
-            ? "bg-zinc-800/80 border border-green-400/40"
-            : "bg-zinc-800/50 hover:bg-zinc-700/50"
-        )}
-      >
-        <RefreshCw
+const SectionHeader = memo(
+  ({
+    title,
+    onRefresh,
+    loading = false,
+    icon,
+    showRefreshButtons = true,
+  }: {
+    title: string;
+    onRefresh?: () => void;
+    loading?: boolean;
+    icon?: string;
+    showRefreshButtons?: boolean;
+  }) => (
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2">
+        {icon && <span className="text-lg">{icon}</span>}
+        <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide">
+          {title}
+        </h3>
+      </div>
+      {onRefresh && showRefreshButtons && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRefresh();
+          }}
+          disabled={loading}
           className={cn(
-            "h-3 w-3 transition-all duration-300",
-            loading ? "animate-spin text-green-400" : "text-zinc-400"
+            "h-6 w-6 p-0 transition-all duration-300",
+            loading
+              ? "bg-zinc-800/80 border border-green-400/40"
+              : "bg-zinc-800/50 hover:bg-zinc-700/50"
           )}
-        />
-      </Button>
-    )}
-  </div>
-));
+        >
+          <RefreshCw
+            className={cn(
+              "h-3 w-3 transition-all duration-300",
+              loading ? "animate-spin text-green-400" : "text-zinc-400"
+            )}
+          />
+        </Button>
+      )}
+    </div>
+  )
+);
 
 SectionHeader.displayName = "SectionHeader";
 
 // Componente memoizado para SelectableTextContainer
-const SelectableTextContainer = memo(({
-  children,
-  containerRef,
-}: {
-  children: React.ReactNode;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
-}) => (
-  <div ref={containerRef} className="relative text-selectable">
-    {children}
-  </div>
-));
+const SelectableTextContainer = memo(
+  ({
+    children,
+    containerRef,
+  }: {
+    children: React.ReactNode;
+    containerRef?: React.RefObject<HTMLDivElement | null>;
+  }) => (
+    <div ref={containerRef} className="relative text-selectable">
+      {children}
+    </div>
+  )
+);
 
 SelectableTextContainer.displayName = "SelectableTextContainer";
 
-
-
 // Componente memoizado para AudioButtons
-const AudioButtons = memo(({
-  onSpeak,
-  onSpeakSlow,
-  isPlaying,
-}: {
-  onSpeak: () => void;
-  onSpeakSlow: () => void;
-  isPlaying: boolean;
-}) => (
-  <div className="flex items-center gap-2">
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onSpeak}
-      disabled={isPlaying}
-      className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-    >
-      <Volume2
-        className={cn("h-3 w-3", isPlaying && "animate-pulse")}
-      />
-    </Button>
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onSpeakSlow}
-      disabled={isPlaying}
-      className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
-    >
-      🐢
-    </Button>
-  </div>
-));
+const AudioButtons = memo(
+  ({
+    onSpeak,
+    onSpeakSlow,
+    isPlaying,
+  }: {
+    onSpeak: () => void;
+    onSpeakSlow: () => void;
+    isPlaying: boolean;
+  }) => (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onSpeak}
+        disabled={isPlaying}
+        className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+      >
+        <Volume2 className={cn("h-3 w-3", isPlaying && "animate-pulse")} />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onSpeakSlow}
+        disabled={isPlaying}
+        className="h-7 w-7 p-0 bg-zinc-800/50 hover:bg-zinc-700/50"
+      >
+        🐢
+      </Button>
+    </div>
+  )
+);
 
 AudioButtons.displayName = "AudioButtons";
 
@@ -188,19 +192,28 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   // Ref para la sección de definición
   const definitionRef = useRef<HTMLDivElement>(null);
 
-  // Hook para selección de texto en ejemplos
-  const { selectedText: examplesSelectedText, menuPosition: examplesMenuPosition, showMenu: examplesShowMenu, clearSelection: examplesClearSelection } = useTextSelection({
+  // Ref para la sección de sinónimos
+  const synonymsRef = useRef<HTMLDivElement>(null);
+
+  // Hooks separados para cada sección para evitar conflictos
+  const definitionSelection = useTextSelection({
+    containerRef: definitionRef,
+    onTextSelected: (text) => {
+      console.log('Texto seleccionado en definición:', text);
+    }
+  });
+
+  const examplesSelection = useTextSelection({
     containerRef: examplesRef,
     onTextSelected: (text) => {
       console.log('Texto seleccionado en ejemplos:', text);
     }
   });
 
-  // Hook para selección de texto en definición
-  const { selectedText: definitionSelectedText, menuPosition: definitionMenuPosition, showMenu: definitionShowMenu, clearSelection: definitionClearSelection } = useTextSelection({
-    containerRef: definitionRef,
+  const synonymsSelection = useTextSelection({
+    containerRef: synonymsRef,
     onTextSelected: (text) => {
-      console.log('Texto seleccionado en definición:', text);
+      console.log('Texto seleccionado en sinónimos:', text);
     }
   });
 
@@ -214,42 +227,59 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   }, [word._id, incrementWordSeen]);
 
   // Memoizar funciones de manejo de eventos
-  const speakWord = useCallback((rate = SPEECH_RATES.NORMAL, language = "en-US") => {
-    if (isPlaying) return;
+  const speakWord = useCallback(
+    (rate = SPEECH_RATES.NORMAL, language = "en-US") => {
+      if (isPlaying) return;
 
-    setIsPlaying(true);
-    const utterance = new SpeechSynthesisUtterance(word.word);
-    utterance.rate = rate;
-    utterance.lang = language;
+      setIsPlaying(true);
+      const utterance = new SpeechSynthesisUtterance(word.word);
+      utterance.rate = rate;
+      utterance.lang = language;
 
-    utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
 
-    speechSynthesis.speak(utterance);
-  }, [word.word, isPlaying]);
+      speechSynthesis.speak(utterance);
+    },
+    [word.word, isPlaying]
+  );
 
   const handleSpeakNormal = useCallback(() => speakWord(), [speakWord]);
-  const handleSpeakSlow = useCallback(() => speakWord(SPEECH_RATES.SUPERSLOW), [speakWord]);
+  const handleSpeakSlow = useCallback(
+    () => speakWord(SPEECH_RATES.SUPERSLOW),
+    [speakWord]
+  );
 
-  const handleUpdateLevel = useCallback(async (level: "easy" | "medium" | "hard") => {
-    if (!word._id) return;
+  const handleUpdateLevel = useCallback(
+    async (level: "easy" | "medium" | "hard") => {
+      if (!word._id) return;
 
-    try {
-      await updateWordLevel(word._id, level);
-      toast.success(`Nivel actualizado a ${level}`, {
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { level }, message: `Nivel actualizado a ${level}` }, "Actualizar Nivel")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-    } catch (error: any) {
-      handleApiResult(error, "Actualizar Nivel");
-    }
-  }, [word._id, updateWordLevel, handleApiResult]);
+      try {
+        await updateWordLevel(word._id, level);
+        toast.success(`Nivel actualizado a ${level}`, {
+          action: {
+            label: <Eye className="h-4 w-4" />,
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data: { level },
+                  message: `Nivel actualizado a ${level}`,
+                },
+                "Actualizar Nivel"
+              ),
+          },
+          cancel: {
+            label: <X className="h-4 w-4" />,
+            onClick: () => toast.dismiss(),
+          },
+        });
+      } catch (error: any) {
+        handleApiResult(error, "Actualizar Nivel");
+      }
+    },
+    [word._id, updateWordLevel, handleApiResult]
+  );
 
   const handleRefreshImage = useCallback(async () => {
     if (!word._id) return;
@@ -259,12 +289,20 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       toast.success("Imagen actualizada", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { word: word.word }, message: "Imagen actualizada" }, "Actualizar Imagen")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: { word: word.word },
+                message: "Imagen actualizada",
+              },
+              "Actualizar Imagen"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Imagen");
@@ -284,12 +322,20 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       toast.success("Ejemplos actualizados", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { examples: word.examples }, message: "Ejemplos actualizados" }, "Actualizar Ejemplos")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: { examples: word.examples },
+                message: "Ejemplos actualizados",
+              },
+              "Actualizar Ejemplos"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Ejemplos");
@@ -309,12 +355,20 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       toast.success("Sinónimos actualizados", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { synonyms: word.sinonyms }, message: "Sinónimos actualizados" }, "Actualizar Sinónimos")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: { synonyms: word.sinonyms },
+                message: "Sinónimos actualizados",
+              },
+              "Actualizar Sinónimos"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Sinónimos");
@@ -334,17 +388,31 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       toast.success("Code-switching actualizado", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { codeSwitching: word.codeSwitching }, message: "Code-switching actualizado" }, "Actualizar Code-switching")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: { codeSwitching: word.codeSwitching },
+                message: "Code-switching actualizado",
+              },
+              "Actualizar Code-switching"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Code-switching");
     }
-  }, [word._id, word.word, word.codeSwitching, updateWordCodeSwitching, handleApiResult]);
+  }, [
+    word._id,
+    word.word,
+    word.codeSwitching,
+    updateWordCodeSwitching,
+    handleApiResult,
+  ]);
 
   const handleRefreshTypes = useCallback(async () => {
     if (!word._id) return;
@@ -359,12 +427,20 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       toast.success("Tipos actualizados", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: { types: word.type }, message: "Tipos actualizados" }, "Actualizar Tipos")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: { types: word.type },
+                message: "Tipos actualizados",
+              },
+              "Actualizar Tipos"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Tipos");
@@ -373,35 +449,30 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   // Memoizar valores computados
   const isCompact = useMemo(() => variant === "compact", [variant]);
-  
-  const containerClassName = useMemo(() => cn(
-    "bg-zinc-950 text-zinc-100",
-    isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
-  ), [isCompact, variant]);
+
+  const containerClassName = useMemo(
+    () =>
+      cn(
+        "bg-zinc-950 text-zinc-100",
+        isCompact ? "p-3" : variant === "modal" ? "p-0" : "p-6"
+      ),
+    [isCompact, variant]
+  );
 
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value as "info" | "chat");
   }, []);
 
-
-
   return (
     <div className={containerClassName}>
       {/* Tabs */}
-      <Tabs
-        value={activeTab}
-        onValueChange={handleTabChange}
-      >
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
           <TabsTrigger value="info">Información</TabsTrigger>
-          <TabsTrigger value="chat">
-            Chat
-          </TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
 
-        <TabsContent
-          value="info"
-        >
+        <TabsContent value="info">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -440,13 +511,13 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 <p className="text-sm text-zinc-300 leading-relaxed">
                   {capitalize(word.definition)}
                 </p>
-                
+
                 {/* Menú de selección de texto para la definición */}
                 <TextSelectionMenu
-                  selectedText={definitionSelectedText}
-                  position={definitionMenuPosition}
-                  show={definitionShowMenu}
-                  onClose={definitionClearSelection}
+                  selectedText={definitionSelection.selectedText}
+                  position={definitionSelection.menuPosition}
+                  show={definitionSelection.showMenu}
+                  onClose={definitionSelection.clearSelection}
                 />
               </div>
             </SectionContainer>
@@ -455,7 +526,11 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           {/* Spanish Translation */}
           {word.spanish && (
             <SectionContainer>
-              <SectionHeader title="Traducción" icon="🇪🇸" showRefreshButtons={showRefreshButtons} />
+              <SectionHeader
+                title="Traducción"
+                icon="🇪🇸"
+                showRefreshButtons={showRefreshButtons}
+              />
               <h3 className="text-lg font-bold text-blue-400 capitalize mb-1">
                 {capitalize(word.spanish.word)}
               </h3>
@@ -502,26 +577,23 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 loading={actionLoading.updateExamples}
                 showRefreshButtons={showRefreshButtons}
               />
-              <div 
-                ref={examplesRef}
-                className="space-y-2 relative"
-              >
+              <div ref={examplesRef} className="space-y-2 relative">
                 {word.examples.map((example, index) => (
                   <p
                     key={index}
                     className="text-sm text-zinc-300 leading-relaxed cursor-text select-text"
-                    style={{ userSelect: 'text' }}
+                    style={{ userSelect: "text" }}
                   >
                     • {example}
                   </p>
                 ))}
-                
+
                 {/* Menú de selección de texto dentro del contenedor */}
                 <TextSelectionMenu
-                  selectedText={examplesSelectedText}
-                  position={examplesMenuPosition}
-                  show={examplesShowMenu}
-                  onClose={examplesClearSelection}
+                  selectedText={examplesSelection.selectedText}
+                  position={examplesSelection.menuPosition}
+                  show={examplesSelection.showMenu}
+                  onClose={examplesSelection.clearSelection}
                 />
               </div>
             </SectionContainer>
@@ -560,15 +632,24 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 loading={actionLoading.updateSynonyms}
                 showRefreshButtons={showRefreshButtons}
               />
-              <div className="flex flex-wrap gap-2">
+              <div ref={synonymsRef} className="space-y-2 relative">
                 {word.sinonyms.map((synonym, index) => (
-                  <span
+                  <p
                     key={index}
-                    className="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-200 capitalize"
+                    className="text-sm text-zinc-300 leading-relaxed cursor-text select-text"
+                    style={{ userSelect: "text" }}
                   >
-                    {synonym}
-                  </span>
+                    • {synonym}
+                  </p>
                 ))}
+
+                {/* Menú de selección de texto dentro del contenedor */}
+                <TextSelectionMenu
+                  selectedText={synonymsSelection.selectedText}
+                  position={synonymsSelection.menuPosition}
+                  show={synonymsSelection.showMenu}
+                  onClose={synonymsSelection.clearSelection}
+                />
               </div>
             </SectionContainer>
           )}
@@ -631,8 +712,6 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           <WordChatTab word={word} />
         </TabsContent>
       </Tabs>
-
-
     </div>
   );
 });
