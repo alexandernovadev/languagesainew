@@ -139,7 +139,7 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
         )}
         title="Crear palabra"
       >
-        <Hash className={cn("h-4 w-4", isCreatingWord && "animate-spin")} />
+        <Hash className={cn("h-4 w-4", isCreatingWord && "animate-pulse")} />
         <span className="text-xs">
           {isCreatingWord ? "Creando..." : "Palabra"}
         </span>
@@ -157,7 +157,7 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
         )}
         title="Crear expresión"
       >
-        <FileText className={cn("h-4 w-4", isCreatingExpression && "animate-spin")} />
+        <FileText className={cn("h-4 w-4", isCreatingExpression && "animate-pulse")} />
         <span className="text-xs">
           {isCreatingExpression ? "Creando..." : "Expresión"}
         </span>

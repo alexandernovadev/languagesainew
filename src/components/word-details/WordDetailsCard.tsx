@@ -188,7 +188,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   // Ref para la sección de ejemplos
   const examplesRef = useRef<HTMLDivElement>(null);
-  
+
   // Ref para la sección de definición
   const definitionRef = useRef<HTMLDivElement>(null);
 
@@ -198,26 +198,15 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   // Hooks separados para cada sección para evitar conflictos
   const definitionSelection = useTextSelection({
     containerRef: definitionRef,
-    onTextSelected: (text) => {
-      console.log('Texto seleccionado en definición:', text);
-    }
   });
 
   const examplesSelection = useTextSelection({
     containerRef: examplesRef,
-    onTextSelected: (text) => {
-      console.log('Texto seleccionado en ejemplos:', text);
-    }
   });
 
   const synonymsSelection = useTextSelection({
     containerRef: synonymsRef,
-    onTextSelected: (text) => {
-      console.log('Texto seleccionado en sinónimos:', text);
-    }
   });
-
-
 
   // Incrementar seen cuando se ve la palabra
   useEffect(() => {
