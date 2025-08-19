@@ -24,7 +24,16 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
     if (isPlaying) return;
 
     setIsPlaying(true);
-    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Limpiar HTML tags, bullets al inicio/final y espacios extra
+    let cleanText = text
+      .replace(/<[^>]*>/g, '') // Eliminar HTML tags
+      .replace(/^[\s•·▪▫◦‣⁃⁌⁍⁎⁏⁐⁑⁒⁓⁔⁕⁖⁗⁘⁙⁚⁛⁜⁝⁞]+/, '') // Eliminar bullets al inicio
+      .replace(/[\s•·▪▫◦‣⁃⁌⁍⁎⁏⁐⁑⁒⁓⁔⁕⁖⁗⁘⁙⁚⁛⁜⁝⁞]+$/, '') // Eliminar bullets al final
+      .replace(/\s+/g, ' ') // Normalizar espacios múltiples
+      .trim(); // Eliminar espacios al inicio y final
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.rate = SPEECH_RATES.NORMAL;
     utterance.lang = "en-US";
 
@@ -32,10 +41,6 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
     utterance.onerror = () => setIsPlaying(false);
 
     speechSynthesis.speak(utterance);
-    
-    toast.success(`🔊 "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, {
-      description: "Reproduciendo audio...",
-    });
   }, [isPlaying]);
 
   const handleCreateWord = useCallback((text: string) => {
