@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { TextSelectionMenu } from "@/components/common/TextSelectionMenu";
+import { withTextSelection } from "@/components/common/withTextSelection";
 
 import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
@@ -184,14 +185,26 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   // Ref para la sección de ejemplos
   const examplesRef = useRef<HTMLDivElement>(null);
+  
+  // Ref para la sección de definición
+  const definitionRef = useRef<HTMLDivElement>(null);
 
   // Hook para selección de texto en ejemplos
-  const { selectedText, menuPosition, showMenu, clearSelection } = useTextSelection({
+  const { selectedText: examplesSelectedText, menuPosition: examplesMenuPosition, showMenu: examplesShowMenu, clearSelection: examplesClearSelection } = useTextSelection({
     containerRef: examplesRef,
     onTextSelected: (text) => {
       console.log('Texto seleccionado en ejemplos:', text);
     }
   });
+
+  // Hook para selección de texto en definición
+  const { selectedText: definitionSelectedText, menuPosition: definitionMenuPosition, showMenu: definitionShowMenu, clearSelection: definitionClearSelection } = useTextSelection({
+    containerRef: definitionRef,
+    onTextSelected: (text) => {
+      console.log('Texto seleccionado en definición:', text);
+    }
+  });
+
 
 
   // Incrementar seen cuando se ve la palabra
@@ -424,9 +437,19 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           {/* Definition */}
           {word.definition && (
             <SectionContainer>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                {capitalize(word.definition)}
-              </p>
+              <div ref={definitionRef} className="relative">
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  {capitalize(word.definition)}
+                </p>
+                
+                {/* Menú de selección de texto para la definición */}
+                <TextSelectionMenu
+                  selectedText={definitionSelectedText}
+                  position={definitionMenuPosition}
+                  show={definitionShowMenu}
+                  onClose={definitionClearSelection}
+                />
+              </div>
             </SectionContainer>
           )}
 
@@ -496,10 +519,10 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 
                 {/* Menú de selección de texto dentro del contenedor */}
                 <TextSelectionMenu
-                  selectedText={selectedText}
-                  position={menuPosition}
-                  show={showMenu}
-                  onClose={clearSelection}
+                  selectedText={examplesSelectedText}
+                  position={examplesMenuPosition}
+                  show={examplesShowMenu}
+                  onClose={examplesClearSelection}
                 />
               </div>
             </SectionContainer>
