@@ -473,52 +473,89 @@ export default function AnkiGamePage() {
             : "h-[calc(100dvh-180px)] items-center w-full py-0 m-0"
         )}
       >
-        {/* Indicador de progreso con botón FLIP y navegación */}
-        <div
+        {/* Card de reconocimiento de voz */}
+        <Card
           className={cn(
-            "flex items-center justify-between w-full px-2",
-            isFullScreen ? "mb-4 mt-6 max-w-6xl" : "mb-1 max-w-lg"
+            "w-full mx-1 p-2 mb-1",
+            isFullScreen ? "max-w-6xl" : "max-w-lg"
           )}
         >
-          {/* Botón Anterior */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevious}
-            disabled={gameStats.currentIndex === 0}
-            className="h-7 px-2 text-xs"
-          >
-            <ChevronLeft className="h-3 w-3" />
-          </Button>
+          {/* Desktop: Micrófono + texto */}
+          <div className="hidden md:flex items-center gap-2">
+            <div className="flex justify-center">
+              <Button
+                variant={isRecording ? "destructive" : "outline"}
+                size="sm"
+                className={`w-8 h-8 rounded-full transition-all duration-200 ${
+                  isRecording ? "animate-pulse bg-red-500 hover:bg-red-600" : ""
+                }`}
+                onClick={toggleRecording}
+                disabled={!isSupported}
+              >
+                {isRecording ? (
+                  <div className="w-3 h-3 bg-white rounded-sm" />
+                ) : (
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </Button>
+            </div>
 
-          {/* Contador y FLIP centrados */}
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="text-xs font-medium px-3 py-1">
-              {gameStats.currentIndex + 1}/{shuffledWords.length}
-            </Badge>
-
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleFlip}
-              className="h-7 px-2 text-xs font-medium"
-            >
-              <RotateCcw className="h-3 w-3 mr-1" />
-              FLIP
-            </Button>
+            <div className="flex-1 min-h-8 flex items-center">
+              <div className="w-full p-2 border rounded-lg bg-background min-h-8 flex items-center justify-between">
+                <div className="flex-1">
+                  {recognizedText ? (
+                    <span className="text-sm font-medium">
+                      {recognizedText}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground italic text-sm">
+                      {isRecording
+                        ? "Escuchando..."
+                        : "Presiona el micrófono y habla"}
+                    </span>
+                  )}
+                </div>
+                {recognizedText && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-5 w-5 p-0 ml-2 hover:bg-red-100 hover:text-red-600"
+                    onClick={() => setRecognizedText("")}
+                  >
+                    ✕
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Botón Siguiente */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            disabled={gameStats.currentIndex === shuffledWords.length - 1}
-            className="h-7 px-2 text-xs"
-          >
-            <ChevronRight className="h-3 w-3" />
-          </Button>
-        </div>
+          {/* Mobile/Tablet: Solo input con placeholder */}
+          <div className="md:hidden">
+            <input
+              type="text"
+              placeholder="Usa el micrófono de tu dispositivo para hablar..."
+              className="w-full p-3 border rounded-lg bg-background text-sm"
+              readOnly
+            />
+          </div>
+
+          {/* Mensaje de soporte */}
+          {!isSupported && (
+            <div className="mt-1 text-xs text-red-500 text-center">
+              Tu navegador no soporta reconocimiento de voz
+            </div>
+          )}
+        </Card>
 
         {/* Botón de salir - flotante, no ocupa espacio en el layout */}
         {isFullScreen && (
@@ -592,81 +629,55 @@ export default function AnkiGamePage() {
           </div>
         </div>
 
-        {/* Card de reconocimiento de voz */}
-        <Card
+        {/* Indicador de progreso con botón FLIP y navegación */}
+        <div
           className={cn(
-            "w-full mx-1 p-2 mb-1",
-            isFullScreen ? "max-w-6xl" : "max-w-lg"
+            "flex items-center justify-between w-full px-2 py-2",
+            isFullScreen ? "mb-4 mt-6 max-w-6xl" : "mb-1 max-w-lg"
           )}
         >
-          <div className="flex items-center gap-2">
-            {/* Micrófono - 20% */}
-            <div className="flex justify-center">
-              <Button
-                variant={isRecording ? "destructive" : "outline"}
-                size="sm"
-                className={`w-8 h-8 rounded-full transition-all duration-200 ${
-                  isRecording ? "animate-pulse bg-red-500 hover:bg-red-600" : ""
-                }`}
-                onClick={toggleRecording}
-                disabled={!isSupported}
-              >
-                {isRecording ? (
-                  <div className="w-3 h-3 bg-white rounded-sm" />
-                ) : (
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </Button>
-            </div>
+          {/* Botón Anterior */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePrevious}
+            disabled={gameStats.currentIndex === 0}
+            className="h-7 px-2 text-xs"
+          >
+            <ChevronLeft className="h-3 w-3" />
+          </Button>
 
-            {/* Área de texto - 80% */}
-            <div className="flex-1 min-h-8 flex items-center">
-              <div className="w-full p-2 border rounded-lg bg-background min-h-8 flex items-center justify-between">
-                <div className="flex-1">
-                  {recognizedText ? (
-                    <span className="text-sm font-medium">
-                      {recognizedText}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground italic text-sm">
-                      {isRecording
-                        ? "Escuchando..."
-                        : "Presiona el micrófono y habla"}
-                    </span>
-                  )}
-                </div>
-                {recognizedText && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-5 w-5 p-0 ml-2 hover:bg-red-100 hover:text-red-600"
-                    onClick={() => setRecognizedText("")}
-                  >
-                    ✕
-                  </Button>
-                )}
-              </div>
-            </div>
+          {/* Contador y FLIP centrados */}
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="secondary"
+              className="text-xs font-medium px-3 py-1"
+            >
+              {gameStats.currentIndex + 1}/{shuffledWords.length}
+            </Badge>
+
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleFlip}
+              className="h-7 px-2 text-xs font-medium"
+            >
+              <RotateCcw className="h-3 w-3 mr-1" />
+              FLIP
+            </Button>
           </div>
 
-          {/* Mensaje de soporte */}
-          {!isSupported && (
-            <div className="mt-1 text-xs text-red-500 text-center">
-              Tu navegador no soporta reconocimiento de voz
-            </div>
-          )}
-        </Card>
-
+          {/* Botón Siguiente */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNext}
+            disabled={gameStats.currentIndex === shuffledWords.length - 1}
+            className="h-7 px-2 text-xs"
+          >
+            <ChevronRight className="h-3 w-3" />
+          </Button>
+        </div>
       </div>
 
       {/* Modal de estadísticas */}
