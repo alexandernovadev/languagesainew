@@ -371,50 +371,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     setActiveTab(value as "info" | "chat");
   }, []);
 
-  // Funciones para el menú de selección de texto
-  const handleSpeakText = useCallback((text: string) => {
-    if (isPlaying) return;
 
-    setIsPlaying(true);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = SPEECH_RATES.NORMAL;
-    utterance.lang = "en-US";
-
-    utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
-
-    speechSynthesis.speak(utterance);
-    
-    toast.success(`🔊 "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, {
-      description: "Reproduciendo audio...",
-    });
-  }, [isPlaying]);
-
-  const handleCreateWord = useCallback((text: string) => {
-    toast.success(`📖 Crear palabra: "${text}"`, {
-      description: "Se abrirá el formulario de nueva palabra",
-      action: {
-        label: "Crear",
-        onClick: () => {
-          // Aquí se podría abrir un modal o navegar a crear palabra
-          console.log('Crear palabra con texto:', text);
-        }
-      }
-    });
-  }, []);
-
-  const handleCreateExpression = useCallback((text: string) => {
-    toast.success(`📝 Crear expresión: "${text}"`, {
-      description: "Se abrirá el formulario de nueva expresión",
-      action: {
-        label: "Crear",
-        onClick: () => {
-          // Aquí se podría abrir un modal o navegar a crear expresión
-          console.log('Crear expresión con texto:', text);
-        }
-      }
-    });
-  }, []);
 
   return (
     <div className={containerClassName}>
@@ -542,9 +499,6 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                   selectedText={selectedText}
                   position={menuPosition}
                   show={showMenu}
-                  onSpeak={handleSpeakText}
-                  onCreateWord={handleCreateWord}
-                  onCreateExpression={handleCreateExpression}
                   onClose={clearSelection}
                 />
               </div>

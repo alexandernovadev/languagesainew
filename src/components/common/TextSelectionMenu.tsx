@@ -1,14 +1,13 @@
-import { memo } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Volume2, FileText, Hash } from 'lucide-react';
 import { cn } from '@/utils/common/classnames';
+import { toast } from 'sonner';
+import { SPEECH_RATES } from '../../speechRates';
 
 interface TextSelectionMenuProps {
   selectedText: string;
   position: { x: number; y: number } | null;
   show: boolean;
-  onSpeak?: (text: string) => void;
-  onCreateExpression?: (text: string) => void;
-  onCreateWord?: (text: string) => void;
   onClose?: () => void;
 }
 
@@ -16,11 +15,53 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
   selectedText,
   position,
   show,
-  onSpeak,
-  onCreateExpression,
-  onCreateWord,
   onClose
 }: TextSelectionMenuProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Funciones internas del menú
+  const handleSpeakText = useCallback((text: string) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = SPEECH_RATES.NORMAL;
+    utterance.lang = "en-US";
+
+    utterance.onend = () => setIsPlaying(false);
+    utterance.onerror = () => setIsPlaying(false);
+
+    speechSynthesis.speak(utterance);
+    
+    toast.success(`🔊 "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, {
+      description: "Reproduciendo audio...",
+    });
+  }, [isPlaying]);
+
+  const handleCreateWord = useCallback((text: string) => {
+    toast.success(`📖 Crear palabra: "${text}"`, {
+      description: "Se abrirá el formulario de nueva palabra",
+      action: {
+        label: "Crear",
+        onClick: () => {
+          console.log('Crear palabra con texto:', text);
+        }
+      }
+    });
+  }, []);
+
+  const handleCreateExpression = useCallback((text: string) => {
+    toast.success(`📝 Crear expresión: "${text}"`, {
+      description: "Se abrirá el formulario de nueva expresión",
+      action: {
+        label: "Crear",
+        onClick: () => {
+          console.log('Crear expresión con texto:', text);
+        }
+      }
+    });
+  }, []);
+
   if (!show || !position || !selectedText) {
     return null;
   }
@@ -45,51 +86,47 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
       }}
     >
       {/* Escuchar */}
-      {onSpeak && (
-        <button
-          onClick={() => handleAction(() => onSpeak(selectedText))}
-          className={cn(
-            "flex items-center justify-center px-2 py-1.5 rounded-md",
-            "hover:bg-zinc-800 transition-colors duration-150",
-            "text-purple-400 hover:text-purple-300"
-          )}
-          title="Escuchar texto"
-        >
-          <Volume2 className="h-4 w-4" />
-        </button>
-      )}
+      <button
+        onClick={() => handleAction(() => handleSpeakText(selectedText))}
+        className={cn(
+          "flex items-center justify-center px-2 py-1.5 rounded-md",
+          "hover:bg-zinc-800 transition-colors duration-150",
+          "text-purple-400 hover:text-purple-300",
+          isPlaying && "animate-pulse"
+        )}
+        title="Escuchar texto"
+        disabled={isPlaying}
+      >
+        <Volume2 className="h-4 w-4" />
+      </button>
 
       {/* Crear Palabra */}
-      {onCreateWord && (
-        <button
-          onClick={() => handleAction(() => onCreateWord(selectedText))}
-          className={cn(
-            "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
-            "hover:bg-zinc-800 transition-colors duration-150",
-            "text-green-400 hover:text-green-300"
-          )}
-          title="Crear palabra"
-        >
-          <Hash className="h-4 w-4" />
-          <span className="text-xs">Palabra</span>
-        </button>
-      )}
+      <button
+        onClick={() => handleAction(() => handleCreateWord(selectedText))}
+        className={cn(
+          "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
+          "hover:bg-zinc-800 transition-colors duration-150",
+          "text-green-400 hover:text-green-300"
+        )}
+        title="Crear palabra"
+      >
+        <Hash className="h-4 w-4" />
+        <span className="text-xs">Palabra</span>
+      </button>
 
       {/* Crear Expresión */}
-      {onCreateExpression && (
-        <button
-          onClick={() => handleAction(() => onCreateExpression(selectedText))}
-          className={cn(
-            "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
-            "hover:bg-zinc-800 transition-colors duration-150",
-            "text-yellow-400 hover:text-yellow-300"
-          )}
-          title="Crear expresión"
-        >
-          <FileText className="h-4 w-4" />
-          <span className="text-xs">Expresión</span>
-        </button>
-      )}
+      <button
+        onClick={() => handleAction(() => handleCreateExpression(selectedText))}
+        className={cn(
+          "flex items-center gap-1.5 px-2 py-1.5 rounded-md",
+          "hover:bg-zinc-800 transition-colors duration-150",
+          "text-yellow-400 hover:text-yellow-300"
+        )}
+        title="Crear expresión"
+      >
+        <FileText className="h-4 w-4" />
+        <span className="text-xs">Expresión</span>
+      </button>
 
       {/* Flecha hacia abajo */}
       <div
