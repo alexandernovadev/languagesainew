@@ -97,6 +97,7 @@ export default function AnkiGamePage() {
   const {
     words,
     getWordsForReview,
+    getRecentHardOrMediumWords,
     loading,
     updateWordLevel,
     updateWordReview,
@@ -118,7 +119,7 @@ export default function AnkiGamePage() {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        await getWordsForReview(20); // Usar el nuevo método de repaso inteligente
+        await getRecentHardOrMediumWords(); // Usar el método con aleatorización completa
         toast.success("Tarjetas de Anki cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
@@ -142,7 +143,7 @@ export default function AnkiGamePage() {
       }
     };
     fetchWords();
-  }, [getWordsForReview]);
+  }, [getRecentHardOrMediumWords]);
 
   // Sincroniza shuffledWords cuando words cambia
   useEffect(() => {
