@@ -34,14 +34,14 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
     <div
       data-selection-menu
       className={cn(
-        "fixed z-[9999] bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg",
+        "absolute z-[9999] bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg",
         "flex items-center gap-1 p-1 text-white text-sm",
         "animate-in fade-in-0 zoom-in-95 duration-200"
       )}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: 'translateX(-50%) translateY(-100%)',
+        transform: 'translateY(-100%)',
       }}
     >
       {/* Escuchar */}

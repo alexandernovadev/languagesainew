@@ -536,6 +536,17 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                     • {example}
                   </p>
                 ))}
+                
+                {/* Menú de selección de texto dentro del contenedor */}
+                <TextSelectionMenu
+                  selectedText={selectedText}
+                  position={menuPosition}
+                  show={showMenu}
+                  onSpeak={handleSpeakText}
+                  onCreateWord={handleCreateWord}
+                  onCreateExpression={handleCreateExpression}
+                  onClose={clearSelection}
+                />
               </div>
             </SectionContainer>
           )}
@@ -645,16 +656,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
         </TabsContent>
       </Tabs>
 
-      {/* Menú de selección de texto */}
-      <TextSelectionMenu
-        selectedText={selectedText}
-        position={menuPosition}
-        show={showMenu}
-        onSpeak={handleSpeakText}
-        onCreateWord={handleCreateWord}
-        onCreateExpression={handleCreateExpression}
-        onClose={clearSelection}
-      />
+
     </div>
   );
 });

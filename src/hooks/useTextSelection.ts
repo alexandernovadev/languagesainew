@@ -40,11 +40,22 @@ export const useTextSelection = (options: UseTextSelectionOptions = {}) => {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
-        // Calcular posición del menú
-        const menuPosition: TextSelectionMenuPosition = {
-          x: rect.left + window.scrollX + (rect.width / 2),
-          y: rect.top + window.scrollY - 10
-        };
+        // Calcular posición del menú relativa al contenedor
+        let menuPosition: TextSelectionMenuPosition;
+        
+        if (containerRef?.current) {
+          const containerRect = containerRef.current.getBoundingClientRect();
+          menuPosition = {
+            x: rect.left - containerRect.left,
+            y: rect.top - containerRect.top - 25  // Un poco más abajo
+          };
+        } else {
+          // Fallback a posición absoluta al documento
+          menuPosition = {
+            x: rect.left + window.scrollX + (rect.width / 2),
+            y: rect.top + window.scrollY - 10
+          };
+        }
 
         setSelectedText(text);
         setMenuPosition(menuPosition);
@@ -98,11 +109,22 @@ export const useTextSelection = (options: UseTextSelectionOptions = {}) => {
               const range = selection.getRangeAt(0);
               const rect = range.getBoundingClientRect();
               
-              // Actualizar posición del menú
-              const newPosition: TextSelectionMenuPosition = {
-                x: rect.left + window.scrollX + (rect.width / 2),
-                y: rect.top + window.scrollY - 10
-              };
+                             // Actualizar posición del menú relativa al contenedor
+               let newPosition: TextSelectionMenuPosition;
+               
+               if (containerRef?.current) {
+                 const containerRect = containerRef.current.getBoundingClientRect();
+                 newPosition = {
+                   x: rect.left - containerRect.left,
+                   y: rect.top - containerRect.top - 35  // Un poco más abajo
+                 };
+               } else {
+                 // Fallback a posición absoluta al documento
+                 newPosition = {
+                   x: rect.left + window.scrollX + (rect.width / 2),
+                   y: rect.top + window.scrollY - 10
+                 };
+               }
               
               setMenuPosition(newPosition);
             } catch (error) {
