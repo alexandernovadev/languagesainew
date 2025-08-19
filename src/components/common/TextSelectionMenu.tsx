@@ -3,6 +3,8 @@ import { Volume2, FileText, Hash } from 'lucide-react';
 import { cn } from '@/utils/common/classnames';
 import { toast } from 'sonner';
 import { SPEECH_RATES } from '../../speechRates';
+import { useWordStore } from '@/lib/store/useWordStore';
+import { useExpressionStore } from '@/lib/store/useExpressionStore';
 
 interface TextSelectionMenuProps {
   selectedText: string;
@@ -18,6 +20,10 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
   onClose
 }: TextSelectionMenuProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Stores para crear palabras y expresiones
+  const { generateWord } = useWordStore();
+  const { generateExpression } = useExpressionStore();
 
   // Funciones internas del menú
   const handleSpeakText = useCallback((text: string) => {
@@ -43,29 +49,25 @@ export const TextSelectionMenu = memo(function TextSelectionMenu({
     speechSynthesis.speak(utterance);
   }, [isPlaying]);
 
-  const handleCreateWord = useCallback((text: string) => {
-    toast.success(`📖 Crear palabra: "${text}"`, {
-      description: "Se abrirá el formulario de nueva palabra",
-      action: {
-        label: "Crear",
-        onClick: () => {
-          console.log('Crear palabra con texto:', text);
-        }
-      }
-    });
-  }, []);
+  const handleCreateWord = useCallback(async (text: string) => {
+    try {
+      await generateWord(text.trim());
+      toast.success(`📖 Palabra "${text}" creada exitosamente`);
+      onClose?.();
+    } catch (error) {
+      toast.error("Error al crear la palabra");
+    }
+  }, [generateWord, onClose]);
 
-  const handleCreateExpression = useCallback((text: string) => {
-    toast.success(`📝 Crear expresión: "${text}"`, {
-      description: "Se abrirá el formulario de nueva expresión",
-      action: {
-        label: "Crear",
-        onClick: () => {
-          console.log('Crear expresión con texto:', text);
-        }
-      }
-    });
-  }, []);
+  const handleCreateExpression = useCallback(async (text: string) => {
+    try {
+      await generateExpression(text.trim());
+      toast.success(`📝 Expresión "${text}" creada exitosamente`);
+      onClose?.();
+    } catch (error) {
+      toast.error("Error al crear la expresión");
+    }
+  }, [generateExpression, onClose]);
 
   if (!show || !position || !selectedText) {
     return null;
