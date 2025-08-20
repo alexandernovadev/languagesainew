@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
+import { FileText, Book, GraduationCap, HelpCircle, Clock, MessageSquare, Users, Upload } from "lucide-react";
 
 export default function ImportSettingsPage() {
   return (
@@ -22,13 +23,34 @@ export default function ImportSettingsPage() {
         <CardContent className="space-y-6 pb-8 pt-2">
           <Tabs defaultValue="lectures" className="w-full">
             <TabsList className="mb-4">
-              <TabsTrigger value="lectures">Lectures</TabsTrigger>
-              <TabsTrigger value="words">Words</TabsTrigger>
-              <TabsTrigger value="exams">Exams</TabsTrigger>
-              <TabsTrigger value="questions">Questions</TabsTrigger>
-              <TabsTrigger value="attempts">Attempts</TabsTrigger>
-              <TabsTrigger value="expressions">Expressions</TabsTrigger>
-              <TabsTrigger value="users">Users</TabsTrigger>
+              <TabsTrigger value="lectures">
+                <Book className="h-4 w-4 mr-2" />
+                Lectures
+              </TabsTrigger>
+              <TabsTrigger value="words">
+                <FileText className="h-4 w-4 mr-2" />
+                Words
+              </TabsTrigger>
+              <TabsTrigger value="exams">
+                <GraduationCap className="h-4 w-4 mr-2" />
+                Exams
+              </TabsTrigger>
+              <TabsTrigger value="questions">
+                <HelpCircle className="h-4 w-4 mr-2" />
+                Questions
+              </TabsTrigger>
+              <TabsTrigger value="attempts">
+                <Clock className="h-4 w-4 mr-2" />
+                Attempts
+              </TabsTrigger>
+              <TabsTrigger value="expressions">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Expressions
+              </TabsTrigger>
+              <TabsTrigger value="users">
+                <Users className="h-4 w-4 mr-2" />
+                Users
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="lectures">
               <div className="mb-3 text-lg font-semibold">

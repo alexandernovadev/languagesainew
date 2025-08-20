@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Plus, X, GripVertical } from "lucide-react";
+import { Loader2, Plus, X, GripVertical, Book, FileText, List, Image } from "lucide-react";
 import {
   questionLevels,
   questionTypes,
@@ -305,10 +305,22 @@ export function QuestionForm({
     <form id="question-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-2">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4 sticky top-1 z-10">
-          <TabsTrigger value="basic">Básico</TabsTrigger>
-          <TabsTrigger value="content">Contenido</TabsTrigger>
-          <TabsTrigger value="options">Opciones</TabsTrigger>
-          <TabsTrigger value="media">Multimedia</TabsTrigger>
+          <TabsTrigger value="basic">
+            <Book className="h-4 w-4 mr-2" />
+            Básico
+          </TabsTrigger>
+          <TabsTrigger value="content">
+            <FileText className="h-4 w-4 mr-2" />
+            Contenido
+          </TabsTrigger>
+          <TabsTrigger value="options">
+            <List className="h-4 w-4 mr-2" />
+            Opciones
+          </TabsTrigger>
+          <TabsTrigger value="media">
+            <Image className="h-4 w-4 mr-2" />
+            Multimedia
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="basic" className="space-y-6">

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Save, RefreshCw, X, Eye } from "lucide-react";
+import { Loader2, Sparkles, Save, RefreshCw, X, Eye, Wand2, Eye as EyeIcon } from "lucide-react";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { toast } from "sonner";
@@ -162,8 +162,12 @@ export function ExpressionGeneratorModal({
             className="w-full"
           >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="generate">Generar</TabsTrigger>
+              <TabsTrigger value="generate">
+                <Wand2 className="h-4 w-4 mr-2" />
+                Generar
+              </TabsTrigger>
               <TabsTrigger value="preview" disabled={!generatedExpression}>
+                <EyeIcon className="h-4 w-4 mr-2" />
                 Vista Previa
               </TabsTrigger>
             </TabsList>
