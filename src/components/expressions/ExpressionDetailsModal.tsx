@@ -6,6 +6,7 @@ import { Expression } from "@/models/Expression";
 import { ExpressionInfoTab } from "./ExpressionInfoTab";
 import { ExpressionChatTab } from "./ExpressionChatTab";
 import { capitalize } from "@/utils/common";
+import { Info, MessageCircle } from "lucide-react";
 
 interface ExpressionDetailsModalProps {
   open: boolean;
@@ -37,8 +38,12 @@ export function ExpressionDetailsModal({
           className="h-full flex flex-col"
         >
           <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
-            <TabsTrigger value="info">Información</TabsTrigger>
+            <TabsTrigger value="info">
+              <Info className="h-4 w-4 mr-2" />
+              Información
+            </TabsTrigger>
             <TabsTrigger value="chat">
+              <MessageCircle className="h-4 w-4 mr-2" />
               Chat
             </TabsTrigger>
           </TabsList>

@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, memo, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Eye, Volume2, X } from "lucide-react";
+import { RefreshCw, Eye, Volume2, X, Info, MessageCircle } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
@@ -462,8 +462,14 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
-          <TabsTrigger value="info">Información</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="info">
+            <Info className="h-4 w-4 mr-2" />
+            Información
+          </TabsTrigger>
+          <TabsTrigger value="chat">
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Chat
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="info">
