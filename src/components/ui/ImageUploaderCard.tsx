@@ -145,10 +145,10 @@ export function ImageUploaderCard({
       };
       reader.readAsDataURL(imageFile);
       toast.success(
-        "Image detected. Click 'Upload Image' to continue."
+        "Imagen detectada !"
       );
     } else {
-      toast.error("Only image files are allowed");
+      toast.error("Solo se permiten archivos de imagen");
     }
   }, []);
 
@@ -162,10 +162,10 @@ export function ImageUploaderCard({
       };
       reader.readAsDataURL(file);
       toast.success(
-        "Image selected. Click 'Upload Image' to continue."
+        "Imagen seleccionada !"
       );
     } else if (file) {
-      toast.error("Only image files are allowed");
+      toast.error("Solo se permiten archivos de imagen");
     }
   };
 
@@ -230,10 +230,10 @@ export function ImageUploaderCard({
                   {/* Text with shine */}
                   <div className="text-center space-y-2">
                     <p className="text-sm font-medium bg-gradient-to-r from-primary via-blue-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
-                      Generating with AI...
+                      Generando con IA...
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Creating personalized image
+                      Creando imagen personalizada
                     </p>
                   </div>
 
@@ -255,7 +255,7 @@ export function ImageUploaderCard({
                 <div className="relative w-full h-full">
                   <img
                     src={dragImagePreview}
-                    alt="Image preview"
+                    alt="Vista previa de imagen"
                     className="w-full h-full object-cover"
                   />
                   <button
@@ -275,7 +275,7 @@ export function ImageUploaderCard({
                   <button
                     onClick={() => onImageChange("")}
                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    title="Remove image"
+                    title="Eliminar imagen"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -283,7 +283,7 @@ export function ImageUploaderCard({
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Image className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" />
-                  <div className="text-xs">No image</div>
+                  <div className="text-xs">Sin imagen</div>
                 </div>
               )}
             </div>
@@ -310,34 +310,34 @@ export function ImageUploaderCard({
                   <p className="text-sm text-muted-foreground">
                     {isGeneratingImage ? (
                       <span className="text-gray-400 dark:text-gray-500">
-                        Generating image... (drag & drop disabled)
+                        Generando imagen... (arrastrar y soltar deshabilitado)
                       </span>
                     ) : isDragOver ? (
                       <span className="text-green-600 font-medium">
-                        Drop your image here!
+                        ¡Suelta tu imagen aquí!
                       </span>
                     ) : (
                       <>
                         {imageUrl ? (
                           <>
-                            Drag a new image to replace or{" "}
+                            Arrastra una nueva imagen para reemplazar o{" "}
                             <button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
                               className="text-primary hover:underline font-medium"
                             >
-                              click to select
+                              haz clic para seleccionar
                             </button>
                           </>
                         ) : (
                           <>
-                            Drag your image here or{" "}
+                            Arrastra tu imagen aquí o{" "}
                             <button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
                               className="text-primary hover:underline font-medium"
                             >
-                              click to select
+                              haz clic para seleccionar
                             </button>
                           </>
                         )}
@@ -345,7 +345,7 @@ export function ImageUploaderCard({
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Only image files allowed (JPG, PNG, GIF, etc.)
+                    Solo se permiten archivos de imagen (JPG, PNG, GIF, etc.)
                   </p>
                 </div>
               </div>
@@ -361,7 +361,7 @@ export function ImageUploaderCard({
 
               {/* Image URL and AI generation */}
               <div className="space-y-2">
-                <Label htmlFor="image-url">Image URL</Label>
+                <Label htmlFor="image-url">URL de Imagen</Label>
                 <Input
                   id="image-url"
                   value={imageUrl}
@@ -380,18 +380,18 @@ export function ImageUploaderCard({
                   {isGeneratingImage ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Generating
+                      Generando
                     </>
                   ) : (
                     <>
                       <Wand2 className="h-4 w-4 mr-2" />
-                      AI
+                      IA
                     </>
                   )}
                 </Button>
                 {!word && (
                   <p className="text-xs text-muted-foreground">
-                    You need a word to generate an image
+                    Necesitas una palabra para generar una imagen
                   </p>
                 )}
               </div>
@@ -401,7 +401,7 @@ export function ImageUploaderCard({
           {/* Upload image button when image is dragged */}
           {showDragPreview && (
             <div className="space-y-2">
-              <Label>Selected image: {dragImageFile?.name}</Label>
+              <Label>Imagen seleccionada: {dragImageFile?.name}</Label>
               <Button
                 type="button"
                 onClick={handleUploadImage}
@@ -416,12 +416,12 @@ export function ImageUploaderCard({
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2" />
-                    Upload Image
+                    Subir Imagen
                   </>
                 )}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Click "Upload Image" to process the selected image
+                Haz clic en "Subir Imagen" para procesar la imagen seleccionada
               </p>
             </div>
           )}
