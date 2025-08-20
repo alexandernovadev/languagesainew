@@ -36,6 +36,7 @@ export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
             }`}
             onClick={() => handleLanguageClick(language.value)}
           >
+            <span className="mr-1">{language.icon}</span>
             {language.label}
           </Badge>
         );

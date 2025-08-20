@@ -8,9 +8,9 @@ export const LECTURE_LEVELS = [
 ];
 
 export const LECTURE_LANGUAGES = [
-  { value: "es", label: "Español" },
-  { value: "en", label: "Inglés" },
-  { value: "pt", label: "Portugués" },
+  { value: "es", label: "Español", icon: "🇪🇸" },
+  { value: "en", label: "Inglés", icon: "🇬🇧" },
+  { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 
 export const LECTURE_TYPES = [
