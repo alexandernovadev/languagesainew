@@ -1,4 +1,5 @@
-import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { LECTURE_BOOLEAN_FILTERS } from "./constants";
 
 interface LectureBooleanFiltersProps {
@@ -41,17 +42,20 @@ export function LectureBooleanFilters({ values, onChange }: LectureBooleanFilter
   return (
     <div className="space-y-3">
       {LECTURE_BOOLEAN_FILTERS.map((filter) => (
-        <div key={filter.value} className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{filter.label}</span>
-            <Badge 
-              variant={getVariant(filter.value) as any}
-              className="cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => toggleValue(filter.value)}
-            >
-              {getLabel(filter.value)}
-            </Badge>
-          </div>
+        <div key={filter.value} className="flex items-center space-x-2">
+          <Checkbox
+            id={filter.value}
+            checked={getValue(filter.value) !== undefined}
+            onCheckedChange={() => toggleValue(filter.value)}
+          />
+          <Label htmlFor={filter.value} className="text-sm font-normal cursor-pointer">
+            <div className="flex items-center gap-2">
+              <span>{filter.label}</span>
+              <span className="text-xs text-muted-foreground">
+                ({getLabel(filter.value)})
+              </span>
+            </div>
+          </Label>
         </div>
       ))}
     </div>

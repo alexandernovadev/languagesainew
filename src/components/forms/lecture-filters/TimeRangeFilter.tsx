@@ -12,28 +12,35 @@ export function TimeRangeFilter({ timeMin, timeMax, onMinChange, onMaxChange }: 
   return (
     <div className="space-y-3">
       <div className="space-y-2">
-        <Label htmlFor="timeMin" className="text-sm font-medium">Tiempo mínimo (min)</Label>
+        <Label htmlFor="timeMin" className="text-sm font-medium">
+          Tiempo mínimo (minutos)
+        </Label>
         <Input
           id="timeMin"
           type="number"
           min="0"
           placeholder="0"
-          value={timeMin ?? ""}
-          onChange={(e)=>{
-            const v=e.target.value; onMinChange(v?parseInt(v):undefined);
+          value={timeMin || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            onMinChange(value ? parseInt(value) : undefined);
           }}
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="timeMax" className="text-sm font-medium">Tiempo máximo (min)</Label>
+        <Label htmlFor="timeMax" className="text-sm font-medium">
+          Tiempo máximo (minutos)
+        </Label>
         <Input
           id="timeMax"
           type="number"
           min="0"
           placeholder="60"
-          value={timeMax ?? ""}
-          onChange={(e)=>{
-            const v=e.target.value; onMaxChange(v?parseInt(v):undefined);
+          value={timeMax || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            onMaxChange(value ? parseInt(value) : undefined);
           }}
         />
       </div>

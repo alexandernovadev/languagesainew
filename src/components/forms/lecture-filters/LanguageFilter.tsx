@@ -22,7 +22,7 @@ export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
       {LECTURE_LANGUAGES.map((language) => {
         const isSelected = selectedLanguages.includes(language.value);
         return (
