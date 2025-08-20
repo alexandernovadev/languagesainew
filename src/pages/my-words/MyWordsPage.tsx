@@ -32,6 +32,7 @@ import {
   RefreshCw,
   Stars,
   SlidersHorizontal,
+  Clipboard,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +71,24 @@ export default function MyWordsPage() {
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
+
+  // Función para copiar palabra al portapapeles
+  const copyWordToClipboard = async (word: Word) => {
+    try {
+      const textToCopy = `${capitalize(word.word)}:\n${capitalize(word.spanish?.definition || word.definition || 'Sin definición')}`;
+      await navigator.clipboard.writeText(textToCopy);
+      toast.success(`Se copió "${capitalize(word.word)}" al portapapeles`);
+    } catch (error) {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = `${capitalize(word.word)}:\n${capitalize(word.spanish?.definition || word.definition || 'Sin definición')}`;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      toast.success(`Se copió "${capitalize(word.word)}" al portapapeles`);
+    }
+  };
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -424,6 +443,7 @@ export default function MyWordsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-2/5">Palabra</TableHead>
+                <TableHead className="w-16">Copiar</TableHead>
                 <TableHead>Imagen</TableHead>
                 <TableHead>IPA</TableHead>
                 <TableHead>Nivel</TableHead>
@@ -435,7 +455,7 @@ export default function MyWordsPage() {
               {loading && words.length === 0 ? (
                 Array.from({ length: 7 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
@@ -480,6 +500,25 @@ export default function MyWordsPage() {
                           </span>
                         </div>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => copyWordToClipboard(word)}
+                              className="h-8 w-8 rounded-md text-purple-400 hover:text-purple-300 hover:bg-purple-900/20 border border-transparent hover:border-purple-700/30 transition-all duration-200"
+                            >
+                              <Clipboard className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Copiar al portapapeles</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                     <TableCell>
                       <div className="w-12 h-12 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
@@ -581,7 +620,7 @@ export default function MyWordsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
+                  <TableCell colSpan={8} className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center space-y-4">
                       <div className="text-muted-foreground">
                         {localSearch ? (
