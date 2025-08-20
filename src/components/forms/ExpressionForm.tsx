@@ -8,12 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getAllowedLanguages } from "@/constants/identity";
-import { X, Plus, Loader2, Wand2, Eye } from "lucide-react";
+import { X, Plus, Loader2, Wand2, Eye, Book, Sparkles, Image } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { expressionService } from "@/services/expressionService";
+import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
 
 interface ExpressionFormProps {
   initialData?: Partial<Expression>;
@@ -28,9 +29,6 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
   initialData = {},
   onSubmit,
 }, ref) => {
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [imageProgress, setImageProgress] = useState(0);
-
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
 
@@ -54,64 +52,6 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
       [field]: value 
     };
     setValue("spanish", spanish);
-  };
-
-  const handleGenerateImage = async () => {
-    if (!formData.expression) {
-      toast.error("Necesitas una expresión para generar una imagen");
-      return;
-    }
-
-    setIsGeneratingImage(true);
-    setImageProgress(0);
-
-    try {
-      // Simulate progress
-      const progressInterval = setInterval(() => {
-        setImageProgress(prev => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      const response = await expressionService.updateExpressionImage(
-        (initialData as any)?._id || "temp",
-        formData.expression,
-        formData.img || ""
-      );
-
-      clearInterval(progressInterval);
-      setImageProgress(100);
-
-      const data = response.data;
-      if (data?.success && data?.data?.img) {
-        setValue("img", data.data.img);
-        toast.success("Imagen generada exitosamente", {
-          action: {
-            label: <Eye className="h-4 w-4" />,
-            onClick: () =>
-              handleApiResult(
-                { success: true, data: { imageUrl: data.data.img }, message: "Imagen generada exitosamente" },
-                "Generar Imagen"
-              ),
-          },
-          cancel: {
-            label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss(),
-          },
-        });
-      } else {
-        throw new Error("Error al generar imagen");
-      }
-    } catch (error) {
-      handleApiResult(error, "Generar Imagen");
-    } finally {
-      setIsGeneratingImage(false);
-      setImageProgress(0);
-    }
   };
 
   const handleAddExample = () => {
@@ -158,9 +98,18 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
           <div className="w-full">
             <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">Básico</TabsTrigger>
-                <TabsTrigger value="advanced">Avanzado</TabsTrigger>
-                <TabsTrigger value="image">Imagen</TabsTrigger>
+                <TabsTrigger value="basic">
+                  <Book className="h-4 w-4 mr-2" />
+                  Básico
+                </TabsTrigger>
+                <TabsTrigger value="advanced">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Avanzado
+                </TabsTrigger>
+                <TabsTrigger value="image">
+                  <Image className="h-4 w-4 mr-2" />
+                  Imagen
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="basic" className="space-y-4">
@@ -344,82 +293,24 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                   <CardHeader>
                     <CardTitle>Imagen</CardTitle>
                     <CardDescription>
-                      Añade una imagen representativa para la expresión (URL).
+                      Añade una imagen representativa para la expresión.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                      <div className="md:col-span-1">
-                        <Label>Vista Previa</Label>
-                        <div className="mt-2 w-full aspect-video rounded-md border flex items-center justify-center bg-muted relative overflow-hidden">
-                          {isGeneratingImage ? (
-                            // Skeleton durante generación
-                            <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
-                              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                              <p className="text-sm text-muted-foreground">Generando imagen...</p>
-                              {imageProgress > 0 && (
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div 
-                                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${imageProgress}%` }}
-                                  ></div>
-                                </div>
-                              )}
-                            </div>
-                          ) : formData.img ? (
-                            <img
-                              src={formData.img}
-                              alt="Preview"
-                              className="w-full h-full object-contain rounded-md"
-                              onError={(e) => {
-                                e.currentTarget.src = "/images/noImage.png";
-                              }}
-                            />
-                          ) : (
-                            <p className="text-sm text-muted-foreground">
-                              Sin Imagen
-                            </p>
-                          )}
+                    <div className="space-y-4">
+                      <ImageUploaderCard
+                        entityType="expression"
+                        entityId={initialData._id || ""}
+                        imageUrl={formData.img || ""}
+                        onImageChange={(newImageUrl) => setValue("img", newImageUrl)}
+                        disabled={!initialData._id}
+                      />
+                      
+                      {!initialData._id && (
+                        <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                          💡 <strong>Tip:</strong> Guarda la expresión primero para poder subir imágenes personalizadas.
                         </div>
-                      </div>
-                      <div className="md:col-span-2 space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="img">URL de la Imagen</Label>
-                          <div className="flex gap-2">
-                            <Input
-                              id="img"
-                              {...register("img")}
-                              placeholder="https://ejemplo.com/imagen.jpg"
-                              disabled={isGeneratingImage}
-                              className="flex-1"
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={handleGenerateImage}
-                              disabled={isGeneratingImage || !formData.expression}
-                              className="whitespace-nowrap"
-                            >
-                              {isGeneratingImage ? (
-                                <>
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                  Generando...
-                                </>
-                              ) : (
-                                <>
-                                  <Wand2 className="h-4 w-4 mr-2" />
-                                  Generar con AI
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                          {!formData.expression && (
-                            <p className="text-xs text-muted-foreground">
-                              Necesitas una expresión para generar una imagen
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

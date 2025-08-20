@@ -27,6 +27,7 @@ import { getAllowedLanguages } from "@/constants/identity";
 import { api } from "@/services/api";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
 
 interface LectureFormProps {
   initialData?: Partial<Lecture>;
@@ -45,9 +46,6 @@ export function LectureForm({
   loading = false,
   submitText = "Guardar",
 }: LectureFormProps) {
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [imageProgress, setImageProgress] = useState(0);
-
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
 
@@ -76,64 +74,6 @@ export function LectureForm({
     formData.language &&
     formData.typeWrite &&
     formData.time > 0;
-
-  // Función para generar imagen con AI
-  const handleGenerateImage = async () => {
-    if (!formData.content) {
-      toast.error("Necesitas contenido para generar una imagen");
-      return;
-    }
-
-    setIsGeneratingImage(true);
-    setImageProgress(0);
-
-    try {
-      // Simular progreso
-      const progressInterval = setInterval(() => {
-        setImageProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + 10;
-        });
-      }, 500);
-
-      // Llamar al endpoint de generación de imagen
-      const response = await api.post(
-        `/api/ai/generate-image-lecture/${initialData._id || "temp"}`,
-        {
-          lectureString: formData.content.substring(0, 500), // Primeros 500 caracteres
-          imgOld: formData.img || null,
-        }
-      );
-
-      clearInterval(progressInterval);
-      setImageProgress(100);
-
-      if (response.data.success) {
-        // Actualizar el input con la nueva URL
-        setValue("img", response.data.data.img);
-        toast.success("Imagen generada exitosamente", {
-          action: {
-            label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: { imageUrl: response.data.data.img }, message: "Imagen generada exitosamente" }, "Generar Imagen")
-          },
-          cancel: {
-            label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
-        });
-      } else {
-        throw new Error("Error al generar imagen");
-      }
-    } catch (error: any) {
-      handleApiResult(error, "Generar Imagen");
-    } finally {
-      setIsGeneratingImage(false);
-      setImageProgress(0);
-    }
-  };
 
   const onSubmitForm = async (
     data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
@@ -270,84 +210,24 @@ export function LectureForm({
                 <CardHeader>
                   <CardTitle>Multimedia</CardTitle>
                   <CardDescription>
-                    Añade una imagen de portada para la lectura (URL).
+                    Añade una imagen de portada para la lectura.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                    <div className="md:col-span-1">
-                      <Label>Vista Previa</Label>
-                      <div className="mt-2 w-full aspect-video rounded-md border flex items-center justify-center bg-muted relative overflow-hidden">
-                        {isGeneratingImage ? (
-                          // Skeleton durante generación
-                          <div className="w-full h-full flex flex-col items-center justify-center space-y-2">
-                            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-sm text-muted-foreground">
-                              Generando imagen...
-                            </p>
-                            {imageProgress > 0 && (
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${imageProgress}%` }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                        ) : formData.img ? (
-                          <img
-                            src={formData.img}
-                            alt="Preview"
-                            className="w-full h-full object-contain rounded-md"
-                            onError={(e) => {
-                              e.currentTarget.src = "/images/noImage.png";
-                            }}
-                          />
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            Sin Imagen
-                          </p>
-                        )}
+                  <div className="space-y-4">
+                    <ImageUploaderCard
+                      entityType="lecture"
+                      entityId={initialData._id || ""}
+                      imageUrl={formData.img}
+                      onImageChange={(newImageUrl) => setValue("img", newImageUrl)}
+                      disabled={!initialData._id}
+                    />
+                    
+                    {!initialData._id && (
+                      <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                        💡 <strong>Tip:</strong> Guarda la lección primero para poder subir imágenes personalizadas.
                       </div>
-                    </div>
-                    <div className="md:col-span-2 space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="img">URL de la Imagen</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            id="img"
-                            {...register("img")}
-                            placeholder="https://ejemplo.com/imagen.jpg"
-                            disabled={isGeneratingImage}
-                            className="flex-1"
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleGenerateImage}
-                            disabled={isGeneratingImage || !formData.content}
-                            className="whitespace-nowrap"
-                          >
-                            {isGeneratingImage ? (
-                              <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                Generando...
-                              </>
-                            ) : (
-                              <>
-                                <Wand2 className="h-4 w-4 mr-2" />
-                                Generar con AI
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                        {!formData.content && (
-                          <p className="text-xs text-muted-foreground">
-                            Necesitas contenido para generar una imagen
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
