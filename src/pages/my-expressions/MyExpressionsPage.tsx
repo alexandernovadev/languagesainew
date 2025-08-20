@@ -305,8 +305,8 @@ export default function MyExpressionsPage() {
       </div>
 
       {/* Tabla de expresiones */}
-      <Card>
-        <div className="overflow-x-auto">
+      <Card className="flex flex-col h-[520px]">
+        <div className="overflow-x-auto overflow-y-auto flex-1">
           <Table>
             <TableHeader>
               <TableRow>
