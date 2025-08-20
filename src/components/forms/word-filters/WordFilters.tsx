@@ -36,7 +36,7 @@ import { useWordFilters } from "@/hooks/useWordFilters";
 import { LevelFilter } from "./LevelFilter";
 import { LanguageFilter } from "./LanguageFilter";
 import { TypeFilter } from "./TypeFilter";
-import { BooleanFilters } from "./BooleanFilters";
+import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilter";
 import { SortFilter } from "./SortFilter";
 import { ViewsRangeFilter } from "./ViewsRangeFilter";
 import { DateRangeFilter } from "./DateRangeFilter";
@@ -287,7 +287,7 @@ function FiltersContent({
 
           <div>
             <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm">Imagen</Label>
                 <Select
@@ -309,12 +309,31 @@ function FiltersContent({
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <BooleanFilters
-                  values={booleanFilters}
-                  onChange={(key, value) => {
-                    updateBooleanFilter(key, value);
-                  }}
+
+              <div className="space-y-2">
+                <Label className="text-sm">Ejemplos</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasExamples}
+                  onChange={(value) => updateBooleanFilter("hasExamples", value)}
+                  placeholder="Seleccionar estado de ejemplos"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Sinónimos</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasSynonyms}
+                  onChange={(value) => updateBooleanFilter("hasSynonyms", value)}
+                  placeholder="Seleccionar estado de sinónimos"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Code-Switching</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasCodeSwitching}
+                  onChange={(value) => updateBooleanFilter("hasCodeSwitching", value)}
+                  placeholder="Seleccionar estado de code-switching"
                 />
               </div>
             </div>

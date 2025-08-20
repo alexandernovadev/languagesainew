@@ -91,7 +91,7 @@ export function useWordFilters() {
 
     // Contar filtros booleanos
     Object.values(booleanFilters).forEach((value) => {
-      if (value === true) {
+      if (value !== undefined) {
         count++;
       }
     });
@@ -155,13 +155,13 @@ export function useWordFilters() {
 
     // Filtros booleanos
     Object.entries(booleanFilters).forEach(([key, value]) => {
-      if (value === true) {
+      if (value !== undefined) {
         const labels: Record<string, string> = {
-          hasExamples: "Con ejemplos",
-          hasSynonyms: "Con sinónimos",
-          hasCodeSwitching: "Con code-switching",
+          hasExamples: value ? "Con ejemplos" : "Sin ejemplos",
+          hasSynonyms: value ? "Con sinónimos" : "Sin sinónimos",
+          hasCodeSwitching: value ? "Con code-switching" : "Sin code-switching",
         };
-        descriptions.push(labels[key] || key);
+        descriptions.push(labels[key] || `${key}: ${value ? "Sí" : "No"}`);
       }
     });
 

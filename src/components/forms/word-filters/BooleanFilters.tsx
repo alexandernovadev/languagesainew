@@ -1,32 +1,39 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { BOOLEAN_FILTERS } from "./constants";
+import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilter";
 
 interface BooleanFiltersProps {
-  values: Record<string, boolean>;
-  onChange: (key: string, value: boolean) => void;
+  values: Record<string, boolean | undefined>;
+  onChange: (key: string, value: boolean | undefined) => void;
 }
 
 export function BooleanFilters({ values, onChange }: BooleanFiltersProps) {
   return (
-    <div className="space-y-3">
-      {BOOLEAN_FILTERS.map((filter) => (
-        <div key={filter.value} className="flex items-center space-x-2">
-          <Checkbox
-            id={filter.value}
-            checked={values[filter.value] || false}
-            onCheckedChange={(checked) =>
-              onChange(filter.value, checked as boolean)
-            }
-          />
-          <Label
-            htmlFor={filter.value}
-            className="text-sm font-normal cursor-pointer"
-          >
-            {filter.label}
-          </Label>
-        </div>
-      ))}
+    <div className="space-y-4">
+      <div>
+        <h4 className="text-sm font-medium mb-2">Ejemplos</h4>
+        <BooleanSelectFilter
+          value={values.hasExamples}
+          onChange={(value) => onChange("hasExamples", value)}
+          placeholder="Seleccionar estado de ejemplos"
+        />
+      </div>
+
+      <div>
+        <h4 className="text-sm font-medium mb-2">Sinónimos</h4>
+        <BooleanSelectFilter
+          value={values.hasSynonyms}
+          onChange={(value) => onChange("hasSynonyms", value)}
+          placeholder="Seleccionar estado de sinónimos"
+        />
+      </div>
+
+      <div>
+        <h4 className="text-sm font-medium mb-2">Code-Switching</h4>
+        <BooleanSelectFilter
+          value={values.hasCodeSwitching}
+          onChange={(value) => onChange("hasCodeSwitching", value)}
+          placeholder="Seleccionar estado de code-switching"
+        />
+      </div>
     </div>
   );
 }
