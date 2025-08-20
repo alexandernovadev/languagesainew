@@ -32,6 +32,7 @@ export interface ExpressionBooleanFilters {
   hasExamples: boolean | undefined;
   hasImage: boolean | undefined;
   hasSpanish: boolean | undefined;
+  hasContext: boolean | undefined;
 }
 
 export function useExpressionFilters() {
@@ -40,6 +41,7 @@ export function useExpressionFilters() {
     hasExamples: undefined,
     hasImage: undefined,
     hasSpanish: undefined,
+    hasContext: undefined,
   });
 
   // Update basic filters
@@ -71,6 +73,9 @@ export function useExpressionFilters() {
     }
     if (booleanFilters.hasSpanish !== undefined) {
       apiFilters.hasSpanish = booleanFilters.hasSpanish ? "true" : "false";
+    }
+    if (booleanFilters.hasContext !== undefined) {
+      apiFilters.hasContext = booleanFilters.hasContext ? "true" : "false";
     }
     
     return apiFilters;
@@ -129,9 +134,14 @@ export function useExpressionFilters() {
       descriptions.push("Sin imagen");
     }
     if (booleanFilters.hasSpanish === true) {
-      descriptions.push("Con español");
+      descriptions.push("Con traducción al español");
     } else if (booleanFilters.hasSpanish === false) {
-      descriptions.push("Sin español");
+      descriptions.push("Sin traducción al español");
+    }
+    if (booleanFilters.hasContext === true) {
+      descriptions.push("Con contexto");
+    } else if (booleanFilters.hasContext === false) {
+      descriptions.push("Sin contexto");
     }
     
     return descriptions.join(", ");
@@ -144,6 +154,7 @@ export function useExpressionFilters() {
       hasExamples: undefined,
       hasImage: undefined,
       hasSpanish: undefined,
+      hasContext: undefined,
     });
   };
 

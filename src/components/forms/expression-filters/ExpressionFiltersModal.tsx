@@ -235,15 +235,28 @@ function FiltersContent({
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm">Español</Label>
+                <Label className="text-sm">Traducción al Español</Label>
                 <BooleanSelectFilter
                   value={booleanFilters.hasSpanish}
                   onChange={(value) =>
                     updateBooleanFilter("hasSpanish", value as boolean)
                   }
-                  placeholder="Seleccionar estado de español"
-                  withText="Con español"
-                  withoutText="Sin español"
+                  placeholder="Seleccionar estado de traducción"
+                  withText="Con traducción al español"
+                  withoutText="Sin traducción al español"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Contexto</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasContext}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasContext", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de contexto"
+                  withText="Con contexto"
+                  withoutText="Sin contexto"
                 />
               </div>
             </div>
