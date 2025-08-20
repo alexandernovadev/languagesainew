@@ -11,7 +11,7 @@ import { TimeRangeFilter } from "./TimeRangeFilter";
 import { DateRangeFilter } from "@/components/forms/word-filters/DateRangeFilter";
 import { SortFilter } from "@/components/forms/word-filters/SortFilter";
 import { useLectureFilters } from "@/hooks/useLectureFilters";
-import { Check, X } from "lucide-react";
+import { Check, X, Book, Settings, ArrowUpDown } from "lucide-react";
 
 interface LectureFiltersModalProps {
   open: boolean;
@@ -65,9 +65,18 @@ export function LectureFiltersModal({ open, onOpenChange, onFiltersChange }: Lec
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <Tabs defaultValue="basic" className="w-full">
           <TabsList className="grid w-full grid-cols-3 sticky top-1">
-            <TabsTrigger value="basic">Básicos</TabsTrigger>
-            <TabsTrigger value="advanced">Avanzados</TabsTrigger>
-            <TabsTrigger value="sort">Ordenar</TabsTrigger>
+            <TabsTrigger value="basic">
+              <Book className="h-4 w-4 mr-2" />
+              Básicos
+            </TabsTrigger>
+            <TabsTrigger value="advanced">
+              <Settings className="h-4 w-4 mr-2" />
+              Avanzados
+            </TabsTrigger>
+            <TabsTrigger value="sort">
+              <ArrowUpDown className="h-4 w-4 mr-2" />
+              Ordenar
+            </TabsTrigger>
           </TabsList>
 
           {/* Básicos */}

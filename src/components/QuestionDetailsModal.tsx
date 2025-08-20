@@ -19,6 +19,9 @@ import {
   XCircle,
   Play,
   Volume2,
+  Info,
+  FileText as FileTextIcon,
+  List,
 } from "lucide-react";
 import { Question } from "@/models/Question";
 import {
@@ -112,9 +115,18 @@ export function QuestionDetailsModal({
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
-            <TabsTrigger value="details">Detalles</TabsTrigger>
-            <TabsTrigger value="content">Contenido</TabsTrigger>
-            <TabsTrigger value="options">Opciones</TabsTrigger>
+            <TabsTrigger value="details">
+              <Info className="h-4 w-4 mr-2" />
+              Detalles
+            </TabsTrigger>
+            <TabsTrigger value="content">
+              <FileTextIcon className="h-4 w-4 mr-2" />
+              Contenido
+            </TabsTrigger>
+            <TabsTrigger value="options">
+              <List className="h-4 w-4 mr-2" />
+              Opciones
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="details" className="space-y-6">

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { X, Check } from "lucide-react";
+import { X, Check, Book, FileText, Settings, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
@@ -148,10 +148,22 @@ function FiltersContent({
   return (
     <Tabs defaultValue="basic" className="w-full">
       <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="basic">Básicos</TabsTrigger>
-        <TabsTrigger value="content">Contenido</TabsTrigger>
-        <TabsTrigger value="advanced">Avanzados</TabsTrigger>
-        <TabsTrigger value="sort">Ordenar</TabsTrigger>
+        <TabsTrigger value="basic">
+          <Book className="h-4 w-4 mr-2" />
+          Básicos
+        </TabsTrigger>
+        <TabsTrigger value="content">
+          <FileText className="h-4 w-4 mr-2" />
+          Contenido
+        </TabsTrigger>
+        <TabsTrigger value="advanced">
+          <Settings className="h-4 w-4 mr-2" />
+          Avanzados
+        </TabsTrigger>
+        <TabsTrigger value="sort">
+          <ArrowUpDown className="h-4 w-4 mr-2" />
+          Ordenar
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="basic" className="space-y-4 mt-4">
