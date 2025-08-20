@@ -23,13 +23,12 @@ import {
 import { Word } from "@/models/Word";
 import { wordLevels } from "@/data/wordLevels";
 import { EditableList } from "./EditableList";
-import { Book, Sparkles, ListPlus, Wand2, Loader2, Eye, X, Stars } from "lucide-react";
-import { toast } from "sonner";
-import { api } from "@/services/api";
-import { useResultHandler } from "@/hooks/useResultHandler";
+import { Book, Sparkles, ListPlus, Stars, Image } from "lucide-react";
+import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
 import { capitalize } from "@/utils/common/string/capitalize";
 import { getAllLanguages } from "@/utils/common/language";
 import { WORD_TYPES } from "@/utils/constants/wordTypes";
+import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface WordFormProps {
   initialData?: Partial<Word>;
@@ -44,9 +43,6 @@ export function WordForm({
   onCancel,
   loading = false,
 }: WordFormProps) {
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [imageProgress, setImageProgress] = useState(0);
-
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
 
@@ -109,62 +105,8 @@ export function WordForm({
     setValue(`spanish.${field}`, value);
   };
 
-  // Función para generar imagen con AI
-  const handleGenerateImage = async () => {
-    if (!formData.word) {
-      toast.error("Necesitas una palabra para generar una imagen");
-      return;
-    }
-
-    setIsGeneratingImage(true);
-    setImageProgress(0);
-
-    try {
-      // Simular progreso
-      const progressInterval = setInterval(() => {
-        setImageProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + 10;
-        });
-      }, 500);
-
-      // Llamar al endpoint de generación de imagen para palabras
-      const response = await api.post(
-        `/api/ai/generate-image/${initialData._id || "temp"}`,
-        {
-          word: formData.word,
-          imgOld: formData.img || "",
-        }
-      );
-
-      clearInterval(progressInterval);
-      setImageProgress(100);
-
-      if (response.data.success) {
-        // Actualizar el input con la nueva URL
-        setValue("img", response.data.data.img);
-        toast.success("Imagen generada exitosamente", {
-          action: {
-            label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: { imageUrl: response.data.data.img }, message: "Imagen generada exitosamente" }, "Generar Imagen")
-          },
-          cancel: {
-            label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
-        });
-      } else {
-        throw new Error("Error al generar imagen");
-      }
-    } catch (error: any) {
-      handleApiResult(error, "Generar Imagen");
-    } finally {
-      setIsGeneratingImage(false);
-      setImageProgress(0);
-    }
+  const handleImageChange = (imageUrl: string) => {
+    setValue("img", imageUrl);
   };
 
   return (
@@ -176,10 +118,14 @@ export function WordForm({
       <div className="flex-grow overflow-y-auto px-1 min-h-0">
         <Tabs defaultValue="basic" className="space-y-4">
           <div className="px-4 pt-4">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="basic">
                 <Book className="h-4 w-4 mr-2" />
                 Información Básica
+              </TabsTrigger>
+              <TabsTrigger value="image">
+                <Image className="h-4 w-4 mr-2" />
+                Imagen
               </TabsTrigger>
               <TabsTrigger value="advanced">
                 <Sparkles className="h-4 w-4 mr-2" />
@@ -414,6 +360,31 @@ export function WordForm({
                   items={formData.codeSwitching || []}
                   onChange={(items) => handleChange("codeSwitching", items)}
                   placeholder="Añadir expresión..."
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="image" className="pt-2 space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Image className="h-5 w-5" /> Imagen
+                </CardTitle>
+                <CardDescription>
+                  Arrastra una imagen, genera una con AI, o ingresa una URL manualmente.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ImageUploaderCard
+                  title=""
+                  description=""
+                  imageUrl={formData.img || ""}
+                  onImageChange={handleImageChange}
+                  word={formData.word}
+                  entityId={initialData._id}
+                  entityType="word"
+                  disabled={loading}
                 />
               </CardContent>
             </Card>
