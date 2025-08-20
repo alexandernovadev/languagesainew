@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { LevelFilter } from "@/components/forms/word-filters/LevelFilter";
-import { LanguageFilter } from "@/components/forms/word-filters/LanguageFilter";
+import { LevelFilter } from "./LevelFilter";
+import { LanguageFilter } from "./LanguageFilter";
 import { TypeWriteFilter } from "./TypeWriteFilter";
 import { LectureBooleanFilters } from "./LectureBooleanFilters";
 import { TimeRangeFilter } from "./TimeRangeFilter";
 import { DateRangeFilter } from "@/components/forms/word-filters/DateRangeFilter";
-import { SortFilter } from "@/components/forms/word-filters/SortFilter";
+import { SortFilter } from "./SortFilter";
 import { useLectureFilters } from "@/hooks/useLectureFilters";
 import { Check, X, Book, Settings, ArrowUpDown } from "lucide-react";
 
@@ -98,7 +98,7 @@ export function LectureFiltersModal({ open, onOpenChange, onFiltersChange }: Lec
               </div>
               <Separator />
               <div>
-                <h4 className="text-sm font-medium mb-2">Otros</h4>
+                <h4 className="text-sm font-medium mb-2">Filtros Específicos</h4>
                 <LectureBooleanFilters values={booleanFilters} onChange={updateBooleanFilter} />
               </div>
             </div>
@@ -108,7 +108,7 @@ export function LectureFiltersModal({ open, onOpenChange, onFiltersChange }: Lec
           <TabsContent value="advanced" className="space-y-4 mt-4">
             <div className="space-y-4">
               <div>
-                <h4 className="text-sm font-medium mb-2">Duración (minutos)</h4>
+                <h4 className="text-sm font-medium mb-2">Tiempo de Lectura (minutos)</h4>
                 <TimeRangeFilter
                   timeMin={filters.timeMin}
                   timeMax={filters.timeMax}

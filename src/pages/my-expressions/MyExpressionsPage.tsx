@@ -47,6 +47,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useExpressionFilters } from "@/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useExpressionFilterUrlSync } from "@/hooks/useExpressionFilterUrlSync";
 import { SPEECH_RATES } from "../../speechRates";
 
 export default function MyExpressionsPage() {
@@ -64,6 +65,7 @@ export default function MyExpressionsPage() {
     setPage,
     setSearchQuery,
     setFilters,
+    filters,
   } = useExpressionStore();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,6 +83,9 @@ export default function MyExpressionsPage() {
   // Hook para obtener información de filtros activos
   const { activeFiltersCount, getActiveFiltersDescription } =
     useExpressionFilters();
+  
+  // Hook para sincronización de filtros con URL
+  const { clearURLFilters } = useExpressionFilterUrlSync(filters, setFilters);
   
   // Hook para manejo de resultados
   const { handleApiResult } = useResultHandler();
@@ -158,6 +163,11 @@ export default function MyExpressionsPage() {
   const handleFiltersChange = (filters: any) => {
     setFilters(filters);
     setFiltersModalOpen(false);
+    
+    // Si se limpian todos los filtros, limpiar también la URL
+    if (Object.keys(filters).length === 0) {
+      clearURLFilters();
+    }
   };
 
   const handleRefresh = async () => {

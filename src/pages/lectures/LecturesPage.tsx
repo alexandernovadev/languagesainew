@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useLectureFilterUrlSync } from "@/hooks/useLectureFilterUrlSync";
 import { Eye, X } from "lucide-react";
 import {
   Tooltip,
@@ -72,6 +73,9 @@ export default function LecturesPage() {
     hasActiveFilters,
     clearFilters,
   } = useLectureFilters();
+
+  // Hook para sincronización de filtros con URL
+  const { clearURLFilters } = useLectureFilterUrlSync(lectureFilters, setFilters);
 
   // Buscar cuando localSearch cambie (con debounce)
   useEffect(() => {
@@ -210,6 +214,11 @@ export default function LecturesPage() {
   const handleFiltersChange = (filters: any) => {
     setFilters(filters);
     getLectures(1,10,localSearch,filters);
+    
+    // Si se limpian todos los filtros, limpiar también la URL
+    if (Object.keys(filters).length === 0) {
+      clearURLFilters();
+    }
   };
 
   if (loading) {

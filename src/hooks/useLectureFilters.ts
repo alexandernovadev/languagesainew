@@ -13,6 +13,8 @@ interface LectureFilters {
   updatedBefore?: string;
   sortBy?: string;
   sortOrder?: string;
+  hasImg?: boolean;
+  hasUrlAudio?: boolean;
 }
 
 export function useLectureFilters() {
@@ -21,21 +23,23 @@ export function useLectureFilters() {
   const [filters, setFilters] = useState<LectureFilters>({});
   const [booleanFilters, setBooleanFilters] = useState<Record<string, boolean>>({});
 
-  // Sync from store to local hook state (like words hook)
+  // Sync from store to local hook state
   useEffect(() => {
     if (currentFilters && Object.keys(currentFilters).length > 0) {
-      setFilters(currentFilters);
-      // Boolean filters may be present in store as string 'true'; coerce
+      const newFilters: LectureFilters = {};
       const bools: Record<string, boolean> = {};
+      
       Object.entries(currentFilters).forEach(([k, v]) => {
         if (k === "hasImg" || k === "hasUrlAudio") {
           bools[k] = v === true || v === "true";
+        } else {
+          newFilters[k as keyof LectureFilters] = v;
         }
       });
-      // Always set, so clearing in store resets local booleans too
+      
+      setFilters(newFilters);
       setBooleanFilters(bools);
     } else {
-      // When store filters are cleared, reset local state as well
       setFilters({});
       setBooleanFilters({});
     }
@@ -57,10 +61,10 @@ export function useLectureFilters() {
   }, [setStoreFilters]);
 
   const hasActiveFilters = useMemo(() => {
-    const basic = Object.values(filters).some((v)=>v!==undefined&&v!==""&&v!==null);
-    const bool  = Object.values(booleanFilters).some((v)=>v===true);
-    return basic||bool;
-  },[filters,booleanFilters]);
+    const basic = Object.values(filters).some((v) => v !== undefined && v !== "" && v !== null);
+    const bool = Object.values(booleanFilters).some((v) => v !== undefined);
+    return basic || bool;
+  }, [filters, booleanFilters]);
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -73,22 +77,30 @@ export function useLectureFilters() {
         }
       }
     });
+    
+    // Contar filtros booleanos activos
+    Object.values(booleanFilters).forEach(value => {
+      if (value !== undefined) {
+        count += 1;
+      }
+    });
+    
     return count;
-  }, [filters]);
+  }, [filters, booleanFilters]);
 
-  // include boolean count
-   const activeFiltersTotal = useMemo(()=>{
-     let c=activeFiltersCount;
-     Object.values(booleanFilters).forEach(v=>{if(v) c++;});
-     return c;
-   },[activeFiltersCount,booleanFilters]);
+
 
   // Combined filters to send to API
   const combinedFilters = useMemo(() => {
     const apiFilters: Record<string, any> = { ...filters };
+    
+    // Convertir filtros booleanos a strings para la API
     Object.entries(booleanFilters).forEach(([k, v]) => {
-      if (v) apiFilters[k] = v;
+      if (v !== undefined) {
+        apiFilters[k] = v ? "true" : "false";
+      }
     });
+    
     return apiFilters;
   }, [filters, booleanFilters]);
 
@@ -126,12 +138,12 @@ export function useLectureFilters() {
     });
     // Boolean descriptions
     Object.entries(booleanFilters).forEach(([key, value]) => {
-      if (value) {
+      if (value !== undefined) {
         const labels: Record<string, string> = {
-          hasImg: "Con imagen",
-          hasUrlAudio: "Con audio",
+          hasImg: value ? "Con imagen" : "Sin imagen",
+          hasUrlAudio: value ? "Con audio" : "Sin audio",
         };
-        desc.push(labels[key] || key);
+        desc.push(labels[key] || `${key}: ${value}`);
       }
     });
     return desc;
@@ -145,7 +157,7 @@ export function useLectureFilters() {
     updateBooleanFilter,
     clearFilters,
     hasActiveFilters,
-    activeFiltersCount: activeFiltersTotal,
+    activeFiltersCount,
     getActiveFiltersDescription,
   };
 } 
