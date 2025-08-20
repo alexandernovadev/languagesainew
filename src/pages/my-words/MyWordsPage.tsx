@@ -422,10 +422,9 @@ export default function MyWordsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Palabra</TableHead>
+                <TableHead className="w-1/3">Palabra</TableHead>
                 <TableHead>Imagen</TableHead>
                 <TableHead>IPA</TableHead>
-                <TableHead>Traducción</TableHead>
                 <TableHead>Nivel</TableHead>
                 <TableHead>Vistas</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
@@ -435,36 +434,51 @@ export default function MyWordsPage() {
               {loading && words.length === 0 ? (
                 Array.from({ length: 7 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={6}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
                 ))
               ) : words.length > 0 ? (
                 words.map((word) => (
-                  <TableRow key={word._id}>
-                    <TableCell className="font-medium flex items-center gap-2 capitalize text-lg">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          speakWord(word.word, SPEECH_RATES.NORMAL)
-                        }
-                        className="h-8 w-8 p-0"
-                      >
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          speakWord(word.word, SPEECH_RATES.SUPERSLOW)
-                        }
-                        className="h-8 w-8 p-0"
-                      >
-                        🐢
-                      </Button>
-                      {word.word}
+                  <TableRow 
+                    key={word._id}
+                    onDoubleClick={() => viewWordDetails(word)}
+                    className="cursor-pointer select-none"
+                  >
+                    <TableCell className="font-medium">
+                      <div className="flex items-start gap-2">
+                        <div className="flex gap-1 mt-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              speakWord(word.word, SPEECH_RATES.NORMAL)
+                            }
+                            className="h-8 w-8 p-0 select-none"
+                          >
+                            <Volume2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              speakWord(word.word, SPEECH_RATES.SUPERSLOW)
+                            }
+                            className="h-8 w-8 p-0 select-none"
+                          >
+                            🐢
+                          </Button>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="capitalize text-lg font-medium">
+                            {word.word}
+                          </span>
+                          <span className="capitalize text-sm text-muted-foreground">
+                            {word.spanish?.word || "N/A"}
+                          </span>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="w-12 h-12 rounded-md border overflow-hidden bg-muted flex items-center justify-center">
@@ -496,9 +510,6 @@ export default function MyWordsPage() {
                           <span className="text-muted-foreground">N/A</span>
                         )}
                       </span>
-                    </TableCell>
-                    <TableCell className="capitalize">
-                      {word.spanish?.word || "N/A"}
                     </TableCell>
                     <TableCell>
                       <WordLevelBadge level={word.level} />

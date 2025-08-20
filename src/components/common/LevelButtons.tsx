@@ -32,8 +32,8 @@ export const LevelButtons = memo(function LevelButtons({
 
   return (
     <div className={cn(
-      "flex justify-center gap-2 mt-4",
-      variant === "modal" && "px-3 py-2",
+      "flex justify-center gap-2",
+      variant === "modal" && "px-3 py-1",
       variant === "compact" && "gap-1",
       className
     )}>
