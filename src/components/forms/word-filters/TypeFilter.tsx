@@ -39,8 +39,8 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
               }
             />
             <Label htmlFor={type.value} className="cursor-pointer">
-              <div className="text-sm leading-tight">{type.label}</div>
-              <div className="text-xs text-muted-foreground">{type.spanishLabel}</div>
+              <div className="text-sm leading-tight">{type.spanishLabel}</div>
+              <div className="text-xs text-muted-foreground capitalize">{type.label}</div>
             </Label>
           </div>
         ))}

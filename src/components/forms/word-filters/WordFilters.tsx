@@ -28,6 +28,7 @@ import {
   Info,
   Book,
   FileText,
+  Search,
   Settings,
   ArrowUpDown,
 } from "lucide-react";
@@ -193,7 +194,7 @@ function FiltersContent({
 }: FiltersContentProps) {
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="basic">
           <Book className="h-4 w-4 mr-2" />
           Básicos
@@ -201,6 +202,10 @@ function FiltersContent({
         <TabsTrigger value="content">
           <FileText className="h-4 w-4 mr-2" />
           Contenido
+        </TabsTrigger>
+        <TabsTrigger value="text">
+          <Search className="h-4 w-4 mr-2" />
+          Por Texto
         </TabsTrigger>
         <TabsTrigger value="advanced">
           <Settings className="h-4 w-4 mr-2" />
@@ -262,54 +267,11 @@ function FiltersContent({
       <TabsContent value="content" className="space-y-4 mt-4">
         <div className="space-y-4">
           <div>
-            <h4 className="text-sm font-medium mb-2">Búsqueda de Texto</h4>
-            <TextFilters
-              definition={filters.definition}
-              IPA={filters.IPA}
-              spanishWord={filters.spanishWord}
-              spanishDefinition={filters.spanishDefinition}
-              onDefinitionChange={(value) => {
-                updateFilter("definition", value);
-              }}
-              onIPAChange={(value) => {
-                updateFilter("IPA", value);
-              }}
-              onSpanishWordChange={(value) => {
-                updateFilter("spanishWord", value);
-              }}
-              onSpanishDefinitionChange={(value) => {
-                updateFilter("spanishDefinition", value);
-              }}
-            />
-          </div>
-
-          <Separator />
-
-          <div>
             <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por características de contenido de las palabras
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm">Imagen</Label>
-                <Select
-                  value={filters.hasImage ?? "all"}
-                  onValueChange={(v) =>
-                    updateFilter(
-                      "hasImage",
-                      v === "all" ? undefined : (v as "true" | "false")
-                    )
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="true">Con imagen</SelectItem>
-                    <SelectItem value="false">Sin imagen</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="space-y-2">
                 <Label className="text-sm">Ejemplos</Label>
                 <BooleanSelectFilter
@@ -337,6 +299,62 @@ function FiltersContent({
                 />
               </div>
             </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <h4 className="text-sm font-medium mb-2">Imagen</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por palabras que tengan o no imagen
+            </p>
+            <Select
+              value={filters.hasImage ?? "all"}
+              onValueChange={(v) =>
+                updateFilter(
+                  "hasImage",
+                  v === "all" ? undefined : (v as "true" | "false")
+                )
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Todas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="true">Con imagen</SelectItem>
+                <SelectItem value="false">Sin imagen</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="text" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Búsqueda de Texto</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Busca palabras por su contenido textual
+            </p>
+            <TextFilters
+              definition={filters.definition}
+              IPA={filters.IPA}
+              spanishWord={filters.spanishWord}
+              spanishDefinition={filters.spanishDefinition}
+              onDefinitionChange={(value) => {
+                updateFilter("definition", value);
+              }}
+              onIPAChange={(value) => {
+                updateFilter("IPA", value);
+              }}
+              onSpanishWordChange={(value) => {
+                updateFilter("spanishWord", value);
+              }}
+              onSpanishDefinitionChange={(value) => {
+                updateFilter("spanishDefinition", value);
+              }}
+            />
           </div>
         </div>
       </TabsContent>

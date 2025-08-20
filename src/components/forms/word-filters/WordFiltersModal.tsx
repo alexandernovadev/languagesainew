@@ -3,7 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import {
   Filter,
@@ -12,6 +18,7 @@ import {
   Check,
   Book,
   FileText,
+  Search,
   Settings,
   ArrowUpDown,
 } from "lucide-react";
@@ -32,10 +39,10 @@ interface WordFiltersModalProps {
   onFiltersChange: (filters: any) => void;
 }
 
-export function WordFiltersModal({ 
-  open, 
-  onOpenChange, 
-  onFiltersChange 
+export function WordFiltersModal({
+  open,
+  onOpenChange,
+  onFiltersChange,
 }: WordFiltersModalProps) {
   const {
     filters,
@@ -75,12 +82,14 @@ export function WordFiltersModal({
               <>
                 <Badge variant="secondary">{activeFiltersCount}</Badge>
                 <span className="text-sm text-muted-foreground">
-                  {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                  {activeFiltersCount} filtro
+                  {activeFiltersCount !== 1 ? "s" : ""} activo
+                  {activeFiltersCount !== 1 ? "s" : ""}
                 </span>
               </>
             )}
           </div>
-          
+
           {/* Botones */}
           <div className="flex items-center gap-2">
             {hasActiveFilters && (
@@ -94,10 +103,7 @@ export function WordFiltersModal({
                 Limpiar
               </Button>
             )}
-            <Button
-              onClick={handleApplyFilters}
-              className="min-w-[100px]"
-            >
+            <Button onClick={handleApplyFilters} className="min-w-[100px]">
               <Check className="h-4 w-4 mr-2" />
               Aplicar
             </Button>
@@ -105,19 +111,15 @@ export function WordFiltersModal({
         </div>
       }
     >
-
-
-        {/* Content Scrollable */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <FiltersContent
-            filters={filters}
-            booleanFilters={booleanFilters}
-            updateFilter={updateFilter as (key: string, value: any) => void}
-            updateBooleanFilter={updateBooleanFilter}
-          />
-        </div>
-
-
+      {/* Content Scrollable */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <FiltersContent
+          filters={filters}
+          booleanFilters={booleanFilters}
+          updateFilter={updateFilter as (key: string, value: any) => void}
+          updateBooleanFilter={updateBooleanFilter}
+        />
+      </div>
     </ModalNova>
   );
 }
@@ -137,7 +139,7 @@ function FiltersContent({
 }: FiltersContentProps) {
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="basic">
           <Book className="h-4 w-4 mr-2" />
           Básicos
@@ -145,6 +147,10 @@ function FiltersContent({
         <TabsTrigger value="content">
           <FileText className="h-4 w-4 mr-2" />
           Contenido
+        </TabsTrigger>
+        <TabsTrigger value="text">
+          <Search className="h-4 w-4 mr-2" />
+          Por Texto
         </TabsTrigger>
         <TabsTrigger value="advanced">
           <Settings className="h-4 w-4 mr-2" />
@@ -206,7 +212,82 @@ function FiltersContent({
       <TabsContent value="content" className="space-y-4 mt-4">
         <div className="space-y-4">
           <div>
+            <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por características de contenido de las palabras
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm">Ejemplos</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasExamples}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasExamples", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de ejemplos"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Sinónimos</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasSynonyms}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasSynonyms", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de sinónimos"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Code-Switching</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasCodeSwitching}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasCodeSwitching", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de code-switching"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <h4 className="text-sm font-medium mb-2">Imagen</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por palabras que tengan o no imagen
+            </p>
+            <Select
+              value={filters.hasImage ?? "all"}
+              onValueChange={(v) =>
+                updateFilter(
+                  "hasImage",
+                  v === "all" ? undefined : (v as "true" | "false")
+                )
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Todas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="true">Con imagen</SelectItem>
+                <SelectItem value="false">Sin imagen</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="text" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
             <h4 className="text-sm font-medium mb-2">Búsqueda de Texto</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Busca palabras por su contenido textual
+            </p>
             <TextFilters
               definition={filters.definition}
               IPA={filters.IPA}
@@ -225,62 +306,6 @@ function FiltersContent({
                 updateFilter("spanishDefinition", value);
               }}
             />
-          </div>
-
-          <Separator />
-
-          <div>
-            <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label className="text-sm">Imagen</Label>
-                <Select
-                  value={filters.hasImage ?? "all"}
-                  onValueChange={(v) =>
-                    updateFilter(
-                      "hasImage",
-                      v === "all" ? undefined : (v as "true" | "false")
-                    )
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="true">Con imagen</SelectItem>
-                    <SelectItem value="false">Sin imagen</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Ejemplos</Label>
-                <BooleanSelectFilter
-                  value={booleanFilters.hasExamples}
-                  onChange={(value) => updateBooleanFilter("hasExamples", value)}
-                  placeholder="Seleccionar estado de ejemplos"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Sinónimos</Label>
-                <BooleanSelectFilter
-                  value={booleanFilters.hasSynonyms}
-                  onChange={(value) => updateBooleanFilter("hasSynonyms", value)}
-                  placeholder="Seleccionar estado de sinónimos"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Code-Switching</Label>
-                <BooleanSelectFilter
-                  value={booleanFilters.hasCodeSwitching}
-                  onChange={(value) => updateBooleanFilter("hasCodeSwitching", value)}
-                  placeholder="Seleccionar estado de code-switching"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </TabsContent>
@@ -344,4 +369,4 @@ function FiltersContent({
       </TabsContent>
     </Tabs>
   );
-} 
+}
