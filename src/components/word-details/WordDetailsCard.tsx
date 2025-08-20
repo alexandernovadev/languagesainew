@@ -16,6 +16,7 @@ import { TextSelectionMenu } from "@/components/common/TextSelectionMenu";
 
 import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
+import "../ui/ImageUploaderCard.css";
 
 interface WordDetailsCardProps {
   word: Word;
@@ -31,15 +32,19 @@ const SectionContainer = memo(
     children,
     className = "",
     loading = false,
+    subtle = false,
   }: {
     children: React.ReactNode;
     className?: string;
     loading?: boolean;
+    subtle?: boolean;
   }) => (
     <div className="mb-4">
       {loading ? (
-        <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-green-500 via-blue-500 to-green-500 animate-gradient-x">
-          <div className="bg-zinc-900/90 rounded-lg p-4">{children}</div>
+        <div className={subtle ? "ai-generating-border-subtle" : "ai-generating-border"}>
+          <div className="inner-content">
+            <div className="p-4">{children}</div>
+          </div>
         </div>
       ) : (
         <div
@@ -590,7 +595,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Code Switching */}
           {word.codeSwitching && word.codeSwitching.length > 0 && (
-            <SectionContainer loading={actionLoading.updateCodeSwitching}>
+            <SectionContainer loading={actionLoading.updateCodeSwitching} subtle={true}>
               <SectionHeader
                 title="Code-Switching"
                 icon="🔀"
@@ -613,7 +618,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Synonyms */}
           {word.sinonyms && word.sinonyms.length > 0 && (
-            <SectionContainer loading={actionLoading.updateSynonyms}>
+            <SectionContainer loading={actionLoading.updateSynonyms} subtle={true}>
               <SectionHeader
                 title="Sinónimos"
                 icon="🔗"
@@ -645,7 +650,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
           {/* Word Types */}
           {word.type && word.type.length > 0 && (
-            <SectionContainer loading={actionLoading.updateTypes}>
+            <SectionContainer loading={actionLoading.updateTypes} subtle={true}>
               <SectionHeader
                 title="Tipos"
                 icon="🏷️"
