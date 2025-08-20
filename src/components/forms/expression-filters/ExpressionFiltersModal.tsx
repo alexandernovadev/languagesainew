@@ -1,112 +1,81 @@
-import { useState, useEffect } from "react";
-import { ModalNova } from "@/components/ui/modal-nova";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X, Filter, Check } from "lucide-react";
-import { expressionTypes, expressionLevels, expressionLanguages } from "@/utils/constants/expressionTypes";
-import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { Separator } from "@/components/ui/separator";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import {
+  Filter,
+  X,
+  Info,
+  Check,
+  Book,
+  FileText,
+  Search,
+  Settings,
+  ArrowUpDown,
+} from "lucide-react";
+
+import { useExpressionFilters } from "@/hooks/useExpressionFilters";
+import { LevelFilter } from "./LevelFilter";
+import { LanguageFilter } from "./LanguageFilter";
+import { TypeFilter } from "./TypeFilter";
+import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilter";
+import { SortFilter } from "./SortFilter";
+import { DateRangeFilter } from "@/components/forms/common/DateRangeFilter";
+import { TextFilters } from "@/components/forms/common/TextFilters";
 
 interface ExpressionFiltersModalProps {
   open: boolean;
-  onClose: () => void;
-  onApply: (filters: any) => void;
+  onOpenChange: (open: boolean) => void;
+  onFiltersChange: (filters: any) => void;
 }
 
 export function ExpressionFiltersModal({
   open,
-  onClose,
-  onApply,
+  onOpenChange,
+  onFiltersChange,
 }: ExpressionFiltersModalProps) {
-  const { filters } = useExpressionStore();
-  const [localFilters, setLocalFilters] = useState<any>({});
+  const {
+    filters,
+    booleanFilters,
+    combinedFilters,
+    hasActiveFilters,
+    activeFiltersCount,
+    updateFilter,
+    updateBooleanFilter,
+    clearFilters,
+  } = useExpressionFilters();
 
-  useEffect(() => {
-    setLocalFilters(filters);
-  }, [filters]);
-
-  const handleFilterChange = (key: string, value: any) => {
-    setLocalFilters((prev: any) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleTypeToggle = (type: string) => {
-    const currentTypes = localFilters.type || [];
-    const newTypes = currentTypes.includes(type)
-      ? currentTypes.filter((t: string) => t !== type)
-      : [...currentTypes, type];
-    
-    handleFilterChange("type", newTypes);
-  };
-
-  const handleLevelToggle = (level: string) => {
-    const currentLevels = localFilters.difficulty || [];
-    const newLevels = currentLevels.includes(level)
-      ? currentLevels.filter((l: string) => l !== level)
-      : [...currentLevels, level];
-    
-    handleFilterChange("difficulty", newLevels);
-  };
-
-  const handleLanguageToggle = (language: string) => {
-    const currentLanguages = localFilters.language || [];
-    const newLanguages = currentLanguages.includes(language)
-      ? currentLanguages.filter((l: string) => l !== language)
-      : [...currentLanguages, language];
-    
-    handleFilterChange("language", newLanguages);
-  };
-
-  const handleHasImageToggle = () => {
-    const currentValue = localFilters.hasImage;
-    handleFilterChange("hasImage", !currentValue);
-  };
-
-  const handleHasSpanishToggle = () => {
-    const currentValue = localFilters.hasSpanish;
-    handleFilterChange("hasSpanish", !currentValue);
-  };
-
+  // Limpiar filtros
   const handleClearFilters = () => {
-    setLocalFilters({});
+    clearFilters();
+    // No aplicar filtros inmediatamente, solo limpiar internamente
   };
 
-  const handleApply = () => {
-    onApply(localFilters);
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (localFilters.type?.length) count += localFilters.type.length;
-    if (localFilters.difficulty?.length) count += localFilters.difficulty.length;
-    if (localFilters.language?.length) count += localFilters.language.length;
-    if (localFilters.hasImage) count++;
-    if (localFilters.hasSpanish) count++;
-    if (localFilters.createdAt) count++;
-    if (localFilters.updatedAt) count++;
-    return count;
+  // Aplicar filtros y cerrar modal
+  const handleApplyFilters = () => {
+    onFiltersChange(combinedFilters);
+    onOpenChange(false);
   };
 
   return (
     <ModalNova
       open={open}
-      onOpenChange={onClose}
-      title="Filtros de Expresiones"
-      description="Filtra las expresiones según tus criterios"
+      onOpenChange={onOpenChange}
+      title="Filtros Avanzados de Expresiones"
+      description="Aplica filtros para encontrar las expresiones que necesitas."
       size="4xl"
-      height="h-[90dvh]"
       footer={
         <div className="flex items-center justify-between w-full">
           {/* Info de filtros activos */}
           <div className="flex items-center gap-2">
-            {getActiveFiltersCount() > 0 && (
+            {hasActiveFilters && (
               <>
-                <Badge variant="secondary">{getActiveFiltersCount()}</Badge>
+                <Badge variant="secondary">{activeFiltersCount}</Badge>
                 <span className="text-sm text-muted-foreground">
-                  {getActiveFiltersCount()} filtro{getActiveFiltersCount() !== 1 ? 's' : ''} activo{getActiveFiltersCount() !== 1 ? 's' : ''}
+                  {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
                 </span>
               </>
             )}
@@ -114,7 +83,7 @@ export function ExpressionFiltersModal({
           
           {/* Botones */}
           <div className="flex items-center gap-2">
-            {getActiveFiltersCount() > 0 && (
+            {hasActiveFilters && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -125,10 +94,7 @@ export function ExpressionFiltersModal({
                 Limpiar
               </Button>
             )}
-            <Button
-              onClick={handleApply}
-              className="min-w-[100px]"
-            >
+            <Button onClick={handleApplyFilters} className="min-w-[100px]">
               <Check className="h-4 w-4 mr-2" />
               Aplicar
             </Button>
@@ -136,170 +102,225 @@ export function ExpressionFiltersModal({
         </div>
       }
     >
-      <div className="px-6 py-4">
-          <div className="space-y-6">
-          {/* Tipos de Expresión */}
-          <div>
-            <Label className="text-base font-semibold">Tipos de Expresión</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {expressionTypes.map((type) => (
-                <Button
-                  key={type.value}
-                  variant={localFilters.type?.includes(type.value) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleTypeToggle(type.value)}
-                >
-                  {type.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Niveles */}
-          <div>
-            <Label className="text-base font-semibold">Niveles</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {expressionLevels.map((level) => (
-                <Button
-                  key={level.value}
-                  variant={localFilters.difficulty?.includes(level.value) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleLevelToggle(level.value)}
-                >
-                  {level.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Idiomas */}
-          <div>
-            <Label className="text-base font-semibold">Idiomas</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {expressionLanguages.map((language) => (
-                <Button
-                  key={language.value}
-                  variant={localFilters.language?.includes(language.value) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleLanguageToggle(language.value)}
-                >
-                  {language.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Filtros booleanos */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="hasImage"
-                checked={localFilters.hasImage || false}
-                onChange={handleHasImageToggle}
-                className="rounded"
-              />
-              <Label htmlFor="hasImage">Solo con imagen</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="hasSpanish"
-                checked={localFilters.hasSpanish || false}
-                onChange={handleHasSpanishToggle}
-                className="rounded"
-              />
-              <Label htmlFor="hasSpanish">Solo con traducción al español</Label>
-            </div>
-          </div>
-
-          {/* Filtros de fecha */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="createdAt">Creado desde</Label>
-              <Input
-                id="createdAt"
-                type="date"
-                value={localFilters.createdAt || ""}
-                onChange={(e) => handleFilterChange("createdAt", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="updatedAt">Actualizado desde</Label>
-              <Input
-                id="updatedAt"
-                type="date"
-                value={localFilters.updatedAt || ""}
-                onChange={(e) => handleFilterChange("updatedAt", e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Filtros activos */}
-          {getActiveFiltersCount() > 0 && (
-            <div>
-              <Label className="text-base font-semibold">Filtros Activos</Label>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {localFilters.type?.map((type: string) => (
-                                              <Badge key={type} variant="secondary">
-                    {expressionTypes.find(t => t.value === type)?.label || type}
-                    <button
-                      onClick={() => handleTypeToggle(type)}
-                      className="ml-1 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-                {localFilters.difficulty?.map((level: string) => (
-                                              <Badge key={level} variant="secondary">
-                    {expressionLevels.find(l => l.value === level)?.label || level}
-                    <button
-                      onClick={() => handleLevelToggle(level)}
-                      className="ml-1 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-                {localFilters.language?.map((lang: string) => (
-                                              <Badge key={lang} variant="secondary">
-                    {expressionLanguages.find(l => l.value === lang)?.label || lang}
-                    <button
-                      onClick={() => handleLanguageToggle(lang)}
-                      className="ml-1 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-                {localFilters.hasImage && (
-                  <Badge variant="secondary">
-                    Con imagen
-                    <button
-                      onClick={handleHasImageToggle}
-                      className="ml-1 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-                {localFilters.hasSpanish && (
-                  <Badge variant="secondary">
-                    Con español
-                    <button
-                      onClick={handleHasSpanishToggle}
-                      className="ml-1 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 flex items-center justify-center"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+      {/* Content Scrollable */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <FiltersContent
+          filters={filters}
+          booleanFilters={booleanFilters}
+          updateFilter={updateFilter as (key: string, value: any) => void}
+          updateBooleanFilter={updateBooleanFilter}
+        />
       </div>
     </ModalNova>
+  );
+}
+
+interface FiltersContentProps {
+  filters: any;
+  booleanFilters: Record<string, boolean>;
+  updateFilter: (key: string, value: any) => void;
+  updateBooleanFilter: (key: string, value: boolean) => void;
+}
+
+function FiltersContent({
+  filters,
+  booleanFilters,
+  updateFilter,
+  updateBooleanFilter,
+}: FiltersContentProps) {
+  return (
+    <Tabs defaultValue="basic" className="w-full">
+      <TabsList className="grid w-full grid-cols-5">
+        <TabsTrigger value="basic">
+          <Book className="h-4 w-4 mr-2" />
+          Básicos
+        </TabsTrigger>
+        <TabsTrigger value="content">
+          <FileText className="h-4 w-4 mr-2" />
+          Contenido
+        </TabsTrigger>
+        <TabsTrigger value="text">
+          <Search className="h-4 w-4 mr-2" />
+          Por Texto
+        </TabsTrigger>
+        <TabsTrigger value="advanced">
+          <Settings className="h-4 w-4 mr-2" />
+          Avanzados
+        </TabsTrigger>
+        <TabsTrigger value="sort">
+          <ArrowUpDown className="h-4 w-4 mr-2" />
+          Ordenar
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="basic" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Nivel de Dificultad</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Selecciona uno o varios niveles
+            </p>
+            <LevelFilter
+              value={filters.difficulty}
+              onChange={(value) => {
+                updateFilter("difficulty", value);
+              }}
+            />
+          </div>
+
+          <Separator />
+
+          <div>
+            <h4 className="text-sm font-medium mb-2">Idioma</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Selecciona uno o varios idiomas
+            </p>
+            <LanguageFilter
+              value={filters.language}
+              onChange={(value) => {
+                updateFilter("language", value);
+              }}
+            />
+          </div>
+
+          <Separator />
+
+          <div>
+            <h4 className="text-sm font-medium mb-2">Tipo de Expresión</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Selecciona uno o varios tipos
+            </p>
+            <TypeFilter
+              value={filters.type}
+              onChange={(value) => {
+                updateFilter("type", value);
+              }}
+            />
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="content" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Contenido Disponible</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por características de contenido de las expresiones
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm">Ejemplos</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasExamples}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasExamples", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de ejemplos"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Imagen</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasImage}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasImage", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de imagen"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm">Español</Label>
+                <BooleanSelectFilter
+                  value={booleanFilters.hasSpanish}
+                  onChange={(value) =>
+                    updateBooleanFilter("hasSpanish", value as boolean)
+                  }
+                  placeholder="Seleccionar estado de español"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="text" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Búsqueda de Texto</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Busca expresiones por su contenido textual
+            </p>
+            <TextFilters
+              definition={filters.definition}
+              expression={filters.expression}
+              spanishExpression={filters.spanishExpression}
+              spanishDefinition={filters.spanishDefinition}
+              onDefinitionChange={(value) => {
+                updateFilter("definition", value);
+              }}
+              onExpressionChange={(value) => {
+                updateFilter("expression", value);
+              }}
+              onSpanishExpressionChange={(value) => {
+                updateFilter("spanishExpression", value);
+              }}
+              onSpanishDefinitionChange={(value) => {
+                updateFilter("spanishDefinition", value);
+              }}
+            />
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="advanced" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Rango de Fechas</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Filtra por fechas de creación y actualización
+            </p>
+            <DateRangeFilter
+              createdAfter={filters.createdAfter}
+              createdBefore={filters.createdBefore}
+              updatedAfter={filters.updatedAfter}
+              updatedBefore={filters.updatedBefore}
+              onCreatedAfterChange={(value) => {
+                updateFilter("createdAfter", value);
+              }}
+              onCreatedBeforeChange={(value) => {
+                updateFilter("createdBefore", value);
+              }}
+              onUpdatedAfterChange={(value) => {
+                updateFilter("updatedAfter", value);
+              }}
+              onUpdatedBeforeChange={(value) => {
+                updateFilter("updatedBefore", value);
+              }}
+            />
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="sort" className="space-y-4 mt-4">
+        <div>
+          <h4 className="text-sm font-medium mb-2">Ordenamiento</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            Configura cómo se ordenan los resultados
+          </p>
+          <SortFilter
+            sortBy={filters.sortBy}
+            sortOrder={filters.sortOrder}
+            onSortByChange={(value) => {
+              updateFilter("sortBy", value);
+            }}
+            onSortOrderChange={(value) => {
+              updateFilter("sortOrder", value);
+            }}
+          />
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 } 
