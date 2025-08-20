@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, FileText, Wand2, Loader2, Eye, X } from "lucide-react";
+import { Settings, FileText, Wand2, Loader2, Eye, X, Image } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Lecture } from "@/models/Lecture";
 import { lectureLevels } from "@/data/lectureLevels";
@@ -48,6 +48,8 @@ export function LectureForm({
 }: LectureFormProps) {
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
+
+
 
   const {
     register,
@@ -96,10 +98,14 @@ export function LectureForm({
       >
         <Tabs defaultValue="config" className="flex flex-col flex-grow min-h-0">
           <div className="px-6 py-2">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="config">
                 <Settings className="h-4 w-4 mr-2" />
                 Configuración
+              </TabsTrigger>
+              <TabsTrigger value="multimedia">
+                <Image className="h-4 w-4 mr-2" />
+                Multimedia
               </TabsTrigger>
               <TabsTrigger value="content">
                 <FileText className="h-4 w-4 mr-2" />
@@ -206,6 +212,10 @@ export function LectureForm({
                 </CardContent>
               </Card>
 
+
+            </TabsContent>
+
+            <TabsContent value="multimedia" className="p-4 space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Multimedia</CardTitle>
@@ -221,6 +231,7 @@ export function LectureForm({
                       imageUrl={formData.img}
                       onImageChange={(newImageUrl) => setValue("img", newImageUrl)}
                       disabled={!initialData._id}
+                      word={formData.content || ""}
                     />
                     
                     {!initialData._id && (
