@@ -24,7 +24,7 @@ export function DefaultQuestionsGrid({ onQuestionClick, isLoading }: DefaultQues
         "¿Tiene  mas significados que el que me diste?",
         "¿Cuáles son las variaciones?",
         "¿Hay sinónimos o antónimos?",
-        "¿Cómo cambia el significado según el contexto?"
+        "¿Es una palabra común en el ingles? Si no ,cual es la común?"
       ],
     },
     {

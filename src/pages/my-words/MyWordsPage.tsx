@@ -448,7 +448,7 @@ export default function MyWordsPage() {
                   >
                     <TableCell className="font-medium">
                       <div className="flex items-start gap-2">
-                        <div className="flex gap-1 mt-1">
+                        <div className="flex flex-col md:flex-row gap-1 mt-1">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -470,7 +470,7 @@ export default function MyWordsPage() {
                             🐢
                           </Button>
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-3 md:mt-0">
                           <span className="capitalize text-lg font-medium">
                             {word.word}
                           </span>
