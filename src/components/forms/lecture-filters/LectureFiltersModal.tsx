@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { LevelFilter } from "./LevelFilter";
 import { LanguageFilter } from "./LanguageFilter";
 import { TypeWriteFilter } from "./TypeWriteFilter";
@@ -11,7 +13,7 @@ import { TimeRangeFilter } from "./TimeRangeFilter";
 import { DateRangeFilter } from "@/components/forms/word-filters/DateRangeFilter";
 import { SortFilter } from "./SortFilter";
 import { useLectureFilters } from "@/hooks/useLectureFilters";
-import { Check, X, Book, FileText, Settings, ArrowUpDown } from "lucide-react";
+import { Check, X, Book, FileText, Search, Settings, ArrowUpDown } from "lucide-react";
 
 interface LectureFiltersModalProps {
   open: boolean;
@@ -116,7 +118,7 @@ function FiltersContent({
 }: FiltersContentProps) {
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="basic">
           <Book className="h-4 w-4 mr-2" />
           Básicos
@@ -124,6 +126,10 @@ function FiltersContent({
         <TabsTrigger value="content">
           <FileText className="h-4 w-4 mr-2" />
           Contenido
+        </TabsTrigger>
+        <TabsTrigger value="text">
+          <Search className="h-4 w-4 mr-2" />
+          Por Texto
         </TabsTrigger>
         <TabsTrigger value="advanced">
           <Settings className="h-4 w-4 mr-2" />
@@ -192,6 +198,36 @@ function FiltersContent({
               onMinChange={(v) => updateFilter("timeMin", v)}
               onMaxChange={(v) => updateFilter("timeMax", v)}
             />
+          </div>
+        </div>
+      </TabsContent>
+
+      {/* Por Texto */}
+      <TabsContent value="text" className="space-y-4 mt-4">
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-sm font-medium mb-2">Búsqueda de Texto</h4>
+            <p className="text-xs text-muted-foreground mb-2">
+              Busca lecturas por su contenido textual
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm">Título</Label>
+                <Input
+                  placeholder="Buscar en título..."
+                  value={filters.title || ""}
+                  onChange={(e) => updateFilter("title", e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Contenido</Label>
+                <Input
+                  placeholder="Buscar en contenido..."
+                  value={filters.content || ""}
+                  onChange={(e) => updateFilter("content", e.target.value)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </TabsContent>

@@ -225,6 +225,8 @@ function FiltersContent({
                     updateBooleanFilter("hasExamples", value as boolean)
                   }
                   placeholder="Seleccionar estado de ejemplos"
+                  withText="Con ejemplos"
+                  withoutText="Sin ejemplos"
                 />
               </div>
 
@@ -236,6 +238,8 @@ function FiltersContent({
                     updateBooleanFilter("hasSynonyms", value as boolean)
                   }
                   placeholder="Seleccionar estado de sinónimos"
+                  withText="Con sinónimos"
+                  withoutText="Sin sinónimos"
                 />
               </div>
 
@@ -247,6 +251,8 @@ function FiltersContent({
                     updateBooleanFilter("hasCodeSwitching", value as boolean)
                   }
                   placeholder="Seleccionar estado de code-switching"
+                  withText="Con code-switching"
+                  withoutText="Sin code-switching"
                 />
               </div>
             </div>

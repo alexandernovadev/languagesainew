@@ -216,6 +216,8 @@ function FiltersContent({
                     updateBooleanFilter("hasExamples", value as boolean)
                   }
                   placeholder="Seleccionar estado de ejemplos"
+                  withText="Con ejemplos"
+                  withoutText="Sin ejemplos"
                 />
               </div>
 
@@ -227,6 +229,8 @@ function FiltersContent({
                     updateBooleanFilter("hasImage", value as boolean)
                   }
                   placeholder="Seleccionar estado de imagen"
+                  withText="Con imagen"
+                  withoutText="Sin imagen"
                 />
               </div>
 
@@ -238,6 +242,8 @@ function FiltersContent({
                     updateBooleanFilter("hasSpanish", value as boolean)
                   }
                   placeholder="Seleccionar estado de español"
+                  withText="Con español"
+                  withoutText="Sin español"
                 />
               </div>
             </div>

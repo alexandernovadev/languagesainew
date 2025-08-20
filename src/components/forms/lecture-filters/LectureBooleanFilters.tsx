@@ -14,6 +14,8 @@ export function LectureBooleanFilters({ values, onChange }: LectureBooleanFilter
           value={values.hasImg}
           onChange={(value) => onChange("hasImg", value)}
           placeholder="Seleccionar estado de imagen"
+          withText="Con imagen"
+          withoutText="Sin imagen"
         />
       </div>
 
@@ -23,6 +25,8 @@ export function LectureBooleanFilters({ values, onChange }: LectureBooleanFilter
           value={values.hasUrlAudio}
           onChange={(value) => onChange("hasUrlAudio", value)}
           placeholder="Seleccionar estado de audio"
+          withText="Con audio"
+          withoutText="Sin audio"
         />
       </div>
     </div>

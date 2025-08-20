@@ -11,13 +11,17 @@ interface BooleanSelectFilterProps {
   onChange: (value: boolean | undefined) => void;
   placeholder?: string;
   className?: string;
+  withText?: string;
+  withoutText?: string;
 }
 
 export function BooleanSelectFilter({ 
   value, 
   onChange, 
   placeholder = "Seleccionar...",
-  className = ""
+  className = "",
+  withText = "Con",
+  withoutText = "Sin"
 }: BooleanSelectFilterProps) {
   const getValue = () => {
     if (value === undefined) return "all";
@@ -42,8 +46,8 @@ export function BooleanSelectFilter({
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">Todas</SelectItem>
-        <SelectItem value="true">Con</SelectItem>
-        <SelectItem value="false">Sin</SelectItem>
+        <SelectItem value="true">{withText}</SelectItem>
+        <SelectItem value="false">{withoutText}</SelectItem>
       </SelectContent>
     </Select>
   );

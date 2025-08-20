@@ -278,6 +278,8 @@ function FiltersContent({
                   value={booleanFilters.hasExamples}
                   onChange={(value) => updateBooleanFilter("hasExamples", value)}
                   placeholder="Seleccionar estado de ejemplos"
+                  withText="Con ejemplos"
+                  withoutText="Sin ejemplos"
                 />
               </div>
 
@@ -287,6 +289,8 @@ function FiltersContent({
                   value={booleanFilters.hasSynonyms}
                   onChange={(value) => updateBooleanFilter("hasSynonyms", value)}
                   placeholder="Seleccionar estado de sinónimos"
+                  withText="Con sinónimos"
+                  withoutText="Sin sinónimos"
                 />
               </div>
 
@@ -296,6 +300,8 @@ function FiltersContent({
                   value={booleanFilters.hasCodeSwitching}
                   onChange={(value) => updateBooleanFilter("hasCodeSwitching", value)}
                   placeholder="Seleccionar estado de code-switching"
+                  withText="Con code-switching"
+                  withoutText="Sin code-switching"
                 />
               </div>
             </div>
