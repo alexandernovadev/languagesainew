@@ -48,6 +48,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useWordFilters } from "@/hooks/useWordFilters";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { capitalize } from "@/utils/common/string/capitalize";
 
 export default function MyWordsPage() {
   const {
@@ -679,7 +680,7 @@ export default function MyWordsPage() {
       <ModalNova
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        title={isEditing ? "Editar Palabra" : "Agregar Nueva Palabra"}
+        title={isEditing ? `Editar | ${capitalize(selectedWord?.word || 'Palabra')}` : "Agregar Nueva Palabra"}
         description={
           isEditing
             ? "Modifica los detalles de la palabra."

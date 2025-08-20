@@ -569,7 +569,7 @@ export default function MyExpressionsPage() {
       <ModalNova
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        title={isEditing ? "Editar Expresión" : "Nueva Expresión"}
+        title={isEditing ? `Editar | ${capitalize(selectedExpression?.expression || 'Expresión')}` : "Nueva Expresión"}
         description={
           isEditing
             ? "Modifica los datos de la expresión"
