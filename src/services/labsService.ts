@@ -87,6 +87,11 @@ class LabsService {
     return response.data;
   }
 
+  async sendBackupByEmail(): Promise<LabsResponse> {
+    const response = await api.post("/api/labs/backup/send-now");
+    return response.data;
+  }
+
   async clearAllData(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/data/clear-all");
     return response.data;

@@ -289,6 +289,23 @@ export default function LabsPage() {
           />
 
           <LabsActionCard
+            title="Enviar Backup por Email"
+            description="Envía un backup completo de todas las colecciones por email"
+            icon={FileText}
+            onAction={() =>
+              handleAction(
+                "sendBackupByEmail",
+                () => labsService.sendBackupByEmail(),
+                false,
+                "",
+                ""
+              )
+            }
+            loading={loading === "sendBackupByEmail"}
+            variant="success"
+          />
+
+          <LabsActionCard
             title="Limpiar Todos los Datos"
             description="Elimina TODAS las palabras y lecturas de la base de datos"
             icon={Eraser}
