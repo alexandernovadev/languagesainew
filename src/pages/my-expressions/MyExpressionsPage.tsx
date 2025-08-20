@@ -23,6 +23,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
+  Volume2,
   Edit,
   Trash2,
   Search,
@@ -46,6 +47,7 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { useExpressionFilters } from "@/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { SPEECH_RATES } from "../../speechRates";
 
 export default function MyExpressionsPage() {
   const {
@@ -145,6 +147,12 @@ export default function MyExpressionsPage() {
   const viewExpressionDetails = (expression: Expression) => {
     setSelectedExpression(expression);
     setDetailsModalOpen(true);
+  };
+
+  const speakExpression = (text: string, rate = SPEECH_RATES.NORMAL) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = rate;
+    speechSynthesis.speak(utterance);
   };
 
   const handleFiltersChange = (filters: any) => {
@@ -337,33 +345,57 @@ export default function MyExpressionsPage() {
                 expressions.map((expression) => (
                   <TableRow key={expression._id}>
                     <TableCell>
-                      <div className="space-y-1">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="font-medium cursor-help">
-                                {capitalize(expression.expression)}
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{capitalize(expression.expression)}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="text-sm text-muted-foreground max-w-xs truncate cursor-help">
-                                {expression.spanish?.definition || expression.definition}
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                {expression.spanish?.definition || expression.definition}
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                      <div className="flex items-start gap-2">
+                        <div className="flex gap-1 mt-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              speakExpression(expression.expression, SPEECH_RATES.NORMAL)
+                            }
+                            className="h-8 w-8 p-0 select-none"
+                          >
+                            <Volume2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              speakExpression(expression.expression, SPEECH_RATES.SUPERSLOW)
+                            }
+                            className="h-8 w-8 p-0 select-none"
+                          >
+                            🐢
+                          </Button>
+                        </div>
+                        <div className="space-y-1 flex-1">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="font-medium cursor-help">
+                                  {capitalize(expression.expression)}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{capitalize(expression.expression)}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="text-sm text-muted-foreground max-w-xs truncate cursor-help">
+                                  {expression.spanish?.definition || expression.definition}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-xs">
+                                  {expression.spanish?.definition || expression.definition}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
