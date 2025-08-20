@@ -49,6 +49,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useWordFilters } from "@/hooks/useWordFilters";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useFilterUrlSync } from "@/hooks/useFilterUrlSync";
 import { capitalize } from "@/utils/common/string/capitalize";
 
 export default function MyWordsPage() {
@@ -67,6 +68,7 @@ export default function MyWordsPage() {
     setSearchQuery,
     setFilters,
     generateWord,
+    currentFilters,
   } = useWordStore();
 
   // Hook para manejo de errores
@@ -89,6 +91,9 @@ export default function MyWordsPage() {
       toast.success(`Se copió "${capitalize(word.word)}" al portapapeles`);
     }
   };
+
+  // Hook para sincronización de filtros con URL
+  const { clearURLFilters } = useFilterUrlSync(currentFilters, setFilters);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -127,7 +132,9 @@ export default function MyWordsPage() {
   useEffect(() => {
     const loadWords = async () => {
       try {
+        // Los filtros se cargan automáticamente desde el hook useFilterUrlSync
         await getWords();
+        
         toast.success("Palabras cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
@@ -139,11 +146,13 @@ export default function MyWordsPage() {
           }
         });
       } catch (error: any) {
-        handleApiResult(error, "Cargar Palabras");
+        handleApiResult(error, "Cargar Palabras")
       }
     };
     loadWords();
-  }, []);
+  }, []); // Solo ejecutar una vez al montar el componente
+
+
 
   // Sync selectedWord with updated data from store
   useEffect(() => {
@@ -286,9 +295,17 @@ export default function MyWordsPage() {
     }
   };
 
-  // Handler para filtros: aplicar siempre
+  // Handler para filtros: aplicar solo si son diferentes
   const handleFiltersChange = (filters: any) => {
-    setFilters(filters);
+    // Evitar aplicar filtros si son iguales a los actuales
+    if (JSON.stringify(filters) !== JSON.stringify(currentFilters)) {
+      setFilters(filters);
+      
+      // Si se limpian todos los filtros, limpiar también la URL
+      if (Object.keys(filters).length === 0) {
+        clearURLFilters();
+      }
+    }
   };
 
   const handleRefresh = async () => {
