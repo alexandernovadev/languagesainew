@@ -422,7 +422,7 @@ export default function MyWordsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-1/3">Palabra</TableHead>
+                <TableHead className="w-2/5">Palabra</TableHead>
                 <TableHead>Imagen</TableHead>
                 <TableHead>IPA</TableHead>
                 <TableHead>Nivel</TableHead>
