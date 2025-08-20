@@ -551,10 +551,29 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                   className="w-full max-w-xs rounded-lg max-h-96 object-contain border border-zinc-700"
                 />
               ) : (
-                <div className="w-full max-w-xs h-48 rounded-lg bg-zinc-800/50 border border-zinc-700 flex items-center justify-center">
-                  <div className="text-center text-zinc-500">
-                    <div className="text-2xl mb-2">🖼️</div>
-                    <div className="text-xs">Sin imagen</div>
+                <div className="w-full max-w-xs h-48 flex items-center justify-center">
+                  <div className="text-center text-zinc-400 group-hover:text-zinc-300 transition-colors duration-300">
+                    <div className="mb-3">
+                      <svg 
+                        className="w-12 h-12 mx-auto text-zinc-500 group-hover:text-zinc-400 transition-colors duration-300" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={1.5} 
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400 transition-colors duration-300">
+                      Sin imagen
+                    </div>
+                    <div className="text-xs text-zinc-600 group-hover:text-zinc-500 transition-colors duration-300 mt-1">
+                      Haz clic en actualizar para generar
+                    </div>
                   </div>
                 </div>
               )}

@@ -40,7 +40,7 @@ export function ImageUploaderCard({
   disabled = false,
   className = "",
 }: ImageUploaderCardProps) {
-  const [isGeneratingImage, setIsGeneratingImage] = useState(true);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [dragImageFile, setDragImageFile] = useState<File | null>(null);
   const [dragImagePreview, setDragImagePreview] = useState<string>("");
