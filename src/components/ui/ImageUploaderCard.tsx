@@ -13,6 +13,7 @@ import { Loader2, Wand2, Upload, X, Image } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/services/api";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import useImageUpload from "@/hooks/useImageUpload";
 import "./ImageUploaderCard.css";
 
 interface ImageUploaderCardProps {
@@ -44,14 +45,20 @@ export function ImageUploaderCard({
   const [isDragOver, setIsDragOver] = useState(false);
   const [dragImageFile, setDragImageFile] = useState<File | null>(null);
   const [dragImagePreview, setDragImagePreview] = useState<string>("");
-  const [isUploading, setIsUploading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Hook para manejo de errores
+  // Hook for error handling
   const { handleApiResult } = useResultHandler();
 
-  // Función para generar imagen con AI
+  // Custom hook for image uploads
+  const { isUploading, uploadImage } = useImageUpload({
+    entityType,
+    entityId: entityId || "",
+    onImageChange
+  });
+
+  // Function to generate image with AI
   const handleGenerateImage = async () => {
     if (!word) {
       toast.error("Necesitas una palabra para generar una imagen");
@@ -111,7 +118,7 @@ export function ImageUploaderCard({
     }
   };
 
-  // Funciones para drag and drop
+  // Functions for drag and drop
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(true);
@@ -131,17 +138,17 @@ export function ImageUploaderCard({
 
     if (imageFile) {
       setDragImageFile(imageFile);
-      // Crear preview de la imagen
+      // Create image preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setDragImagePreview(e.target?.result as string);
       };
       reader.readAsDataURL(imageFile);
       toast.success(
-        "Imagen detectada. Haz clic en 'Subir Imagen' para continuar."
+        "Image detected. Click 'Upload Image' to continue."
       );
     } else {
-      toast.error("Solo se permiten archivos de imagen");
+      toast.error("Only image files are allowed");
     }
   }, []);
 
@@ -155,37 +162,26 @@ export function ImageUploaderCard({
       };
       reader.readAsDataURL(file);
       toast.success(
-        "Imagen seleccionada. Haz clic en 'Subir Imagen' para continuar."
+        "Image selected. Click 'Upload Image' to continue."
       );
     } else if (file) {
-      toast.error("Solo se permiten archivos de imagen");
+      toast.error("Only image files are allowed");
     }
   };
 
   const handleUploadImage = async () => {
-    if (!dragImageFile) return;
-
-    setIsUploading(true);
+    if (!dragImageFile || !entityId) return;
 
     try {
-      // Por ahora solo console.log
-      console.log("Subiendo imagen:", dragImageFile);
-      console.log("Nombre:", dragImageFile.name);
-      console.log("Tamaño:", dragImageFile.size);
-      console.log("Tipo:", dragImageFile.type);
+      // Use custom hook to upload image
+      await uploadImage(dragImageFile);
 
-      // Simular subida
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Imagen subida exitosamente (console.log)");
-
-      // Limpiar estado
+      // Clear state after successful upload
       setDragImageFile(null);
       setDragImagePreview("");
-    } catch (error) {
-      toast.error("Error al subir la imagen");
-    } finally {
-      setIsUploading(false);
+    } catch (error: any) {
+      // Error already handled in hook
+      console.error('Error in handleUploadImage:', error);
     }
   };
 
@@ -195,7 +191,7 @@ export function ImageUploaderCard({
   };
 
   const canGenerateImage = word && !isGeneratingImage && !disabled;
-  const showDragAndDrop = !dragImageFile; // Siempre mostrar drag & drop
+  const showDragAndDrop = !dragImageFile; // Always show drag & drop
   const showDragPreview = dragImageFile && dragImagePreview;
 
   return (
@@ -220,9 +216,9 @@ export function ImageUploaderCard({
               }`}
             >
               {isGeneratingImage ? (
-                // Skeleton durante generación con toque de AI
+                // Skeleton during generation with AI touch
                 <div className="w-full h-full flex flex-col items-center justify-center space-y-4 p-6">
-                  {/* Spinner con glow de AI */}
+                  {/* Spinner with AI glow */}
                   <div className="relative">
                     <div className="w-20 h-20 border-4 border-primary/30 rounded-full animate-spin"></div>
                     <div className="absolute inset-0 w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -231,17 +227,17 @@ export function ImageUploaderCard({
                     <div className="absolute inset-0 w-20 h-20 bg-primary/10 rounded-full blur-xl animate-pulse"></div>
                   </div>
 
-                  {/* Texto con shine */}
+                  {/* Text with shine */}
                   <div className="text-center space-y-2">
                     <p className="text-sm font-medium bg-gradient-to-r from-primary via-blue-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
-                      Generando con IA...
+                      Generating with AI...
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Creando imagen personalizada
+                      Creating personalized image
                     </p>
                   </div>
 
-                  {/* Partículas flotantes sutiles */}
+                  {/* Subtle floating particles */}
                   <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-primary/40 rounded-full animate-bounce"></div>
                     <div
@@ -255,11 +251,11 @@ export function ImageUploaderCard({
                   </div>
                 </div>
               ) : showDragPreview ? (
-                // Preview de imagen arrastrada
+                // Preview of dragged image
                 <div className="relative w-full h-full">
                   <img
                     src={dragImagePreview}
-                    alt="Preview de imagen"
+                    alt="Image preview"
                     className="w-full h-full object-cover"
                   />
                   <button
@@ -273,13 +269,13 @@ export function ImageUploaderCard({
                 <div className="relative w-full h-full">
                   <img
                     src={imageUrl}
-                    alt={word || "Imagen"}
+                    alt={word || "Image"}
                     className="w-full h-full object-cover"
                   />
                   <button
                     onClick={() => onImageChange("")}
                     className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    title="Eliminar imagen"
+                    title="Remove image"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -287,7 +283,7 @@ export function ImageUploaderCard({
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Image className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" />
-                  <div className="text-xs">Sin imagen</div>
+                  <div className="text-xs">No image</div>
                 </div>
               )}
             </div>
@@ -314,34 +310,34 @@ export function ImageUploaderCard({
                   <p className="text-sm text-muted-foreground">
                     {isGeneratingImage ? (
                       <span className="text-gray-400 dark:text-gray-500">
-                        Generando imagen... (drag & drop deshabilitado)
+                        Generating image... (drag & drop disabled)
                       </span>
                     ) : isDragOver ? (
                       <span className="text-green-600 font-medium">
-                        ¡Suelta tu imagen aquí!
+                        Drop your image here!
                       </span>
                     ) : (
                       <>
                         {imageUrl ? (
                           <>
-                            Arrastra una nueva imagen para reemplazar o{" "}
+                            Drag a new image to replace or{" "}
                             <button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
                               className="text-primary hover:underline font-medium"
                             >
-                              haz clic para seleccionar
+                              click to select
                             </button>
                           </>
                         ) : (
                           <>
-                            Arrastra tu imagen aquí o{" "}
+                            Drag your image here or{" "}
                             <button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
                               className="text-primary hover:underline font-medium"
                             >
-                              haz clic para seleccionar
+                              click to select
                             </button>
                           </>
                         )}
@@ -349,12 +345,12 @@ export function ImageUploaderCard({
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Solo se permiten archivos de imagen (JPG, PNG, GIF, etc.)
+                    Only image files allowed (JPG, PNG, GIF, etc.)
                   </p>
                 </div>
               </div>
 
-              {/* Input de archivo oculto */}
+              {/* Hidden file input */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -363,14 +359,14 @@ export function ImageUploaderCard({
                 className="hidden"
               />
 
-              {/* URL de imagen y generación AI */}
+              {/* Image URL and AI generation */}
               <div className="space-y-2">
-                <Label htmlFor="image-url">URL de imagen</Label>
+                <Label htmlFor="image-url">Image URL</Label>
                 <Input
                   id="image-url"
                   value={imageUrl}
                   onChange={(e) => onImageChange(e.target.value)}
-                  placeholder="https://ejemplo.com/imagen.jpg"
+                  placeholder="https://example.com/image.jpg"
                   disabled={isGeneratingImage || disabled}
                   className="w-full"
                 />
@@ -384,7 +380,7 @@ export function ImageUploaderCard({
                   {isGeneratingImage ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Generar
+                      Generating
                     </>
                   ) : (
                     <>
@@ -395,17 +391,17 @@ export function ImageUploaderCard({
                 </Button>
                 {!word && (
                   <p className="text-xs text-muted-foreground">
-                    Necesitas una palabra para generar una imagen
+                    You need a word to generate an image
                   </p>
                 )}
               </div>
             </>
           )}
 
-          {/* Botón de subir imagen cuando hay imagen arrastrada */}
+          {/* Upload image button when image is dragged */}
           {showDragPreview && (
             <div className="space-y-2">
-              <Label>Imagen seleccionada: {dragImageFile?.name}</Label>
+              <Label>Selected image: {dragImageFile?.name}</Label>
               <Button
                 type="button"
                 onClick={handleUploadImage}
@@ -415,17 +411,17 @@ export function ImageUploaderCard({
                 {isUploading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Subiendo...
+                    Uploading...
                   </>
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2" />
-                    Subir Imagen
+                    Upload Image
                   </>
                 )}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Haz clic en "Subir Imagen" para procesar la imagen seleccionada
+                Click "Upload Image" to process the selected image
               </p>
             </div>
           )}
