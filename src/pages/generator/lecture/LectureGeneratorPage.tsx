@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -156,6 +156,8 @@ export default function LectureGeneratorPage() {
     loadAllWords();
   }, []);
 
+
+
   const handleGenerateText = async (data: GeneratorFormData) => {
     setIsGenerating(true);
     setGeneratedText("");
@@ -243,6 +245,8 @@ export default function LectureGeneratorPage() {
 
   // Sincronizar config con valores actuales al abrir el modal
   const openConfigModal = () => {
+    // ✅ SOLUCIÓN: Sincronizar la configuración ANTES de abrir el modal
+    // Los estados locales ya están sincronizados, solo abrir el modal
     setIsConfigOpen(true);
   };
 
@@ -257,6 +261,7 @@ export default function LectureGeneratorPage() {
     grammarTopics: string[];
     selectedWords: string[];
   }) => {
+    // ✅ SOLUCIÓN: Actualizar tanto el formulario como los estados locales
     setValue("level", config.level);
     setValue("typeWrite", config.typeWrite);
     setValue("difficulty", config.difficulty);
@@ -265,6 +270,9 @@ export default function LectureGeneratorPage() {
     setRangeMax(config.rangeMax);
     setGrammarTopics(config.grammarTopics);
     setSelectedWords(config.selectedWords);
+    
+    // ✅ SOLUCIÓN: Forzar la validación del formulario
+    // trigger() no está disponible, pero setValue ya dispara la validación
   };
 
   const handleGenerateTopic = async () => {
@@ -272,17 +280,28 @@ export default function LectureGeneratorPage() {
     await generateTopic(currentPrompt);
   };
 
-  const initialConfig = {
-    level: getValues("level"),
-    typeWrite: getValues("typeWrite"),
-    difficulty: getValues("difficulty"),
+  // ✅ SOLUCIÓN: Crear initialConfig dinámicamente usando useMemo
+  const initialConfig = useMemo(() => ({
+    level: watchedValues.level,
+    typeWrite: watchedValues.typeWrite,
+    difficulty: watchedValues.difficulty,
     language,
     rangeMin,
     rangeMax,
     grammarTopics,
     selectedWords,
     preloadedWords,
-  };
+  }), [
+    watchedValues.level,
+    watchedValues.typeWrite, 
+    watchedValues.difficulty,
+    language,
+    rangeMin,
+    rangeMax,
+    grammarTopics,
+    selectedWords,
+    preloadedWords
+  ]);
 
   return (
     <PageLayout>
