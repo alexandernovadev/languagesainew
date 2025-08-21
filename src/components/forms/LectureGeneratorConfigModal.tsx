@@ -110,20 +110,26 @@ export const LectureGeneratorConfigModal: React.FC<
     >
       <div className="px-6 pb-4">
         <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Básico
-            </TabsTrigger>
-            <TabsTrigger value="grammar" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Gramática
-            </TabsTrigger>
-            <TabsTrigger value="words" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Palabras
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full sticky top-1 z-10">
+              <TabsTrigger value="basic" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Settings className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Básico</span>
+                <span className="sm:hidden">Básico</span>
+              </TabsTrigger>
+              <TabsTrigger value="grammar" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <BookOpen className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Gramática</span>
+                <span className="sm:hidden">Gramática</span>
+              </TabsTrigger>
+              <TabsTrigger value="words" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <FileText className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Palabras</span>
+                <span className="sm:hidden">Palabras</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="basic" className="mt-4">
             <Card>

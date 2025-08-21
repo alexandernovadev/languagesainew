@@ -370,20 +370,26 @@ export default function ExamHistoryPage() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Resumen
-          </TabsTrigger>
-          <TabsTrigger value="attempts" className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            Intentos
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
-            Análisis
-          </TabsTrigger>
-        </TabsList>
+        {/* Contenedor con scroll horizontal en móvil */}
+        <div className="max-sm:overflow-x-auto max-sm:pb-2">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full">
+            <TabsTrigger value="overview" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <BarChart3 className="h-4 w-4" />
+              <span className="max-sm:hidden sm:inline">Resumen</span>
+              <span className="sm:hidden">Resumen</span>
+            </TabsTrigger>
+            <TabsTrigger value="attempts" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <BookOpen className="h-4 w-4" />
+              <span className="max-sm:hidden sm:inline">Intentos</span>
+              <span className="sm:hidden">Intentos</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <TrendingUp className="h-4 w-4" />
+              <span className="max-sm:hidden sm:inline">Análisis</span>
+              <span className="sm:hidden">Análisis</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">

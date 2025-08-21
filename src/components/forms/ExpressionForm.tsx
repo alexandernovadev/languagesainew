@@ -97,20 +97,26 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
         <div className="w-full">
           <div className="w-full">
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">
-                  <Book className="h-4 w-4 mr-2" />
-                  Básico
-                </TabsTrigger>
-                <TabsTrigger value="advanced">
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Avanzado
-                </TabsTrigger>
-                <TabsTrigger value="image">
-                  <Image className="h-4 w-4 mr-2" />
-                  Imagen
-                </TabsTrigger>
-              </TabsList>
+              {/* Contenedor con scroll horizontal en móvil */}
+              <div className="max-sm:overflow-x-auto max-sm:pb-2">
+                <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full">
+                  <TabsTrigger value="basic" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                    <Book className="h-4 w-4 mr-2" />
+                    <span className="max-sm:hidden sm:inline">Básico</span>
+                    <span className="sm:hidden">Básico</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="advanced" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    <span className="max-sm:hidden sm:inline">Avanzado</span>
+                    <span className="sm:hidden">Avanzado</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="image" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                    <Image className="h-4 w-4 mr-2" />
+                    <span className="max-sm:hidden sm:inline">Imagen</span>
+                    <span className="sm:hidden">Imagen</span>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <TabsContent value="basic" className="space-y-4">
                 <Card>

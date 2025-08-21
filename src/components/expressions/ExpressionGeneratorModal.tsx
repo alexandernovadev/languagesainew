@@ -211,16 +211,21 @@ export function ExpressionGeneratorModal({
     >
       <div className="px-6 py-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="generate">
-              <Wand2 className="h-4 w-4 mr-2" />
-              Generar
-            </TabsTrigger>
-            <TabsTrigger value="preview" disabled={!generatedExpression}>
-              <EyeIcon className="h-4 w-4 mr-2" />
-              Vista Previa
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 max-sm:flex max-sm:w-max max-sm:min-w-full">
+              <TabsTrigger value="generate" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Wand2 className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Generar</span>
+                <span className="sm:hidden">Generar</span>
+              </TabsTrigger>
+              <TabsTrigger value="preview" disabled={!generatedExpression} className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <EyeIcon className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Vista Previa</span>
+                <span className="sm:hidden">Previa</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="generate" className="space-y-4">
             <Card>

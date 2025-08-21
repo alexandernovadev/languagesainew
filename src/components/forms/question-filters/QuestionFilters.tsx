@@ -202,12 +202,27 @@ function FiltersContent({
 }: FiltersContentProps) {
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="basic">Básicos</TabsTrigger>
-        <TabsTrigger value="content">Contenido</TabsTrigger>
-        <TabsTrigger value="advanced">Avanzados</TabsTrigger>
-        <TabsTrigger value="sort">Ordenar</TabsTrigger>
-      </TabsList>
+      {/* Contenedor con scroll horizontal en móvil */}
+      <div className="max-sm:overflow-x-auto max-sm:pb-2">
+        <TabsList className="grid w-full grid-cols-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 max-sm:flex max-sm:w-max max-sm:min-w-full">
+          <TabsTrigger value="basic" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <span className="max-sm:hidden sm:inline">Básicos</span>
+            <span className="sm:hidden">Básicos</span>
+          </TabsTrigger>
+          <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <span className="max-sm:hidden sm:inline">Contenido</span>
+            <span className="sm:hidden">Contenido</span>
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <span className="max-sm:hidden sm:inline">Avanzados</span>
+            <span className="sm:hidden">Avanzados</span>
+          </TabsTrigger>
+          <TabsTrigger value="sort" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <span className="max-sm:hidden sm:inline">Ordenar</span>
+            <span className="sm:hidden">Ordenar</span>
+          </TabsTrigger>
+        </TabsList>
+      </div>
 
       <TabsContent value="basic" className="space-y-6">
         <LevelFilter

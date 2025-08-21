@@ -98,20 +98,26 @@ export function LectureForm({
       >
         <Tabs defaultValue="config" className="flex flex-col flex-grow min-h-0">
           <div className="px-6 py-2">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="config">
-                <Settings className="h-4 w-4 mr-2" />
-                Configuración
-              </TabsTrigger>
-              <TabsTrigger value="multimedia">
-                <Image className="h-4 w-4 mr-2" />
-                Multimedia
-              </TabsTrigger>
-              <TabsTrigger value="content">
-                <FileText className="h-4 w-4 mr-2" />
-                Contenido
-              </TabsTrigger>
-            </TabsList>
+            {/* Contenedor con scroll horizontal en móvil */}
+            <div className="max-sm:overflow-x-auto max-sm:pb-2">
+              <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full">
+                <TabsTrigger value="config" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Settings className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Configuración</span>
+                  <span className="sm:hidden">Config</span>
+                </TabsTrigger>
+                <TabsTrigger value="multimedia" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Image className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Multimedia</span>
+                  <span className="sm:hidden">Media</span>
+                </TabsTrigger>
+                <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <FileText className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Contenido</span>
+                  <span className="sm:hidden">Contenido</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
 
           <div className="flex-grow overflow-y-auto">

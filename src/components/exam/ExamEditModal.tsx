@@ -1063,20 +1063,26 @@ export function ExamEditModal({
       }
     >
               <Tabs defaultValue="general" className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
-            <TabsTrigger value="general" className="flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              General
-            </TabsTrigger>
-            <TabsTrigger value="questions" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Preguntas
-            </TabsTrigger>
-            <TabsTrigger value="order" className="flex items-center gap-2">
-              <ListOrdered className="w-4 h-4" />
-              Orden
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full sticky top-1 z-10">
+              <TabsTrigger value="general" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Settings className="w-4 h-4" />
+                <span className="max-sm:hidden sm:inline">General</span>
+                <span className="sm:hidden">General</span>
+              </TabsTrigger>
+              <TabsTrigger value="questions" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <FileText className="w-4 h-4" />
+                <span className="max-sm:hidden sm:inline">Preguntas</span>
+                <span className="sm:hidden">Preguntas</span>
+              </TabsTrigger>
+              <TabsTrigger value="order" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <ListOrdered className="w-4 h-4" />
+                <span className="max-sm:hidden sm:inline">Orden</span>
+                <span className="sm:hidden">Orden</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="general" className="flex-1 flex flex-col">
             <ScrollArea className="h-[80dvh] pr-4 pb-32">

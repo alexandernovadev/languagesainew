@@ -304,24 +304,31 @@ export function QuestionForm({
   return (
     <form id="question-form" onSubmit={handleSubmit(handleFormSubmit)} className="space-y-2">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 sticky top-1 z-10">
-          <TabsTrigger value="basic">
-            <Book className="h-4 w-4 mr-2" />
-            Básico
-          </TabsTrigger>
-          <TabsTrigger value="content">
-            <FileText className="h-4 w-4 mr-2" />
-            Contenido
-          </TabsTrigger>
-          <TabsTrigger value="options">
-            <List className="h-4 w-4 mr-2" />
-            Opciones
-          </TabsTrigger>
-          <TabsTrigger value="media">
-            <Image className="h-4 w-4 mr-2" />
-            Multimedia
-          </TabsTrigger>
-        </TabsList>
+        {/* Contenedor con scroll horizontal en móvil */}
+        <div className="max-sm:overflow-x-auto max-sm:pb-2">
+          <TabsList className="grid w-full grid-cols-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 max-sm:flex max-sm:w-max max-sm:min-w-full sticky top-1 z-10">
+            <TabsTrigger value="basic" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <Book className="h-4 w-4 mr-2" />
+              <span className="max-sm:hidden sm:inline">Básico</span>
+              <span className="sm:hidden">Básico</span>
+            </TabsTrigger>
+            <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <FileText className="h-4 w-4 mr-2" />
+              <span className="max-sm:hidden sm:inline">Contenido</span>
+              <span className="sm:hidden">Contenido</span>
+            </TabsTrigger>
+            <TabsTrigger value="options" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <List className="h-4 w-4 mr-2" />
+              <span className="max-sm:hidden sm:inline">Opciones</span>
+              <span className="sm:hidden">Opciones</span>
+            </TabsTrigger>
+            <TabsTrigger value="media" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <Image className="h-4 w-4 mr-2" />
+              <span className="max-sm:hidden sm:inline">Multimedia</span>
+              <span className="sm:hidden">Media</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="basic" className="space-y-6">
           <Card>

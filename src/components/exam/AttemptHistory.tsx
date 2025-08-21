@@ -186,52 +186,59 @@ export const AttemptHistory: React.FC<AttemptHistoryProps> = ({
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="all" className="flex items-center gap-1">
-                Todos
-                <Badge variant="secondary" className="ml-1">
-                  {getTotalCount()}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger
-                value="completed"
-                className="flex items-center gap-1"
-              >
-                <CheckCircle className="h-3 w-3" />
-                Completados
-                <Badge variant="secondary" className="ml-1">
-                  {getTabCount("graded")}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger
-                value="in_progress"
-                className="flex items-center gap-1"
-              >
-                <Clock className="h-3 w-3" />
-                En progreso
-                <Badge variant="secondary" className="ml-1">
-                  {getTabCount("in_progress")}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger
-                value="submitted"
-                className="flex items-center gap-1"
-              >
-                Enviados
-                <Badge variant="secondary" className="ml-1">
-                  {getTabCount("submitted")}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger
-                value="abandoned"
-                className="flex items-center gap-1"
-              >
-                Abandonados
-                <Badge variant="secondary" className="ml-1">
-                  {getTabCount("abandoned")}
-                </Badge>
-              </TabsTrigger>
-            </TabsList>
+            {/* Contenedor con scroll horizontal en móvil */}
+            <div className="max-sm:overflow-x-auto max-sm:pb-2">
+              <TabsList className="grid w-full grid-cols-5 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-5 max-sm:flex max-sm:w-max max-sm:min-w-full">
+                <TabsTrigger value="all" className="flex items-center gap-1 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <span className="max-sm:hidden sm:inline">Todos</span>
+                  <span className="sm:hidden">Todos</span>
+                  <Badge variant="secondary" className="ml-1">
+                    {getTotalCount()}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="completed"
+                  className="flex items-center gap-1 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
+                  <CheckCircle className="h-3 w-3" />
+                  <span className="max-sm:hidden sm:inline">Completados</span>
+                  <span className="sm:hidden">Completados</span>
+                  <Badge variant="secondary" className="ml-1">
+                    {getTabCount("graded")}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="in_progress"
+                  className="flex items-center gap-1 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
+                  <Clock className="h-3 w-3" />
+                  <span className="max-sm:hidden sm:inline">En progreso</span>
+                  <span className="sm:hidden">Progreso</span>
+                  <Badge variant="secondary" className="ml-1">
+                    {getTabCount("in_progress")}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="submitted"
+                  className="flex items-center gap-1 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
+                  <span className="max-sm:hidden sm:inline">Enviados</span>
+                  <span className="sm:hidden">Enviados</span>
+                  <Badge variant="secondary" className="ml-1">
+                    {getTabCount("submitted")}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="abandoned"
+                  className="flex items-center gap-1 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
+                  <span className="max-sm:hidden sm:inline">Abandonados</span>
+                  <span className="sm:hidden">Abandonados</span>
+                  <Badge variant="secondary" className="ml-1">
+                    {getTabCount("abandoned")}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value={activeTab} className="mt-6">
               {filteredAttempts.length === 0 ? (

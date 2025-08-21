@@ -114,20 +114,26 @@ export function QuestionDetailsModal({
       <div className="p-4">
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 sticky top-1 z-10">
-            <TabsTrigger value="details">
-              <Info className="h-4 w-4 mr-2" />
-              Detalles
-            </TabsTrigger>
-            <TabsTrigger value="content">
-              <FileTextIcon className="h-4 w-4 mr-2" />
-              Contenido
-            </TabsTrigger>
-            <TabsTrigger value="options">
-              <List className="h-4 w-4 mr-2" />
-              Opciones
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full sticky top-1 z-10">
+              <TabsTrigger value="details" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Info className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Detalles</span>
+                <span className="sm:hidden">Detalles</span>
+              </TabsTrigger>
+              <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <FileTextIcon className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Contenido</span>
+                <span className="sm:hidden">Contenido</span>
+              </TabsTrigger>
+              <TabsTrigger value="options" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <List className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Opciones</span>
+                <span className="sm:hidden">Opciones</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="details" className="space-y-6">
             <Card>

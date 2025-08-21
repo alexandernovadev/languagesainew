@@ -270,23 +270,30 @@ export default function ExamGeneratorPage() {
 
         {/* Main content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="config" disabled={state.isGenerating}>
-              <FileText className="h-4 w-4 mr-2" />
-              Configuración
-            </TabsTrigger>
-            <TabsTrigger
-              value="progress"
-              disabled={!state.isGenerating && !state.generatedExam}
-            >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Progreso
-            </TabsTrigger>
-            <TabsTrigger value="questions" disabled={!state.generatedExam}>
-              <Eye className="h-4 w-4 mr-2" />
-              Preguntas
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full">
+              <TabsTrigger value="config" disabled={state.isGenerating} className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <FileText className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Configuración</span>
+                <span className="sm:hidden">Config</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="progress"
+                disabled={!state.isGenerating && !state.generatedExam}
+                className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Progreso</span>
+                <span className="sm:hidden">Progreso</span>
+              </TabsTrigger>
+              <TabsTrigger value="questions" disabled={!state.generatedExam} className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Eye className="h-4 w-4 mr-2" />
+                <span className="max-sm:hidden sm:inline">Preguntas</span>
+                <span className="sm:hidden">Preguntas</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="config" className="space-y-6">
             <ExamConfigForm

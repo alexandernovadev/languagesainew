@@ -109,24 +109,31 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-6">
         <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
-              <UserIcon className="h-4 w-4" />
-              Básico
-            </TabsTrigger>
-            <TabsTrigger value="personal" className="flex items-center gap-2">
-              <UserPlus className="h-4 w-4" />
-              Personal
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Rol y Config
-            </TabsTrigger>
-            <TabsTrigger value="contact" className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              Contacto
-            </TabsTrigger>
-          </TabsList>
+          {/* Contenedor con scroll horizontal en móvil */}
+          <div className="max-sm:overflow-x-auto max-sm:pb-2">
+            <TabsList className="grid grid-cols-4 w-full sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 max-sm:flex max-sm:w-max max-sm:min-w-full">
+              <TabsTrigger value="basic" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <UserIcon className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Básico</span>
+                <span className="sm:hidden">Básico</span>
+              </TabsTrigger>
+              <TabsTrigger value="personal" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <UserPlus className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Personal</span>
+                <span className="sm:hidden">Personal</span>
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Settings className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Rol y Config</span>
+                <span className="sm:hidden">Config</span>
+              </TabsTrigger>
+              <TabsTrigger value="contact" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <Phone className="h-4 w-4" />
+                <span className="max-sm:hidden sm:inline">Contacto</span>
+                <span className="sm:hidden">Contacto</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="basic" className="space-y-4">
             <div className="grid grid-cols-2 gap-4 my-6">
