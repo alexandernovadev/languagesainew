@@ -12,7 +12,16 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, Save, RefreshCw, X, Eye, Wand2, Eye as EyeIcon } from "lucide-react";
+import {
+  Loader2,
+  Sparkles,
+  Save,
+  RefreshCw,
+  X,
+  Eye,
+  Wand2,
+  Eye as EyeIcon,
+} from "lucide-react";
 import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { toast } from "sonner";
@@ -62,12 +71,20 @@ export function ExpressionGeneratorModal({
       toast.success("Expresión guardada exitosamente", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: generatedExpression, message: "Expresión guardada exitosamente" }, "Guardar Expresión")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: generatedExpression,
+                message: "Expresión guardada exitosamente",
+              },
+              "Guardar Expresión"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
       handleClose();
     } catch (error) {
@@ -86,12 +103,20 @@ export function ExpressionGeneratorModal({
       toast.success("Expresión regenerada exitosamente", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: result, message: "Expresión regenerada exitosamente" }, "Regenerar Expresión")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: result,
+                message: "Expresión regenerada exitosamente",
+              },
+              "Regenerar Expresión"
+            ),
         },
         cancel: {
           label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     }
   };
@@ -112,275 +137,233 @@ export function ExpressionGeneratorModal({
       size="4xl"
       height="h-[90dvh]"
       footer={
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleClose}>
-            Cerrar
-          </Button>
-          {activeTab === "generate" && (
+        <div className="flex items-center justify-between w-full">
+          {/* Lado izquierdo: Regenerar (solo cuando hay expresión) */}
+          <div className="flex-1">
+            {generatedExpression && (
+              <Button
+                onClick={handleRegenerate}
+                disabled={isGenerating}
+                variant="outline"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Regenerando...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Regenerar
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          {/* Lado derecho: Cerrar y Generar/Guardar */}
+          <div className="flex items-center gap-2">
             <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt.trim()}
+              variant="outline"
+              onClick={handleClose}
+              disabled={isGenerating}
             >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Generando...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Generar
-                </>
-              )}
+              Cerrar
             </Button>
-          )}
-          {activeTab === "preview" && generatedExpression && (
-            <Button
-              onClick={handleSave}
-              disabled={actionLoading.create}
-            >
-              {actionLoading.create ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Guardar
-                </>
-              )}
-            </Button>
-          )}
+
+            {!generatedExpression ? (
+              // Solo mostrar botón de generar si no hay expresión generada
+              <Button
+                onClick={handleGenerate}
+                disabled={isGenerating || !prompt.trim()}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Generando...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Generar
+                  </>
+                )}
+              </Button>
+            ) : (
+              // Mostrar botón de guardar si ya hay expresión generada
+              <Button onClick={handleSave} disabled={actionLoading.create || isGenerating}>
+                {actionLoading.create ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Guardar
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       }
     >
       <div className="px-6 py-4">
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="generate">
-                <Wand2 className="h-4 w-4 mr-2" />
-                Generar
-              </TabsTrigger>
-              <TabsTrigger value="preview" disabled={!generatedExpression}>
-                <EyeIcon className="h-4 w-4 mr-2" />
-                Vista Previa
-              </TabsTrigger>
-            </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="generate">
+              <Wand2 className="h-4 w-4 mr-2" />
+              Generar
+            </TabsTrigger>
+            <TabsTrigger value="preview" disabled={!generatedExpression}>
+              <EyeIcon className="h-4 w-4 mr-2" />
+              Vista Previa
+            </TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="generate" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Prompt de Generación</CardTitle>
-                  <CardDescription>
-                    Describe qué tipo de expresión quieres generar. Por ejemplo:
-                    "Crea un idiom sobre el éxito", "Genera una frase formal
-                    para negocios"
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="prompt">Descripción</Label>
-                    <Textarea
-                      id="prompt"
-                      placeholder="Ej: Crea un idiom sobre el éxito que sea fácil de entender..."
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      rows={4}
-                      className="resize-none"
-                    />
-                  </div>
+          <TabsContent value="generate" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Prompt de Generación</CardTitle>
+                <CardDescription>
+                  Describe qué tipo de expresión quieres generar. Por ejemplo:
+                  "Crea un idiom sobre el éxito", "Genera una frase formal para
+                  negocios"
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="prompt">Descripción</Label>
+                  <Textarea
+                    id="prompt"
+                    placeholder="Ej: Crea un idiom sobre el éxito que sea fácil de entender..."
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    rows={8}
+                    className="resize-none"
+                  />
+                </div>
 
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={handleGenerate}
-                      disabled={isGenerating || !prompt.trim()}
-                      className="flex-1"
-                    >
-                      {isGenerating ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Generando...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="h-4 w-4 mr-2" />
-                          Generar Expresión
-                        </>
+                <div className="text-sm text-muted-foreground">
+                  Haz clic en "Generar" en el pie del modal para crear tu
+                  expresión
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="preview" className="space-y-4">
+            {generatedExpression && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Información Principal */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-xl">
+                      {generatedExpression.expression}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      {generatedExpression.definition}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Metadatos */}
+                    <div className="flex items-center gap-3">
+                      {generatedExpression.difficulty && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Nivel:</span>
+                          <ExpressionLevelBadge
+                            level={generatedExpression.difficulty}
+                          />
+                        </div>
                       )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="preview" className="space-y-4">
-              {generatedExpression && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Información Principal */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-xl">
-                        {generatedExpression.expression}
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        {generatedExpression.definition}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {/* Metadatos */}
-                      <div className="flex items-center gap-3">
-                        {generatedExpression.difficulty && (
+                      {generatedExpression.type &&
+                        generatedExpression.type.length > 0 && (
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">Nivel:</span>
-                            <ExpressionLevelBadge
-                              level={generatedExpression.difficulty}
-                            />
+                            <span className="text-sm font-medium">Tipos:</span>
+                            <div className="flex gap-1">
+                              {generatedExpression.type.map((type, index) => (
+                                <Badge key={index} variant="secondary">
+                                  {type}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {generatedExpression.type &&
-                          generatedExpression.type.length > 0 && (
-                            <div className="flex items-center gap-2">
+                    </div>
+
+                    {/* Contexto */}
+                    {generatedExpression.context && (
+                      <div>
+                        <Label className="text-sm font-medium">Contexto</Label>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {generatedExpression.context}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Traducción al Español */}
+                    {generatedExpression.spanish && (
+                      <div className="border-t pt-4">
+                        <Label className="text-sm font-medium">
+                          En Español
+                        </Label>
+                        <div className="space-y-2 mt-2">
+                          {generatedExpression.spanish.expression && (
+                            <div>
                               <span className="text-sm font-medium">
-                                Tipos:
+                                Expresión:{" "}
                               </span>
-                              <div className="flex gap-1">
-                                {generatedExpression.type.map((type, index) => (
-                                  <Badge key={index} variant="secondary">
-                                    {type}
-                                  </Badge>
-                                ))}
-                              </div>
+                              <span className="text-sm text-muted-foreground">
+                                {generatedExpression.spanish.expression}
+                              </span>
                             </div>
                           )}
-                      </div>
-
-                      {/* Contexto */}
-                      {generatedExpression.context && (
-                        <div>
-                          <Label className="text-sm font-medium">
-                            Contexto
-                          </Label>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {generatedExpression.context}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Traducción al Español */}
-                      {generatedExpression.spanish && (
-                        <div className="border-t pt-4">
-                          <Label className="text-sm font-medium">
-                            En Español
-                          </Label>
-                          <div className="space-y-2 mt-2">
-                            {generatedExpression.spanish.expression && (
-                              <div>
-                                <span className="text-sm font-medium">
-                                  Expresión:{" "}
-                                </span>
-                                <span className="text-sm text-muted-foreground">
-                                  {generatedExpression.spanish.expression}
-                                </span>
-                              </div>
-                            )}
-                            {generatedExpression.spanish.definition && (
-                              <div>
-                                <span className="text-sm font-medium">
-                                  Definición:{" "}
-                                </span>
-                                <span className="text-sm text-muted-foreground">
-                                  {generatedExpression.spanish.definition}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {/* Ejemplos */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Ejemplos de Uso</CardTitle>
-                      <CardDescription>
-                        Frases que muestran cómo usar esta expresión
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {generatedExpression.examples &&
-                      generatedExpression.examples.length > 0 ? (
-                        <div className="space-y-3">
-                          {generatedExpression.examples.map(
-                            (example, index) => (
-                              <div
-                                key={index}
-                                className="p-3 bg-muted rounded-lg"
-                              >
-                                <p className="text-sm">{example}</p>
-                              </div>
-                            )
+                          {generatedExpression.spanish.definition && (
+                            <div>
+                              <span className="text-sm font-medium">
+                                Definición:{" "}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                {generatedExpression.spanish.definition}
+                              </span>
+                            </div>
                           )}
                         </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          No hay ejemplos disponibles
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
 
-              {/* Acciones */}
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={handleRegenerate}
-                      disabled={isGenerating}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      {isGenerating ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Regenerando...
-                        </>
-                      ) : (
-                        <>
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                          Regenerar
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      onClick={handleSave}
-                      disabled={actionLoading.create}
-                      className="flex-1"
-                    >
-                      {actionLoading.create ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Guardando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-2" />
-                          Guardar Expresión
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                {/* Ejemplos */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Ejemplos de Uso</CardTitle>
+                    <CardDescription>
+                      Frases que muestran cómo usar esta expresión
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {generatedExpression.examples &&
+                    generatedExpression.examples.length > 0 ? (
+                      <div className="space-y-3">
+                        {generatedExpression.examples.map((example, index) => (
+                          <div key={index} className="p-3 bg-muted rounded-lg">
+                            <p className="text-sm">{example}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        No hay ejemplos disponibles
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </ModalNova>
   );
