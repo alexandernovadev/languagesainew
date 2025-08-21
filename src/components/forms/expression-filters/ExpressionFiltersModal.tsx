@@ -130,28 +130,36 @@ function FiltersContent({
 }: FiltersContentProps) {
   return (
     <Tabs defaultValue="basic" className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
-        <TabsTrigger value="basic">
-          <Book className="h-4 w-4 mr-2" />
-          Básicos
-        </TabsTrigger>
-        <TabsTrigger value="content">
-          <FileText className="h-4 w-4 mr-2" />
-          Contenido
-        </TabsTrigger>
-        <TabsTrigger value="text">
-          <Search className="h-4 w-4 mr-2" />
-          Por Texto
-        </TabsTrigger>
-        <TabsTrigger value="advanced">
-          <Settings className="h-4 w-4 mr-2" />
-          Avanzados
-        </TabsTrigger>
-        <TabsTrigger value="sort">
-          <ArrowUpDown className="h-4 w-4 mr-2" />
-          Ordenar
-        </TabsTrigger>
-      </TabsList>
+      {/* Contenedor con scroll horizontal en móvil */}
+      <div className="max-sm:overflow-x-auto max-sm:pb-2">
+        <TabsList className="grid w-full grid-cols-5 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-5 max-sm:flex max-sm:w-max max-sm:min-w-full">
+          <TabsTrigger value="basic" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <Book className="h-4 w-4 mr-2" />
+            <span className="max-sm:hidden sm:inline">Básicos</span>
+            <span className="sm:hidden">Básicos</span>
+          </TabsTrigger>
+          <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <FileText className="h-4 w-4 mr-2" />
+            <span className="max-sm:hidden sm:inline">Contenido</span>
+            <span className="sm:hidden">Contenido</span>
+          </TabsTrigger>
+          <TabsTrigger value="text" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <Search className="h-4 w-4 mr-2" />
+            <span className="max-sm:hidden sm:inline">Por Texto</span>
+            <span className="sm:hidden">Texto</span>
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <Settings className="h-4 w-4 mr-2" />
+            <span className="max-sm:hidden sm:inline">Avanzados</span>
+            <span className="sm:hidden">Avanzados</span>
+          </TabsTrigger>
+          <TabsTrigger value="sort" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+            <ArrowUpDown className="h-4 w-4 mr-2" />
+            <span className="max-sm:hidden sm:inline">Ordenar</span>
+            <span className="sm:hidden">Ordenar</span>
+          </TabsTrigger>
+        </TabsList>
+      </div>
 
       <TabsContent value="basic" className="space-y-4 mt-4">
         <div className="space-y-4">

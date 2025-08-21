@@ -118,24 +118,31 @@ export function WordForm({
       <div className="flex-grow overflow-y-auto px-1 min-h-0">
         <Tabs defaultValue="basic" className="space-y-4">
           <div className="px-4 pt-4">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="basic">
-                <Book className="h-4 w-4 mr-2" />
-                Información Básica
-              </TabsTrigger>
-              <TabsTrigger value="image">
-                <Image className="h-4 w-4 mr-2" />
-                Imagen
-              </TabsTrigger>
-              <TabsTrigger value="advanced">
-                <Sparkles className="h-4 w-4 mr-2" />
-                Campos Avanzados
-              </TabsTrigger>
-              <TabsTrigger value="anki">
-                <Stars className="h-4 w-4 mr-2" />
-                Sistema Anki
-              </TabsTrigger>
-            </TabsList>
+            {/* Contenedor con scroll horizontal en móvil */}
+            <div className="max-sm:overflow-x-auto max-sm:pb-2">
+              <TabsList className="grid w-full grid-cols-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 max-sm:flex max-sm:w-max max-sm:min-w-full">
+                <TabsTrigger value="basic" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Book className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Información Básica</span>
+                  <span className="sm:hidden">Básica</span>
+                </TabsTrigger>
+                <TabsTrigger value="image" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Image className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Imagen</span>
+                  <span className="sm:hidden">Imagen</span>
+                </TabsTrigger>
+                <TabsTrigger value="advanced" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Campos Avanzados</span>
+                  <span className="sm:hidden">Avanzados</span>
+                </TabsTrigger>
+                <TabsTrigger value="anki" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                  <Stars className="h-4 w-4 mr-2" />
+                  <span className="max-sm:hidden sm:inline">Sistema Anki</span>
+                  <span className="sm:hidden">Anki</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
 
           <TabsContent value="basic" className="pt-2">
@@ -486,8 +493,6 @@ export function WordForm({
           </TabsContent>
         </Tabs>
       </div>
-
-
     </form>
   );
 }
