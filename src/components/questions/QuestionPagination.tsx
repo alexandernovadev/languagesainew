@@ -60,7 +60,6 @@ export function QuestionPagination({
           disabled={currentPage <= 1}
         >
           <ChevronLeft className="h-4 w-4" />
-          Anterior
         </Button>
 
         <div className="flex items-center space-x-1">
@@ -90,7 +89,6 @@ export function QuestionPagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
         >
-          Siguiente
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

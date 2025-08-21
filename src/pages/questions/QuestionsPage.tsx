@@ -14,7 +14,14 @@ import { QuestionDetailsModal } from "@/components/QuestionDetailsModal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, X as XIcon, SlidersHorizontal, Eye, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Search,
+  X as XIcon,
+  SlidersHorizontal,
+  Eye,
+  RefreshCw,
+} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -49,7 +56,8 @@ export default function QuestionsPage() {
   const { handleApiResult } = useResultHandler();
 
   // Hook para obtener información de filtros activos
-  const { activeFiltersCount, getActiveFiltersDescription } = useQuestionFilters();
+  const { activeFiltersCount, getActiveFiltersDescription } =
+    useQuestionFilters();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -86,12 +94,20 @@ export default function QuestionsPage() {
         toast.success("Preguntas cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: questions, message: "Preguntas cargadas exitosamente" }, "Cargar Preguntas")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data: questions,
+                  message: "Preguntas cargadas exitosamente",
+                },
+                "Cargar Preguntas"
+              ),
           },
           cancel: {
             label: <XIcon className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
       } catch (error: any) {
         handleApiResult(error, "Cargar Preguntas");
@@ -121,24 +137,40 @@ export default function QuestionsPage() {
         toast.success("Pregunta actualizada correctamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data, message: "Pregunta actualizada correctamente" }, "Actualizar Pregunta")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data,
+                  message: "Pregunta actualizada correctamente",
+                },
+                "Actualizar Pregunta"
+              ),
           },
           cancel: {
             label: <XIcon className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
       } else {
         await createQuestion(data);
         toast.success("Pregunta creada correctamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data, message: "Pregunta creada correctamente" }, "Crear Pregunta")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data,
+                  message: "Pregunta creada correctamente",
+                },
+                "Crear Pregunta"
+              ),
           },
           cancel: {
             label: <XIcon className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
       }
       setDialogOpen(false);
@@ -174,12 +206,20 @@ export default function QuestionsPage() {
         toast.success("Pregunta eliminada correctamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
-            onClick: () => handleApiResult({ success: true, data: selectedQuestion, message: "Pregunta eliminada correctamente" }, "Eliminar Pregunta")
+            onClick: () =>
+              handleApiResult(
+                {
+                  success: true,
+                  data: selectedQuestion,
+                  message: "Pregunta eliminada correctamente",
+                },
+                "Eliminar Pregunta"
+              ),
           },
           cancel: {
             label: <XIcon className="h-4 w-4" />,
-            onClick: () => toast.dismiss()
-          }
+            onClick: () => toast.dismiss(),
+          },
         });
         // Recargar las preguntas después de eliminar
         getQuestions();
@@ -216,12 +256,20 @@ export default function QuestionsPage() {
       toast.success("Preguntas actualizadas", {
         action: {
           label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data: questions, message: "Preguntas actualizadas" }, "Actualizar Preguntas")
+          onClick: () =>
+            handleApiResult(
+              {
+                success: true,
+                data: questions,
+                message: "Preguntas actualizadas",
+              },
+              "Actualizar Preguntas"
+            ),
         },
         cancel: {
           label: <XIcon className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
+          onClick: () => toast.dismiss(),
+        },
       });
     } catch (error: any) {
       handleApiResult(error, "Actualizar Preguntas");
@@ -388,7 +436,7 @@ export default function QuestionsPage() {
         <div className="relative flex-1 mb-3">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar preguntas por tema..."
+            placeholder={`Buscar preguntas por tema... (${total} preguntas)`}
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
             className="pl-8"
@@ -408,9 +456,6 @@ export default function QuestionsPage() {
 
       {/* Questions Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Preguntas ({total})</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <QuestionTable
@@ -456,7 +501,9 @@ export default function QuestionsPage() {
                 // Trigger form submission
                 const form = document.getElementById("question-form");
                 if (form) {
-                  form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                  form.dispatchEvent(
+                    new Event("submit", { bubbles: true, cancelable: true })
+                  );
                 }
               }}
               disabled={actionLoading.create || actionLoading.update}
