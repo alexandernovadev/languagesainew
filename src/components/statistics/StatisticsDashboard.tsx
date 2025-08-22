@@ -8,15 +8,8 @@ import { StatsWordMetrics } from "./StatsWordMetrics";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { PageHeader } from "@/components/ui/page-header";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 interface StatisticsDashboardProps {
   stats: any;
@@ -24,7 +17,15 @@ interface StatisticsDashboardProps {
   wordStats: any;
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
+  actions: Array<{
+    id: string;
+    icon: React.ReactNode;
+    onClick: () => void;
+    tooltip: string;
+    variant?: "default" | "outline" | "secondary";
+    disabled?: boolean;
+    loading?: boolean;
+  }>;
 }
 
 export function StatisticsDashboard({
@@ -33,9 +34,8 @@ export function StatisticsDashboard({
   wordStats,
   loading,
   error,
-  refetch
+  actions,
 }: StatisticsDashboardProps) {
-
   if (loading) {
     return (
       <div className="space-y-6 overflow-x-hidden">
@@ -64,7 +64,6 @@ export function StatisticsDashboard({
   if (error || !stats) {
     return (
       <Alert>
-        <RefreshCw className="h-4 w-4" />
         <AlertDescription>
           {error || "Error al cargar las estadísticas"}
         </AlertDescription>
@@ -77,7 +76,6 @@ export function StatisticsDashboard({
     console.error("Invalid stats structure:", stats);
     return (
       <Alert>
-        <RefreshCw className="h-4 w-4" />
         <AlertDescription>Estructura de datos inválida</AlertDescription>
       </Alert>
     );
@@ -93,26 +91,7 @@ export function StatisticsDashboard({
       <PageHeader
         title="Dashboard"
         description="Estadísticas generales de tu contenido de aprendizaje"
-        actions={
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={refetch}
-                  disabled={loading}
-                  className="h-10 w-10 p-0"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Actualizar estadísticas</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        }
+        actions={<ActionButtonsHeader actions={actions} />}
       />
 
       <StatsKPIs stats={stats} />
