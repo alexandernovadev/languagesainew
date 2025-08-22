@@ -103,7 +103,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
 
   getWords: async (
     page = get().currentPage,
-    limit = 6,
+    limit = 8,
     filters = get().currentFilters
   ) => {
     set({
@@ -144,12 +144,12 @@ export const useWordStore = create<WordStore>((set, get) => ({
     set({ searchQuery: query, currentPage: 1 });
     // Cuando hay búsqueda, usar solo el filtro de búsqueda, ignorando otros filtros
     const filtersToUse = query ? { wordUser: query } : get().currentFilters;
-    get().getWords(1, 6, filtersToUse);
+    get().getWords(1, 8, filtersToUse);
   },
 
   setFilters: (filters: Partial<WordFilters>) => {
     set({ currentFilters: filters, currentPage: 1 });
-    get().getWords(1, 6, filters);
+    get().getWords(1, 8, filters);
   },
 
   clearFilters: () => {
@@ -158,7 +158,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     const filtersToUse = get().searchQuery
       ? { wordUser: get().searchQuery }
       : {};
-    get().getWords(1, 6, filtersToUse);
+    get().getWords(1, 8, filtersToUse);
   },
 
   retry: () => {
