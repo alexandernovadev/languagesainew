@@ -30,7 +30,7 @@ export default function LecturesPage() {
     loading,
     totalPages,
     currentPage,
-    total,  // Agregar total
+    total,  
     getLectures,
     postLecture,
     putLecture,
