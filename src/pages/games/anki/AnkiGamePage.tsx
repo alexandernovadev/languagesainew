@@ -322,25 +322,6 @@ export default function AnkiGamePage() {
 
         // También actualizar el nivel tradicional para compatibilidad
         await updateWordLevel(shuffledWords[gameStats.currentIndex]._id, level);
-
-        toast.success(`Palabra marcada como '${level}'`, {
-          action: {
-            label: <Eye className="h-4 w-4" />,
-            onClick: () =>
-              handleApiResult(
-                {
-                  success: true,
-                  data: { level, word: shuffledWords[gameStats.currentIndex] },
-                  message: `Palabra marcada como '${level}'`,
-                },
-                "Marcar Palabra"
-              ),
-          },
-          cancel: {
-            label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss(),
-          },
-        });
         gameStats.next();
         setIsFlipped(false);
       } catch (error: any) {

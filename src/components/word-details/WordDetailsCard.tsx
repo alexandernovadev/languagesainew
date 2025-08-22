@@ -254,24 +254,6 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
       try {
         await updateWordLevel(word._id, level);
-        toast.success(`Nivel actualizado a ${level}`, {
-          action: {
-            label: <Eye className="h-4 w-4" />,
-            onClick: () =>
-              handleApiResult(
-                {
-                  success: true,
-                  data: { level },
-                  message: `Nivel actualizado a ${level}`,
-                },
-                "Actualizar Nivel"
-              ),
-          },
-          cancel: {
-            label: <X className="h-4 w-4" />,
-            onClick: () => toast.dismiss(),
-          },
-        });
       } catch (error: any) {
         handleApiResult(error, "Actualizar Nivel");
       }
