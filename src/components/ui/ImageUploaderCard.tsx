@@ -71,7 +71,6 @@ export function ImageUploaderCard({
         setIsGeneratingImage(true);
         const newImageUrl = await onGenerateImage(word, imageUrl);
         onImageChange(newImageUrl);
-        toast.success("Imagen generada exitosamente");
       } catch (error) {
         handleApiResult(error, "Generar Imagen");
       } finally {
@@ -107,7 +106,6 @@ export function ImageUploaderCard({
       if (response.data.success) {
         const newImageUrl = response.data.data.img;
         onImageChange(newImageUrl);
-        toast.success("Imagen generada exitosamente");
       } else {
         throw new Error("Error al generar imagen");
       }
@@ -144,9 +142,6 @@ export function ImageUploaderCard({
         setDragImagePreview(e.target?.result as string);
       };
       reader.readAsDataURL(imageFile);
-      toast.success(
-        "Imagen detectada !"
-      );
     } else {
       toast.error("Solo se permiten archivos de imagen");
     }
@@ -161,9 +156,6 @@ export function ImageUploaderCard({
         setDragImagePreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
-      toast.success(
-        "Imagen seleccionada !"
-      );
     } else if (file) {
       toast.error("Solo se permiten archivos de imagen");
     }
