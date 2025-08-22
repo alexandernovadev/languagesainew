@@ -315,8 +315,8 @@ export default function MyExpressionsPage() {
       </div>
 
       {/* Tabla de expresiones */}
-      <Card className="flex flex-col h-[60dvh]">
-        <div className="overflow-x-auto overflow-y-auto flex-1">
+      <Card className="flex flex-col">
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -550,8 +550,8 @@ export default function MyExpressionsPage() {
 
       {/* Paginación */}
       {totalPages > 1 && (
-        <div className="flex justify-end items-center w-full">
-          <div className="flex gap-2">
+        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
+          <div className="flex justify-center items-center gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -627,8 +627,8 @@ export default function MyExpressionsPage() {
       {/* Modal de filtros */}
       <ExpressionFiltersModal
         open={filtersModalOpen}
-        onClose={() => setFiltersModalOpen(false)}
-        onApply={handleFiltersChange}
+        onOpenChange={setFiltersModalOpen}
+        onFiltersChange={handleFiltersChange}
       />
 
       {/* Modal de confirmación de eliminación */}

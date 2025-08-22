@@ -15,8 +15,8 @@ export function ExamPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex justify-end mt-8 w-full">
-      <div className="flex gap-2">
+    <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
+      <div className="flex justify-center gap-2">
         <Button
           variant="outline"
           disabled={currentPage === 1}

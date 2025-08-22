@@ -709,28 +709,30 @@ export default function MyWordsPage() {
       </Card>
 
       {/* Paginación */}
-      <div className="flex items-center justify-end space-x-2 mt-2 w-full">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setPage(currentPage - 1)}
-          disabled={currentPage <= 1}
-          aria-label="Página anterior"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        <span className="text-sm text-muted-foreground">
-          Página {currentPage} de {totalPages} &mdash; {total} palabras
-        </span>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setPage(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          aria-label="Página siguiente"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
+      <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
+        <div className="flex items-center justify-center space-x-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setPage(currentPage - 1)}
+            disabled={currentPage <= 1}
+            aria-label="Página anterior"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Página {currentPage} de {totalPages} &mdash; {total} palabras
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setPage(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            aria-label="Página siguiente"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
 
       <ModalNova

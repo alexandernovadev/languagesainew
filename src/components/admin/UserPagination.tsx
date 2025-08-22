@@ -49,39 +49,41 @@ export function UserPagination({ currentPage, totalPages, onPageChange }: UserPa
   };
 
   return (
-    <div className="flex items-center justify-end space-x-2 py-4 w-full">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        <ChevronLeft className="h-4 w-4" />
-        Anterior
-      </Button>
-      
-      {getPageNumbers().map((page, index) => (
+    <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
+      <div className="flex items-center justify-center space-x-2">
         <Button
-          key={index}
-          variant={page === currentPage ? "default" : "outline"}
+          variant="outline"
           size="sm"
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          disabled={page === '...'}
-          className="w-8 h-8 p-0"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
-          {page}
+          <ChevronLeft className="h-4 w-4" />
+          Anterior
         </Button>
-      ))}
-      
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Siguiente
-        <ChevronRight className="h-4 w-4" />
-      </Button>
+        
+        {getPageNumbers().map((page, index) => (
+          <Button
+            key={index}
+            variant={page === currentPage ? "default" : "outline"}
+            size="sm"
+            onClick={() => typeof page === 'number' && onPageChange(page)}
+            disabled={page === '...'}
+            className="w-8 h-8 p-0"
+          >
+            {page}
+          </Button>
+        ))}
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Siguiente
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 } 
