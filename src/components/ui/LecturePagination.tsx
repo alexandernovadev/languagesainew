@@ -1,22 +1,17 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface LecturePaginationProps {
   currentPage: number;
   totalPages: number;
+  total: number;  
   onPageChange: (page: number) => void;
 }
 
 export function LecturePagination({
   currentPage,
   totalPages,
+  total, 
   onPageChange,
 }: LecturePaginationProps) {
   if (totalPages <= 1) return null;
@@ -34,7 +29,7 @@ export function LecturePagination({
         </Button>
         
         <span className="px-3 py-2 text-xs sm:text-[10px] text-white">
-          Página {currentPage} de {totalPages}
+          Página {currentPage} de {totalPages} ({total} total) 
         </span>
         
         <Button

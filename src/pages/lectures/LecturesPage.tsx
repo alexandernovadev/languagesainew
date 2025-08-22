@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
 import { useLectureStore } from "@/lib/store/useLectureStore";
@@ -20,12 +19,6 @@ import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useLectureFilterUrlSync } from "@/hooks/useLectureFilterUrlSync";
 import { Eye, X } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { LectureFiltersModal } from "@/components/forms/lecture-filters/LectureFiltersModal";
 import { useLectureFilters } from "@/hooks/useLectureFilters";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
@@ -37,6 +30,7 @@ export default function LecturesPage() {
     loading,
     totalPages,
     currentPage,
+    total,  // Agregar total
     getLectures,
     postLecture,
     putLecture,
@@ -71,8 +65,6 @@ export default function LecturesPage() {
     filters: lectureFilters,
     activeFiltersCount,
     getActiveFiltersDescription,
-    hasActiveFilters,
-    clearFilters,
   } = useLectureFilters();
 
   // Hook para sincronización de filtros con URL
@@ -319,7 +311,7 @@ export default function LecturesPage() {
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-3 w-3 text-muted-foreground" />
             <Input
-              placeholder={`Buscar lecturas... (${total} lecturas)`}
+              placeholder={`Buscar lecturas... (${total || 0} lecturas)`}
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               className="pl-7 h-8 text-base"
@@ -401,6 +393,7 @@ export default function LecturesPage() {
         <LecturePagination
           currentPage={currentPage}
           totalPages={totalPages}
+          total={total} 
           onPageChange={handlePageChange}
         />
 
