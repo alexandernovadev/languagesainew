@@ -432,25 +432,27 @@ export default function QuestionsPage() {
       />
 
       {/* Search and Actions */}
-      <div className="flex flex-col sm:flex-row gap-4 mx-2">
-        <div className="relative flex-1 mb-3">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={`Buscar preguntas por tema... (${total} preguntas)`}
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
-            className="pl-8"
-          />
-          {localSearch && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setLocalSearch("")}
-              className="absolute right-1 top-1 h-6 w-6 p-0"
-            >
-              <XIcon className="h-4 w-4" />
-            </Button>
-          )}
+      <div className="sticky top-[56px] z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-2 p-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-3 w-3 text-muted-foreground" />
+            <Input
+              placeholder={`Buscar preguntas por tema... (${total} preguntas)`}
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              className="pl-7 h-8 text-sm"
+            />
+            {localSearch && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocalSearch("")}
+                className="absolute right-1 top-1 h-5 w-5 p-0"
+              >
+                <XIcon className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

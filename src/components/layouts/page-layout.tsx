@@ -9,5 +9,5 @@ export function PageLayout({
   children,
   className = "space-y-6",
 }: PageLayoutProps) {
-  return <div className={className}>{children}</div>;
+  return <div className={`${className} pt-0`}>{children}</div>;
 }
