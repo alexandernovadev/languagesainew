@@ -33,7 +33,7 @@ export default function DashboardLayout({
       {showSidebar && <AppSidebar />}
       <SidebarInset className="h-dvh overflow-auto bg-background font-sans antialiased">
         <header
-          className={`sticky top-0 z-[1] flex h-16 shrink-0 items-center 
+          className={`sticky top-0 z-30 flex h-16 shrink-0 items-center 
           gap-2 border-b bg-background/95 backdrop-blur 
           supports-[backdrop-filter]:bg-background/60 px-4`}
         >
@@ -54,8 +54,8 @@ export default function DashboardLayout({
             </Button>
           )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 z-[1]">
-          <div className="container mx-auto">{children}</div>
+        <main className="flex flex-1 flex-col gap-4 p-4 overflow-hidden">
+          <div className="container mx-auto overflow-y-auto h-full">{children}</div>
         </main>
       </SidebarInset>
       <LoginModal open={isOpen} setOpen={closeLoginModal} />
