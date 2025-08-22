@@ -111,7 +111,7 @@ export function VerbRow({
             placeholder="..."
             value={userAnswer || ""}
             onChange={(e) => onInputChange(verb.id, fieldType, e.target.value)}
-            className={`min-w-[90px] md:min-w-[120px] px-2 py-1 text-sm h-7 ${getInputClassName()}`}
+            className={`min-w-[90px] md:min-w-[120px] px-2 py-1 text-base h-7 ${getInputClassName()}`}
             disabled={showAnswers}
           />
           {showAnswers && (

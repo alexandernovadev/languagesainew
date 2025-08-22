@@ -392,7 +392,7 @@ export default function MyWordsPage() {
               placeholder="Buscar palabras..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="pl-7 h-8 text-sm"
+              className="pl-7 h-8 text-base"
             />
             {localSearch && (
               <Button

@@ -99,11 +99,11 @@ export default function UsersPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-3 w-3" />
             <Input
-              placeholder="Buscar por nombre de usuario..."
+              placeholder="Buscar usuarios..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-              className="pl-9 h-8 text-sm"
+              className="pl-9 h-8 text-base"
             />
           </div>
         </div>

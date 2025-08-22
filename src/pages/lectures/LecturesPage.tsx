@@ -319,10 +319,10 @@ export default function LecturesPage() {
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-3 w-3 text-muted-foreground" />
             <Input
-              placeholder="Buscar lecturas..."
+              placeholder={`Buscar lecturas... (${total} lecturas)`}
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="pl-7 h-8 text-sm"
+              className="pl-7 h-8 text-base"
             />
             {localSearch && (
               <Button
