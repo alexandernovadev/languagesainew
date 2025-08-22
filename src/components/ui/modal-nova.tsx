@@ -78,7 +78,7 @@ export function ModalNova({
 
   // Portal directo y correcto usando el contenedor específico
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[99999999] flex items-center justify-center p-4">
       {/* Overlay con backdrop */}
       <div 
         className="fixed inset-0 bg-black/80 animate-in fade-in-0 duration-200"
