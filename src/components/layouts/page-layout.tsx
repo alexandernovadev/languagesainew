@@ -7,7 +7,7 @@ interface PageLayoutProps {
 
 export function PageLayout({
   children,
-  className = "space-y-6",
+  className = "",
 }: PageLayoutProps) {
   return <div className={`${className} pt-0`}>{children}</div>;
 }
