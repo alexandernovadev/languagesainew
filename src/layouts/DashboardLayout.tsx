@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { useLoginModal } from "@/hooks/useLoginModal";
+import { useEnvironment } from "@/hooks/useEnvironment";
 
 export default function DashboardLayout({
   children,
@@ -26,6 +27,7 @@ export default function DashboardLayout({
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
   const { isAuthenticated } = useUserStore();
   const { isOpen, openLoginModal, closeLoginModal } = useLoginModal();
+  const { isDevelopment } = useEnvironment();
 
   return (
     <SidebarProvider>
@@ -42,7 +44,10 @@ export default function DashboardLayout({
           <DynamicBreadcrumb />
           <div className="flex-1" />
           {isAuthenticated() ? (
-            <UserDropdownMenu avatarSize="h-11 w-11" avatarSrc="/loogo.png" />
+            <UserDropdownMenu
+              avatarSize="h-11 w-11"
+              avatarSrc={isDevelopment ? "/logodev.png" : "/loogo.png"}
+            />
           ) : (
             <Button
               variant="ghost"
@@ -55,7 +60,9 @@ export default function DashboardLayout({
           )}
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 overflow-hidden">
-          <div className="container mx-auto overflow-y-auto h-full">{children}</div>
+          <div className="container mx-auto overflow-y-auto h-full">
+            {children}
+          </div>
         </main>
       </SidebarInset>
       <LoginModal open={isOpen} setOpen={closeLoginModal} />
