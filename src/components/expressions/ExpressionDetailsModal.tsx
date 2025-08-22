@@ -27,7 +27,9 @@ export function ExpressionDetailsModal({
     <ModalNova
       open={open}
       onOpenChange={onClose}
-      title={`${capitalize(expression.expression)} - ${expression.spanish?.expression || 'Sin traducción'}`}
+      title={`${capitalize(expression.expression)} - ${
+        expression.spanish?.expression || "Sin traducción"
+      }`}
       size="4xl"
       height="h-[calc(100dvh-2rem)]"
     >
@@ -37,21 +39,16 @@ export function ExpressionDetailsModal({
           onValueChange={(value) => setActiveTab(value as "info" | "chat")}
           className="h-full flex flex-col"
         >
-          {/* Contenedor con scroll horizontal en móvil */}
-          <div className="max-sm:overflow-x-auto max-sm:pb-2">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 max-sm:flex max-sm:w-max max-sm:min-w-full sticky top-1 z-10">
-              <TabsTrigger value="info" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
-                <Info className="h-4 w-4 mr-2" />
-                <span className="max-sm:hidden sm:inline">Información</span>
-                <span className="sm:hidden">Info</span>
-              </TabsTrigger>
-              <TabsTrigger value="chat" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                <span className="max-sm:hidden sm:inline">Chat</span>
-                <span className="sm:hidden">Chat</span>
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList className="grid w-full grid-cols-2 sticky top-1 z-10">
+            <TabsTrigger value="info">
+              <Info className="h-4 w-4 mr-2" />
+              Información
+            </TabsTrigger>
+            <TabsTrigger value="chat">
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Chat
+            </TabsTrigger>
+          </TabsList>
 
           <TabsContent value="info" className="pr-2 flex-1">
             <ExpressionInfoTab expression={expression} />
