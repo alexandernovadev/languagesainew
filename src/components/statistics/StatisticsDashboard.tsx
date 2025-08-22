@@ -1,4 +1,3 @@
-import { useStatistics } from "@/hooks/useStatistics";
 import { StatsKPIs } from "./StatsKPIs";
 import { StatsLevelChart } from "./StatsLevelChart";
 import { StatsQualityChart } from "./StatsQualityChart";
@@ -17,10 +16,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PageHeader } from "@/components/ui/page-header";
 
-export function StatisticsDashboard() {
-  const { stats, lectureStats, wordStats, loading, error, refetch } =
-    useStatistics();
+interface StatisticsDashboardProps {
+  stats: any;
+  lectureStats: any;
+  wordStats: any;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export function StatisticsDashboard({
+  stats,
+  lectureStats,
+  wordStats,
+  loading,
+  error,
+  refetch
+}: StatisticsDashboardProps) {
 
   if (loading) {
     return (
@@ -76,32 +90,30 @@ export function StatisticsDashboard() {
 
   return (
     <div className="space-y-6 overflow-x-hidden">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          <p className="text-muted-foreground">
-            Estadísticas generales de tu contenido de aprendizaje
-          </p>
-        </div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={refetch}
-                disabled={loading}
-                className="h-10 w-10 p-0"
-              >
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Actualizar estadísticas</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Estadísticas generales de tu contenido de aprendizaje"
+        actions={
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={refetch}
+                  disabled={loading}
+                  className="h-10 w-10 p-0"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Actualizar estadísticas</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        }
+      />
 
       <StatsKPIs stats={stats} />
 
