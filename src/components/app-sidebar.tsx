@@ -40,7 +40,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="z-[99999999]">
+    <Sidebar collapsible="icon" className="z-[9999]">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
