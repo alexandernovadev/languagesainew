@@ -344,6 +344,38 @@ export default function AnkiGamePage() {
         {
           id: "reset",
           icon: <RefreshCw className="h-4 w-4" />,
+          onClick: async () => {
+            try {
+              await getRecentHardOrMediumWords(); // Recargar palabras desde el servidor
+              toast.success("Tarjetas de Anki recargadas exitosamente", {
+                action: {
+                  label: <Eye className="h-4 w-4" />,
+                  onClick: () =>
+                    handleApiResult(
+                      {
+                        success: true,
+                        data: words,
+                        message: "Tarjetas de Anki recargadas exitosamente",
+                      },
+                      "Recargar Tarjetas Anki"
+                    ),
+                },
+                cancel: {
+                  label: <X className="h-4 w-4" />,
+                  onClick: () => toast.dismiss(),
+                },
+              });
+            } catch (error: any) {
+              handleApiResult(error, "Recargar Tarjetas Anki");
+            }
+          },
+          tooltip: "Recargar tarjetas",
+          variant: "outline",
+          loading: loading
+        },
+        {
+          id: "restart",
+          icon: <RotateCcw className="h-4 w-4" />,
           onClick: handleReset,
           tooltip: "Reiniciar juego",
           variant: "outline"
