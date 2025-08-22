@@ -551,7 +551,7 @@ export default function AnkiGamePage() {
               <Input
                 type="text"
                 placeholder="Usa el micrófono de tu dispositivo para hablar..."
-                className="w-full p-3 pr-10 text-sm"
+                className="w-full p-3 pr-10 text-base min-h-[44px] anki-mobile-input"
                 value={recognizedText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecognizedText(e.target.value)}
               />
