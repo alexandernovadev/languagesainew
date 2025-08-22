@@ -51,6 +51,7 @@ import { useWordFilters } from "@/hooks/useWordFilters";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useFilterUrlSync } from "@/hooks/useFilterUrlSync";
 import { capitalize } from "@/utils/common/string/capitalize";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function MyWordsPage() {
   const {
@@ -332,101 +333,53 @@ export default function MyWordsPage() {
         title="Mis Palabras"
         description="Gestiona tu vocabulario personal."
         actions={
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {activeFiltersCount > 0 && (
-                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setFiltersModalOpen(true),
+                tooltip: "Filtros",
+                variant: "outline",
+                badge: { count: activeFiltersCount, variant: "default" },
+                detailedTooltip: activeFiltersCount > 0 ? (
                   <div className="text-xs">
-                    {activeFiltersCount > 0 ? (
-                      <div>
-                        <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro
-                          {activeFiltersCount !== 1 ? "s" : ""} activo
-                          {activeFiltersCount !== 1 ? "s" : ""}
+                    <div className="font-medium mb-1">
+                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                    </div>
+                    <div className="space-y-1">
+                      {getActiveFiltersDescription?.map((desc, index) => (
+                        <div key={index} className="text-muted-foreground">
+                          • {desc}
                         </div>
-                        <div className="space-y-1">
-                          {getActiveFiltersDescription?.map((desc, index) => (
-                            <div key={index} className="text-muted-foreground">
-                              • {desc}
-                            </div>
-                          )) || []}
-                        </div>
-                      </div>
-                    ) : (
-                      <div>Sin filtros activos</div>
-                    )}
+                      )) || []}
+                    </div>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Generate Word */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setGenerateModalOpen(true)}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Stars className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Generar palabra</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar palabras</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => openDialog()}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nueva palabra</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                ) : undefined
+              },
+              {
+                id: "generate",
+                icon: <Stars className="h-4 w-4" />,
+                onClick: () => setGenerateModalOpen(true),
+                tooltip: "Generar palabra",
+                variant: "outline"
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: handleRefresh,
+                tooltip: "Actualizar palabras",
+                variant: "outline"
+              },
+              {
+                id: "add",
+                icon: <Plus className="h-4 w-4" />,
+                onClick: () => openDialog(),
+                tooltip: "Agregar palabra",
+                variant: "default"
+              }
+            ]}
+          />
         }
       />
 
