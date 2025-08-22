@@ -50,37 +50,26 @@ export function UserPagination({ currentPage, totalPages, onPageChange }: UserPa
 
   return (
     <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
-      <div className="flex items-center justify-center space-x-2">
+      <div className="flex justify-center items-center gap-2">
         <Button
           variant="outline"
-          size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
         >
           <ChevronLeft className="h-4 w-4" />
-          Anterior
         </Button>
         
-        {getPageNumbers().map((page, index) => (
-          <Button
-            key={index}
-            variant={page === currentPage ? "default" : "outline"}
-            size="sm"
-            onClick={() => typeof page === 'number' && onPageChange(page)}
-            disabled={page === '...'}
-            className="w-8 h-8 p-0"
-          >
-            {page}
-          </Button>
-        ))}
+        <span className="px-3 py-2 text-xs sm:text-[10px] text-white">
+          Página {currentPage} de {totalPages}
+        </span>
         
         <Button
           variant="outline"
-          size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
         >
-          Siguiente
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

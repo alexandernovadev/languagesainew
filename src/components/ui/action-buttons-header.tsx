@@ -38,7 +38,7 @@ export function ActionButtonsHeader({ actions, className = "" }: ActionButtonsHe
   return (
     <div className={`flex items-center gap-1 ${className}`}>
       {/* Desktop Actions */}
-      <div className="hidden sm:flex items-center gap-1">
+      <div className="hidden sm:flex items-center gap-1.5">
         {actions.map((action) => (
           <Tippy
             key={action.id}

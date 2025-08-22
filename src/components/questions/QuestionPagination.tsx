@@ -48,51 +48,28 @@ export function QuestionPagination({
 
   return (
     <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
-      <div className="flex items-center justify-between">
-        <div className="flex-1 text-sm text-muted-foreground">
-          Mostrando página {currentPage} de {totalPages} ({total} preguntas en
-          total)
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage <= 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          <div className="flex items-center space-x-1">
-            {getVisiblePages().map((page, index) => (
-              <div key={index}>
-                {page === "..." ? (
-                  <span className="px-2 py-1 text-sm text-muted-foreground">
-                    ...
-                  </span>
-                ) : (
-                  <Button
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => onPageChange(page as number)}
-                    className="h-8 w-8 p-0"
-                  >
-                    {page}
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage >= totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+      <div className="flex justify-center items-center gap-2">
+        <Button
+          variant="outline"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage <= 1}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        
+        <span className="px-3 py-2 text-xs sm:text-[10px] text-white">
+          Página {currentPage} de {totalPages} ({total} total)
+        </span>
+        
+        <Button
+          variant="outline"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage >= totalPages}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

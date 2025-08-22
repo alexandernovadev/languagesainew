@@ -506,20 +506,20 @@ export default function MyExpressionsPage() {
           <div className="flex justify-center items-center gap-2">
             <Button
               variant="outline"
-              size="sm"
               onClick={() => setPage(currentPage - 1)}
               disabled={currentPage <= 1}
+              className="h-8 w-8 p-0 text-xs sm:text-[10px] text-muted-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="px-3 py-2 text-sm">
-              Página {currentPage} de {totalPages} ({total} expresiones)
+            <span className="px-3 py-2 text-xs sm:text-[10px] text-white">
+              Página {currentPage} de {totalPages} ({total} total)
             </span>
             <Button
               variant="outline"
-              size="sm"
               onClick={() => setPage(currentPage + 1)}
               disabled={currentPage >= totalPages}
+              className="h-8 w-8 p-0 text-xs sm:text-[10px] text-muted-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

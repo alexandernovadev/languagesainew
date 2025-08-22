@@ -665,25 +665,25 @@ export default function MyWordsPage() {
 
       {/* Paginación */}
       <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-t-lg shadow-lg p-2">
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex justify-center items-center gap-2">
           <Button
             variant="outline"
-            size="icon"
             onClick={() => setPage(currentPage - 1)}
             disabled={currentPage <= 1}
             aria-label="Página anterior"
+            className="h-8 w-8 p-0 text-xs sm:text-[10px] text-muted-foreground"
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <span className="text-sm text-muted-foreground">
-            Página {currentPage} de {totalPages} &mdash; {total} palabras
+          <span className="px-3 py-2 text-xs sm:text-[10px] text-white">
+            Página {currentPage} de {totalPages} ({total} total)
           </span>
           <Button
             variant="outline"
-            size="icon"
             onClick={() => setPage(currentPage + 1)}
             disabled={currentPage >= totalPages}
             aria-label="Página siguiente"
+            className="h-8 w-8 p-0 text-xs sm:text-[10px] text-muted-foreground"
           >
             <ChevronRight className="h-5 w-5" />
           </Button>

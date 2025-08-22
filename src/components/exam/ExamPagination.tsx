@@ -21,11 +21,12 @@ export function ExamPagination({
           variant="outline"
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
         >
           Anterior
         </Button>
 
-        <span className="flex items-center px-4">
+        <span className="flex items-center px-4 text-xs sm:text-[10px] text-white">
           Página {currentPage} de {totalPages}
         </span>
 
@@ -33,6 +34,7 @@ export function ExamPagination({
           variant="outline"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
+          className="h-8 w-8 p-0 text-xs sm:text-[10px] text-white"
         >
           Siguiente
         </Button>
