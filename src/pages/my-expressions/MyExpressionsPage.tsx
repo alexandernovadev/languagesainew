@@ -49,6 +49,7 @@ import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useExpressionFilterUrlSync } from "@/hooks/useExpressionFilterUrlSync";
 import { SPEECH_RATES } from "../../speechRates";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function MyExpressionsPage() {
   const {
@@ -194,100 +195,49 @@ export default function MyExpressionsPage() {
         title="Mis Expresiones"
         description="Gestiona tus expresiones idiomáticas y frases"
         actions={
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {activeFiltersCount > 0 && (
-                      <Badge
-                        variant="default"
-                        className="absolute -top-1 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-green-600 text-white"
-                      >
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setFiltersModalOpen(true),
+                tooltip: "Filtros",
+                variant: "outline",
+                badge: { count: activeFiltersCount, variant: "default" },
+                detailedTooltip: activeFiltersCount > 0 ? (
                   <div className="text-xs">
-                    {activeFiltersCount > 0 ? (
-                      <div>
-                        <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro
-                          {activeFiltersCount !== 1 ? "s" : ""} activo
-                          {activeFiltersCount !== 1 ? "s" : ""}
-                        </div>
-                        <div className="text-muted-foreground">
-                          {getActiveFiltersDescription?.()}
-                        </div>
-                      </div>
-                    ) : (
-                      <div>Sin filtros activos</div>
-                    )}
+                    <div className="font-medium mb-1">
+                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                    </div>
+                    <div className="text-muted-foreground">
+                      {getActiveFiltersDescription?.()}
+                    </div>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    disabled={loading}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar expresiones</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setGeneratorModalOpen(true)}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Generar expresión con AI</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => openDialog()}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nueva expresión</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                ) : undefined
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: handleRefresh,
+                tooltip: "Actualizar expresiones",
+                variant: "outline"
+              },
+              {
+                id: "generate",
+                icon: <Sparkles className="h-4 w-4" />,
+                onClick: () => setGeneratorModalOpen(true),
+                tooltip: "Generar expresión con AI",
+                variant: "outline"
+              },
+              {
+                id: "add",
+                icon: <Plus className="h-4 w-4" />,
+                onClick: () => openDialog(),
+                tooltip: "Agregar expresión",
+                variant: "default"
+              }
+            ]}
+          />
         }
       />
 

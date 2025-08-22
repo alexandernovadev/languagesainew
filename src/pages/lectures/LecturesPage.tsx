@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { LectureFiltersModal } from "@/components/forms/lecture-filters/LectureFiltersModal";
 import { useLectureFilters } from "@/hooks/useLectureFilters";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function LecturesPage() {
   const navigate = useNavigate();
@@ -271,80 +272,44 @@ export default function LecturesPage() {
         title="Lecturas"
         description="Gestiona y explora todas tus lecturas."
         actions={
-          <div className="flex items-center gap-2">
-            {/* Botón filtros */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {activeFiltersCount > 0 && (
-                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setFiltersModalOpen(true),
+                tooltip: "Filtros",
+                variant: "outline",
+                badge: { count: activeFiltersCount, variant: "default" },
+                detailedTooltip: activeFiltersCount > 0 ? (
                   <div className="text-xs">
-                    {activeFiltersCount > 0 ? (
-                      <div>
-                        <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
-                        </div>
-                        <div className="space-y-1">
-                          {getActiveFiltersDescription.map((desc, idx)=>(
-                            <div key={idx} className="text-muted-foreground">• {desc}</div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div>Sin filtros activos</div>
-                    )}
+                    <div className="font-medium mb-1">
+                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                    </div>
+                    <div className="space-y-1">
+                      {getActiveFiltersDescription.map((desc, idx) => (
+                        <div key={idx} className="text-muted-foreground">• {desc}</div>
+                      ))}
+                    </div>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar lecturas</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={openAddModal}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nueva lectura</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                ) : undefined
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: handleRefresh,
+                tooltip: "Actualizar lecturas",
+                variant: "outline"
+              },
+              {
+                id: "add",
+                icon: <Plus className="h-4 w-4" />,
+                onClick: () => openAddModal(),
+                tooltip: "Agregar lectura",
+                variant: "default"
+              }
+            ]}
+          />
         }
       />
 

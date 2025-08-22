@@ -16,6 +16,7 @@ import { useGameStats } from "./hooks/useGameStats";
 import { checkAnswer } from "./utils";
 import { useState, useEffect } from "react";
 import { ModalNova } from "@/components/ui/modal-nova";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function VerbsGamePage() {
   // Zustand store
@@ -168,25 +169,17 @@ export default function VerbsGamePage() {
           title="Juego de Verbos"
           description="Practica los verbos irregulares y sus participios."
           actions={
-            <div className="flex items-center gap-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowHistoryModal(true)}
-                      className="h-10 w-10 p-0"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Ver historial</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <ActionButtonsHeader
+              actions={[
+                {
+                  id: "history",
+                  icon: <RotateCcw className="h-4 w-4" />,
+                  onClick: () => setShowHistoryModal(true),
+                  tooltip: "Ver historial",
+                  variant: "outline"
+                }
+              ]}
+            />
           }
         />
         <GameConfigModal onStartGame={handleStartGame} />

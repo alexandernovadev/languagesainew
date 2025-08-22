@@ -37,6 +37,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 interface ExamHistoryFilters {
   status: string;
@@ -298,67 +299,38 @@ export default function ExamHistoryPage() {
         title="Historial de Exámenes"
         description="Revisa tu progreso y rendimiento en todos los exámenes"
         actions={
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {hasActiveFilters && (
-                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setIsFiltersModalOpen(true),
+                tooltip: "Filtrar historial",
+                variant: "outline",
+                badge: hasActiveFilters ? { count: activeFiltersCount, variant: "default" } : undefined,
+                detailedTooltip: hasActiveFilters ? (
                   <div className="text-xs">
-                    {hasActiveFilters ? (
-                      <div>
-                        <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
-                        </div>
-                        <div className="space-y-1">
-                          {getActiveFiltersDescription().map((d, idx) => (
-                            <div key={idx} className="text-muted-foreground">
-                              • {d}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div>Filtrar historial</div>
-                    )}
+                    <div className="font-medium mb-1">
+                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                    </div>
+                    <div className="space-y-1">
+                      {getActiveFiltersDescription().map((d, idx) => (
+                        <div key={idx} className="text-muted-foreground">• {d}</div>
+                      ))}
+                    </div>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={loadData}
-                    disabled={loading}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw
-                      className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-                    />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar historial</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                ) : undefined
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: loadData,
+                tooltip: "Actualizar historial",
+                variant: "outline",
+                loading: loading
+              }
+            ]}
+          />
         }
       />
 

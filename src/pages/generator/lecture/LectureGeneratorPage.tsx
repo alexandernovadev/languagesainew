@@ -25,6 +25,7 @@ import { Lecture } from "@/models/Lecture";
 import { getAuthHeaders } from "@/utils/services";
 import { LectureGeneratorConfigModal } from "@/components/forms/LectureGeneratorConfigModal";
 import { wordService } from "@/services/wordService";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 const generatorFormSchema = z.object({
   // Permitir vacío (random). Si no está vacío, mínimo 120 caracteres
@@ -310,15 +311,17 @@ export default function LectureGeneratorPage() {
         description="Genera lecturas personalizadas con IA."
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              aria-label="Configuración avanzada"
-              onClick={openConfigModal}
-            >
-              <Settings className="w-5 h-5" />
-            </Button>
+            <ActionButtonsHeader
+              actions={[
+                {
+                  id: "config",
+                  icon: <Settings className="h-4 w-4" />,
+                  onClick: openConfigModal,
+                  tooltip: "Configuración avanzada",
+                  variant: "outline"
+                }
+              ]}
+            />
             <LectureGeneratorConfigModal
               open={isConfigOpen}
               onOpenChange={setIsConfigOpen}

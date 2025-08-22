@@ -54,7 +54,7 @@ export default function DashboardLayout({
             </Button>
           )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4">
+        <main className="flex flex-1 flex-col gap-4 p-4 z-[1]">
           <div className="container mx-auto">{children}</div>
         </main>
       </SidebarInset>

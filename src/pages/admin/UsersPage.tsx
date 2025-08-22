@@ -19,6 +19,7 @@ import { UserEditModal } from "../../components/admin/UserEditModal";
 import { UserDeleteDialog } from "../../components/admin/UserDeleteDialog";
 import { UserPagination } from "../../components/admin/UserPagination";
 import { UserPageSkeleton } from "../../components/admin/UserPageSkeleton";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function UsersPage() {
   const {
@@ -62,65 +63,33 @@ export default function UsersPage() {
         title="Usuarios"
         description="Gestiona los usuarios del sistema con permisos y roles."
         actions={
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {hasActiveFilters && (
-                      <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                        !
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Filtrar usuarios</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={fetchUsers}
-                    disabled={loading}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar usuarios</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => setIsEditModalOpen(true)}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nuevo usuario</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setIsFiltersModalOpen(true),
+                tooltip: "Filtrar usuarios",
+                variant: "outline",
+                badge: hasActiveFilters ? { text: "!", variant: "secondary" } : undefined
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: fetchUsers,
+                tooltip: "Actualizar usuarios",
+                variant: "outline",
+                loading: loading
+              },
+              {
+                id: "add",
+                icon: <Plus className="h-4 w-4" />,
+                onClick: () => setIsEditModalOpen(true),
+                tooltip: "Crear nuevo usuario",
+                variant: "default"
+              }
+            ]}
+          />
         }
       />
 

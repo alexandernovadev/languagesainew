@@ -27,6 +27,7 @@ import { ExamTitleEditModal } from "@/components/exam/ExamTitleEditModal";
 import { ExamHeader } from "@/components/exam/ExamHeader";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function ExamGeneratorPage() {
   const navigate = useNavigate();
@@ -239,14 +240,17 @@ export default function ExamGeneratorPage() {
         title="Generador de Exámenes"
         description="Crea exámenes personalizados con IA para diferentes niveles y temas."
         actions={
-          <div className="flex gap-2">
-            {state.generatedExam && (
-              <Button variant="outline" onClick={handleNewGeneration}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Nueva Generación
-              </Button>
-            )}
-          </div>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "new-generation",
+                icon: <ArrowLeft className="h-4 w-4" />,
+                onClick: handleNewGeneration,
+                tooltip: "Nueva Generación",
+                variant: "outline"
+              }
+            ].filter(action => state.generatedExam)}
+          />
         }
       />
 

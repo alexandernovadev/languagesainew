@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useQuestionFilters } from "@/hooks/useQuestionFilters";
 import { Badge } from "@/components/ui/badge";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function QuestionsPage() {
   const {
@@ -350,84 +351,44 @@ export default function QuestionsPage() {
         title="Questions"
         description="Manage and create questions for language learning exercises and assessments."
         actions={
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFiltersModalOpen(true)}
-                    className="h-10 w-10 p-0 relative"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    {activeFiltersCount > 0 && (
-                      <Badge className="absolute -top-1 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-green-600 text-white">
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
+          <ActionButtonsHeader
+            actions={[
+              {
+                id: "filters",
+                icon: <SlidersHorizontal className="h-4 w-4" />,
+                onClick: () => setFiltersModalOpen(true),
+                tooltip: "Filtros",
+                variant: "outline",
+                badge: { count: activeFiltersCount, variant: "default" },
+                detailedTooltip: activeFiltersCount > 0 ? (
                   <div className="text-xs">
-                    {activeFiltersCount > 0 ? (
-                      <div>
-                        <div className="font-medium mb-1">
-                          {activeFiltersCount} filtro
-                          {activeFiltersCount !== 1 ? "s" : ""} activo
-                          {activeFiltersCount !== 1 ? "s" : ""}
-                        </div>
-                        <div className="space-y-1">
-                          {getActiveFiltersDescription?.map((desc, index) => (
-                            <div key={index} className="text-muted-foreground">
-                              • {desc}
-                            </div>
-                          )) || []}
-                        </div>
-                      </div>
-                    ) : (
-                      <div>Sin filtros activos</div>
-                    )}
+                    <div className="font-medium mb-1">
+                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
+                    </div>
+                    <div className="space-y-1">
+                      {getActiveFiltersDescription?.map((desc, index) => (
+                        <div key={index} className="text-muted-foreground">• {desc}</div>
+                      ))}
+                    </div>
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    disabled={loading}
-                    className="h-10 w-10 p-0"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Actualizar preguntas</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => openDialog()}
-                    className="h-10 w-10 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Crear nueva pregunta</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                ) : undefined
+              },
+              {
+                id: "refresh",
+                icon: <RefreshCw className="h-4 w-4" />,
+                onClick: handleRefresh,
+                tooltip: "Actualizar preguntas",
+                variant: "outline"
+              },
+              {
+                id: "add",
+                icon: <Plus className="h-4 w-4" />,
+                onClick: () => openDialog(),
+                tooltip: "Crear pregunta",
+                variant: "default"
+              }
+            ]}
+          />
         }
       />
 

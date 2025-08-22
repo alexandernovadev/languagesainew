@@ -34,6 +34,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/utils/common/classnames";
+import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 // Declaraciones de tipos para Web Speech API
 declare global {
@@ -331,84 +332,38 @@ export default function AnkiGamePage() {
   };
 
   const actions = (
-    <div className="flex items-center gap-2">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShuffle}
-              className="h-10 w-10 p-0"
-            >
-              <Shuffle className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Mezclar palabras</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="h-10 w-10 p-0"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Reiniciar juego</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsStatsModalOpen(true)}
-              className="h-10 w-10 p-0"
-            >
-              <BarChart3 className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Ver estadísticas</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsFullScreen(!isFullScreen)}
-              className="h-10 w-10 p-0"
-            >
-              {isFullScreen ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
-                <Maximize2 className="h-4 w-4" />
-              )}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>
-              {isFullScreen
-                ? "Salir de pantalla completa"
-                : "Pantalla completa"}
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
+    <ActionButtonsHeader
+      actions={[
+        {
+          id: "shuffle",
+          icon: <Shuffle className="h-4 w-4" />,
+          onClick: handleShuffle,
+          tooltip: "Mezclar palabras",
+          variant: "outline"
+        },
+        {
+          id: "reset",
+          icon: <RefreshCw className="h-4 w-4" />,
+          onClick: handleReset,
+          tooltip: "Reiniciar juego",
+          variant: "outline"
+        },
+        {
+          id: "stats",
+          icon: <BarChart3 className="h-4 w-4" />,
+          onClick: () => setIsStatsModalOpen(true),
+          tooltip: "Ver estadísticas",
+          variant: "outline"
+        },
+        {
+          id: "fullscreen",
+          icon: isFullScreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />,
+          onClick: () => setIsFullScreen(!isFullScreen),
+          tooltip: isFullScreen ? "Salir de pantalla completa" : "Pantalla completa",
+          variant: "outline"
+        }
+      ]}
+    />
   );
 
   const currentCard = useMemo(
