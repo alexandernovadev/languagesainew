@@ -9,6 +9,7 @@ interface LectureStore {
   actionLoading: { [key: string]: boolean };
   totalPages: number;
   currentPage: number;
+  total: number;  
   currentFilters: any;
 
   setFilters: (filters: any) => void;
@@ -33,6 +34,7 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
   actionLoading: {},
   totalPages: 1,
   currentPage: 1,
+  total: 0,  
   currentFilters: {},
 
   setFilters: (filters: any) => {
@@ -50,6 +52,7 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
       set({
         lectures: data.data,
         totalPages: data.pages,
+        total: data.total,  
         loading: false,
       });
     } catch (error: any) {
@@ -76,6 +79,7 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
         return {
           lectures: [...state.lectures, ...newLectures],
           totalPages: data.pages,
+          total: data.total,  
           loading: false,
         };
       });

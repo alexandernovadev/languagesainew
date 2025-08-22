@@ -38,7 +38,9 @@ export function UserDropdownMenu({
           {showFullHeader ? (
             <>
               <Avatar
-                className={[avatarSize, "border-2", "border-gray-700"].join(" ")}
+                className={[avatarSize, "border-2", "border-gray-700"].join(
+                  " "
+                )}
               >
                 <AvatarImage
                   src={avatarSrc || user.image || ""}
@@ -58,7 +60,9 @@ export function UserDropdownMenu({
           ) : (
             <>
               <Avatar
-                className={[avatarSize, "border-2", "border-gray-700"].join(" ")}
+                className={[avatarSize, "border-2", "border-gray-700"].join(
+                  " "
+                )}
               >
                 <AvatarImage
                   src={avatarSrc || user.image || ""}

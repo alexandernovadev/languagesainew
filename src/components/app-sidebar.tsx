@@ -25,12 +25,14 @@ import {
   configSettingsItems,
 } from "./sidebar-menus";
 import { LoginModal } from "./auth/LoginModal";
+import { useEnvironment } from "@/hooks/useEnvironment";
 
 export function AppSidebar() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   const { setOpenMobile } = useSidebar();
+  const { isDevelopment } = useEnvironment();
 
   // Handler para cerrar sidebar en móvil
   const handleMenuClick = () => {
@@ -47,13 +49,13 @@ export function AppSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <div className="flex items-center gap-2">
                 <img
-                  src="/loogo.png"
+                  src={isDevelopment ? "/logodev.png" : "/loogo.png"}
                   alt="Logo"
                   className="size-8 rounded-lg bg-sidebar-accent object-contain"
                 />
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">LanguagesAI</span>
-                  <span className="text-xs">v{packageJson.version}</span>
+                  <span className="font-semibold">LanguagesAI {isDevelopment ? "DEV" : ""}</span>
+                  <span className="text-xs">v{packageJson.version} {isDevelopment ? "DEV" : ""}</span>
                 </div>
               </div>
             </SidebarMenuButton>
