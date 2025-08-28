@@ -330,25 +330,6 @@ export default function LectureGeneratorPage() {
               lectureLevels={lectureLevels}
               lectureTypes={lectureTypes}
             />
-            <Button
-              type="submit"
-              form="lectureGeneratorForm"
-              disabled={isGenerating || !isValid}
-              className="gap-2"
-              style={{ minWidth: 140 }}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="shimmer-text">Generando...</span>
-                </>
-              ) : (
-                <>
-                  <BookOpen className="h-4 w-4" />
-                  Generar Lectura
-                </>
-              )}
-            </Button>
           </div>
         }
       />
@@ -382,6 +363,28 @@ export default function LectureGeneratorPage() {
                     <p className={`text-xs text-muted-foreground`}>
                       {watchedValues.prompt.length} / 600 caracteres
                     </p>
+                  </div>
+                  
+                  {/* 🔄 Botón de Generar Lectura debajo del input */}
+                  <div className="flex justify-end pt-4">
+                    <Button
+                      type="submit"
+                      form="lectureGeneratorForm"
+                      disabled={isGenerating || !isValid}
+                      className="gap-2 px-8 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span className="shimmer-text">Generando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <BookOpen className="h-4 w-4" />
+                          Generar Lectura
+                        </>
+                      )}
+                    </Button>
                   </div>
                 </div>
               </div>
