@@ -19,6 +19,12 @@ export function useChatLogic<T>(
   useEffect(() => {
     const loadChatHistory = async () => {
       if (itemId) {
+        // 🔄 Si ya tenemos fallbackChat con datos, usarlo inmediatamente
+        if (fallbackChat && fallbackChat.length > 0) {
+          setMessages(fallbackChat);
+          return; // No hacer llamada HTTP si ya tenemos datos
+        }
+
         try {
           const chatHistory = await getChatHistory(itemId);
           // Ensure we always set an array

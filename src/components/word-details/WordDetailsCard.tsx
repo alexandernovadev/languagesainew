@@ -18,6 +18,9 @@ import { LevelButtons } from "@/components/common/LevelButtons";
 import { capitalize } from "@/utils";
 import "../ui/ImageUploaderCard.css";
 
+// Importar el tipo ChatMessage
+import { ChatMessage } from "@/components/chat/types";
+
 interface WordDetailsCardProps {
   word: Word;
   variant?: "full" | "compact" | "modal";
@@ -186,6 +189,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     updateWordCodeSwitching,
     updateWordTypes,
     incrementWordSeen,
+    getChatHistory,
     actionLoading,
   } = useWordStore();
 
@@ -194,6 +198,10 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "chat">("info");
+  
+  // 🔄 Estado para precargar el chat
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   // Ref para la sección de ejemplos
   const examplesRef = useRef<HTMLDivElement>(null);
@@ -442,6 +450,33 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value as "info" | "chat");
   }, []);
+
+  // 🔄 Precargar el chat cuando se monta el componente
+  useEffect(() => {
+    const preloadChat = async () => {
+      if (word._id) {
+        // 🔄 Solo precargar si no tenemos chat inicial o si es muy corto
+        if (!word.chat || word.chat.length === 0) {
+          setIsChatLoading(true);
+          try {
+            const history = await getChatHistory(word._id);
+            setChatHistory(history);
+          } catch (error) {
+            console.error("Error preloading chat:", error);
+            setChatHistory([]);
+          } finally {
+            setIsChatLoading(false);
+          }
+        } else {
+          // 🔄 Si ya tenemos chat inicial, usarlo directamente
+          setChatHistory(word.chat);
+          setIsChatLoading(false);
+        }
+      }
+    };
+
+    preloadChat();
+  }, [word._id, getChatHistory, word.chat]);
 
   return (
     <div className={containerClassName}>
@@ -720,7 +755,12 @@ export const WordDetailsCard = memo(function WordDetailsCard({
         </TabsContent>
 
         <TabsContent value="chat">
-          <WordChatTab word={word} />
+          {/* 🔄 Chat ya precargado */}
+          <WordChatTab 
+            word={word} 
+            preloadedChat={chatHistory}
+            isPreloading={isChatLoading}
+          />
         </TabsContent>
       </Tabs>
     </div>
