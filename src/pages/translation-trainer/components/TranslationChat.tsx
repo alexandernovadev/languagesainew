@@ -8,52 +8,43 @@ import { Badge } from "@/components/ui/badge";
 
 // Icons
 import { Send, Settings, Zap, RotateCcw } from "lucide-react";
-
-// Hooks
-import { useTextGeneration } from "@/hooks/useTextGeneration";
-import { useTranslationAnalysis } from "@/hooks/useTranslationAnalysis";
-
 // Types
 import {
   translationService,
-  type TranslationConfig,
+  // type TranslationConfig, // Now from store
 } from "@/services/translationService";
+import { useTranslationTrainerStore, type Message } from "@/lib/store/useTranslationTrainerStore";
+import type { TranslationConfig } from "@/services/translationService";
+import { getLanguageFlag } from "@/utils/languageHelpers"; // Import the new helper
 
 // Components
 import { ChatMessage } from "./ChatMessage";
 
 interface TranslationChatProps {
-  chatId: string;
   onOpenConfig: () => void;
 }
 
-interface Message {
-  id: string;
-  type: "generated_text" | "user_translation" | "ai_feedback";
-  content: string;
-  timestamp: Date;
-  metadata?: any;
-}
-
 export function TranslationChat({
-  chatId,
   onOpenConfig,
 }: TranslationChatProps) {
   // Hooks
-  const {
-    text: generatedText,
-    textId,
-    loading: generating,
-    config,
+  const { 
+    activeChat,
+    generatedText,
+    generatedTextId,
+    textGenerationLoading: generating,
+    currentGenerationConfig: config,
+    messages,
+    addMessage,
+    loadChatMessages,
+    clearMessages,
     generateText,
-  } = useTextGeneration();
-  const { analyzeTranslation, loading: analyzing } = useTranslationAnalysis();
+  } = useTranslationTrainerStore();
 
-  // State
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Local state that will remain
   const [userTranslation, setUserTranslation] = useState("");
-  const [currentGeneratedText, setCurrentGeneratedText] = useState("");
   const [chatName, setChatName] = useState("Translation Practice");
+  const [analyzing, setAnalyzing] = useState(false); 
 
   // Refs
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -61,36 +52,38 @@ export function TranslationChat({
 
   // Effects
   useEffect(() => {
-    // Load chat messages when chatId changes
-    if (chatId) {
-      loadChatMessages(chatId);
+    // Load chat messages when activeChat changes
+    if (activeChat) {
+      loadChatMessages(activeChat);
+      // Also update chatName from activeChat's details if available
+      const currentChat = useTranslationTrainerStore.getState().chats.find(c => c.id === activeChat);
+      if (currentChat) {
+        setChatName(currentChat.name || "Translation Practice");
+      } else {
+        setChatName("Translation Practice");
+      }
     } else {
-      setMessages([]);
+      clearMessages();
       setChatName("Translation Practice");
     }
-  }, [chatId]);
+  }, [activeChat, loadChatMessages, clearMessages]);
 
   useEffect(() => {
-    if (generatedText && generatedText !== currentGeneratedText) {
-      setCurrentGeneratedText(generatedText);
+    if (generatedText && generatedTextId) {
       const newMessage: Message = {
-        id: `generated-${Date.now()}`,
+        id: generatedTextId,
         type: "generated_text",
         content: generatedText,
         timestamp: new Date(),
         metadata: { config },
       };
-      setMessages((prev) => {
-        const updated = [...prev, newMessage];
-
-        return updated;
-      });
-    } else {
+      if (!messages.some(msg => msg.id === newMessage.id)) {
+        addMessage(newMessage);
+      }
     }
-  }, [generatedText, currentGeneratedText, config]);
+  }, [generatedText, generatedTextId, config, addMessage, messages]);
 
   useEffect(() => {
-    // Only scroll if there are messages
     if (messages.length > 0) {
       scrollToBottom();
     }
@@ -104,7 +97,7 @@ export function TranslationChat({
   };
 
   const handleSubmitTranslation = async () => {
-    if (!userTranslation.trim() || !currentGeneratedText) return;
+    if (!userTranslation.trim() || !generatedText || !activeChat) return;
 
     // Add user translation message
     const userMessage: Message = {
@@ -112,17 +105,20 @@ export function TranslationChat({
       type: "user_translation",
       content: userTranslation,
       timestamp: new Date(),
+      metadata: { chatId: activeChat },
     };
-    setMessages((prev) => [...prev, userMessage]);
+    addMessage(userMessage);
 
-    // Analyze translation
+    // Analyze translation using translationService directly
     try {
-      const analysis = await analyzeTranslation({
-        originalText: currentGeneratedText,
+      setAnalyzing(true); // Start analyzing
+      const analysis = await translationService.analyzeTranslation({
+        originalText: generatedText,
         userTranslation,
         sourceLanguage: config?.sourceLanguage,
         targetLanguage: config?.targetLanguage,
-        textId: textId || "generated-text-id",
+        textId: generatedTextId,
+        chatId: activeChat,
       });
 
       if (analysis) {
@@ -136,15 +132,17 @@ export function TranslationChat({
             score: analysis.score,
             feedback: analysis.feedback,
             errors: analysis.errors,
+            chatId: activeChat,
           },
         };
-        setMessages((prev) => [...prev, feedbackMessage]);
+        addMessage(feedbackMessage);
       }
     } catch (error) {
       console.error("Translation analysis failed:", error);
+    } finally {
+      setAnalyzing(false); 
     }
 
-    // Clear input
     setUserTranslation("");
   };
 
@@ -156,11 +154,11 @@ export function TranslationChat({
   };
 
   const handleGenerateNewText = async () => {
+    if (!activeChat) return;
 
-    // Default configuration for quick text generation
-    const defaultConfig = {
+    const defaultConfig: TranslationConfig = {
       minWords: 120,
-      maxWords: 300, // Updated to match backend
+      maxWords: 300,
       difficulty: "intermediate" as const,
       sourceLanguage: "spanish" as const,
       targetLanguage: "english" as const,
@@ -170,65 +168,7 @@ export function TranslationChat({
     };
 
     console.log("⚙️ [TranslationChat] Using config:", defaultConfig);
-    await generateText(defaultConfig, chatId);
-  };
-
-  const loadChatMessages = async (chatId: string) => {
-    try {
-
-      // Get chat details with messages from the API
-      const chatDetails = await translationService.getChatDetails(chatId);
-      console.log("📥 [TranslationChat] Chat details received:", {
-        hasChatDetails: !!chatDetails,
-        hasMessages: !!chatDetails?.messages,
-        messageCount: chatDetails?.messages?.length || 0,
-      });
-
-      if (chatDetails && chatDetails.messages) {
-        setMessages(chatDetails.messages);
-        setChatName(chatDetails.name || "Translation Practice");
-        console.log(
-          "✅ [TranslationChat] Messages loaded:",
-          chatDetails.messages.length
-        );
-
-        // Find the latest generated text and user translation
-        const lastGeneratedText = chatDetails.messages
-          .filter((msg: any) => msg.type === "generated_text")
-          .slice(-1)[0];
-
-        const lastUserTranslation = chatDetails.messages
-          .filter((msg: any) => msg.type === "user_translation")
-          .slice(-1)[0];
-
-        console.log("🔍 [TranslationChat] Found messages:", {
-          hasGeneratedText: !!lastGeneratedText,
-          hasUserTranslation: !!lastUserTranslation,
-        });
-
-        setCurrentGeneratedText(lastGeneratedText?.content || "");
-        setUserTranslation(lastUserTranslation?.content || "");
-      } else {
-        // New chat or no messages yet
-        console.log(
-          "🆕 [TranslationChat] New chat or no messages, resetting state"
-        );
-        setMessages([]);
-        setCurrentGeneratedText("");
-        setUserTranslation("");
-        setChatName("Translation Practice");
-      }
-    } catch (error) {
-      console.error(
-        "❌ [TranslationChat] Failed to load chat messages:",
-        error
-      );
-      // On error, reset to empty state
-      setMessages([]);
-      setCurrentGeneratedText("");
-      setUserTranslation("");
-      setChatName("Translation Practice");
-    }
+    await generateText(defaultConfig, activeChat);
   };
 
   const getLanguageInfo = () => {
@@ -241,19 +181,6 @@ export function TranslationChat({
     };
   };
 
-  const getLanguageFlag = (lang: string) => {
-    switch (lang) {
-      case "spanish":
-        return "🇪🇸";
-      case "english":
-        return "🇺🇸";
-      case "portuguese":
-        return "🇵🇹";
-      default:
-        return "🌐";
-    }
-  };
-
   const languageInfo = getLanguageInfo();
 
   return (
@@ -263,7 +190,7 @@ export function TranslationChat({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-foreground">{chatName}</h2>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -303,7 +230,7 @@ export function TranslationChat({
       {/* Messages */}
       <ScrollArea className="flex-1 min-h-0 p-6">
         <div className="space-y-4">
-          {messages.length === 0 ? (
+          {messages.length === 0 && !generating ? (
             <div className="text-center py-8">
               <div className="text-muted-foreground mb-4">
                 <Zap className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
@@ -311,16 +238,7 @@ export function TranslationChat({
                 <p className="text-sm">
                   Configure your practice session to get started
                 </p>
-                {generating && (
-                  <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
-                    <p className="text-primary font-medium">
-                      Generating your first text...
-                    </p>
-                    <p className="text-sm text-primary/70">
-                      Please wait while we create your practice material
-                    </p>
-                  </div>
-                )}
+                {/* Removed generating block here, as the main generating block below handles this */}
               </div>
               <Button onClick={onOpenConfig} disabled={generating}>
                 <Settings className="h-4 w-4 mr-2" />
@@ -339,24 +257,15 @@ export function TranslationChat({
             ))
           )}
 
-          {generating && (
-            <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-              <div className="flex items-center gap-2">
-                <Zap className="h-5 w-5 animate-pulse text-primary" />
-                <span className="font-medium text-foreground">
-                  Generating text...
-                </span>
-              </div>
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                  style={{ animationDelay: "0.1s" }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
+          {generating && messages.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full p-8">
+              <div className="text-center">
+                <Zap className="h-12 w-12 mx-auto mb-4 text-primary animate-pulse" />
+                <h2 className="text-xl font-semibold mb-2">Generating Text</h2>
+                <p className="text-muted-foreground mb-4">Creating your translation practice session...</p>
+                <div className="w-48 bg-muted rounded-full h-2 mx-auto">
+                  <div className="bg-primary h-2 rounded-full animate-pulse w-3/4"></div>
+                </div>
               </div>
             </div>
           )}
@@ -366,7 +275,7 @@ export function TranslationChat({
       </ScrollArea>
 
       {/* Input */}
-      {currentGeneratedText && (
+      {generatedText && (
         <div className="sticky bottom-0 p-6 border-t border-border bg-card shadow-lg">
           <div className="flex gap-2">
             <Textarea

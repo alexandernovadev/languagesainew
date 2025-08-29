@@ -74,7 +74,6 @@ export interface PreloadedConfigs {
 }
 
 export const translationService = {
-  // Normal requests with axios (following guidelines)
   async getConfigs(): Promise<PreloadedConfigs> {
     const res = await api.get('/api/translation/configs');
     return res.data;
@@ -115,8 +114,9 @@ export const translationService = {
   // Streaming request with fetch (following project pattern)
   async generateTextStream(
     config: TranslationConfig, 
-    onChunk: (chunk: string) => void,
-    chatId?: string
+    onChunk: (chunk: string, textId: string) => void,
+    chatId?: string,
+    textId?: string
   ): Promise<void> {
     const response = await fetch(`${import.meta.env.VITE_BACK_URL}/api/translation/generate-text`, {
       method: 'POST',
@@ -145,7 +145,7 @@ export const translationService = {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value || new Uint8Array(), { stream: true });
-      if (chunkValue) onChunk(chunkValue);
+      if (chunkValue) onChunk(chunkValue, textId || '');
     }
   }
 };

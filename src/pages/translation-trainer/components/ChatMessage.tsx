@@ -1,11 +1,13 @@
 import { Clock, User, Bot, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { getLanguageFlag } from "@/utils/languageHelpers"; // Import the new helper
+import { formatLocalTime } from "@/utils/common/time/formatDate"; // Import new formatLocalTime
 
 interface ChatMessageProps {
   message: {
     id: string;
-    type: 'generated_text' | 'user_translation' | 'ai_feedback';
+    type: "generated_text" | "user_translation" | "ai_feedback";
     content: string;
     timestamp: Date;
     metadata?: {
@@ -18,6 +20,7 @@ interface ChatMessageProps {
         explanation: string;
       }>;
       correctTranslation?: string;
+      feedback?: string;
     };
   };
   onRetry?: () => void;
@@ -26,11 +29,11 @@ interface ChatMessageProps {
 export function ChatMessage({ message, onRetry }: ChatMessageProps) {
   const getMessageIcon = () => {
     switch (message.type) {
-      case 'generated_text':
+      case "generated_text":
         return <Bot className="h-4 w-4 text-blue-500" />;
-      case 'user_translation':
+      case "user_translation":
         return <User className="h-4 w-4 text-green-500" />;
-      case 'ai_feedback':
+      case "ai_feedback":
         return <CheckCircle className="h-4 w-4 text-purple-500" />;
       default:
         return <Bot className="h-4 w-4 text-muted-foreground" />;
@@ -39,22 +42,15 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
 
   const getMessageTitle = () => {
     switch (message.type) {
-      case 'generated_text':
-        return 'Generated Text';
-      case 'user_translation':
-        return 'Your Translation';
-      case 'ai_feedback':
-        return 'AI Feedback';
+      case "generated_text":
+        return "Generated Text";
+      case "user_translation":
+        return "Your Translation";
+      case "ai_feedback":
+        return "AI Feedback";
       default:
-        return 'Message';
+        return "Message";
     }
-  };
-
-  const formatTime = (timestamp: Date) => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
   };
 
   return (
@@ -65,14 +61,12 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
           {getMessageIcon()}
           <span className="font-medium text-sm">{getMessageTitle()}</span>
           {message.metadata?.score && (
-            <Badge variant="secondary">
-              Score: {message.metadata.score}%
-            </Badge>
+            <Badge variant="secondary">Score: {message.metadata.score}%</Badge>
           )}
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{formatTime(message.timestamp)}</span>
+          <span>{formatLocalTime(message.timestamp)}</span>
         </div>
       </div>
 
@@ -82,22 +76,50 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
       </div>
 
       {/* Metadata for AI Feedback */}
-      {message.type === 'ai_feedback' && message.metadata && (
+      {message.type === "ai_feedback" && message.metadata && (
         <div className="space-y-3 pt-3 border-t border-border">
           {/* Score Display */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground">Score:</span>
-            <Badge variant={message.metadata.score >= 90 ? 'default' : message.metadata.score >= 70 ? 'secondary' : 'destructive'}>
-              {message.metadata.score}/100
+            <span className="text-xs font-medium text-muted-foreground">
+              Score:
+            </span>
+            <Badge
+              variant={
+                message.metadata!.score! >= 90
+                  ? "default"
+                  : message.metadata!.score! >= 70
+                  ? "secondary"
+                  : "destructive"
+              }
+            >
+              {message.metadata!.score!}/100
             </Badge>
           </div>
+
+          {/* AI General Feedback */}
+          {message.metadata.feedback && (
+            <div>
+              <span className="text-xs font-medium text-muted-foreground">
+                AI Feedback:
+              </span>
+              <div className="text-sm bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 p-3 rounded mt-1">
+                <p className="whitespace-pre-wrap">
+                  {message.metadata.feedback}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Correct Translation */}
           {message.metadata.correctTranslation && (
             <div>
-              <span className="text-xs font-medium text-muted-foreground">Correct Translation:</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                Correct Translation:
+              </span>
               <div className="text-sm bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 p-3 rounded mt-1">
-                <p className="whitespace-pre-wrap">{message.metadata.correctTranslation}</p>
+                <p className="whitespace-pre-wrap">
+                  {message.metadata.correctTranslation}
+                </p>
               </div>
             </div>
           )}
@@ -110,43 +132,67 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
               </span>
               <div className="space-y-3 mt-2">
                 {message.metadata.errors.map((error, index) => (
-                  <div key={index} className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 p-3 rounded">
+                  <div
+                    key={index}
+                    className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 p-3 rounded"
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="text-xs px-2 py-1">
                         {error.type}
                       </Badge>
-                      <Badge 
-                        variant={error.severity === 'critical' || error.severity === 'major' ? 'destructive' : 
-                               error.severity === 'moderate' || error.severity === 'medium' ? 'secondary' : 'outline'} 
+                      <Badge
+                        variant={
+                          error.severity === "critical" ||
+                          error.severity === "major"
+                            ? "destructive"
+                            : error.severity === "moderate" ||
+                              error.severity === "medium"
+                            ? "secondary"
+                            : "outline"
+                        }
                         className="text-xs px-2 py-1"
                       >
                         {error.severity}
                       </Badge>
                     </div>
-                    
+
                     {/* Error Message */}
-                    <p className="text-sm font-medium mb-2">{error.message}</p>
-                    
+                    <p className="text-sm font-medium mb-2">
+                      {error.explanation}
+                    </p>
+
                     {/* Original vs Corrected */}
                     {error.original && (
                       <div className="mb-2">
-                        <span className="text-xs font-medium text-red-600 dark:text-red-400">Original:</span>
-                        <p className="text-sm bg-red-50 dark:bg-red-950/30 p-2 rounded mt-1">"{error.original}"</p>
+                        <span className="text-xs font-medium text-red-600 dark:text-red-400">
+                          Original:
+                        </span>
+                        <p className="text-sm bg-red-50 dark:bg-red-950/30 p-2 rounded mt-1">
+                          "{error.original}"
+                        </p>
                       </div>
                     )}
-                    
+
                     {error.corrected && (
                       <div className="mb-2">
-                        <span className="text-xs font-medium text-green-600 dark:text-green-400">Corrected:</span>
-                        <p className="text-sm bg-green-50 dark:bg-green-950/30 p-2 rounded mt-1">"{error.corrected}"</p>
+                        <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                          Corrected:
+                        </span>
+                        <p className="text-sm bg-green-50 dark:bg-green-950/30 p-2 rounded mt-1">
+                          "{error.corrected}"
+                        </p>
                       </div>
                     )}
-                    
+
                     {/* Explanation */}
                     {error.explanation && (
                       <div>
-                        <span className="text-xs font-medium text-muted-foreground">Explanation:</span>
-                        <p className="text-sm text-muted-foreground mt-1">{error.explanation}</p>
+                        <span className="text-xs font-medium text-muted-foreground">
+                          Explanation:
+                        </span>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {error.explanation}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -155,7 +201,9 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
             </div>
           ) : (
             <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 p-3 rounded">
-              <p className="text-sm text-green-700 dark:text-green-300 font-medium">✅ No errors found! Excellent translation.</p>
+              <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                ✅ No errors found! Excellent translation.
+              </p>
             </div>
           )}
         </div>

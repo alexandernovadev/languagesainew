@@ -106,6 +106,19 @@ export const formatDateTimeSpanish = (date: string | Date): string => {
 }; 
 
 /**
+ * Formats a date to show only the local time (e.g., "10:30 AM")
+ * 
+ * @param date - The date to format (string or Date object)
+ * @returns Formatted time string (e.g., "10:30 AM")
+ */
+export const formatLocalTime = (date: string | Date): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+/**
  * Formats a date to Spanish with 12h time and seconds for Bogotá timezone
  * Output example: "Domingo, 17 de agosto de 2025 | 02:15 34segs PM"
  */

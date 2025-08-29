@@ -2,35 +2,21 @@ import { useState } from "react";
 
 // UI Components
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { Button } from "@/components/ui/button";
 
 // Icons
-import {
-  MessageSquare,
-  Clock,
-  TrendingUp,
-  MoreVertical,
-  Trash2,
-} from "lucide-react";
+import { MessageSquare, Clock, Trash2 } from "lucide-react";
 
 // Types
-import type { TranslationChat } from "@/services/translationService";
+import { useTranslationTrainerStore } from "@/lib/store/useTranslationTrainerStore";
+import { getLanguageFlag } from "@/utils/languageHelpers"; // Import the new helper
+import { timeAgo } from "@/utils/common/time/timeAgo"; // Import timeAgo helper
 
-interface ChatSidebarProps {
-  chats: TranslationChat[];
-  activeChat: string | null;
-  onChatSelect: (chatId: string) => void;
-  onDeleteChat: (chatId: string) => void;
-}
+export function ChatSidebar({}) {
+  const { chats, activeChat, setActiveChat, deleteChat } =
+    useTranslationTrainerStore();
 
-export function ChatSidebar({
-  chats,
-  activeChat,
-  onChatSelect,
-  onDeleteChat,
-}: ChatSidebarProps) {
   // State for delete confirmation
   const [chatToDelete, setChatToDelete] = useState<string | null>(null);
 
@@ -44,31 +30,6 @@ export function ChatSidebar({
           id: chat.id || `fallback-${index}-${Date.now()}`,
         }))
     : [];
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffHours < 1) return "Just now";
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
-
-  const getLanguageFlag = (lang: string) => {
-    switch (lang) {
-      case "spanish":
-        return "🇪🇸";
-      case "english":
-        return "🇺🇸";
-      case "portuguese":
-        return "🇵🇹";
-      default:
-        return "🌐";
-    }
-  };
 
   return (
     <>
@@ -86,7 +47,7 @@ export function ChatSidebar({
             {safeChats.map((chat) => (
               <div
                 key={chat.id}
-                onClick={() => onChatSelect(chat.id)}
+                onClick={() => setActiveChat(chat.id)}
                 className={`p-3 rounded-lg cursor-pointer transition-colors ${
                   activeChat === chat.id
                     ? "bg-primary/10 border-primary/20 border"
@@ -137,7 +98,7 @@ export function ChatSidebar({
 
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
-                    <span>{formatDate(chat.lastActivity)}</span>
+                    <span>{timeAgo(chat.lastActivity)}</span>
                   </div>
                 </div>
               </div>
@@ -163,7 +124,7 @@ export function ChatSidebar({
         }
         onConfirm={() => {
           if (chatToDelete) {
-            onDeleteChat(chatToDelete);
+            deleteChat(chatToDelete);
             setChatToDelete(null);
           }
         }}
