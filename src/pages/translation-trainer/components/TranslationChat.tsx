@@ -34,7 +34,7 @@ interface Message {
 
 export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) {
   // Hooks
-  const { text: generatedText, loading: generating, config, generateText } = useTextGeneration();
+  const { text: generatedText, textId, loading: generating, config, generateText } = useTextGeneration();
   const { analyzeTranslation, loading: analyzing } = useTranslationAnalysis();
 
   // State
@@ -103,8 +103,7 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
         userTranslation,
         sourceLanguage: config?.sourceLanguage,
         targetLanguage: config?.targetLanguage,
-        textId: 'generated-text-id', // TODO: Get actual generated text ID
-        chatId
+        textId: textId || 'generated-text-id'
       });
 
       if (analysis) {
