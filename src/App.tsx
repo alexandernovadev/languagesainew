@@ -36,6 +36,9 @@ import {
   TranslatorPage,
 } from "./routes";
 
+// Translation Trainer
+import { TranslationTrainerPage } from "@/pages/translation-trainer/TranslationTrainerPage";
+
 // Componente para manejar rutas desconocidas
 function NotFoundRedirect() {
   // Mostrar toast cuando se ejecute este componente
@@ -89,6 +92,7 @@ export default function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin/users" element={<UsersPage />} />
                   <Route path="/tools/translator" element={<TranslatorPage />} />
+                  <Route path="/translation-trainer" element={<TranslationTrainerPage />} />
 
                   {/* Catch-all route para rutas desconocidas */}
                   <Route path="*" element={<NotFoundRedirect />} />

@@ -43,6 +43,7 @@ const routeNameMapping: { [key: string]: string } = {
   // Tools
   "/tools": "Tools",
   "/tools/translator": "Traductor",
+  "/translation-trainer": "Translation Trainer",
 };
 
 // Rutas que no deberían ser clickeables (solo grupos de navegación)
