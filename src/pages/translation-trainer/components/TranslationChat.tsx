@@ -71,15 +71,7 @@ export function TranslationChat({
   }, [chatId]);
 
   useEffect(() => {
-    console.log("🔄 [TranslationChat] useEffect triggered:", {
-      generatedText: generatedText?.substring(0, 50) + "...",
-      currentGeneratedText: currentGeneratedText?.substring(0, 50) + "...",
-      hasConfig: !!config,
-      messagesCount: messages.length,
-    });
-
     if (generatedText && generatedText !== currentGeneratedText) {
-      console.log("✅ [TranslationChat] Adding new generated text message");
       setCurrentGeneratedText(generatedText);
       const newMessage: Message = {
         id: `generated-${Date.now()}`,
@@ -89,22 +81,11 @@ export function TranslationChat({
         metadata: { config },
       };
       setMessages((prev) => {
-        console.log("📝 [TranslationChat] Previous messages:", prev.length);
         const updated = [...prev, newMessage];
-        console.log("📝 [TranslationChat] Updated messages:", updated.length);
-        console.log(
-          "📝 [TranslationChat] New message content:",
-          newMessage.content.substring(0, 100) + "..."
-        );
+
         return updated;
       });
     } else {
-      console.log("❌ [TranslationChat] Not adding message because:", {
-        noGeneratedText: !generatedText,
-        sameText: generatedText === currentGeneratedText,
-        generatedTextLength: generatedText?.length || 0,
-        currentGeneratedTextLength: currentGeneratedText?.length || 0,
-      });
     }
   }, [generatedText, currentGeneratedText, config]);
 
@@ -175,7 +156,6 @@ export function TranslationChat({
   };
 
   const handleGenerateNewText = async () => {
-    console.log("🚀 [TranslationChat] handleGenerateNewText called");
 
     // Default configuration for quick text generation
     const defaultConfig = {
@@ -195,7 +175,6 @@ export function TranslationChat({
 
   const loadChatMessages = async (chatId: string) => {
     try {
-      console.log("🔄 [TranslationChat] Loading messages for chat:", chatId);
 
       // Get chat details with messages from the API
       const chatDetails = await translationService.getChatDetails(chatId);
@@ -205,13 +184,13 @@ export function TranslationChat({
         messageCount: chatDetails?.messages?.length || 0,
       });
 
-              if (chatDetails && chatDetails.messages) {
-          setMessages(chatDetails.messages);
-          setChatName(chatDetails.name || "Translation Practice");
-          console.log(
-            "✅ [TranslationChat] Messages loaded:",
-            chatDetails.messages.length
-          );
+      if (chatDetails && chatDetails.messages) {
+        setMessages(chatDetails.messages);
+        setChatName(chatDetails.name || "Translation Practice");
+        console.log(
+          "✅ [TranslationChat] Messages loaded:",
+          chatDetails.messages.length
+        );
 
         // Find the latest generated text and user translation
         const lastGeneratedText = chatDetails.messages
@@ -229,16 +208,16 @@ export function TranslationChat({
 
         setCurrentGeneratedText(lastGeneratedText?.content || "");
         setUserTranslation(lastUserTranslation?.content || "");
-              } else {
-          // New chat or no messages yet
-          console.log(
-            "🆕 [TranslationChat] New chat or no messages, resetting state"
-          );
-          setMessages([]);
-          setCurrentGeneratedText("");
-          setUserTranslation("");
-          setChatName("Translation Practice");
-        }
+      } else {
+        // New chat or no messages yet
+        console.log(
+          "🆕 [TranslationChat] New chat or no messages, resetting state"
+        );
+        setMessages([]);
+        setCurrentGeneratedText("");
+        setUserTranslation("");
+        setChatName("Translation Practice");
+      }
     } catch (error) {
       console.error(
         "❌ [TranslationChat] Failed to load chat messages:",
@@ -283,9 +262,7 @@ export function TranslationChat({
       <div className="p-6 border-b border-border bg-card">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">
-              {chatName}
-            </h2>
+            <h2 className="font-semibold text-foreground">{chatName}</h2>
             <div className="flex gap-2">
               <Button
                 variant="outline"
