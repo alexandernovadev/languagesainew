@@ -53,6 +53,7 @@ export function TranslationChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [userTranslation, setUserTranslation] = useState("");
   const [currentGeneratedText, setCurrentGeneratedText] = useState("");
+  const [chatName, setChatName] = useState("Translation Practice");
 
   // Refs
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -65,6 +66,7 @@ export function TranslationChat({
       loadChatMessages(chatId);
     } else {
       setMessages([]);
+      setChatName("Translation Practice");
     }
   }, [chatId]);
 
@@ -203,12 +205,13 @@ export function TranslationChat({
         messageCount: chatDetails?.messages?.length || 0,
       });
 
-      if (chatDetails && chatDetails.messages) {
-        setMessages(chatDetails.messages);
-        console.log(
-          "✅ [TranslationChat] Messages loaded:",
-          chatDetails.messages.length
-        );
+              if (chatDetails && chatDetails.messages) {
+          setMessages(chatDetails.messages);
+          setChatName(chatDetails.name || "Translation Practice");
+          console.log(
+            "✅ [TranslationChat] Messages loaded:",
+            chatDetails.messages.length
+          );
 
         // Find the latest generated text and user translation
         const lastGeneratedText = chatDetails.messages
@@ -226,15 +229,16 @@ export function TranslationChat({
 
         setCurrentGeneratedText(lastGeneratedText?.content || "");
         setUserTranslation(lastUserTranslation?.content || "");
-      } else {
-        // New chat or no messages yet
-        console.log(
-          "🆕 [TranslationChat] New chat or no messages, resetting state"
-        );
-        setMessages([]);
-        setCurrentGeneratedText("");
-        setUserTranslation("");
-      }
+              } else {
+          // New chat or no messages yet
+          console.log(
+            "🆕 [TranslationChat] New chat or no messages, resetting state"
+          );
+          setMessages([]);
+          setCurrentGeneratedText("");
+          setUserTranslation("");
+          setChatName("Translation Practice");
+        }
     } catch (error) {
       console.error(
         "❌ [TranslationChat] Failed to load chat messages:",
@@ -244,6 +248,7 @@ export function TranslationChat({
       setMessages([]);
       setCurrentGeneratedText("");
       setUserTranslation("");
+      setChatName("Translation Practice");
     }
   };
 
@@ -279,7 +284,7 @@ export function TranslationChat({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-foreground">
-              Translation Practice
+              {chatName}
             </h2>
             <div className="flex gap-2">
               <Button
