@@ -86,16 +86,29 @@ export function ConfigModal({ configs, onConfigChange }: ConfigModalProps) {
   // Notify parent when config changes (only after initialization)
   useEffect(() => {
     if (onConfigChange && isInitialized) {
-      const allSelectedWords = Object.values(selectedWords).flat();
-      // Send only the word text, not the full object
-      const wordTexts = allSelectedWords.map(wordObj => wordObj.word);
+      // Get word texts from selected IDs
+      const wordTexts: string[] = [];
+      Object.entries(selectedWords).forEach(([type, wordIds]) => {
+        if (type === 'recent' && configs.recentWords) {
+          wordIds.forEach(id => {
+            const word = configs.recentWords.find(w => w.id === id);
+            if (word?.word) wordTexts.push(word.word);
+          });
+        } else if (configs.userWords[type as keyof typeof configs.userWords]) {
+          const words = configs.userWords[type as keyof typeof configs.userWords] as any[];
+          wordIds.forEach(id => {
+            const word = words.find(w => w.id === id);
+            if (word?.word) wordTexts.push(word.word);
+          });
+        }
+      });
       const finalConfig = {
         ...config,
         mustUseWords: wordTexts
       };
       onConfigChange(finalConfig);
     }
-  }, [config, selectedWords, isInitialized]); // Removed onConfigChange from deps
+  }, [config, selectedWords, isInitialized, configs]);
 
   const getLanguageFlag = (lang: string) => {
     switch (lang) {
