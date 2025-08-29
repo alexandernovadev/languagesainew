@@ -135,12 +135,13 @@ export function ChatSidebar({ chats, activeChat, onChatSelect, onDeleteChat }: C
       onOpenChange={(open) => !open && setChatToDelete(null)}
       title="Delete Chat"
       description={
-        <div>
-          <p>Are you sure you want to delete this chat?</p>
-          <p className="text-sm text-muted-foreground mt-2">
+        <>
+          Are you sure you want to delete this chat?
+          <br />
+          <span className="text-sm text-muted-foreground">
             All messages and translations in this chat will be permanently lost. This action cannot be undone.
-          </p>
-        </div>
+          </span>
+        </>
       }
       onConfirm={() => {
         if (chatToDelete) {
