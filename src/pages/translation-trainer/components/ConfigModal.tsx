@@ -159,7 +159,7 @@ export function ConfigModal({ configs, onConfigChange }: ConfigModalProps) {
                 value={config.minWords}
                 onChange={(e) => setConfig(prev => ({ ...prev, minWords: Number(e.target.value) }))}
                 min="50"
-                max="500"
+                max="300"
               />
             </div>
             <div className="space-y-2">
@@ -170,7 +170,7 @@ export function ConfigModal({ configs, onConfigChange }: ConfigModalProps) {
                 value={config.maxWords}
                 onChange={(e) => setConfig(prev => ({ ...prev, maxWords: Number(e.target.value) }))}
                 min="100"
-                max="1000"
+                max="300"
               />
             </div>
           </div>
