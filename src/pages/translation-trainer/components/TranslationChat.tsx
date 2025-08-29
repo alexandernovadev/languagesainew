@@ -57,7 +57,15 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
   }, [chatId]);
 
   useEffect(() => {
+    console.log('🔄 [TranslationChat] useEffect triggered:', {
+      generatedText: generatedText?.substring(0, 50) + '...',
+      currentGeneratedText: currentGeneratedText?.substring(0, 50) + '...',
+      hasConfig: !!config,
+      messagesCount: messages.length
+    });
+
     if (generatedText && generatedText !== currentGeneratedText) {
+      console.log('✅ [TranslationChat] Adding new generated text message');
       setCurrentGeneratedText(generatedText);
       const newMessage: Message = {
         id: `generated-${Date.now()}`,
@@ -66,7 +74,12 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
         timestamp: new Date(),
         metadata: { config }
       };
-      setMessages(prev => [...prev, newMessage]);
+      setMessages(prev => {
+        console.log('📝 [TranslationChat] Previous messages:', prev.length);
+        const updated = [...prev, newMessage];
+        console.log('📝 [TranslationChat] Updated messages:', updated.length);
+        return updated;
+      });
     }
   }, [generatedText, currentGeneratedText, config]);
 
@@ -137,10 +150,12 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
   };
 
   const handleGenerateNewText = async () => {
+    console.log('🚀 [TranslationChat] handleGenerateNewText called');
+    
     // Default configuration for quick text generation
     const defaultConfig = {
       minWords: 120,
-      maxWords: 700,
+      maxWords: 300, // Updated to match backend
       difficulty: 'intermediate' as const,
       sourceLanguage: 'spanish' as const,
       targetLanguage: 'english' as const,
@@ -149,18 +164,25 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
       topic: 'general'
     };
 
+    console.log('⚙️ [TranslationChat] Using config:', defaultConfig);
     await generateText(defaultConfig, chatId);
   };
 
   const loadChatMessages = async (chatId: string) => {
     try {
-      console.log('Loading messages for chat:', chatId);
+      console.log('🔄 [TranslationChat] Loading messages for chat:', chatId);
       
       // Get chat details with messages from the API
       const chatDetails = await translationService.getChatDetails(chatId);
+      console.log('📥 [TranslationChat] Chat details received:', {
+        hasChatDetails: !!chatDetails,
+        hasMessages: !!chatDetails?.messages,
+        messageCount: chatDetails?.messages?.length || 0
+      });
       
       if (chatDetails && chatDetails.messages) {
         setMessages(chatDetails.messages);
+        console.log('✅ [TranslationChat] Messages loaded:', chatDetails.messages.length);
         
         // Find the latest generated text and user translation
         const lastGeneratedText = chatDetails.messages
@@ -171,17 +193,23 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
           .filter((msg: any) => msg.type === 'user_translation')
           .slice(-1)[0];
         
+        console.log('🔍 [TranslationChat] Found messages:', {
+          hasGeneratedText: !!lastGeneratedText,
+          hasUserTranslation: !!lastUserTranslation
+        });
+        
         setCurrentGeneratedText(lastGeneratedText?.content || '');
         setUserTranslation(lastUserTranslation?.content || '');
       } else {
         // New chat or no messages yet
+        console.log('🆕 [TranslationChat] New chat or no messages, resetting state');
         setMessages([]);
         setCurrentGeneratedText('');
         setUserTranslation('');
       }
       
     } catch (error) {
-      console.error('Failed to load chat messages:', error);
+      console.error('❌ [TranslationChat] Failed to load chat messages:', error);
       // On error, reset to empty state
       setMessages([]);
       setCurrentGeneratedText('');
@@ -258,10 +286,16 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
                 <Zap className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
                 <p>No messages yet</p>
                 <p className="text-sm">Configure your practice session to get started</p>
+                {generating && (
+                  <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <p className="text-primary font-medium">Generating your first text...</p>
+                    <p className="text-sm text-primary/70">Please wait while we create your practice material</p>
+                  </div>
+                )}
               </div>
-              <Button onClick={onOpenConfig}>
+              <Button onClick={onOpenConfig} disabled={generating}>
                 <Settings className="h-4 w-4 mr-2" />
-                Configure Practice
+                {generating ? 'Generating...' : 'Configure Practice'}
               </Button>
             </div>
           ) : (
@@ -275,9 +309,16 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
           )}
           
           {generating && (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Zap className="h-4 w-4 animate-pulse" />
-              <span className="text-sm">Generating text...</span>
+            <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 animate-pulse text-primary" />
+                <span className="font-medium text-foreground">Generating text...</span>
+              </div>
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
             </div>
           )}
           
