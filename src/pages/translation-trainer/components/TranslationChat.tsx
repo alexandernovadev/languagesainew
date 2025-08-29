@@ -78,7 +78,15 @@ export function TranslationChat({ chatId, onOpenConfig }: TranslationChatProps) 
         console.log('📝 [TranslationChat] Previous messages:', prev.length);
         const updated = [...prev, newMessage];
         console.log('📝 [TranslationChat] Updated messages:', updated.length);
+        console.log('📝 [TranslationChat] New message content:', newMessage.content.substring(0, 100) + '...');
         return updated;
+      });
+    } else {
+      console.log('❌ [TranslationChat] Not adding message because:', {
+        noGeneratedText: !generatedText,
+        sameText: generatedText === currentGeneratedText,
+        generatedTextLength: generatedText?.length || 0,
+        currentGeneratedTextLength: currentGeneratedText?.length || 0
       });
     }
   }, [generatedText, currentGeneratedText, config]);
