@@ -141,7 +141,7 @@ export function TranslationTrainerPage() {
 
   // Render
   return (
-    <div className="flex h-dvh bg-background relative">
+    <div className="flex h-[calc(100vh-100px)] relative">
       {/* Desktop Sidebar */}
       <div className={`hidden lg:flex flex-col border-r border-border bg-card transition-all duration-300 ${
         isDesktopSidebarCollapsed ? 'w-16' : 'w-80'
