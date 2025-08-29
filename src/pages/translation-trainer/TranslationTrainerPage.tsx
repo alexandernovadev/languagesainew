@@ -42,10 +42,10 @@ export function TranslationTrainerPage() {
 
   // Event handlers
   const handleCreateChat = async () => {
-    const newChatId = await createChat();
-    if (newChatId) {
-      setIsConfigModalOpen(true);
-    }
+    if (textGenerationLoading) return; // Prevent if generating
+    await createChat();
+    // Chat will be auto-selected by the hook
+    setIsConfigModalOpen(true);
   };
 
   const handleChatSelect = (chatId: string) => {
@@ -57,10 +57,24 @@ export function TranslationTrainerPage() {
   };
 
   const handleConfigSubmit = async () => {
-    if (!currentConfig) return;
+    if (!currentConfig || textGenerationLoading) return;
     
-    await generateText(currentConfig, activeChat || undefined);
+    // Close modal immediately when generation starts
     setIsConfigModalOpen(false);
+    
+    let targetChatId = activeChat;
+    
+    // If no active chat, create one first
+    if (!activeChat) {
+      const newChatId = await createChat();
+      if (newChatId) {
+        targetChatId = newChatId;
+      }
+    }
+    
+    if (targetChatId) {
+      await generateText(currentConfig, targetChatId);
+    }
   };
 
   const handleConfigCancel = () => {
@@ -103,21 +117,12 @@ export function TranslationTrainerPage() {
               handleCreateChat();
               setIsSidebarOpen(false);
             }}
-            className="flex-1" 
+            className="w-full" 
             size="sm"
+            disabled={textGenerationLoading}
           >
             <Plus className="h-4 w-4 mr-2" />
-            New Chat
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => {
-              setIsConfigModalOpen(true);
-              setIsSidebarOpen(false);
-            }}
-          >
-            <Settings className="h-4 w-4" />
+            {textGenerationLoading ? 'Generating...' : 'New Chat'}
           </Button>
         </div>
       </div>
@@ -186,6 +191,7 @@ export function TranslationTrainerPage() {
           <Button 
             variant="ghost" 
             size="sm"
+            disabled={textGenerationLoading}
             onClick={() => setIsConfigModalOpen(true)}
           >
             <Settings className="h-4 w-4" />
@@ -199,6 +205,17 @@ export function TranslationTrainerPage() {
               chatId={activeChat}
               onOpenConfig={() => setIsConfigModalOpen(true)}
             />
+          ) : textGenerationLoading ? (
+            <div className="flex flex-col items-center justify-center h-full p-8">
+              <div className="text-center">
+                <Zap className="h-12 w-12 mx-auto mb-4 text-primary animate-pulse" />
+                <h2 className="text-xl font-semibold mb-2">Generating Text</h2>
+                <p className="text-muted-foreground mb-4">Creating your translation practice session...</p>
+                <div className="w-48 bg-muted rounded-full h-2 mx-auto">
+                  <div className="bg-primary h-2 rounded-full animate-pulse w-3/4"></div>
+                </div>
+              </div>
+            </div>
           ) : (
             <EmptyState onCreateChat={handleCreateChat} />
           )}
@@ -207,10 +224,14 @@ export function TranslationTrainerPage() {
 
       {/* Config Modal */}
       <ModalNova
-        open={isConfigModalOpen}
-        onOpenChange={setIsConfigModalOpen}
+        open={isConfigModalOpen && !textGenerationLoading}
+        onOpenChange={(open) => {
+          if (!textGenerationLoading) {
+            setIsConfigModalOpen(open);
+          }
+        }}
         title="Configure Translation Practice"
-        description="Set up your translation training session"
+        description={activeChat ? "Configure your translation training session" : "Create a new chat and configure your training session"}
         footer={
           <div className="flex justify-between">
             <Button variant="outline" onClick={handleConfigCancel}>

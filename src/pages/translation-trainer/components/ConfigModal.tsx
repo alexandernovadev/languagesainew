@@ -87,9 +87,11 @@ export function ConfigModal({ configs, onConfigChange }: ConfigModalProps) {
   useEffect(() => {
     if (onConfigChange && isInitialized) {
       const allSelectedWords = Object.values(selectedWords).flat();
+      // Send only the word text, not the full object
+      const wordTexts = allSelectedWords.map(wordObj => wordObj.word);
       const finalConfig = {
         ...config,
-        mustUseWords: allSelectedWords
+        mustUseWords: wordTexts
       };
       onConfigChange(finalConfig);
     }
