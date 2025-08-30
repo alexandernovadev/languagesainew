@@ -14,10 +14,6 @@ export interface ResetWordsSeenRequest {
   seen?: number;
 }
 
-export interface UpdateLecturesLanguageRequest {
-  language: string;
-}
-
 export interface DatabaseStats {
   totalWords: number;
   totalLectures: number;
@@ -27,10 +23,6 @@ export interface DatabaseStats {
 export interface CleanerResponse {
   deletedCount?: number;
   totalFound?: number;
-  deletedExams?: number;
-  deletedAttempts?: number;
-  totalExamsFound?: number;
-  totalAttemptsFound?: number;
   totalQuestionsBefore?: number;
   message: string;
 }
@@ -110,16 +102,6 @@ class LabsService {
   }
 
   // Cleaner Functions (DANGEROUS - requires authentication)
-  async cleanExamAttempts(): Promise<LabsResponse> {
-    const response = await api.delete("/api/labs/clean/exam-attempts");
-    return response.data;
-  }
-
-  async cleanExams(): Promise<LabsResponse> {
-    const response = await api.delete("/api/labs/clean/exams");
-    return response.data;
-  }
-
   async cleanQuestions(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/clean/questions");
     return response.data;
@@ -142,11 +124,6 @@ class LabsService {
 
   async cleanUsers(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/clean/users");
-    return response.data;
-  }
-
-  async cleanTranslationChatsAndTexts(): Promise<LabsResponse> {
-    const response = await api.delete("/api/labs/clean/translation-chats");
     return response.data;
   }
 }

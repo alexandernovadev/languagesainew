@@ -16,8 +16,6 @@ import {
   ArrowRight,
   BarChart,
   Trash,
-  FileX,
-  ClipboardList,
 } from "lucide-react";
 import { labsService } from "@/services/labsService";
 import { LabsSection } from "@/components/labs/labs-section";
@@ -377,60 +375,6 @@ export default function LabsPage() {
           icon={Trash2}
           variant="danger"
         >
-          <LabsActionCard
-            title="Eliminar Todos los Intentos de Examen"
-            description="Elimina TODOS los intentos de examen de la base de datos"
-            icon={Trash}
-            onAction={() =>
-              handleAction(
-                "cleanExamAttempts",
-                () => labsService.cleanExamAttempts(),
-                true,
-                "Eliminar Intentos de Examen (PELIGROSO)",
-                "⚠️ ADVERTENCIA: Esta acción eliminará TODOS los intentos de examen de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
-              )
-            }
-            loading={loading === "cleanExamAttempts"}
-            dangerous={true}
-            variant="danger"
-          />
-
-          <LabsActionCard
-            title="Eliminar Todos los Exámenes"
-            description="Elimina TODOS los exámenes y sus intentos asociados"
-            icon={FileX}
-            onAction={() =>
-              handleAction(
-                "cleanExams",
-                () => labsService.cleanExams(),
-                true,
-                "Eliminar Todos los Exámenes (PELIGROSO)",
-                "⚠️ ADVERTENCIA: Esta acción eliminará TODOS los exámenes y sus intentos asociados de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
-              )
-            }
-            loading={loading === "cleanExams"}
-            dangerous={true}
-            variant="danger"
-          />
-
-          <LabsActionCard
-            title="Eliminar Todas las Preguntas"
-            description="Elimina TODAS las preguntas de la base de datos"
-            icon={ClipboardList}
-            onAction={() =>
-              handleAction(
-                "cleanQuestions",
-                () => labsService.cleanQuestions(),
-                true,
-                "Eliminar Todas las Preguntas (PELIGROSO)",
-                "⚠️ ADVERTENCIA: Esta acción eliminará TODAS las preguntas de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
-              )
-            }
-            loading={loading === "cleanQuestions"}
-            dangerous={true}
-            variant="danger"
-          />
-
           <LabsActionCard
             title="Eliminar Todas las Palabras"
             description="Elimina TODAS las palabras de la base de datos"

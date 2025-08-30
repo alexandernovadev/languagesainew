@@ -38,9 +38,6 @@ interface ImportResult {
   totalExpressions?: number;
   totalLectures?: number;
   totalWords?: number;
-  totalExams?: number;
-  totalQuestions?: number;
-  totalAttempts?: number;
   totalBatches: number;
   totalValid: number;
   totalInvalid: number;
@@ -55,7 +52,7 @@ interface ImportResult {
 
 interface ImportResultProps {
   result: { data: ImportResult; message: string };
-  type: "expressions" | "lectures" | "words" | "exams" | "questions" | "attempts";
+  type: "expressions" | "lectures" | "words" | "questions";
 }
 
 function statusColor(status: string) {
@@ -109,9 +106,7 @@ function getTypeLabel(type: string): string {
     expressions: "Expressions",
     lectures: "Lectures",
     words: "Words",
-    exams: "Exams",
     questions: "Questions",
-    attempts: "Attempts"
   };
   return labels[type as keyof typeof labels] || "Items";
 }
@@ -121,9 +116,7 @@ function getTotalItems(data: ImportResult): number {
          data.totalExpressions || 
          data.totalLectures || 
          data.totalWords || 
-         data.totalExams || 
          data.totalQuestions || 
-         data.totalAttempts || 
          0;
 }
 

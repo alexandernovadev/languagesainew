@@ -14,12 +14,7 @@ import {
   LecturesPage,
   LectureDetailPage,
   AnkiGamePage,
-  VerbsGamePage,
   LectureGeneratorPage,
-  ExamGeneratorPage,
-  ExamsPage,
-  ExamTakingPage,
-  ExamHistoryPage,
   SettingsPage,
   GeneralSettingsPage,
   ImportSettingsPage,
@@ -33,11 +28,7 @@ import {
   LogsSettingsPage,
   LabsPage,
   UsersPage,
-  TranslatorPage,
 } from "./routes";
-
-// Translation Trainer
-import { TranslationTrainerPage } from "@/pages/translation-trainer/TranslationTrainerPage";
 
 // Componente para manejar rutas desconocidas
 function NotFoundRedirect() {
@@ -63,19 +54,11 @@ export default function App() {
                   <Route path="/" element={<DashboardPage />} />
                   <Route path="/lectures" element={<LecturesPage />} />
                   <Route path="/lectures/:id" element={<LectureDetailPage />} />
-                  <Route path="/exams" element={<ExamsPage />} />
-                  <Route
-                    path="/exams/:examSlug/take"
-                    element={<ExamTakingPage />}
-                  />
-                  <Route path="/exam-history" element={<ExamHistoryPage />} />
                   <Route path="/games/anki" element={<AnkiGamePage />} />
-                  <Route path="/games/verbs" element={<VerbsGamePage />} />
                   <Route
                     path="/generator/lecture"
                     element={<LectureGeneratorPage />}
                   />
-                  <Route path="/generator/exam" element={<ExamGeneratorPage />} />
                   <Route path="/settings" element={<SettingsPage />}>
                     <Route index element={<SettingsIndexRedirect />} />
                     <Route path="general" element={<GeneralSettingsPage />} />
@@ -91,8 +74,6 @@ export default function App() {
                   <Route path="/questions" element={<QuestionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin/users" element={<UsersPage />} />
-                  <Route path="/tools/translator" element={<TranslatorPage />} />
-                  <Route path="/translation-trainer" element={<TranslationTrainerPage />} />
 
                   {/* Catch-all route para rutas desconocidas */}
                   <Route path="*" element={<NotFoundRedirect />} />

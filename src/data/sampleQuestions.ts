@@ -57,18 +57,6 @@ export const sampleQuestions: Question[] = [
     updatedAt: "2024-01-03T00:00:00.000Z",
   },
   {
-    _id: "4",
-    text: "Translate the word 'house' to Spanish.",
-    type: "translate",
-    level: "A1",
-    difficulty: 1,
-    correctAnswers: ["casa"],
-    explanation: "The Spanish translation of 'house' is 'casa'.",
-    tags: ["vocabulary", "translation", "basic_words"],
-    createdAt: "2024-01-04T00:00:00.000Z",
-    updatedAt: "2024-01-04T00:00:00.000Z",
-  },
-  {
     _id: "5",
     text: "Write a short paragraph about your daily routine.",
     type: "writing",
@@ -81,26 +69,6 @@ export const sampleQuestions: Question[] = [
     createdAt: "2024-01-05T00:00:00.000Z",
     updatedAt: "2024-01-05T00:00:00.000Z",
   },
-  {
-    _id: "6",
-    text: "Which of the following are irregular verbs?",
-    type: "multiple_choice",
-    level: "B1",
-    difficulty: 3,
-    options: [
-      { value: "A", label: "go, see, take", isCorrect: true },
-      { value: "B", label: "walk, talk, work", isCorrect: false },
-      { value: "C", label: "play, study, learn", isCorrect: false },
-      { value: "D", label: "help, open, close", isCorrect: false },
-    ],
-    correctAnswers: ["A"],
-    explanation:
-      "Go, see, and take are irregular verbs because they don't follow the regular -ed pattern for past tense.",
-    tags: ["grammar", "irregular_verbs", "past_tense"],
-    createdAt: "2024-01-06T00:00:00.000Z",
-    updatedAt: "2024-01-06T00:00:00.000Z",
-  },
-
   {
     _id: "8",
     text: "Are these sentences grammatically correct: 'I have been to Paris. I have gone to Paris.'",
@@ -151,19 +119,6 @@ export const sampleQuestions: Question[] = [
     tags: ["grammar", "prepositions", "movement"],
     createdAt: "2024-01-10T00:00:00.000Z",
     updatedAt: "2024-01-10T00:00:00.000Z",
-  },
-  {
-    _id: "11",
-    text: "Translate the phrase 'I would like to' to Spanish.",
-    type: "translate",
-    level: "A2",
-    difficulty: 2,
-    correctAnswers: ["me gustaría", "quisiera"],
-    explanation:
-      "Both 'me gustaría' and 'quisiera' are correct translations of 'I would like to' in Spanish.",
-    tags: ["vocabulary", "translation", "polite_expressions"],
-    createdAt: "2024-01-11T00:00:00.000Z",
-    updatedAt: "2024-01-11T00:00:00.000Z",
   },
   {
     _id: "10",

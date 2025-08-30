@@ -3,7 +3,6 @@ import {
   Settings,
   BookOpen,
   RotateCcw,
-  Gamepad2,
   HelpCircle,
   ClipboardList,
   History,
@@ -16,8 +15,6 @@ import {
   Brain,
   BookOpenCheck,
   Quote,
-  Languages,
-  MessageSquareText,
 } from "lucide-react";
 
 export const menuItems = [
@@ -69,16 +66,6 @@ export const generatorItems = [
     url: "/generator/lecture",
     icon: BookOpenCheck,
   },
-  {
-    title: "Traductor",
-    url: "/tools/translator",
-    icon: Languages,
-  },
-  {
-    title: "Translation Trainer",
-    url: "/translation-trainer",
-    icon: MessageSquareText,
-  },
 ];
 
 export const gamesItems = [
@@ -86,11 +73,6 @@ export const gamesItems = [
     title: "Juego Anki",
     url: "/games/anki",
     icon: RotateCcw,
-  },
-  {
-    title: "Juego de Verbos",
-    url: "/games/verbs",
-    icon: Gamepad2,
   },
 ];
 

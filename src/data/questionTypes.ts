@@ -1,18 +1,3 @@
-import {
-  getAllExamTypes,
-  getAllExamLevels,
-  getExamTypeInfo,
-  getExamLevelInfo,
-} from "@/utils/common/examTypes";
-
-// Re-exportar las utilidades para mantener compatibilidad
-export const questionTypes = getAllExamTypes();
-export const questionLevels = getAllExamLevels();
-
-// Funciones helper para mantener compatibilidad
-export const getQuestionTypeInfo = getExamTypeInfo;
-export const getQuestionLevelInfo = getExamLevelInfo;
-
 export const questionDifficulties = [
   {
     value: 1,

@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, BookOpen, ClipboardList, HelpCircle, Target, MessageSquare, Users, Eye, X } from "lucide-react";
+import { FileText, BookOpen, HelpCircle, MessageSquare, Users, Eye, X } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { lectureService } from "@/services/lectureService";
-import { examService } from "@/services/examService";
 import { questionService } from "@/services/questionService";
-import { examAttemptService } from "@/services/examAttemptService";
 import { expressionService } from "@/services/expressionService";
 import { userService } from "@/services/userService";
 import { downloadJSON } from "@/utils/common";
@@ -20,12 +18,10 @@ export default function ExportSettingsPage() {
   const [exportLoading, setExportLoading] = useState<{
     words: boolean;
     lectures: boolean;
-    exams: boolean;
     questions: boolean;
-    attempts: boolean;
     expressions: boolean;
     users: boolean;
-  }>({ words: false, lectures: false, exams: false, questions: false, attempts: false, expressions: false, users: false });
+  }>({ words: false, lectures: false, questions: false, expressions: false, users: false });
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
@@ -76,29 +72,6 @@ export default function ExportSettingsPage() {
     }
   };
 
-  const handleExportExams = async () => {
-    setExportLoading((prev) => ({ ...prev, exams: true }));
-    try {
-      const data = await examService.exportExams();
-      downloadJSON(data, "exams-export");
-      toast.success("Exportación exitosa", {
-        description: "Los exámenes se han exportado correctamente",
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data, message: "Los exámenes se han exportado correctamente" }, "Exportar Exámenes")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-    } catch (error: any) {
-      handleApiResult(error, "Exportar Exámenes");
-    } finally {
-      setExportLoading((prev) => ({ ...prev, exams: false }));
-    }
-  };
-
   const handleExportQuestions = async () => {
     setExportLoading((prev) => ({ ...prev, questions: true }));
     try {
@@ -119,29 +92,6 @@ export default function ExportSettingsPage() {
       handleApiResult(error, "Exportar Preguntas");
     } finally {
       setExportLoading((prev) => ({ ...prev, questions: false }));
-    }
-  };
-
-  const handleExportAttempts = async () => {
-    setExportLoading((prev) => ({ ...prev, attempts: true }));
-    try {
-      const data = await examAttemptService.exportExamAttempts();
-      downloadJSON(data, "exam-attempts-export");
-      toast.success("Exportación exitosa", {
-        description: "Los intentos de examen se han exportado correctamente",
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data, message: "Los intentos de examen se han exportado correctamente" }, "Exportar Intentos")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-    } catch (error: any) {
-      handleApiResult(error, "Exportar Intentos");
-    } finally {
-      setExportLoading((prev) => ({ ...prev, attempts: false }));
     }
   };
 
@@ -220,30 +170,12 @@ export default function ExportSettingsPage() {
             </Button>
             <Button
               variant="outline"
-              onClick={handleExportExams}
-              disabled={exportLoading.exams}
-              className="justify-start w-full"
-            >
-              <ClipboardList className="mr-2 h-4 w-4" />
-              {exportLoading.exams ? "Exportando..." : "Exportar Exámenes"}
-            </Button>
-            <Button
-              variant="outline"
               onClick={handleExportQuestions}
               disabled={exportLoading.questions}
               className="justify-start w-full"
             >
               <HelpCircle className="mr-2 h-4 w-4" />
               {exportLoading.questions ? "Exportando..." : "Exportar Preguntas"}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleExportAttempts}
-              disabled={exportLoading.attempts}
-              className="justify-start w-full"
-            >
-              <Target className="mr-2 h-4 w-4" />
-              {exportLoading.attempts ? "Exportando..." : "Exportar Intentos"}
             </Button>
             <Button
               variant="outline"

@@ -1,16 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import LectureImportForm from "@/components/forms/LectureImportForm";
 import WordImportForm from "@/components/forms/WordImportForm";
-import ExamImportForm from "@/components/forms/ExamImportForm";
 import QuestionImportForm from "@/components/forms/QuestionImportForm";
-import ExamAttemptImportForm from "@/components/forms/ExamAttemptImportForm";
 import ExpressionImportForm from "@/components/forms/ExpressionImportForm";
 import UserImportForm from "@/components/forms/UserImportForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileText, Book, GraduationCap, HelpCircle, Clock, MessageSquare, Users, Upload } from "lucide-react";
+import { FileText, Book, HelpCircle, Clock, MessageSquare, Users, Upload } from "lucide-react";
 
 export default function ImportSettingsPage() {
   return (
@@ -31,17 +29,9 @@ export default function ImportSettingsPage() {
                 <FileText className="h-4 w-4 mr-2" />
                 Words
               </TabsTrigger>
-              <TabsTrigger value="exams">
-                <GraduationCap className="h-4 w-4 mr-2" />
-                Exams
-              </TabsTrigger>
               <TabsTrigger value="questions">
                 <HelpCircle className="h-4 w-4 mr-2" />
                 Questions
-              </TabsTrigger>
-              <TabsTrigger value="attempts">
-                <Clock className="h-4 w-4 mr-2" />
-                Attempts
               </TabsTrigger>
               <TabsTrigger value="expressions">
                 <MessageSquare className="h-4 w-4 mr-2" />
@@ -62,21 +52,11 @@ export default function ImportSettingsPage() {
               <div className="mb-3 text-lg font-semibold">Importar Words</div>
               <WordImportForm />
             </TabsContent>
-            <TabsContent value="exams">
-              <div className="mb-3 text-lg font-semibold">Importar Exams</div>
-              <ExamImportForm />
-            </TabsContent>
             <TabsContent value="questions">
               <div className="mb-3 text-lg font-semibold">
                 Importar Questions
               </div>
               <QuestionImportForm />
-            </TabsContent>
-            <TabsContent value="attempts">
-              <div className="mb-3 text-lg font-semibold">
-                Importar Intentos de Examen
-              </div>
-              <ExamAttemptImportForm />
             </TabsContent>
             <TabsContent value="expressions">
               <div className="mb-3 text-lg font-semibold">

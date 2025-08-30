@@ -23,13 +23,7 @@ const routeNameMapping: { [key: string]: string } = {
   "/games": "Juegos",
   "/lectures/:id": "Detalle de Lectura",
   "/games/anki": "Juego Anki",
-  "/games/verbs": "Juego de Verbos",
   "/generator/lecture": "Generador de Lecturas",
-  "/generator/exam": "Generador de Exámenes",
-  "/exam-history": "Historial de Exámenes",
-  "/questions": "Preguntas",
-  "/exams": "Exámenes",
-  "/exams/:examSlug/take": "Tomar Examen",
   "/profile": "Mi Perfil",
   "/settings/general": "Configuración General",
   "/settings/import": "Importar",
@@ -42,8 +36,6 @@ const routeNameMapping: { [key: string]: string } = {
   
   // Tools
   "/tools": "Tools",
-  "/tools/translator": "Traductor",
-  "/translation-trainer": "Translation Trainer",
 };
 
 // Rutas que no deberían ser clickeables (solo grupos de navegación)
@@ -58,12 +50,6 @@ export function DynamicBreadcrumb() {
   // Función para obtener el nombre del segmento
   const getSegmentName = (segment: string, index: number) => {
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
-
-    // Si es la ruta de tomar examen, intentar obtener el título del examen
-    if (path.includes("/exams/") && path.includes("/take")) {
-      // Por ahora, mostrar "Tomar Examen" - esto se puede mejorar para mostrar el título real
-      return "Tomar Examen";
-    }
 
     return routeNameMapping[path] || segment;
   };
