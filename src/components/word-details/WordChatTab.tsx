@@ -1,21 +1,24 @@
 import { Word } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
+import { useChatLogic } from "@/components/chat";
+import { ChatMessage } from "@/components/chat/types";
+import { createChatMessage, clearChatWithToast } from "@/components/chat/helpers";
 import {
-  useChatLogic,
-  DefaultQuestionsGrid,
   ChatMessage as ChatMessageComponent,
-  StreamingMessage,
   ChatInput,
-  createChatMessage,
-  clearChatWithToast,
+  DefaultQuestionsGrid,
+  StreamingMessage,
 } from "@/components/chat";
+import { useEffect } from "react";
 
 interface WordChatTabProps {
   word: Word;
+  preloadedChat?: ChatMessage[];  // 🔄 Chat precargado
+  isPreloading?: boolean;         // 🔄 Estado de precarga
 }
 
-export function WordChatTab({ word }: WordChatTabProps) {
+export function WordChatTab({ word, preloadedChat, isPreloading }: WordChatTabProps) {
   const { streamChatMessage, getChatHistory, clearChatHistory } = useWordStore();
   
   // Hook para manejo de errores
@@ -38,8 +41,15 @@ export function WordChatTab({ word }: WordChatTabProps) {
     word,
     word._id,
     getChatHistory,
-    word.chat
+    preloadedChat || word.chat  // 🔄 Usar chat precargado si está disponible
   );
+
+  // 🔄 Si tenemos chat precargado, usarlo inmediatamente
+  useEffect(() => {
+    if (preloadedChat && preloadedChat.length > 0) {
+      setMessages(preloadedChat);
+    }
+  }, [preloadedChat, setMessages]);
 
   const handleDefaultQuestion = async (question: string) => {
     setInputValue(question);
@@ -90,10 +100,20 @@ export function WordChatTab({ word }: WordChatTabProps) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
+      {/* 🔄 Indicador de precarga */}
+      {isPreloading && (
+        <div className="p-4 text-center">
+          <div className="inline-flex items-center gap-2 text-sm text-zinc-400">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+            Cargando historial del chat...
+          </div>
+        </div>
+      )}
+
       {/* Historial de mensajes */}
       <div className="flex-1 p-4 overflow-y-auto [&>*]:m-0 [&>*]:p-0">
         {/* Opciones por defecto dentro del chat */}
-        {messages.length === 0 && (
+        {messages.length === 0 && !isPreloading && (
           <DefaultQuestionsGrid
             onQuestionClick={handleDefaultQuestion}
             isLoading={isLoading}

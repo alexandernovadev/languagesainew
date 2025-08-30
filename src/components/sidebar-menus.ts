@@ -17,6 +17,7 @@ import {
   BookOpenCheck,
   Quote,
   Languages,
+  MessageSquareText,
 } from "lucide-react";
 
 export const menuItems = [
@@ -72,6 +73,11 @@ export const generatorItems = [
     title: "Traductor",
     url: "/tools/translator",
     icon: Languages,
+  },
+  {
+    title: "Translation Trainer",
+    url: "/translation-trainer",
+    icon: MessageSquareText,
   },
 ];
 

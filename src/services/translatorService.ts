@@ -1,4 +1,3 @@
-import { api } from "./api";
 import type { AllowedLanguageCode } from "@/constants/identity";
 
 export interface TranslateRequest {
