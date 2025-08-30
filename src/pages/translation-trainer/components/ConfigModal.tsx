@@ -28,8 +28,8 @@ export function ConfigModal() {
 
   // State
   const [config, setConfig] = useState<TranslationConfig>({
-    minWords: configs?.defaultConfigs.minWords || 50, // Default fallback
-    maxWords: configs?.defaultConfigs.maxWords || 300, // Default fallback
+    minWords: currentGenerationConfig?.minWords || 70, // Default fallback to 70
+    maxWords: currentGenerationConfig?.maxWords || 100, // Default fallback to 100
     difficulty: currentGenerationConfig?.difficulty || "intermediate",
     sourceLanguage: currentGenerationConfig?.sourceLanguage || "spanish",
     targetLanguage: currentGenerationConfig?.targetLanguage || "english",

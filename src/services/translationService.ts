@@ -111,6 +111,11 @@ export const translationService = {
     return res.data;
   },
 
+  async updateChatConfig(chatId: string, config: TranslationConfig): Promise<{ success: boolean; message: string }> {
+    const res = await api.put(`/api/translation/chat/${chatId}/config`, { config });
+    return res.data;
+  },
+
   // Streaming request with fetch (following project pattern)
   async generateTextStream(
     config: TranslationConfig, 

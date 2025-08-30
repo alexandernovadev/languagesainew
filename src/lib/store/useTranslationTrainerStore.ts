@@ -47,6 +47,7 @@ interface TranslationTrainerActions {
   clearMessages: () => void;
   setGeneratedTextAndId: (text: string, id: string, config: TranslationConfig | null) => void;
   setCurrentGenerationConfig: (config: TranslationConfig | null) => void;
+  updateChatConfig: (chatId: string, config: TranslationConfig) => Promise<void>;
 }
 
 type TranslationTrainerStore = TranslationTrainerState & TranslationTrainerActions;
@@ -135,6 +136,12 @@ export const useTranslationTrainerStore = create<TranslationTrainerStore>((set, 
       }, chatId, newTextId);
 
       toast.success('Text generated successfully');
+
+      // After successful generation, update the chat's config in the backend
+      if (chatId) {
+        get().updateChatConfig(chatId, newConfig);
+      }
+
     } catch (error: any) {
       toast.error(`Failed to generate text: ${error.message || 'Unknown error'}`);
     } finally {
@@ -158,6 +165,13 @@ export const useTranslationTrainerStore = create<TranslationTrainerStore>((set, 
       const chatDetails = await translationService.getChatDetails(chatId);
       if (chatDetails && chatDetails.messages) {
         set({ messages: chatDetails.messages });
+
+        // Set currentGenerationConfig from chatDetails if available
+        if (chatDetails.config) {
+          get().setCurrentGenerationConfig(chatDetails.config);
+        } else {
+          get().setCurrentGenerationConfig(null); // Clear if no config in chat
+        }
 
         // Find the latest generated text and update store state
         const latestGeneratedText = chatDetails.messages
@@ -200,5 +214,19 @@ export const useTranslationTrainerStore = create<TranslationTrainerStore>((set, 
 
   setCurrentGenerationConfig: (config) => {
     set({ currentGenerationConfig: config });
+  },
+
+  updateChatConfig: async (chatId, config) => {
+    try {
+      await translationService.updateChatConfig(chatId, config);
+      set((state) => ({
+        chats: state.chats.map((chat) =>
+          chat.id === chatId ? { ...chat, config } : chat
+        ),
+      }));
+      toast.success('Chat configuration updated');
+    } catch (error: any) {
+      toast.error(`Failed to update chat config: ${error.message || 'Unknown error'}`);
+    }
   },
 }));

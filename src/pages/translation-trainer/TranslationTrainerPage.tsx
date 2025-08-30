@@ -70,7 +70,7 @@ export function TranslationTrainerPage() {
       }
     }
 
-    if (targetChatId) {
+    if (targetChatId && currentConfig) { // Ensure currentConfig is not null
       await generateText(currentConfig, targetChatId);
     }
   };
