@@ -486,6 +486,24 @@ export default function LabsPage() {
           />
 
           <LabsActionCard
+            title="Eliminar Chats de Traducción y Textos Generados"
+            description="Elimina TODOS los chats de traducción y textos generados de la base de datos"
+            icon={ClipboardList}
+            onAction={() =>
+              handleAction(
+                "cleanTranslationChatsAndTexts",
+                () => labsService.cleanTranslationChatsAndTexts(),
+                true,
+                "Eliminar Chats de Traducción y Textos Generados (PELIGROSO)",
+                "⚠️ ADVERTENCIA: Esta acción eliminará TODOS los chats de traducción y textos generados de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
+              )
+            }
+            loading={loading === "cleanTranslationChatsAndTexts"}
+            dangerous={true}
+            variant="danger"
+          />
+
+          <LabsActionCard
             title="Eliminar Todos los Usuarios"
             description="Elimina TODOS los usuarios excepto el actual"
             icon={Users}

@@ -144,6 +144,11 @@ class LabsService {
     const response = await api.delete("/api/labs/clean/users");
     return response.data;
   }
+
+  async cleanTranslationChatsAndTexts(): Promise<LabsResponse> {
+    const response = await api.delete("/api/labs/clean/translation-chats");
+    return response.data;
+  }
 }
 
 export const labsService = new LabsService();
