@@ -3,7 +3,7 @@ import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import {
   useChatLogic,
-  ChatMessage as ChatMessageComponent,
+  ChatMessageComponent,
   StreamingMessage,
   ChatInput,
   createChatMessage,

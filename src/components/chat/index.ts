@@ -1,6 +1,6 @@
 // Exportar todos los componentes del chat
 export { MarkdownRenderer } from "./MarkdownRenderer";
-export { ChatMessage } from "./ChatMessage";
+export { ChatMessage as ChatMessageComponent } from "./ChatMessage";
 export { StreamingMessage } from "./StreamingMessage";
 export { ChatInput } from "./ChatInput";
 export { DefaultQuestionsGrid } from "./DefaultQuestionsGrid";
@@ -12,4 +12,4 @@ export type { ChatMessage, ChatInterfaceProps } from "./types";
 export { useChatLogic } from "./useChatLogic";
 
 // Exportar helpers
-export { createChatMessage, clearChatWithToast } from "./helpers.tsx";
+export { createChatMessage, clearChatWithToast } from "./helpers";
