@@ -68,7 +68,7 @@ export const useTranslationTrainerStore = create<TranslationTrainerStore>((set, 
     set({ configsLoading: true });
     try {
       const result = await translationService.getConfigs();
-      set({ configs: result });
+      set({ configs: result.data });
       toast.success('Configuration loaded successfully');
     } catch (error: any) {
       toast.error(`Failed to load configs: ${error.message || 'Unknown error'}`);

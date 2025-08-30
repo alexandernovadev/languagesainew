@@ -12,6 +12,12 @@ export interface TranslationConfig {
   topic?: string;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 export interface TranslationChat {
   id: string;
   name: string;
@@ -74,7 +80,7 @@ export interface PreloadedConfigs {
 }
 
 export const translationService = {
-  async getConfigs(): Promise<PreloadedConfigs> {
+  async getConfigs(): Promise<ApiResponse<PreloadedConfigs>> {
     const res = await api.get('/api/translation/configs');
     return res.data;
   },
