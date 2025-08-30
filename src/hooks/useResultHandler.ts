@@ -1,4 +1,4 @@
-import { useResultHandler as useResultContext } from '@/contexts/ResultContext';
+import { useResultContext } from '@/contexts/ResultContext';
 
 export function useResultHandler() {
   const { showResult, hideResult, clearResult } = useResultContext();

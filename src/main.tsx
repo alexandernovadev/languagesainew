@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./globals.css";
+import { ResultProvider } from "./contexts/ResultContext";
 
 // Configurar manejo global de errores no capturados
 const setupGlobalErrorHandling = () => {
@@ -36,6 +37,8 @@ setupGlobalErrorHandling();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
-  <App />
+  <ResultProvider>
+    <App />
+  </ResultProvider>
   // </React.StrictMode>
 );
