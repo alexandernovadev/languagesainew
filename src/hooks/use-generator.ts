@@ -7,13 +7,13 @@ interface GeneratorFilters {
   [key: string]: string;
 }
 
-export function useGenerator(type: "exam" | "lecture") {
+export function useGenerator() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<GeneratorFilters>({
     topic: "",
     level: "",
     difficulty: "",
-    ...(type === "exam" ? { instructions: "" } : { objectives: "" }),
+    objectives: "",
   });
 
   const handleFilterSubmit = (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export function useGenerator(type: "exam" | "lecture") {
       topic: "",
       level: "",
       difficulty: "",
-      ...(type === "exam" ? { instructions: "" } : { objectives: "" }),
+      objectives: "",
     });
   };
 

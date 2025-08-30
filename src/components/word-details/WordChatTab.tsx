@@ -7,7 +7,6 @@ import { createChatMessage, clearChatWithToast } from "@/components/chat/helpers
 import {
   ChatMessage as ChatMessageComponent,
   ChatInput,
-  DefaultQuestionsGrid,
   StreamingMessage,
 } from "@/components/chat";
 import { useEffect } from "react";
@@ -50,11 +49,6 @@ export function WordChatTab({ word, preloadedChat, isPreloading }: WordChatTabPr
       setMessages(preloadedChat);
     }
   }, [preloadedChat, setMessages]);
-
-  const handleDefaultQuestion = async (question: string) => {
-    setInputValue(question);
-    await handleSendMessage(question);
-  };
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !word) return;
@@ -112,14 +106,6 @@ export function WordChatTab({ word, preloadedChat, isPreloading }: WordChatTabPr
 
       {/* Historial de mensajes */}
       <div className="flex-1 p-4 overflow-y-auto [&>*]:m-0 [&>*]:p-0">
-        {/* Opciones por defecto dentro del chat */}
-        {messages.length === 0 && !isPreloading && (
-          <DefaultQuestionsGrid
-            onQuestionClick={handleDefaultQuestion}
-            isLoading={isLoading}
-          />
-        )}
-
         {/* Mensajes del chat */}
         {Array.isArray(messages) &&
           messages.map((message) => (

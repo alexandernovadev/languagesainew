@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { FileText, BookOpen, HelpCircle, MessageSquare, Users, Eye, X } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { lectureService } from "@/services/lectureService";
-import { questionService } from "@/services/questionService";
 import { expressionService } from "@/services/expressionService";
 import { userService } from "@/services/userService";
 import { downloadJSON } from "@/utils/common";
@@ -18,10 +17,9 @@ export default function ExportSettingsPage() {
   const [exportLoading, setExportLoading] = useState<{
     words: boolean;
     lectures: boolean;
-    questions: boolean;
     expressions: boolean;
     users: boolean;
-  }>({ words: false, lectures: false, questions: false, expressions: false, users: false });
+  }>({ words: false, lectures: false, expressions: false, users: false });
 
   // Hook para manejo de errores
   const { handleApiResult } = useResultHandler();
@@ -69,29 +67,6 @@ export default function ExportSettingsPage() {
       handleApiResult(error, "Exportar Lecturas");
     } finally {
       setExportLoading((prev) => ({ ...prev, lectures: false }));
-    }
-  };
-
-  const handleExportQuestions = async () => {
-    setExportLoading((prev) => ({ ...prev, questions: true }));
-    try {
-      const data = await questionService.exportQuestions();
-      downloadJSON(data, "questions-export");
-      toast.success("Exportación exitosa", {
-        description: "Las preguntas se han exportado correctamente",
-        action: {
-          label: <Eye className="h-4 w-4" />,
-          onClick: () => handleApiResult({ success: true, data, message: "Las preguntas se han exportado correctamente" }, "Exportar Preguntas")
-        },
-        cancel: {
-          label: <X className="h-4 w-4" />,
-          onClick: () => toast.dismiss()
-        }
-      });
-    } catch (error: any) {
-      handleApiResult(error, "Exportar Preguntas");
-    } finally {
-      setExportLoading((prev) => ({ ...prev, questions: false }));
     }
   };
 
@@ -167,15 +142,6 @@ export default function ExportSettingsPage() {
             >
               <BookOpen className="mr-2 h-4 w-4" />
               {exportLoading.lectures ? "Exportando..." : "Exportar Lecturas"}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleExportQuestions}
-              disabled={exportLoading.questions}
-              className="justify-start w-full"
-            >
-              <HelpCircle className="mr-2 h-4 w-4" />
-              {exportLoading.questions ? "Exportando..." : "Exportar Preguntas"}
             </Button>
             <Button
               variant="outline"

@@ -3,16 +3,12 @@ import {
   Settings,
   BookOpen,
   RotateCcw,
-  HelpCircle,
-  ClipboardList,
-  History,
   Users,
   BookMarked,
   FileDown,
   FileUp,
   FileSpreadsheet,
   Info,
-  Brain,
   BookOpenCheck,
   Quote,
 } from "lucide-react";
@@ -38,29 +34,9 @@ export const menuItems = [
     url: "/my-expressions",
     icon: Quote,
   },
-  {
-    title: "Preguntas",
-    url: "/questions",
-    icon: HelpCircle,
-  },
-  {
-    title: "Exámenes",
-    url: "/exams",
-    icon: ClipboardList,
-  },
-  {
-    title: "Historial de Exámenes",
-    url: "/exam-history",
-    icon: History,
-  },
 ];
 
 export const generatorItems = [
-  {
-    title: "Generador de Exámenes",
-    url: "/generator/exam",
-    icon: Brain,
-  },
   {
     title: "Generador de Lecturas",
     url: "/generator/lecture",

@@ -1,4 +1,4 @@
-export const questionDifficulties = [
+export const commonDifficulties = [
   {
     value: 1,
     label: "Muy Fácil",

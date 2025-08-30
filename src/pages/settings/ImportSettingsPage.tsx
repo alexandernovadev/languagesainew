@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import LectureImportForm from "@/components/forms/LectureImportForm";
 import WordImportForm from "@/components/forms/WordImportForm";
-import QuestionImportForm from "@/components/forms/QuestionImportForm";
 import ExpressionImportForm from "@/components/forms/ExpressionImportForm";
 import UserImportForm from "@/components/forms/UserImportForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -29,10 +28,6 @@ export default function ImportSettingsPage() {
                 <FileText className="h-4 w-4 mr-2" />
                 Words
               </TabsTrigger>
-              <TabsTrigger value="questions">
-                <HelpCircle className="h-4 w-4 mr-2" />
-                Questions
-              </TabsTrigger>
               <TabsTrigger value="expressions">
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Expressions
@@ -51,12 +46,6 @@ export default function ImportSettingsPage() {
             <TabsContent value="words">
               <div className="mb-3 text-lg font-semibold">Importar Words</div>
               <WordImportForm />
-            </TabsContent>
-            <TabsContent value="questions">
-              <div className="mb-3 text-lg font-semibold">
-                Importar Questions
-              </div>
-              <QuestionImportForm />
             </TabsContent>
             <TabsContent value="expressions">
               <div className="mb-3 text-lg font-semibold">

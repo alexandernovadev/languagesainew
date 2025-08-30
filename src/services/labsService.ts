@@ -23,7 +23,6 @@ export interface DatabaseStats {
 export interface CleanerResponse {
   deletedCount?: number;
   totalFound?: number;
-  totalQuestionsBefore?: number;
   message: string;
 }
 
@@ -68,11 +67,6 @@ class LabsService {
     return response.data;
   }
 
-  async seedQuestionsFromJson(): Promise<LabsResponse> {
-    const response = await api.post("/api/labs/seed/questions");
-    return response.data;
-  }
-
   // Backup & Maintenance
   async createBackup(): Promise<LabsResponse> {
     const response = await api.post("/api/labs/backup/create");
@@ -102,11 +96,6 @@ class LabsService {
   }
 
   // Cleaner Functions (DANGEROUS - requires authentication)
-  async cleanQuestions(): Promise<LabsResponse> {
-    const response = await api.delete("/api/labs/clean/questions");
-    return response.data;
-  }
-
   async cleanWords(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/clean/words");
     return response.data;

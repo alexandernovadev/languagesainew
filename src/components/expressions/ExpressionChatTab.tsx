@@ -3,7 +3,6 @@ import { useExpressionStore } from "@/lib/store/useExpressionStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import {
   useChatLogic,
-  DefaultQuestionsGrid,
   ChatMessage as ChatMessageComponent,
   StreamingMessage,
   ChatInput,
@@ -36,11 +35,6 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
     setStreamingMessage,
     messagesEndRef,
   } = useChatLogic(expression, expression._id, getChatHistory, expression.chat);
-
-  const handleDefaultQuestion = async (question: string) => {
-    setInputValue(question);
-    await handleSendMessage(question);
-  };
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !expression) return;
@@ -88,14 +82,6 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
     <div className="flex flex-col h-full min-h-0">
       {/* Historial de mensajes */}
       <div className="flex-1 p-4 overflow-y-auto [&>*]:m-0 [&>*]:p-0">
-        {/* Opciones por defecto dentro del chat */}
-        {messages.length === 0 && (
-          <DefaultQuestionsGrid
-            onQuestionClick={handleDefaultQuestion}
-            isLoading={isLoading}
-          />
-        )}
-
         {/* Mensajes del chat */}
         {Array.isArray(messages) &&
           messages.map((message) => (

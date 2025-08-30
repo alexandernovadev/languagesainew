@@ -5,7 +5,6 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import LoadingSpinner from "./components/LoadingSpinner";
 import LazyRouteErrorBoundary from "./components/LazyRouteErrorBoundary";
-import { ResultProvider } from "./contexts/ResultContext";
 import { toast } from "sonner";
 
 // Importar todas las rutas lazy load
@@ -23,7 +22,6 @@ import {
   SettingsIndexRedirect,
   MyWordsPage,
   MyExpressionsPage,
-  QuestionsPage,
   ProfilePage,
   LogsSettingsPage,
   LabsPage,
@@ -45,7 +43,6 @@ function NotFoundRedirect() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <ResultProvider>
         <BrowserRouter>
           <DashboardLayout>
             <LazyRouteErrorBoundary>
@@ -71,7 +68,6 @@ export default function App() {
 
                   <Route path="/my-words" element={<MyWordsPage />} />
                   <Route path="/my-expressions" element={<MyExpressionsPage />} />
-                  <Route path="/questions" element={<QuestionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin/users" element={<UsersPage />} />
 
@@ -82,7 +78,6 @@ export default function App() {
             </LazyRouteErrorBoundary>
           </DashboardLayout>
         </BrowserRouter>
-      </ResultProvider>
     </ErrorBoundary>
   );
 }

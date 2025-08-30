@@ -52,7 +52,7 @@ interface ImportResult {
 
 interface ImportResultProps {
   result: { data: ImportResult; message: string };
-  type: "expressions" | "lectures" | "words" | "questions";
+  type: "expressions" | "lectures" | "words";
 }
 
 function statusColor(status: string) {
@@ -106,7 +106,6 @@ function getTypeLabel(type: string): string {
     expressions: "Expressions",
     lectures: "Lectures",
     words: "Words",
-    questions: "Questions",
   };
   return labels[type as keyof typeof labels] || "Items";
 }
@@ -116,7 +115,6 @@ function getTotalItems(data: ImportResult): number {
          data.totalExpressions || 
          data.totalLectures || 
          data.totalWords || 
-         data.totalQuestions || 
          0;
 }
 
