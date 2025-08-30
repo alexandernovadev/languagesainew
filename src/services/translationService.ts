@@ -97,7 +97,7 @@ export const translationService = {
     return res.data;
   },
 
-  async getChats(): Promise<TranslationChat[]> {
+  async getChats(): Promise<ApiResponse<TranslationChat[]>> {
     const res = await api.get('/api/translation/chats');
     return res.data;
   },

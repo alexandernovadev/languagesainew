@@ -82,7 +82,8 @@ export const useTranslationTrainerStore = create<TranslationTrainerStore>((set, 
     set({ chatsLoading: true });
     try {
       const result = await translationService.getChats();
-      set({ chats: Array.isArray(result) ? result : [] });
+      console.log("Loaded chats from backend:", result.data);
+      set({ chats: Array.isArray(result.data) ? result.data : [] });
     } catch (error: any) {
       toast.error(`Failed to load chats: ${error.message || 'Unknown error'}`);
       set({ chats: [] });
