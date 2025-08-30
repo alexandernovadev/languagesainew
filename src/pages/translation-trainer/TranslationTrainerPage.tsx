@@ -95,8 +95,8 @@ export function TranslationTrainerPage() {
 
   // Sidebar content component
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-border">
+    <div className="flex flex-col h-full overflow-y-auto">
+      <div className="p-4 border-b border-border sticky top-0 bg-background z-10">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Languages className="h-5 w-5 text-primary" />
