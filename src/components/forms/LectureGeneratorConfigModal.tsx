@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { GrammarTopicsSelector } from "@/components/exam/components/GrammarTopicsSelector";
+import { GrammarSelector } from "@/components/forms/GrammarSelector";
 import { WordsSelector } from "@/components/forms/WordsSelector";
+import { grammarTopicGroups } from "@/data/grammarTopics"; // Import the new data
 import { Settings, BookOpen, FileText } from "lucide-react";
 import { getAllowedLanguages } from "@/constants/identity";
 
@@ -285,7 +286,8 @@ export const LectureGeneratorConfigModal: React.FC<
           </TabsContent>
 
           <TabsContent value="grammar" className="mt-4">
-            <GrammarTopicsSelector
+            <GrammarSelector
+              grammarTopicGroups={grammarTopicGroups} // Pass the data here
               selectedTopics={tempConfig.grammarTopics}
               onTopicsChange={(topics) =>
                 setTempConfig((c) => ({ ...c, grammarTopics: topics }))
