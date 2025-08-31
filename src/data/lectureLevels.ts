@@ -3,4 +3,10 @@ export interface LectureLevel {
   label: string;
 }
 
+export const lectureLevels: LectureLevel[] = [
+  { value: "easy", label: "Fácil" },
+  { value: "medium", label: "Medio" },
+  { value: "hard", label: "Difícil" },
+];
+
 // Re-exportar las utilidades para mantener compatibilidad
