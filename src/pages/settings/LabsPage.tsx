@@ -16,6 +16,7 @@ import {
   ArrowRight,
   BarChart,
   Trash,
+  ClipboardList,
 } from "lucide-react";
 import { labsService } from "@/services/labsService";
 import { LabsSection } from "@/components/labs/labs-section";

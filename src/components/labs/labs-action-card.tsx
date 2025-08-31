@@ -12,7 +12,7 @@ interface LabsActionCardProps {
   loading?: boolean;
   dangerous?: boolean;
   disabled?: boolean;
-  variant?: "default" | "danger" | "warning" | "info";
+  variant?: "default" | "danger" | "warning" | "info" | "success";
 }
 
 export function LabsActionCard({

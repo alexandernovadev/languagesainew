@@ -14,6 +14,10 @@ export interface ResetWordsSeenRequest {
   seen?: number;
 }
 
+export interface UpdateLecturesLanguageRequest {
+  language: string;
+}
+
 export interface DatabaseStats {
   totalWords: number;
   totalLectures: number;
@@ -67,6 +71,11 @@ class LabsService {
     return response.data;
   }
 
+  async seedQuestionsFromJson(): Promise<LabsResponse> {
+    const response = await api.post("/api/labs/seed/questions-from-json");
+    return response.data;
+  }
+
   // Backup & Maintenance
   async createBackup(): Promise<LabsResponse> {
     const response = await api.post("/api/labs/backup/create");
@@ -108,6 +117,11 @@ class LabsService {
 
   async cleanExpressions(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/clean/expressions");
+    return response.data;
+  }
+
+  async cleanTranslationChatsAndTexts(): Promise<LabsResponse> {
+    const response = await api.delete("/api/labs/clean/translation-chats-and-texts");
     return response.data;
   }
 
