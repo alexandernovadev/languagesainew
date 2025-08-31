@@ -4,22 +4,22 @@ import { Send, Trash2 } from "lucide-react";
 
 interface ChatInputProps {
   inputValue: string;
-  setInputValue: (value: string) => void;
-  onSendMessage: (message: string) => void;
-  onClearChat: () => void;
   placeholder: string;
   isLoading: boolean;
   hasMessages: boolean;
+  setInputValue: (value: string) => void;
+  onSendMessage: (message: string) => void;
+  onClearChat: () => void;
 }
 
 export function ChatInput({
   inputValue,
-  setInputValue,
-  onSendMessage,
-  onClearChat,
   placeholder,
   isLoading,
   hasMessages,
+  setInputValue,
+  onSendMessage,
+  onClearChat,
 }: ChatInputProps) {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -35,7 +35,7 @@ export function ChatInput({
         onChange={(e) => setInputValue(e.target.value)}
         placeholder={placeholder}
         disabled={isLoading}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         className="flex-1"
       />
       <Button

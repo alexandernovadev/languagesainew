@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Eye, X } from "lucide-react";
 
+// TODO esto deberia ser global OJO esta repitodo como 4 veces en el codigo
 const duplicateStrategies = [
   { value: "skip", label: "Skip (do not import duplicates)" },
   { value: "overwrite", label: "Overwrite (replace existing)" },

@@ -1,14 +1,13 @@
 import React from 'react';
 import { AlertDialogNova } from '@/components/ui/alert-dialog-nova';
-import { Trash2, AlertTriangle } from 'lucide-react';
 import { User } from '@/services/userService';
 
 interface UserDeleteDialogProps {
   user: User | null;
   isOpen: boolean;
+  loading?: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (id: string) => Promise<void>;
-  loading?: boolean;
 }
 
 export function UserDeleteDialog({ user, isOpen, onOpenChange, onConfirm, loading }: UserDeleteDialogProps) {

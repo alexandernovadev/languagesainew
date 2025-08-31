@@ -1,3 +1,5 @@
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
+
 export const LECTURE_LEVELS = [
   { value: "A1", label: "A1 - Principiante" },
   { value: "A2", label: "A2 - Básico" },
@@ -6,6 +8,7 @@ export const LECTURE_LEVELS = [
   { value: "C1", label: "C1 - Avanzado" },
   { value: "C2", label: "C2 - Maestría" },
 ];
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export const LECTURE_LANGUAGES = [
   { value: "es", label: "Español", icon: "🇪🇸" },
@@ -13,6 +16,7 @@ export const LECTURE_LANGUAGES = [
   { value: "pt", label: "Portugués", icon: "🇵🇹" },
 ];
 
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 export const LECTURE_TYPES = [
   { value: "analysis", label: "Análisis" },
   { value: "argumentative", label: "Argumentativa" },
@@ -39,11 +43,13 @@ export const LECTURE_TYPES = [
   { value: "chronicle", label: "Crónica" },
   { value: "blog", label: "Blog" },
 ];
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export const LECTURE_BOOLEAN_FILTERS = [
   { value: "hasImg", label: "Con Imagen" },
   { value: "hasUrlAudio", label: "Con Audio" },
 ];
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export const LECTURE_SORT_OPTIONS = [
   { value: "createdAt", label: "Fecha de Creación" },

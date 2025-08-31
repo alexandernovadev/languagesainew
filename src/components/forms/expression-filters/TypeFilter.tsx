@@ -8,6 +8,7 @@ interface TypeFilterProps {
   value?: string[];
   onChange: (value: string[]) => void;
 }
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export function TypeFilter({ value = [], onChange }: TypeFilterProps) {
   const handleToggle = (type: string) => {

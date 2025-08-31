@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Expression } from "@/models/Expression";
 import { ExpressionInfoTab } from "./ExpressionInfoTab";
 import { ExpressionChatTab } from "./ExpressionChatTab";

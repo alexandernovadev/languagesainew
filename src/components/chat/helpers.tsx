@@ -4,7 +4,7 @@ import { ChatMessage } from "./types";
 
 // Función helper para crear mensajes del chat
 export function createChatMessage(
-  role: "user" | "assistant",
+  role: "user" | "assistant", // TODO otrA VEZ CHAMBONADA
   content: string
 ): ChatMessage {
   return {
@@ -17,8 +17,8 @@ export function createChatMessage(
 
 // Función helper para limpiar el chat
 export async function clearChatWithToast<T>(
-  clearChatFunction: (id: string) => Promise<void>,
   itemId: string,
+  clearChatFunction: (id: string) => Promise<void>,
   setMessages: (messages: ChatMessage[]) => void,
   handleApiResult: (result: any, action: string) => void
 ) {

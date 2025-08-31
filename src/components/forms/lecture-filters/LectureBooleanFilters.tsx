@@ -4,6 +4,8 @@ interface LectureBooleanFiltersProps {
   values: Record<string, boolean | undefined>;
   onChange: (key: string, value: boolean | undefined) => void;
 }
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
+
 
 export function LectureBooleanFilters({ values, onChange }: LectureBooleanFiltersProps) {
   return (

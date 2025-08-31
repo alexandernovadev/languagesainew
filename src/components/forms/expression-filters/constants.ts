@@ -3,7 +3,7 @@ export const EXPRESSION_LEVELS = [
   { value: "medium", label: "Medio" },
   { value: "hard", label: "Difícil" },
 ];
-
+// TODO aqui langaujes repetidos como 56 veces en el codigo
 export const EXPRESSION_LANGUAGES = [
   { value: "en", label: "Inglés", icon: "🇬🇧" },
   { value: "es", label: "Español", icon: "🇪🇸" },

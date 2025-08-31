@@ -71,8 +71,8 @@ export function ExpressionChatTab({ expression }: ExpressionChatTabProps) {
 
   const handleClearChat = async () => {
     await clearChatWithToast(
-      clearChatHistory,
       expression._id,
+      clearChatHistory,
       setMessages,
       handleApiResult
     );

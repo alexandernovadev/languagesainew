@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Search, Check, X, Clock, Wrench, RefreshCw, BookOpen } from "lucide-react";
+import { Search, Check, X } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";

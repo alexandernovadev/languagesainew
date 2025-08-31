@@ -51,15 +51,16 @@ export function useChatLogic<T>(
 
   return {
     messages,
-    setMessages,
     inputValue,
-    setInputValue,
     isLoading,
-    setIsLoading,
     isStreaming,
-    setIsStreaming,
     streamingMessage,
-    setStreamingMessage,
     messagesEndRef,
+    
+    setInputValue,
+    setIsLoading,
+    setIsStreaming,
+    setStreamingMessage,
+    setMessages,
   };
 }

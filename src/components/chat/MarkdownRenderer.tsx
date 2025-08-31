@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 interface MarkdownRendererProps {
   content: string;
 }
-
+// TODO Esto es el centro de la chambonada de markdown CAMBIAR son 13 segun gpt
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <div className="[&>*]:m-0 [&>*]:p-0 [&>*]:space-y-0 [&>*]:gap-0 [&>*]:leading-none [&>*]:mb-0 [&>*]:mt-0 [&>*]:py-0 [&>*]:pt-0 [&>*]:pb-0">
@@ -64,7 +64,10 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             />
           ),
           li: ({ node, ...props }) => (
-            <li className="pl-0 m-0 p-0 [&>*]:text-gray-100 [&>strong]:text-green-300 [&>em]:text-blue-300 [&>code]:bg-gray-800/50 [&>code]:px-1.5 [&>code]:py-0.5 [&>code]:rounded [&>code]:text-sm [&>code]:font-mono [&>code]:border [&>code]:border-gray-700" {...props} />
+            <li
+              className="pl-0 m-0 p-0 [&>*]:text-gray-100 [&>strong]:text-green-300 [&>em]:text-blue-300 [&>code]:bg-gray-800/50 [&>code]:px-1.5 [&>code]:py-0.5 [&>code]:rounded [&>code]:text-sm [&>code]:font-mono [&>code]:border [&>code]:border-gray-700"
+              {...props}
+            />
           ),
           strong: ({ node, ...props }) => (
             <strong className="font-bold m-0 p-0" {...props} />

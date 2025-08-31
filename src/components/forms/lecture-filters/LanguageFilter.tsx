@@ -5,6 +5,7 @@ interface LanguageFilterProps {
   value?: string;
   onChange: (value: string | undefined) => void;
 }
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export function LanguageFilter({ value, onChange }: LanguageFilterProps) {
   const selectedLanguages = value ? value.split(",") : [];

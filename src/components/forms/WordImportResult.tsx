@@ -6,6 +6,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
+// TODO esto deberia ser global OJO esta repitodo como 4 veces en el codigo
 interface ProcessingResult {
   index: number;
   status: "valid" | "invalid" | "duplicate" | "error";

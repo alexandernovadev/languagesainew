@@ -1,28 +1,47 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { ModalNova } from '@/components/ui/modal-nova';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LanguageSelect } from '@/components/ui/LanguageSelect';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, UserPlus, User as UserIcon, Settings, Phone } from 'lucide-react';
-import { User, UserCreate, UserUpdate } from '@/services/userService';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ModalNova } from "@/components/ui/modal-nova";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { LanguageSelect } from "@/components/ui/LanguageSelect";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Save,
+  UserPlus,
+  User as UserIcon,
+  Settings,
+  Phone,
+} from "lucide-react";
+import { User, UserCreate, UserUpdate } from "@/services/userService";
 
+  // TODO Cambar esta chambonada de poner el languageSelect 
+  // por un select con el idioma y el flag en el idiomaSelect
+  // TODO los roles deben ser admin, teacher y student en un TS
 // Validation schema
 const userSchema = z.object({
-  username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres').optional(),
-  role: z.enum(['admin', 'teacher', 'student']),
+  username: z
+    .string()
+    .min(3, "El nombre de usuario debe tener al menos 3 caracteres"),
+  email: z.string().email("Email inválido"),
+  password: z
+    .string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .optional(),
+  role: z.enum(["admin", "teacher", "student"]),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  language: z.enum(['es', 'en', 'fr', 'de', 'it', 'pt']),
+  language: z.enum(["es", "en", "fr", "de", "it", "pt"]),
   isActive: z.boolean().default(true),
   address: z.string().optional(),
   phone: z.string().optional(),
@@ -38,8 +57,17 @@ interface UserEditModalProps {
   saving: boolean;
 }
 
-export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEditModalProps) {
+export function UserEditModal({
+  user,
+  isOpen,
+  onClose,
+  onSave,
+  saving,
+}: UserEditModalProps) {
   const isEditing = !!user;
+
+  // TODO Cambar esta chambonada de poner el languageSelect 
+  // por un select con el idioma y el flag en el idiomaSelect
 
   const {
     register,
@@ -51,21 +79,22 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      username: user?.username || '',
-      email: user?.email || '',
-      password: '',
-      role: (user?.role as 'admin' | 'teacher' | 'student') || 'student',
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      language: (user?.language as 'es' | 'en' | 'fr' | 'de' | 'it' | 'pt') || 'es',
+      username: user?.username || "",
+      email: user?.email || "",
+      password: "",
+      role: (user?.role as "admin" | "teacher" | "student") || "student",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      language:
+        (user?.language as "es" | "en" | "fr" | "de" | "it" | "pt") || "es",
       isActive: user?.isActive ?? true,
-      address: user?.address || '',
-      phone: user?.phone || '',
+      address: user?.address || "",
+      phone: user?.phone || "",
     },
   });
 
-  const watchedRole = watch('role');
-  const watchedIsActive = watch('isActive');
+  const watchedRole = watch("role");
+  const watchedIsActive = watch("isActive");
 
   const onSubmit = async (data: UserFormData) => {
     try {
@@ -73,11 +102,11 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
       if (isEditing && !data.password) {
         delete data.password;
       }
-      
+
       await onSave(data);
       reset();
     } catch (error) {
-      console.error('Error saving user:', error);
+      console.error("Error saving user:", error);
     }
   };
 
@@ -102,7 +131,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
             className="flex items-center gap-2"
           >
             <Save className="h-4 w-4" />
-            {saving ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}
+            {saving ? "Guardando..." : isEditing ? "Actualizar" : "Crear"}
           </Button>
         </div>
       }
@@ -112,22 +141,34 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
           {/* Contenedor con scroll horizontal en móvil */}
           <div className="max-sm:overflow-x-auto max-sm:pb-2">
             <TabsList className="grid grid-cols-4 w-full sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 max-sm:flex max-sm:w-max max-sm:min-w-full">
-              <TabsTrigger value="basic" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <TabsTrigger
+                value="basic"
+                className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+              >
                 <UserIcon className="h-4 w-4" />
                 <span className="max-sm:hidden sm:inline">Básico</span>
                 <span className="sm:hidden">Básico</span>
               </TabsTrigger>
-              <TabsTrigger value="personal" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <TabsTrigger
+                value="personal"
+                className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+              >
                 <UserPlus className="h-4 w-4" />
                 <span className="max-sm:hidden sm:inline">Personal</span>
                 <span className="sm:hidden">Personal</span>
               </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <TabsTrigger
+                value="settings"
+                className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+              >
                 <Settings className="h-4 w-4" />
                 <span className="max-sm:hidden sm:inline">Rol y Config</span>
                 <span className="sm:hidden">Config</span>
               </TabsTrigger>
-              <TabsTrigger value="contact" className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+              <TabsTrigger
+                value="contact"
+                className="flex items-center gap-2 max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+              >
                 <Phone className="h-4 w-4" />
                 <span className="max-sm:hidden sm:inline">Contacto</span>
                 <span className="sm:hidden">Contacto</span>
@@ -141,12 +182,14 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="username">Nombre de Usuario *</Label>
                 <Input
                   id="username"
-                  {...register('username')}
+                  {...register("username")}
                   placeholder="Ingrese nombre de usuario"
-                  className={errors.username ? 'border-red-500' : ''}
+                  className={errors.username ? "border-red-500" : ""}
                 />
                 {errors.username && (
-                  <p className="text-sm text-red-500">{errors.username.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.username.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
@@ -154,9 +197,9 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Input
                   id="email"
                   type="email"
-                  {...register('email')}
+                  {...register("email")}
                   placeholder="usuario@ejemplo.com"
-                  className={errors.email ? 'border-red-500' : ''}
+                  className={errors.email ? "border-red-500" : ""}
                 />
                 {errors.email && (
                   <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -169,12 +212,14 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Input
                   id="password"
                   type="password"
-                  {...register('password')}
+                  {...register("password")}
                   placeholder="Ingrese contraseña"
-                  className={errors.password ? 'border-red-500' : ''}
+                  className={errors.password ? "border-red-500" : ""}
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
             )}
@@ -184,11 +229,13 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Input
                   id="password"
                   type="password"
-                  {...register('password')}
+                  {...register("password")}
                   placeholder="Dejar vacío para mantener la actual"
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
             )}
@@ -200,7 +247,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="firstName">Nombre</Label>
                 <Input
                   id="firstName"
-                  {...register('firstName')}
+                  {...register("firstName")}
                   placeholder="Nombre"
                 />
               </div>
@@ -208,7 +255,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="lastName">Apellido</Label>
                 <Input
                   id="lastName"
-                  {...register('lastName')}
+                  {...register("lastName")}
                   placeholder="Apellido"
                 />
               </div>
@@ -221,9 +268,13 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="role">Rol *</Label>
                 <Select
                   value={watchedRole}
-                  onValueChange={(value: 'admin' | 'teacher' | 'student') => setValue('role', value)}
+                  onValueChange={(value: "admin" | "teacher" | "student") =>
+                    setValue("role", value)
+                  }
                 >
-                  <SelectTrigger className={errors.role ? 'border-red-500' : ''}>
+                  <SelectTrigger
+                    className={errors.role ? "border-red-500" : ""}
+                  >
                     <SelectValue placeholder="Seleccionar rol" />
                   </SelectTrigger>
                   <SelectContent>
@@ -238,13 +289,21 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
               </div>
               <div className="space-y-2">
                 <Label htmlFor="language">Idioma *</Label>
+                {/* TODO Cambar esta chambonada de poner el languageSelect por un select con el idioma y el flag */}
                 <LanguageSelect
-                  value={watch('language')}
-                  onChange={(value) => setValue('language', value)}
-                  disabled={false}
+                  value={watch("language")}
+                  onChange={(value) =>
+                    setValue(
+                      "language",
+                      value as "es" | "en" | "fr" | "de" | "it" | "pt"
+                    )
+                  }
+                  includeAuto={false}
                 />
                 {errors.language && (
-                  <p className="text-sm text-red-500">{errors.language.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.language.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -252,7 +311,9 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
               <Checkbox
                 id="isActive"
                 checked={watchedIsActive}
-                onCheckedChange={(checked) => setValue('isActive', checked as boolean)}
+                onCheckedChange={(checked) =>
+                  setValue("isActive", checked as boolean)
+                }
               />
               <Label htmlFor="isActive">Usuario Activo</Label>
             </div>
@@ -264,7 +325,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="phone">Teléfono</Label>
                 <Input
                   id="phone"
-                  {...register('phone')}
+                  {...register("phone")}
                   placeholder="+1 234 567 8900"
                 />
               </div>
@@ -272,7 +333,7 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
                 <Label htmlFor="address">Dirección</Label>
                 <Input
                   id="address"
-                  {...register('address')}
+                  {...register("address")}
                   placeholder="Dirección completa"
                 />
               </div>
@@ -280,6 +341,6 @@ export function UserEditModal({ user, isOpen, onClose, onSave, saving }: UserEdi
           </TabsContent>
         </Tabs>
       </form>
-      </ModalNova>
-    );
-  } 
+    </ModalNova>
+  );
+}

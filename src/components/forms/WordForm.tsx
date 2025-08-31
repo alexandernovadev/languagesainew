@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,10 +39,10 @@ interface WordFormProps {
 export function WordForm({
   initialData = {},
   onSubmit,
-  onCancel,
   loading = false,
 }: WordFormProps) {
   // Hook para manejo de errores
+  // TODO esto no se usa
   const { handleApiResult } = useResultHandler();
 
   const {

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { PageLayout } from '@/components/layouts/page-layout';
+import React from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 export function UserPageSkeleton() {
   return (
@@ -61,4 +61,4 @@ export function UserPageSkeleton() {
       </div>
     </PageLayout>
   );
-} 
+}

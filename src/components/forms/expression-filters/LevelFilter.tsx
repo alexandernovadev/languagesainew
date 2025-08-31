@@ -5,6 +5,7 @@ interface LevelFilterProps {
   value?: string[];
   onChange: (value: string[]) => void;
 }
+// TODO ESTO podria ser global , porque hay 3 o 4 componentes que usan esto
 
 export function LevelFilter({ value = [], onChange }: LevelFilterProps) {
   const handleToggle = (level: string) => {

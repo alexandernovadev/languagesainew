@@ -25,6 +25,7 @@ import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilt
 import { SortFilter } from "./SortFilter";
 import { DateRangeFilter } from "@/components/forms/common/DateRangeFilter";
 import { TextFilters } from "@/components/forms/common/TextFilters";
+import { ExpressionBooleanFilters } from "@/hooks/useExpressionFilters";
 
 interface ExpressionFiltersModalProps {
   open: boolean;
@@ -117,9 +118,12 @@ export function ExpressionFiltersModal({
 
 interface FiltersContentProps {
   filters: any;
-  booleanFilters: Record<string, boolean>;
+  booleanFilters: ExpressionBooleanFilters;
   updateFilter: (key: string, value: any) => void;
-  updateBooleanFilter: (key: string, value: boolean) => void;
+  updateBooleanFilter: (
+    key: keyof ExpressionBooleanFilters,
+    value: boolean | undefined
+  ) => void;
 }
 
 function FiltersContent({

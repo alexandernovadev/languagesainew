@@ -1,10 +1,7 @@
 import React from 'react';
 
-interface DefaultQuestionsGridProps {
-  // Define props here if needed
-}
-
-export const DefaultQuestionsGrid: React.FC<DefaultQuestionsGridProps> = () => {
+// TODO: Esto funciana para algo ?
+export const DefaultQuestionsGrid: React.FC = () => {
   return (
     <div>
       <h2>Default Questions Grid</h2>

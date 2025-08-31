@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -6,19 +6,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Edit, Trash2 } from 'lucide-react';
-import { User } from '@/services/userService';
-import { formatDateShort } from '@/utils/common/time/formatDate';
+} from "@/components/ui/tooltip";
+import { Edit, Trash2 } from "lucide-react";
+import { User } from "@/services/userService";
+import { formatDateShort } from "@/utils/common/time/formatDate";
 
 interface UserTableProps {
   users: User[];
@@ -28,25 +28,37 @@ interface UserTableProps {
   searchQuery?: string;
 }
 
-export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }: UserTableProps) {
+export function UserTable({
+  users = [],
+  onEdit,
+  onDelete,
+  loading,
+  searchQuery,
+}: UserTableProps) {
+
+  // TODO aqui otra vez la chambonada del role
   const getRoleBadgeVariant = (role: string) => {
     switch (role.toLowerCase()) {
-      case 'admin':
-        return 'destructive';
-      case 'teacher':
-        return 'secondary';
-      case 'student':
-        return 'outline';
+      case "admin":
+        return "destructive";
+      case "teacher":
+        return "secondary";
+      case "student":
+        return "outline";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getStatusBadgeVariant = (isActive: boolean) => {
-    return isActive ? 'default' : 'secondary';
+    return isActive ? "default" : "secondary";
   };
 
-  const getInitials = (firstName?: string, lastName?: string, username?: string) => {
+  const getInitials = (
+    firstName?: string,
+    lastName?: string,
+    username?: string
+  ) => {
     if (firstName && lastName) {
       return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
@@ -56,7 +68,7 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
     if (username) {
       return username.substring(0, 2).toUpperCase();
     }
-    return 'U';
+    return "U";
   };
 
   if (loading) {
@@ -70,7 +82,9 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
   if (users.length === 0) {
     return (
       <div className="p-8 text-center text-muted-foreground">
-        {searchQuery ? 'No se encontraron usuarios con esa búsqueda.' : 'No hay usuarios registrados.'}
+        {searchQuery
+          ? "No se encontraron usuarios con esa búsqueda."
+          : "No hay usuarios registrados."}
       </div>
     );
   }
@@ -92,9 +106,7 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
       <TableBody>
         {users.map((user, index) => (
           <TableRow key={user._id}>
-            <TableCell className="font-medium">
-              {index + 1}
-            </TableCell>
+            <TableCell className="font-medium">{index + 1}</TableCell>
             <TableCell className="min-w-0">
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8 flex-shrink-0">
@@ -123,17 +135,15 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
             </TableCell>
             <TableCell>
               <Badge variant={getStatusBadgeVariant(user.isActive)}>
-                {user.isActive ? 'Activo' : 'Inactivo'}
+                {user.isActive ? "Activo" : "Inactivo"}
               </Badge>
             </TableCell>
             <TableCell>
-              <Badge variant="outline">
-                {user.language.toUpperCase()}
-              </Badge>
+              <Badge variant="outline">{user.language.toUpperCase()}</Badge>
             </TableCell>
             <TableCell>
               <span className="text-sm text-muted-foreground">
-                {user.lastLogin ? formatDateShort(user.lastLogin) : 'Nunca'}
+                {user.lastLogin ? formatDateShort(user.lastLogin) : "Nunca"}
               </span>
             </TableCell>
             <TableCell className="text-right">
@@ -155,7 +165,7 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                
+
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -180,4 +190,4 @@ export function UserTable({ users = [], onEdit, onDelete, loading, searchQuery }
       </TableBody>
     </Table>
   );
-} 
+}

@@ -49,9 +49,12 @@ export function useLectureFilters() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const updateBooleanFilter = useCallback((key: string, value: boolean) => {
-    setBooleanFilters((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  const updateBooleanFilter = useCallback(
+    (key: string, value: boolean | undefined) => {
+      setBooleanFilters((prev) => ({ ...prev, [key]: value }));
+    },
+    []
+  );
 
   const clearFilters = useCallback(() => {
     setFilters({});

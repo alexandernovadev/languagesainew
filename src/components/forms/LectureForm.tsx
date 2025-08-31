@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -7,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,13 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, FileText, Wand2, Loader2, Eye, X, Image } from "lucide-react";
+import { Settings, FileText, Image } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Lecture } from "@/models/Lecture";
 import { lectureLevels } from "@/data/lectureLevels";
 import { lectureTypes } from "@/data/lectureTypes";
 import { getAllowedLanguages } from "@/constants/identity";
-import { api } from "@/services/api";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
@@ -39,24 +36,17 @@ interface LectureFormProps {
   submitText?: string;
 }
 
-export function LectureForm({
-  initialData = {},
-  onSubmit,
-  onCancel,
-  loading = false,
-  submitText = "Guardar",
-}: LectureFormProps) {
+export function LectureForm({ initialData = {}, onSubmit }: LectureFormProps) {
   // Hook para manejo de errores
+  // TODO esto no se usa
   const { handleApiResult } = useResultHandler();
-
-
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm({
     defaultValues: {
       level: initialData.level || "",
@@ -84,7 +74,8 @@ export function LectureForm({
       await onSubmit(data);
     } else {
       toast.error("Por favor completa todos los campos requeridos", {
-        description: "Nivel, tipo de contenido, idioma, contenido y duración (mayor a 0) son obligatorios"
+        description:
+          "Nivel, tipo de contenido, idioma, contenido y duración (mayor a 0) son obligatorios",
       });
     }
   };
@@ -101,17 +92,26 @@ export function LectureForm({
             {/* Contenedor con scroll horizontal en móvil */}
             <div className="max-sm:overflow-x-auto max-sm:pb-2">
               <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 max-sm:flex max-sm:w-max max-sm:min-w-full">
-                <TabsTrigger value="config" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <TabsTrigger
+                  value="config"
+                  className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
                   <Settings className="h-4 w-4 mr-2" />
                   <span className="max-sm:hidden sm:inline">Configuración</span>
                   <span className="sm:hidden">Config</span>
                 </TabsTrigger>
-                <TabsTrigger value="multimedia" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <TabsTrigger
+                  value="multimedia"
+                  className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
                   <Image className="h-4 w-4 mr-2" />
                   <span className="max-sm:hidden sm:inline">Multimedia</span>
                   <span className="sm:hidden">Media</span>
                 </TabsTrigger>
-                <TabsTrigger value="content" className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap">
+                <TabsTrigger
+                  value="content"
+                  className="max-sm:flex-shrink-0 max-sm:whitespace-nowrap"
+                >
                   <FileText className="h-4 w-4 mr-2" />
                   <span className="max-sm:hidden sm:inline">Contenido</span>
                   <span className="sm:hidden">Contenido</span>
@@ -217,8 +217,6 @@ export function LectureForm({
                   </div>
                 </CardContent>
               </Card>
-
-
             </TabsContent>
 
             <TabsContent value="multimedia" className="p-4 space-y-6">
@@ -235,14 +233,17 @@ export function LectureForm({
                       entityType="lecture"
                       entityId={initialData._id || ""}
                       imageUrl={formData.img}
-                      onImageChange={(newImageUrl) => setValue("img", newImageUrl)}
+                      onImageChange={(newImageUrl) =>
+                        setValue("img", newImageUrl)
+                      }
                       disabled={!initialData._id}
                       word={formData.content || ""}
                     />
-                    
+
                     {!initialData._id && (
                       <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                        💡 <strong>Tip:</strong> Guarda la lección primero para poder subir imágenes personalizadas.
+                        💡 <strong>Tip:</strong> Guarda la lección primero para
+                        poder subir imágenes personalizadas.
                       </div>
                     )}
                   </div>

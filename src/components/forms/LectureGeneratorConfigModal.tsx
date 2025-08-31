@@ -27,12 +27,12 @@ interface LectureGeneratorConfigModalProps {
   };
   onSave: (config: {
     level: string;
-    typeWrite: string;
+    typeWrite: string; // TODO Como asi q string, por eso laneed de humano en el code
     difficulty: string;
-    language: string;
+    language: string; // TODO mire a este hp
     rangeMin: number;
     rangeMax: number;
-    grammarTopics: string[];
+    grammarTopics: string[]; // todo String again
     selectedWords: string[];
   }) => void;
   lectureLevels: { value: string; label: string }[];
