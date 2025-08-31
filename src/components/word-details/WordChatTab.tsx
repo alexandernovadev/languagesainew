@@ -5,9 +5,9 @@ import { useChatLogic } from "@/components/chat";
 import { ChatMessage } from "@/components/chat/types";
 import { createChatMessage, clearChatWithToast } from "@/components/chat/helpers";
 import {
-  ChatMessage as ChatMessageComponent,
   ChatInput,
   StreamingMessage,
+  ChatMessageComponent,
 } from "@/components/chat";
 import { useEffect } from "react";
 
