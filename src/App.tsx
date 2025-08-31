@@ -15,7 +15,6 @@ import {
   AnkiGamePage,
   LectureGeneratorPage,
   SettingsPage,
-  GeneralSettingsPage,
   ImportSettingsPage,
   ExportSettingsPage,
   SystemInfoPage,
@@ -23,7 +22,6 @@ import {
   MyWordsPage,
   MyExpressionsPage,
   ProfilePage,
-  LogsSettingsPage,
   LabsPage,
   UsersPage,
 } from "./routes";
@@ -58,12 +56,10 @@ export default function App() {
                   />
                   <Route path="/settings" element={<SettingsPage />}>
                     <Route index element={<SettingsIndexRedirect />} />
-                    <Route path="general" element={<GeneralSettingsPage />} />
                     <Route path="import" element={<ImportSettingsPage />} />
                     <Route path="export" element={<ExportSettingsPage />} />
                     <Route path="labs" element={<LabsPage />} />
                     <Route path="system" element={<SystemInfoPage />} />
-                    <Route path="logs" element={<LogsSettingsPage />} />
                   </Route>
 
                   <Route path="/my-words" element={<MyWordsPage />} />

@@ -7,7 +7,6 @@ export const LectureDetailPage = lazy(() => import("../pages/lectures/LectureDet
 export const AnkiGamePage = lazy(() => import("../pages/games/anki/AnkiGamePage"));
 export const LectureGeneratorPage = lazy(() => import("../pages/generator/lecture/LectureGeneratorPage"));
 export const SettingsPage = lazy(() => import("../pages/settings/SettingsPage"));
-export const GeneralSettingsPage = lazy(() => import("../pages/settings/GeneralSettingsPage"));
 export const ImportSettingsPage = lazy(() => import("../pages/settings/ImportSettingsPage"));
 export const ExportSettingsPage = lazy(() => import("../pages/settings/ExportSettingsPage"));
 export const SystemInfoPage = lazy(() => import("../pages/settings/SystemInfoPage"));
@@ -16,6 +15,5 @@ export const SettingsIndexRedirect = lazy(() => import("../pages/settings/index"
 export const MyWordsPage = lazy(() => import("../pages/my-words/MyWordsPage"));
 export const MyExpressionsPage = lazy(() => import("../pages/my-expressions/MyExpressionsPage"));
 export const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
-export const LogsSettingsPage = lazy(() => import("../pages/settings/LogsSettingsPage"));
 export const LabsPage = lazy(() => import("../pages/settings/LabsPage"));
 export const UsersPage = lazy(() => import("../pages/admin/UsersPage"));

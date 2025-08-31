@@ -25,12 +25,10 @@ const routeNameMapping: { [key: string]: string } = {
   "/games/anki": "Juego Anki",
   "/generator/lecture": "Generador de Lecturas",
   "/profile": "Mi Perfil",
-  "/settings/general": "Configuración General",
   "/settings/import": "Importar",
   "/settings/export": "Exportar",
   "/settings/cleaner": "Limpiador",
   "/settings/system": "Información del Sistema",
-  "/settings/logs": "Registros",
   "/admin": "Admin",
   "/admin/users": "Usuarios",
   

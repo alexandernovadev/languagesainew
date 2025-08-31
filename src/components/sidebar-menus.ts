@@ -59,11 +59,6 @@ export const configSettingsItems = [
     icon: Users,
   },
   {
-    title: "General",
-    url: "/settings/general",
-    icon: Settings,
-  },
-  {
     title: "Importar",
     url: "/settings/import",
     icon: FileUp,
@@ -77,11 +72,6 @@ export const configSettingsItems = [
     title: "Labs",
     url: "/settings/labs",
     icon: Settings,
-  },
-  {
-    title: "Registros",
-    url: "/settings/logs",
-    icon: FileSpreadsheet,
   },
   {
     title: "Información del Sistema",
