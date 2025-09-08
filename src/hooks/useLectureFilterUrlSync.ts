@@ -9,7 +9,7 @@ export const useLectureFilterUrlSync = (currentFilters: any, setFilters: (filter
     const filters: any = {};
     
     // Leer filtros de lecturas
-    const level = urlParams.get('level');
+    const difficulty = urlParams.get('difficulty');
     const language = urlParams.get('language');
     const typeWrite = urlParams.get('typeWrite');
     const timeMin = urlParams.get('timeMin');
@@ -20,7 +20,7 @@ export const useLectureFilterUrlSync = (currentFilters: any, setFilters: (filter
     const sortOrder = urlParams.get('sortOrder');
     
     // Solo agregar filtros que existan
-    if (level) filters.level = level;
+    if (difficulty) filters.difficulty = difficulty;
     if (language) filters.language = language;
     if (typeWrite) filters.typeWrite = typeWrite;
     if (timeMin) filters.timeMin = parseInt(timeMin);
@@ -39,7 +39,7 @@ export const useLectureFilterUrlSync = (currentFilters: any, setFilters: (filter
     const searchParams = url.searchParams;
     
     // Limpiar parámetros existentes
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('typeWrite');
     searchParams.delete('timeMin');
@@ -66,7 +66,7 @@ export const useLectureFilterUrlSync = (currentFilters: any, setFilters: (filter
     const searchParams = url.searchParams;
     
     // Limpiar todos los parámetros de filtros
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('typeWrite');
     searchParams.delete('timeMin');

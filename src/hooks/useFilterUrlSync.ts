@@ -9,7 +9,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const filters: any = {};
     
     // Leer filtros básicos
-    const level = urlParams.get('level');
+    const difficulty = urlParams.get('difficulty');
     const language = urlParams.get('language');
     const type = urlParams.get('type');
     const wordUser = urlParams.get('wordUser');
@@ -24,7 +24,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const sortOrder = urlParams.get('sortOrder');
     
     // Solo agregar filtros que existan
-    if (level) filters.level = level;
+    if (difficulty) filters.difficulty = difficulty;
     if (language) filters.language = language;
     if (type) filters.type = type;
     if (wordUser) filters.wordUser = wordUser;
@@ -47,7 +47,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const searchParams = url.searchParams;
     
     // Limpiar parámetros existentes
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('type');
     searchParams.delete('wordUser');
@@ -78,7 +78,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const searchParams = url.searchParams;
     
     // Limpiar todos los parámetros de filtros
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('type');
     searchParams.delete('wordUser');

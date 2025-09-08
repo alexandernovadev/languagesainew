@@ -14,7 +14,7 @@ export interface Word {
   IPA?: string;
   seen?: number;
   img?: string;
-  level?: "easy" | "medium" | "hard";
+  difficulty?: "easy" | "medium" | "hard";
   sinonyms?: string[];
   codeSwitching?: string[];
   language: string;

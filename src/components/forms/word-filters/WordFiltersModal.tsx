@@ -178,9 +178,9 @@ function FiltersContent({
               Selecciona una o varias dificultades
             </p>
             <LevelFilter
-              value={filters.level}
+              value={filters.difficulty}
               onChange={(value) => {
-                updateFilter("level", value);
+                updateFilter("difficulty", value);
               }}
             />
           </div>

@@ -9,7 +9,7 @@ export const useExpressionFilterUrlSync = (currentFilters: any, setFilters: (fil
     const filters: any = {};
     
     // Leer filtros de expresiones
-    const level = urlParams.get('level');
+    const difficulty = urlParams.get('difficulty');
     const language = urlParams.get('language');
     const type = urlParams.get('type');
     const expression = urlParams.get('expression');
@@ -21,7 +21,7 @@ export const useExpressionFilterUrlSync = (currentFilters: any, setFilters: (fil
     const sortOrder = urlParams.get('sortOrder');
     
     // Solo agregar filtros que existan
-    if (level) filters.level = level;
+    if (difficulty) filters.difficulty = difficulty;
     if (language) filters.language = language;
     if (type) filters.type = type;
     if (expression) filters.expression = expression;
@@ -41,7 +41,7 @@ export const useExpressionFilterUrlSync = (currentFilters: any, setFilters: (fil
     const searchParams = url.searchParams;
     
     // Limpiar parámetros existentes
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('type');
     searchParams.delete('expression');
@@ -69,7 +69,7 @@ export const useExpressionFilterUrlSync = (currentFilters: any, setFilters: (fil
     const searchParams = url.searchParams;
     
     // Limpiar todos los parámetros de filtros
-    searchParams.delete('level');
+    searchParams.delete('difficulty');
     searchParams.delete('language');
     searchParams.delete('type');
     searchParams.delete('expression');

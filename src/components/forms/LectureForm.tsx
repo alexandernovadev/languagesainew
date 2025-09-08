@@ -138,8 +138,8 @@ export function LectureForm({ initialData = {}, onSubmit }: LectureFormProps) {
                         <span className="text-red-500">*</span>
                       </Label>
                       <Select
-                        value={formData.level}
-                        onValueChange={(value) => setValue("level", value)}
+                        value={formData.difficulty}
+                        onValueChange={(value) => setValue("difficulty", value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Selecciona una dificultad" />

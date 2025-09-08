@@ -158,7 +158,7 @@ function FiltersContent({
             <p className="text-xs text-muted-foreground mb-2">
               Selecciona una o varias dificultades
             </p>
-            <LevelFilter value={filters.level} onChange={(v) => updateFilter("level", v)} />
+            <LevelFilter value={filters.difficulty} onChange={(v) => updateFilter("difficulty", v)} />
           </div>
 
           <Separator />

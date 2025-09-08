@@ -59,7 +59,7 @@ export function WordForm({
       examples: [],
       sinonyms: [],
       codeSwitching: [],
-      level: "easy",
+      difficulty: "easy",
       language: "en",
       spanish: { word: "", definition: "" },
       img: "",
@@ -298,8 +298,8 @@ export function WordForm({
                 <div className="space-y-2">
                   <Label htmlFor="difficulty">Dificultad</Label>
                   <Select
-                    value={formData.level}
-                    onValueChange={(value) => handleChange("level", value)}
+                    value={formData.difficulty}
+                    onValueChange={(value) => handleChange("difficulty", value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona una dificultad" />
