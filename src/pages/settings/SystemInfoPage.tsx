@@ -132,11 +132,6 @@ export default function SystemInfoPage() {
                 </span>
               </div>
             </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Estado</span>
-              <Badge variant="default">Operativo</Badge>
-            </div>
           </div>
         </CardContent>
       </Card>
