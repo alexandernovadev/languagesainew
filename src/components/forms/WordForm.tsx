@@ -296,13 +296,13 @@ export function WordForm({
                   <Input id="ipa" {...register("IPA")} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="level">Nivel de Dificultad</Label>
+                  <Label htmlFor="difficulty">Dificultad</Label>
                   <Select
                     value={formData.level}
                     onValueChange={(value) => handleChange("level", value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un nivel" />
+                      <SelectValue placeholder="Selecciona una dificultad" />
                     </SelectTrigger>
                     <SelectContent>
                       {wordLevels.map((level) => (

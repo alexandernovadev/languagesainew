@@ -133,8 +133,8 @@ export function LectureForm({ initialData = {}, onSubmit }: LectureFormProps) {
                 <CardContent>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="level">
-                        Nivel de Dificultad{" "}
+                      <Label htmlFor="difficulty">
+                        Dificultad{" "}
                         <span className="text-red-500">*</span>
                       </Label>
                       <Select
@@ -142,7 +142,7 @@ export function LectureForm({ initialData = {}, onSubmit }: LectureFormProps) {
                         onValueChange={(value) => setValue("level", value)}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona un nivel" />
+                          <SelectValue placeholder="Selecciona una dificultad" />
                         </SelectTrigger>
                         <SelectContent>
                           {lectureLevels.map((level) => (

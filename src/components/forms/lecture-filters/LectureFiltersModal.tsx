@@ -154,9 +154,9 @@ function FiltersContent({
       <TabsContent value="basic" className="space-y-4 mt-4">
         <div className="space-y-4">
           <div>
-            <h4 className="text-sm font-medium mb-2">Nivel de Dificultad</h4>
+            <h4 className="text-sm font-medium mb-2">Dificultad</h4>
             <p className="text-xs text-muted-foreground mb-2">
-              Selecciona uno o varios niveles
+              Selecciona una o varias dificultades
             </p>
             <LevelFilter value={filters.level} onChange={(v) => updateFilter("level", v)} />
           </div>

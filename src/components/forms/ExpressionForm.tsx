@@ -186,7 +186,7 @@ export const ExpressionForm = forwardRef<ExpressionFormRef, ExpressionFormProps>
                     </div>
 
                     <div className="space-y-2">
-                      <Label>Nivel de Dificultad</Label>
+                      <Label>Dificultad</Label>
                       <div className="flex gap-2">
                         {expressionLevels.map(level => (
                           <Button
