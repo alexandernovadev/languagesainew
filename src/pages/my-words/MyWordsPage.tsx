@@ -44,7 +44,7 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
-import { SPEECH_RATES } from "../../speechRates";
+import { SPEECH_RATES } from "@/constants/speechRates";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useWordFilters } from "@/hooks/useWordFilters";

@@ -48,7 +48,7 @@ import { useExpressionFilters } from "@/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useExpressionFilterUrlSync } from "@/hooks/useExpressionFilterUrlSync";
-import { SPEECH_RATES } from "../../speechRates";
+import { SPEECH_RATES } from "@/constants/speechRates";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function MyExpressionsPage() {

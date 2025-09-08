@@ -4,7 +4,7 @@ import { RefreshCw, Eye, Volume2, X, Info, MessageCircle } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { WordLevelBadge } from "@/components/WordLevelBadge";
-import { SPEECH_RATES } from "../../speechRates";
+import { SPEECH_RATES } from "@/constants/speechRates";
 import { formatDateShort } from "@/utils/common/time";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { toast } from "sonner";

@@ -25,7 +25,7 @@ import type { Lecture } from "@/models/Lecture";
 import type { Word } from "@/models/Word";
 import { getMarkdownTitle, convertMarkdownToHtml } from "@/utils/common/string";
 import { lectureTypes } from "@/data/lectureTypes";
-import { SPEECH_RATES } from "../../speechRates";
+import { SPEECH_RATES } from "@/constants/speechRates";
 import { getLanguageInfo } from "@/utils/common/language";
 import { toast } from "sonner";
 import { WordDetailsModal } from "@/components/word-details";
