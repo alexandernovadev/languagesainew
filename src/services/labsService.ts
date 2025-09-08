@@ -6,6 +6,7 @@ export interface LabsResponse {
   data?: any;
 }
 
+// TODO como asi que se repite esto ?
 export interface UpdateWordsLevelRequest {
   level: "easy" | "medium" | "hard";
 }
