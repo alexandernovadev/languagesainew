@@ -7,7 +7,6 @@ export { TextSelectionMenu } from "./TextSelectionMenu";
 // Chat Interface Components
 export {
   useChatLogic,
-  DefaultQuestionsGrid,
   ChatMessage,
   StreamingMessage,
   ChatInput,

@@ -245,22 +245,6 @@ export default function LabsPage() {
             variant="info"
           />
 
-          <LabsActionCard
-            title="Seed de Preguntas desde JSON"
-            description="Carga preguntas desde archivo JSON"
-            icon={FileText}
-            onAction={() =>
-              handleAction(
-                "seedQuestions",
-                () => labsService.seedQuestionsFromJson(),
-                true,
-                "Seed de Preguntas",
-                "¿Estás seguro de que quieres cargar preguntas desde JSON? Esto agregará nuevas preguntas a la base de datos."
-              )
-            }
-            loading={loading === "seedQuestions"}
-            variant="info"
-          />
         </LabsSection>
 
         {/* Backup & Maintenance */}
@@ -429,23 +413,6 @@ export default function LabsPage() {
             variant="danger"
           />
 
-          <LabsActionCard
-            title="Eliminar Chats de Traducción y Textos Generados"
-            description="Elimina TODOS los chats de traducción y textos generados de la base de datos"
-            icon={ClipboardList}
-            onAction={() =>
-              handleAction(
-                "cleanTranslationChatsAndTexts",
-                () => labsService.cleanTranslationChatsAndTexts(),
-                true,
-                "Eliminar Chats de Traducción y Textos Generados (PELIGROSO)",
-                "⚠️ ADVERTENCIA: Esta acción eliminará TODOS los chats de traducción y textos generados de la base de datos. Esta acción es IRREVERSIBLE. ¿Estás completamente seguro?"
-              )
-            }
-            loading={loading === "cleanTranslationChatsAndTexts"}
-            dangerous={true}
-            variant="danger"
-          />
 
           <LabsActionCard
             title="Eliminar Todos los Usuarios"

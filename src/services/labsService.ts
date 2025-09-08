@@ -78,10 +78,6 @@ class LabsService {
     return response.data;
   }
 
-  async seedQuestionsFromJson(): Promise<LabsResponse> {
-    const response = await api.post("/api/labs/seed/questions-from-json");
-    return response.data;
-  }
 
   // Backup & Maintenance
   async createBackup(): Promise<LabsResponse> {
@@ -127,10 +123,6 @@ class LabsService {
     return response.data;
   }
 
-  async cleanTranslationChatsAndTexts(): Promise<LabsResponse> {
-    const response = await api.delete("/api/labs/clean/translation-chats-and-texts");
-    return response.data;
-  }
 
   async cleanUsers(): Promise<LabsResponse> {
     const response = await api.delete("/api/labs/clean/users");
