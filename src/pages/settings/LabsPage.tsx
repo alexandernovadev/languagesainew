@@ -15,7 +15,7 @@ import {
   Eraser,
   ArrowRight,
   BarChart,
-  Trash,
+  Clock,
   ClipboardList,
 } from "lucide-react";
 import { labsService } from "@/services/labsService";
@@ -25,7 +25,6 @@ import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { Clock } from "lucide-react";
 
 interface ConfirmationState {
   isOpen: boolean;

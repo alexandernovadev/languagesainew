@@ -57,8 +57,14 @@ class LabsService {
 
   // User Management
   async createAdminUser(): Promise<LabsResponse> {
-    const response = await api.post("/api/labs/users/create-admin");
-    return response.data;
+    const response = await fetch("http://localhost:3000/api/labs/users/create-admin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data.data;
   }
 
   async createTestUsers(): Promise<LabsResponse> {
