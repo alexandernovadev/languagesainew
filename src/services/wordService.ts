@@ -116,29 +116,6 @@ export const wordService = {
     return res.data.data; // Devolver el array de palabras
   },
 
-  // NUEVO: Método para obtener solo palabras (sin objetos completos)
-  async getWordsOnly(
-    page: number = 1,
-    limit: number = 10,
-    filters?: Partial<WordFilters>
-  ) {
-    const params = new URLSearchParams();
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
-    params.append("fields", "word"); // Solo traer el campo word
-
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== "") {
-          params.append(key, value.toString());
-        }
-      });
-    }
-
-    const url = `/api/words/words-only?${params.toString()}`;
-    const res = await api.get(url);
-    return res.data.data; // Devolver el array de palabras
-  },
 
   async updateWordExamples(
     wordId: string,
