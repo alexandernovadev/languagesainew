@@ -34,9 +34,12 @@ interface WordStore {
   updateWordLevel: (id: string, level: string) => Promise<any>;
   incrementWordSeen: (id: string) => Promise<boolean>;
   deleteWord: (id: string) => Promise<boolean>;
-  getRecentHardOrMediumWords: () => Promise<void>;
-  // Nuevos métodos para sistema de repaso inteligente
-  getWordsForReview: (limit?: number) => Promise<void>;
+  // Método unificado para tarjetas Anki
+  getAnkiCards: (options?: {
+    mode?: 'random' | 'review';
+    limit?: number;
+    difficulty?: string[];
+  }) => Promise<void>;
   updateWordReview: (
     wordId: string,
     difficulty: number,
@@ -323,26 +326,22 @@ export const useWordStore = create<WordStore>((set, get) => ({
     }
   },
 
-  getRecentHardOrMediumWords: async () => {
+
+  // Método unificado para tarjetas Anki
+  getAnkiCards: async (options: {
+    mode?: 'random' | 'review';
+    limit?: number;
+    difficulty?: string[];
+  } = {}) => {
     set({ loading: true, errors: null });
     try {
-      const { data } = await wordService.getRecentHardOrMediumWords();
+      const { data } = await wordService.getAnkiCards(options);
       set({ words: data, loading: false });
     } catch (error: any) {
       set({ errors: error.message, loading: false });
     }
   },
 
-  // Nuevos métodos para sistema de repaso inteligente
-  getWordsForReview: async (limit?: number) => {
-    set({ loading: true, errors: null });
-    try {
-      const { data } = await wordService.getWordsForReview(limit);
-      set({ words: data, loading: false });
-    } catch (error: any) {
-      set({ errors: error.message, loading: false });
-    }
-  },
   updateWordReview: async (
     wordId: string,
     difficulty: number,
@@ -380,17 +379,6 @@ export const useWordStore = create<WordStore>((set, get) => ({
         errors: error.message,
         actionLoading: { ...get().actionLoading, updateReview: false },
       });
-      throw error;
-    }
-  },
-  getReviewStats: async () => {
-    set({ loading: true, errors: null });
-    try {
-      const { data } = await wordService.getReviewStats();
-      set({ words: data, loading: false });
-      return data;
-    } catch (error: any) {
-      set({ errors: error.message, loading: false });
       throw error;
     }
   },

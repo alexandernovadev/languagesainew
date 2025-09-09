@@ -9,7 +9,6 @@ import {
   ChevronRight,
   Shuffle,
   RefreshCw,
-  BarChart3,
   Eye,
   X,
   Maximize2,
@@ -25,7 +24,6 @@ import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AnkiStatsModal } from "@/components/games/anki/AnkiStatsModal";
 import { WordDetailsCard } from "@/components/word-details";
 
 import { cn } from "@/utils/common/classnames";
@@ -93,8 +91,7 @@ const AudioButtons = ({
 export default function AnkiGamePage() {
   const {
     words,
-    getWordsForReview,
-    getRecentHardOrMediumWords,
+    getAnkiCards,
     loading,
     updateWordLevel,
     updateWordReview,
@@ -107,8 +104,6 @@ export default function AnkiGamePage() {
   // Estado local para palabras mezcladas
   const [shuffledWords, setShuffledWords] = useState(words);
 
-  // Estado para el modal de estadísticas
-  const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
 
   // Estado para full screen
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -116,7 +111,7 @@ export default function AnkiGamePage() {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        await getRecentHardOrMediumWords(); // Usar el método con aleatorización completa
+        await getAnkiCards({ mode: 'random', limit: 30 }); // Usar el método unificado con modo aleatorio
         toast.success("Tarjetas de Anki cargadas exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,
@@ -140,7 +135,7 @@ export default function AnkiGamePage() {
       }
     };
     fetchWords();
-  }, [getRecentHardOrMediumWords]);
+  }, [getAnkiCards]);
 
   // Sincroniza shuffledWords cuando words cambia
   useEffect(() => {
@@ -341,7 +336,7 @@ export default function AnkiGamePage() {
           icon: <RefreshCw className="h-4 w-4" />,
           onClick: async () => {
             try {
-              await getRecentHardOrMediumWords(); // Recargar palabras desde el servidor
+              await getAnkiCards({ mode: 'random', limit: 30 }); // Recargar palabras desde el servidor usando método unificado
               toast.success("Tarjetas de Anki recargadas exitosamente", {
                 action: {
                   label: <Eye className="h-4 w-4" />,
@@ -373,13 +368,6 @@ export default function AnkiGamePage() {
           icon: <RotateCcw className="h-4 w-4" />,
           onClick: handleReset,
           tooltip: "Reiniciar juego",
-          variant: "outline",
-        },
-        {
-          id: "stats",
-          icon: <BarChart3 className="h-4 w-4" />,
-          onClick: () => setIsStatsModalOpen(true),
-          tooltip: "Ver estadísticas",
           variant: "outline",
         },
         {
@@ -674,11 +662,6 @@ export default function AnkiGamePage() {
         </div>
       </div>
 
-      {/* Modal de estadísticas */}
-      <AnkiStatsModal
-        open={isStatsModalOpen}
-        onOpenChange={setIsStatsModalOpen}
-      />
     </PageLayout>
   );
 }

@@ -61,16 +61,23 @@ export const wordService = {
     return res.data;
   },
 
-  async getRecentHardOrMediumWords() {
-    const res = await api.get(`/api/words/get-cards-anki`);
+  // Método unificado para obtener tarjetas Anki
+  async getAnkiCards(options: {
+    mode?: 'random' | 'review';
+    limit?: number;
+    difficulty?: string[];
+  } = {}) {
+    const params = new URLSearchParams();
+    
+    if (options.mode) params.append('mode', options.mode);
+    if (options.limit) params.append('limit', options.limit.toString());
+    if (options.difficulty) params.append('difficulty', options.difficulty.join(','));
+
+    const url = `/api/words/anki-cards${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await api.get(url);
     return res.data;
   },
 
-  // Nuevos métodos para sistema de repaso inteligente
-  async getWordsForReview(limit: number = 20) {
-    const res = await api.get(`/api/words/get-words-for-review?limit=${limit}`);
-    return res.data;
-  },
 
   async updateWordReview(wordId: string, difficulty: number, quality: number) {
     const res = await api.post(`/api/words/${wordId}/update-review`, {
@@ -80,10 +87,6 @@ export const wordService = {
     return res.data;
   },
 
-  async getReviewStats() {
-    const res = await api.get(`/api/words/get-review-stats`);
-    return res.data;
-  },
 
   async generateWordJSON(prompt: string, language = "en") {
     const res = await api.post(`/api/ai/generate-wordJson`, {
