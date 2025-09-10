@@ -46,8 +46,9 @@ export const wordService = {
     return res.data;
   },
 
-  async updateWordLevel(id: string, level: string) {
-    const res = await api.put(`/api/words/${id}/level`, { level });
+  // Renamed and updated
+  async updateWordDifficulty(id: string, difficulty: string) {
+    const res = await api.put(`/api/words/${id}/difficulty`, { difficulty });
     return res.data;
   },
 
@@ -78,108 +79,32 @@ export const wordService = {
     return res.data;
   },
 
-
-  async updateWordReview(wordId: string, difficulty: number, quality: number) {
-    const res = await api.post(`/api/words/${wordId}/update-review`, {
-      difficulty,
-      quality,
-    });
+  // --- AI Generation methods (updated) ---
+  async generateWord(word: string, language = "en", provider = "openai") {
+    const res = await api.post(`/api/words/generate`, { word, language, provider });
     return res.data;
   },
-
-
-  async generateWordJSON(prompt: string, language = "en") {
-    const res = await api.post(`/api/ai/generate-wordJson`, {
-      prompt,
-      language,
-    });
+  async generateWordExamples(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
+    const res = await api.post(`/api/words/${wordId}/generate-examples`, { word, language, oldExamples, provider });
     return res.data;
   },
-
-  // NUEVO: Método optimizado para WordsSelector
-  async getWordsByTypeOptimized(
-    type: string,
-    limit: number = 10,
-    search?: string
-  ) {
-    const params = new URLSearchParams();
-    params.append("type", type);
-    params.append("limit", limit.toString());
-    params.append("fields", "word"); // Solo traer el campo word
-
-    if (search) {
-      params.append("wordUser", search);
-    }
-
-    const url = `/api/words/by-type-optimized?${params.toString()}`;
-    const res = await api.get(url);
-    return res.data.data; // Devolver el array de palabras
-  },
-
-
-  async updateWordExamples(
-    wordId: string,
-    word: string,
-    language: string,
-    oldExamples: string
-  ) {
-    const res = await api.post(`/api/ai/update-word-examples/${wordId}`, {
-      word,
-      language,
-      oldExamples,
-    });
+  async generateWordCodeSwitching(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
+    const res = await api.post(`/api/words/${wordId}/generate-code-switching`, { word, language, oldExamples, provider });
     return res.data;
   },
-
-  async updateWordCodeSwitching(
-    wordId: string,
-    word: string,
-    language: string,
-    oldExamples: string
-  ) {
-    const res = await api.post(`/api/ai/update-word-examples-code-switching/${wordId}`, {
-      word,
-      language,
-      oldExamples,
-    });
+  async generateWordSynonyms(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
+    const res = await api.post(`/api/words/${wordId}/generate-synonyms`, { word, language, oldExamples, provider });
     return res.data;
   },
-
-  async updateWordSynonyms(
-    wordId: string,
-    word: string,
-    language: string,
-    oldExamples: string
-  ) {
-    const res = await api.post(`/api/ai/update-word-synonyms/${wordId}`, {
-      word,
-      language,
-      oldExamples,
-    });
+  async generateWordTypes(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
+    const res = await api.post(`/api/words/${wordId}/generate-types`, { word, language, oldExamples, provider });
     return res.data;
   },
-
-  async updateWordTypes(
-    wordId: string,
-    word: string,
-    language: string,
-    oldExamples: string
-  ) {
-    const res = await api.post(`/api/ai/update-word-types/${wordId}`, {
-      word,
-      language,
-      oldExamples,
-    });
+  async generateWordImage(wordId: string, word: string, imgOld: string = "") {
+    const res = await api.post(`/api/words/${wordId}/generate-image`, { word, imgOld });
     return res.data;
   },
-
-  async updateWordImage(wordId: string, word: string, imgOld: string = "") {
-    const res = await api.post(`/api/ai/generate-image-word/${wordId}`, {
-      word: word,
-      imgOld,
-    });
-    return res.data;
-  },
+  // --- END AI Generation ---
 
   async exportWords() {
     const res = await api.get(`/api/words/export-file`);
