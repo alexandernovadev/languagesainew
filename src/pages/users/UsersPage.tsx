@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useUsers } from "@/hooks/useUsers";
+import { useUsers } from "./hooks/useUsers";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,12 @@ import {
   RefreshCw
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { UserTable } from "../../components/admin/UserTable";
-import { UserFiltersModal } from "../../components/admin/UserFiltersModal";
-import { UserEditModal } from "../../components/admin/UserEditModal";
-import { UserDeleteDialog } from "../../components/admin/UserDeleteDialog";
-import { UserPagination } from "../../components/admin/UserPagination";
-import { UserPageSkeleton } from "../../components/admin/UserPageSkeleton";
+import { UserTable } from "../users/components/UserTable";
+import { UserFiltersModal } from "../users/components/UserFiltersModal";
+import { UserEditModal } from "../users/components/UserEditModal";
+import { UserDeleteDialog } from "../users/components/UserDeleteDialog";
+import { UserPagination } from "../users/components/UserPagination";
+import { UserPageSkeleton } from "../users/components/UserPageSkeleton";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function UsersPage() {

@@ -13,8 +13,8 @@ import { UserDropdownMenu } from "@/components/ui/UserDropdownMenu";
 import { useUserStore } from "@/lib/store/user-store";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
-import { LoginModal } from "@/components/auth/LoginModal";
-import { useLoginModal } from "@/hooks/useLoginModal";
+import { LoginModal } from "../pages/auth/components/LoginModal";
+import { useLoginModal } from "../pages/users/hooks/useLoginModal";
 import { useEnvironment } from "@/hooks/useEnvironment";
 
 export default function DashboardLayout({

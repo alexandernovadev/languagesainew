@@ -1,5 +1,5 @@
 import { Expression } from "@/models/Expression";
-import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { useExpressionStore } from "../../store/useExpressionStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import {
   useChatLogic,

@@ -22,7 +22,7 @@ import {
   Wand2,
   Eye as EyeIcon,
 } from "lucide-react";
-import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { useExpressionStore } from "../../store/useExpressionStore";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";

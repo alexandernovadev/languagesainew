@@ -6,8 +6,8 @@ import {
   Database,
 } from "lucide-react";
 import { labsService } from "@/services/labsService";
-import { LabsSection } from "@/components/labs/labs-section";
-import { LabsActionCard } from "@/components/labs/labs-action-card";
+import { LabsSection } from "./components/labs-section";
+import { LabsActionCard } from "./components/labs-action-card";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";

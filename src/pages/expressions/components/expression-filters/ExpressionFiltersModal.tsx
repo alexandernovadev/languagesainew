@@ -17,7 +17,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 
-import { useExpressionFilters } from "@/hooks/useExpressionFilters";
+import { useExpressionFilters, ExpressionBooleanFilters } from "../../hooks/useExpressionFilters";
 import { LevelFilter } from "./LevelFilter";
 import { LanguageFilter } from "./LanguageFilter";
 import { TypeFilter } from "./TypeFilter";
@@ -25,7 +25,6 @@ import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilt
 import { SortFilter } from "./SortFilter";
 import { DateRangeFilter } from "@/components/forms/common/DateRangeFilter";
 import { TextFilters } from "@/components/forms/common/TextFilters";
-import { ExpressionBooleanFilters } from "@/hooks/useExpressionFilters";
 
 interface ExpressionFiltersModalProps {
   open: boolean;

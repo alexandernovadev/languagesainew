@@ -4,7 +4,7 @@ import { cn } from '@/utils/common/classnames';
 import { toast } from 'sonner';
 import { SPEECH_RATES } from '@/constants/speechRates';
 import { useWordStore } from '@/lib/store/useWordStore';
-import { useExpressionStore } from '@/lib/store/useExpressionStore';
+import { useExpressionStore } from '../../pages/expressions/store/useExpressionStore';
 
 interface TextSelectionMenuProps {
   selectedText: string;

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ExpressionLevelBadge } from "@/components/ExpressionLevelBadge";
+import { ExpressionLevelBadge } from "./components/ExpressionLevelBadge";
 import {
   Table,
   TableBody,
@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/table";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
-import { useExpressionStore } from "@/lib/store/useExpressionStore";
+import { useExpressionStore } from "../../pages/expressions/store/useExpressionStore";
 import { Expression } from "@/models/Expression";
-import { ExpressionForm, ExpressionFormRef } from "@/components/forms/ExpressionForm";
-import { ExpressionDetailsModal } from "@/components/expressions/ExpressionDetailsModal";
-import { ExpressionFiltersModal } from "@/components/forms/expression-filters/ExpressionFiltersModal";
-import { ExpressionGeneratorModal } from "@/components/expressions/ExpressionGeneratorModal";
+import { ExpressionForm, ExpressionFormRef } from "../../pages/expressions/components/ExpressionForm";
+import { ExpressionDetailsModal } from "../../pages/expressions/components/ExpressionDetailsModal";
+import { ExpressionFiltersModal } from "../../pages/expressions/components/expression-filters/ExpressionFiltersModal";
+import { ExpressionGeneratorModal } from "../../pages/expressions/components/ExpressionGeneratorModal";
 import {
   ChevronLeft,
   ChevronRight,
@@ -44,10 +44,10 @@ import {
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLayout } from "@/components/layouts/page-layout";
-import { useExpressionFilters } from "@/hooks/useExpressionFilters";
+import { useExpressionFilters } from "../../pages/expressions/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { useExpressionFilterUrlSync } from "@/hooks/useExpressionFilterUrlSync";
+import { useExpressionFilterUrlSync } from "../../pages/expressions/hooks/useExpressionFilterUrlSync";
 import { SPEECH_RATES } from "@/constants/speechRates";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 

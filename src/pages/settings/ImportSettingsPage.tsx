@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import LectureImportForm from "../lectures/components/LectureImportForm";
 import WordImportForm from "@/components/forms/WordImportForm";
-import ExpressionImportForm from "@/components/forms/ExpressionImportForm";
+import ExpressionImportForm from "../expressions/components/ExpressionImportForm";
 import UserImportForm from "@/components/forms/UserImportForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";

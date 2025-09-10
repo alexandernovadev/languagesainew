@@ -24,7 +24,7 @@ import {
   menuItems,
   configSettingsItems,
 } from "./sidebar-menus";
-import { LoginModal } from "./auth/LoginModal";
+import { LoginModal } from "../pages/auth/components/LoginModal";
 import { useEnvironment } from "@/hooks/useEnvironment";
 
 export function AppSidebar() {

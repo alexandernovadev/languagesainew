@@ -20,7 +20,7 @@ import {
   SystemInfoPage,
   SettingsIndexRedirect,
   WordsPage,
-  MyExpressionsPage,
+  ExpressionsPage,
   ProfilePage,
   LabsPage,
   UsersPage,
@@ -63,9 +63,9 @@ export default function App() {
                   </Route>
 
                   <Route path="/words" element={<WordsPage />} />
-                  <Route path="/my-expressions" element={<MyExpressionsPage />} />
+                  <Route path="/expressions" element={<ExpressionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/admin/users" element={<UsersPage />} />
+                  <Route path="/users" element={<UsersPage />} />
 
                   {/* Catch-all route para rutas desconocidas */}
                   <Route path="*" element={<NotFoundRedirect />} />
