@@ -208,7 +208,13 @@ export const useExpressionStore = create<ExpressionStore>((set, get) => ({
   generateExpression: async (prompt, options = {}) => {
     set({ isGenerating: true });
     try {
-      const response = await expressionService.generateExpression(prompt, options);
+      // Permitir pasar language y options
+      let language;
+      if (options.language) {
+        language = options.language;
+        delete options.language;
+      }
+      const response = await expressionService.generateExpression(prompt, language, options);
       
       if (response.data.success) {
         const generatedExpression = response.data.data;
