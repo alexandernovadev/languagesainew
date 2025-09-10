@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Input } from "@/shared/components/ui/input";
 import {
   RotateCcw,
   ChevronLeft,
@@ -14,8 +14,8 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { wordService } from "@/services/wordService";
@@ -23,11 +23,11 @@ import { wordService } from "@/services/wordService";
 import { toast } from "sonner";
 import { shuffleArray } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { Skeleton } from "@/components/ui/skeleton";
-import { WordDetailsCard } from "@/components/word-details";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { WordDetailsCard } from "@/shared/components/word-details";
 
 import { cn } from "@/utils/common/classnames";
-import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
+import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
 // Declaraciones de tipos para Web Speech API
 declare global {

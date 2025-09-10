@@ -1,7 +1,7 @@
-import { ModalNova } from "@/components/ui/modal-nova";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { Word } from "@/models/Word";
 import { WordDetailsCard } from "./WordDetailsCard";
-import { LevelButtons } from "@/components/common/LevelButtons";
+import { LevelButtons } from "@/shared/components/common/LevelButtons";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { capitalize } from "@/utils/common/string/capitalize";
 

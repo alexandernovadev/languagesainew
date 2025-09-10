@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/shared/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import { Word } from "@/models/Word";
 import { wordLevels } from "@/data/wordLevels";
 import { EditableList } from "./EditableList";
 import { Book, Sparkles, ListPlus, Stars, Image } from "lucide-react";
-import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
+import { ImageUploaderCard } from "@/shared/components/ui/ImageUploaderCard";
 import { capitalize } from "@/utils/common/string/capitalize";
 import { getAllLanguages } from "@/utils/common/language";
 import { WORD_TYPES } from "@/utils/constants/wordTypes";

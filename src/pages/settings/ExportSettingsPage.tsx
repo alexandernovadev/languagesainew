@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
 import { FileText, BookOpen, HelpCircle, MessageSquare, Users, Eye, X } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { lectureService } from "@/services/lectureService";
 import { expressionService } from "@/services/expressionService";
 import { userService } from "@/services/userService";
 import { downloadJSON } from "@/utils/common";
-import { Separator } from "@/components/ui/separator";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHeader } from "@/components/ui/page-header";
+import { Separator } from "@/shared/components/ui/separator";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
 

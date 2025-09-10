@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { EXPRESSION_LEVELS } from "./constants";
 
 interface LevelFilterProps {

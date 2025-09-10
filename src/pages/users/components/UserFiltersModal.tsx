@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { LanguageSelect } from "@/components/ui/LanguageSelect";
+} from "@/shared/components/ui/select";
+import { LanguageSelect } from "@/shared/components/ui/LanguageSelect";
 import type { AllowedLanguageCode } from "@/constants/identity";
-import { DatePicker } from "@/components/ui/date-picker";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
+import { DatePicker } from "@/shared/components/ui/date-picker";
+import { Separator } from "@/shared/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import {
   Filter,
   RotateCcw,

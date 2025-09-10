@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ModalNova } from "@/components/ui/modal-nova";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avatar";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { useLectureStore } from "./store/useLectureStore";
 import { useWordStore } from "@/lib/store/useWordStore";
 import {
@@ -28,7 +28,7 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { SPEECH_RATES } from "@/constants/speechRates";
 import { getLanguageInfo } from "@/utils/common/language";
 import { toast } from "sonner";
-import { WordDetailsModal } from "@/components/word-details";
+import { WordDetailsModal } from "@/shared/components/word-details";
 import { useResultHandler } from "@/hooks/useResultHandler";
 
 export default function LectureDetailPage() {

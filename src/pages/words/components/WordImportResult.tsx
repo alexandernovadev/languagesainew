@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 
 // TODO esto deberia ser global OJO esta repitodo como 4 veces en el codigo
 interface ProcessingResult {

@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Separator } from "@/shared/components/ui/separator";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+} from "@/shared/components/ui/select";
+import { Label } from "@/shared/components/ui/label";
 import {
   Filter,
   X,
@@ -27,7 +27,7 @@ import { useWordFilters } from "@/hooks/useWordFilters";
 import { LevelFilter } from "./LevelFilter";
 import { LanguageFilter } from "./LanguageFilter";
 import { TypeFilter } from "./TypeFilter";
-import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilter";
+import { BooleanSelectFilter } from "@/shared/components/forms/common/BooleanSelectFilter";
 import { SortFilter } from "./SortFilter";
 import { ViewsRangeFilter } from "./ViewsRangeFilter";
 import { DateRangeFilter } from "./DateRangeFilter";

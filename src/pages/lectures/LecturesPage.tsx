@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 
 import { useLectureStore } from "./store/useLectureStore";
 import { useLectureModals } from "./hooks/useLectureModals";
 import { LectureForm } from "./components/LectureForm";
-import { LectureCard } from "@/components/lectures/LectureCard";
-import { LecturePagination } from "@/components/ui/LecturePagination";
+import { LectureCard } from "@/shared/components/lectures/LectureCard";
+import { LecturePagination } from "@/shared/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
 import type { Lecture } from "@/models/Lecture";
 import { Plus, RefreshCw, Search, X as XIcon, SlidersHorizontal } from "lucide-react";
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { toast } from "sonner";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useLectureFilterUrlSync } from "./hooks/useLectureFilterUrlSync";
 import { Eye, X } from "lucide-react";
 import { LectureFiltersModal } from "./components/lecture-filters/LectureFiltersModal";
 import { useLectureFilters } from "./hooks/useLectureFilters";
-import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
+import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
 export default function LecturesPage() {
   const navigate = useNavigate();

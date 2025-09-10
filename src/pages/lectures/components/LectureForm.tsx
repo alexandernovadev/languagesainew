@@ -5,17 +5,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/shared/components/ui/card";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/shared/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Settings, FileText, Image } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Lecture } from "@/models/Lecture";
@@ -24,7 +24,7 @@ import { lectureTypes } from "@/data/lectureTypes";
 import { getAllowedLanguages } from "@/constants/identity";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
+import { ImageUploaderCard } from "@/shared/components/ui/ImageUploaderCard";
 
 interface LectureFormProps {
   initialData?: Partial<Lecture>;

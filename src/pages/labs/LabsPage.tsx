@@ -8,9 +8,9 @@ import {
 import { labsService } from "@/services/labsService";
 import { LabsSection } from "./components/labs-section";
 import { LabsActionCard } from "./components/labs-action-card";
-import { ConfirmationModal } from "@/components/ui/confirmation-modal";
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { ConfirmationModal } from "@/shared/components/ui/confirmation-modal";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 import { useResultHandler } from "@/hooks/useResultHandler";
 
 interface ConfirmationState {

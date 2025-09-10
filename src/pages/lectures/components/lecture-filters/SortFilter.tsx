@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/components/ui/select";
 import { LECTURE_SORT_OPTIONS, LECTURE_SORT_ORDERS } from "./constants";
 
 interface SortFilterProps {

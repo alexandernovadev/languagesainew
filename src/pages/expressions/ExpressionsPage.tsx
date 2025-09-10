@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 import { ExpressionLevelBadge } from "./components/ExpressionLevelBadge";
 import {
   Table,
@@ -10,9 +10,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
+} from "@/shared/components/ui/table";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useExpressionStore } from "../../pages/expressions/store/useExpressionStore";
 import { Expression } from "@/models/Expression";
 import { ExpressionForm, ExpressionFormRef } from "../../pages/expressions/components/ExpressionForm";
@@ -33,23 +33,23 @@ import {
   Sparkles,
   RefreshCw,
 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/ui/tooltip";
 import { toast } from "sonner";
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 import { useExpressionFilters } from "../../pages/expressions/hooks/useExpressionFilters";
 import { capitalize } from "@/utils/common";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useExpressionFilterUrlSync } from "../../pages/expressions/hooks/useExpressionFilterUrlSync";
 import { SPEECH_RATES } from "@/constants/speechRates";
-import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
+import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
 export default function MyExpressionsPage() {
   const {

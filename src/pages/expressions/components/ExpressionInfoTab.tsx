@@ -1,7 +1,7 @@
 import { memo, useRef } from "react";
 import { Expression } from "@/models/Expression";
 import { ExpressionLevelBadge } from "../ExpressionLevelBadge";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/utils/common/classnames";
 import { formatDateShort } from "@/utils/common/time/formatDate";
 import { getLanguageInfo } from "@/utils/common/language";

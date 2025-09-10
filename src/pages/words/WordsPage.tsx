@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { WordLevelBadge } from "@/components/WordLevelBadge";
+import { Card } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { WordLevelBadge } from "@/shared/components/WordLevelBadge";
 import {
   Table,
   TableBody,
@@ -10,14 +10,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
+} from "@/shared/components/ui/table";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { Word } from "@/models/Word";
-import { WordForm } from "@/components/forms/WordForm";
-import { WordDetailsModal } from "@/components/word-details";
-import { WordFiltersModal } from "@/components/forms/word-filters/WordFiltersModal";
+import { WordForm } from "@/shared/components/forms/WordForm";
+import { WordDetailsModal } from "@/shared/components/word-details";
+import { WordFiltersModal } from "@/shared/components/forms/word-filters/WordFiltersModal";
 import {
   ChevronLeft,
   ChevronRight,
@@ -34,24 +34,24 @@ import {
   SlidersHorizontal,
   Clipboard,
 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/ui/tooltip";
 import { toast } from "sonner";
 import { useAnimatedDots } from "@/hooks/useAnimatedDots";
 import { SPEECH_RATES } from "@/constants/speechRates";
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 import { useWordFilters } from "@/hooks/useWordFilters";
 import { useResultHandler } from "@/hooks/useResultHandler";
 import { useFilterUrlSync } from "@/hooks/useFilterUrlSync";
 import { capitalize } from "@/utils/common/string/capitalize";
-import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
+import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
 export default function MyWordsPage() {
   const {

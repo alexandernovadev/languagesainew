@@ -7,15 +7,15 @@ import { useResultHandler } from "@/hooks/useResultHandler";
 import ReactMarkdown from "react-markdown";
 import { Save, BookOpen, Loader2, Settings } from "lucide-react";
 import { useTopicGenerator } from "@/hooks/useTopicGenerator";
-import { TopicGeneratorButton } from "@/components/common/TopicGeneratorButton";
+import { TopicGeneratorButton } from "@/shared/components/common/TopicGeneratorButton";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
 
-import { PageHeader } from "@/components/ui/page-header";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 import { useNavigate } from "react-router-dom";
 
 import { lectureTypes } from "@/data/lectureTypes";
@@ -25,7 +25,7 @@ import { LectureGeneratorConfigModal } from "../../lectures/components/LectureGe
 import { Lecture } from "@/models/Lecture";
 import { getAuthHeaders } from "@/utils/services";
 import { wordService } from "@/services/wordService";
-import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
+import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
 const generatorFormSchema = z.object({
   // Permitir vacío (random). Si no está vacío, mínimo 120 caracteres

@@ -8,7 +8,7 @@ import {
   ChatInput,
   createChatMessage,
   clearChatWithToast,
-} from "@/components/chat";
+} from "@/shared/components/chat";
 
 interface ExpressionChatTabProps {
   expression: Expression;

@@ -1,9 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHeader } from "@/components/ui/page-header";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import { Badge } from "@/shared/components/ui/badge";
+import { Separator } from "@/shared/components/ui/separator";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { formatDateToSpanish, formatDateSpanishBogotaWithTime } from "@/utils/common/time/formatDate";
 import { timeAgo } from "@/utils/common/time/timeAgo";
 import packageJson from "../../../package.json";

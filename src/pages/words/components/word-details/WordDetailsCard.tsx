@@ -1,25 +1,25 @@
 import { useState, useCallback, useMemo, memo, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { RefreshCw, Eye, Volume2, X, Info, MessageCircle } from "lucide-react";
 import { Word } from "@/models/Word";
 import { cn } from "@/utils/common/classnames";
-import { WordLevelBadge } from "@/components/WordLevelBadge";
+import { WordLevelBadge } from "@/shared/components/WordLevelBadge";
 import { SPEECH_RATES } from "@/constants/speechRates";
 import { formatDateShort } from "@/utils/common/time";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
 import { useTextSelection } from "@/hooks/useTextSelection";
-import { TextSelectionMenu } from "@/components/common/TextSelectionMenu";
+import { TextSelectionMenu } from "@/shared/components/common/TextSelectionMenu";
 
-import { LevelButtons } from "@/components/common/LevelButtons";
+import { LevelButtons } from "@/shared/components/common/LevelButtons";
 import { capitalize } from "@/utils";
 import "../ui/ImageUploaderCard.css";
 
 // Importar el tipo ChatMessage
-import { ChatMessage } from "@/components/chat/types";
+import { ChatMessage } from "@/shared/components/chat/types";
 
 interface WordDetailsCardProps {
   word: Word;

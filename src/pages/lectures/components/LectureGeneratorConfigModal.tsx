@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { ModalNova } from "@/components/ui/modal-nova";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { GrammarSelector } from "@/components/forms/GrammarSelector";
-import { WordsSelector } from "@/components/forms/WordsSelector";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/shared/components/ui/select";
+import { Button } from "@/shared/components/ui/button";
+import { Label } from "@/shared/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import { GrammarSelector } from "@/shared/components/forms/GrammarSelector";
+import { WordsSelector } from "@/shared/components/forms/WordsSelector";
 import { grammarTopicGroups } from "@/data/grammarTopics"; // Import the new data
 import { Settings, BookOpen, FileText } from "lucide-react";
 import { getAllowedLanguages } from "@/constants/identity";

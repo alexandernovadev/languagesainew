@@ -1,4 +1,4 @@
-import { BooleanSelectFilter } from "@/components/forms/common/BooleanSelectFilter";
+import { BooleanSelectFilter } from "@/shared/components/forms/common/BooleanSelectFilter";
 
 interface LectureBooleanFiltersProps {
   values: Record<string, boolean | undefined>;

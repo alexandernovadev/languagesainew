@@ -1,18 +1,18 @@
 import {  forwardRef, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { getAllowedLanguages } from "@/constants/identity";
 import { X, Plus, Loader2, Wand2, Eye, Book, Sparkles, Image } from "lucide-react";
 import { Expression } from "@/models/Expression";
 import { expressionTypes, expressionLevels } from "@/utils/constants/expressionTypes";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { ImageUploaderCard } from "@/components/ui/ImageUploaderCard";
+import { ImageUploaderCard } from "@/shared/components/ui/ImageUploaderCard";
 
 interface ExpressionFormProps {
   initialData?: Partial<Expression>;

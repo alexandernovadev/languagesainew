@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import {
   Select,
   SelectItem,
   SelectTrigger,
   SelectContent,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/shared/components/ui/select";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 import { useState } from "react";
 import { api } from "@/services/api";
 import { getAuthHeaders } from "@/utils/services/headers";
-import { FileInputButton } from "@/components/ui/FileInputButton";
+import { FileInputButton } from "@/shared/components/ui/FileInputButton";
 import ImportResult from "./ImportResult";
 import { toast } from "sonner";
 import { useResultHandler } from "@/hooks/useResultHandler";

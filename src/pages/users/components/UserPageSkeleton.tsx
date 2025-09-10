@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
 
 export function UserPageSkeleton() {
   return (

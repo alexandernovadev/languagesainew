@@ -1,14 +1,14 @@
 import { Word } from "@/models/Word";
 import { useWordStore } from "@/lib/store/useWordStore";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { useChatLogic } from "@/components/chat";
-import { ChatMessage } from "@/components/chat/types";
-import { createChatMessage, clearChatWithToast } from "@/components/chat/helpers";
+import { useChatLogic } from "@/shared/components/chat";
+import { ChatMessage } from "@/shared/components/chat/types";
+import { createChatMessage, clearChatWithToast } from "@/shared/components/chat/helpers";
 import {
   ChatInput,
   StreamingMessage,
   ChatMessageComponent,
-} from "@/components/chat";
+} from "@/shared/components/chat";
 import { useEffect } from "react";
 
 interface WordChatTabProps {

@@ -1,12 +1,12 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import LectureImportForm from "../lectures/components/LectureImportForm";
-import WordImportForm from "@/components/forms/WordImportForm";
+import WordImportForm from "@/shared/components/forms/WordImportForm";
 import ExpressionImportForm from "../expressions/components/ExpressionImportForm";
-import UserImportForm from "@/components/forms/UserImportForm";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHeader } from "@/components/ui/page-header";
+import UserImportForm from "@/shared/components/forms/UserImportForm";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components/ui/tabs";
+import { Separator } from "@/shared/components/ui/separator";
+import { PageLayout } from "@/shared/components/layouts/page-layout";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import { FileText, Book, HelpCircle, Clock, MessageSquare, Users, Upload } from "lucide-react";
 
 export default function ImportSettingsPage() {

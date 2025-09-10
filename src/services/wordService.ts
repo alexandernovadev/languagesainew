@@ -1,6 +1,6 @@
 import { Word } from "../models/Word";
 import { api } from "./api";
-import { WordFilters } from "@/components/forms/word-filters/types";
+import { WordFilters } from "@/shared/components/forms/word-filters/types";
 import { useUserStore } from "@/lib/store/user-store";
 
 export const wordService = {

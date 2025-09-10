@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertDialogNova } from '@/components/ui/alert-dialog-nova';
+import { AlertDialogNova } from '@/shared/components/ui/alert-dialog-nova';
 import { User } from '@/services/userService';
 
 interface UserDeleteDialogProps {

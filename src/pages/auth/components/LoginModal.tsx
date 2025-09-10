@@ -1,10 +1,10 @@
-import { ModalNova } from "@/components/ui/modal-nova";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
 import { User as UserIcon, Lock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useUserStore } from "@/lib/store/user-store";
+import { useUserStore } from "../../users/store/user-store";
 
 interface LoginModalProps {
   open: boolean;

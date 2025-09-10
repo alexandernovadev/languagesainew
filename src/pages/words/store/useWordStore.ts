@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { wordService } from "../../services/wordService";
 import { Word } from "../../models/Word";
 import type { ChatMessage } from "../../models/Word";
-import { WordFilters } from "@/components/forms/word-filters/types";
+import { WordFilters } from "@/shared/components/forms/word-filters/types";
 import { toast } from "sonner";
 
 interface WordStore {

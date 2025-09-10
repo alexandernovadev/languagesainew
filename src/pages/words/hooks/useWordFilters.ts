@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { WordFilters } from "@/components/forms/word-filters/types";
+import { WordFilters } from "@/shared/components/forms/word-filters/types";
 import { useWordStore } from "@/lib/store/useWordStore";
 
 export function useWordFilters() {

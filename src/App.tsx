@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import React from "react";
-import DashboardLayout from "./layouts/DashboardLayout";
-import { ErrorBoundary } from "./components/ErrorBoundary";
-import LoadingSpinner from "./components/LoadingSpinner";
-import LazyRouteErrorBoundary from "./components/LazyRouteErrorBoundary";
+import DashboardLayout from "./shared/components/layouts/DashboardLayout";
+import { ErrorBoundary } from "./shared/components/ErrorBoundary";
+import LoadingSpinner from "./shared/components/LoadingSpinner";
+import LazyRouteErrorBoundary from "./shared/components/LazyRouteErrorBoundary";
 import { toast } from "sonner";
 
 // Importar todas las rutas lazy load
