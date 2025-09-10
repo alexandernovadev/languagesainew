@@ -12,7 +12,7 @@ export const ExportSettingsPage = lazy(() => import("../pages/settings/ExportSet
 export const SystemInfoPage = lazy(() => import("../pages/settings/SystemInfoPage"));
 export const SettingsIndexRedirect = lazy(() => import("../pages/settings/index"));
 
-export const MyWordsPage = lazy(() => import("../pages/my-words/MyWordsPage"));
+export const WordsPage = lazy(() => import("../pages/words/WordsPage"));
 export const MyExpressionsPage = lazy(() => import("../pages/my-expressions/MyExpressionsPage"));
 export const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
 export const LabsPage = lazy(() => import("../pages/settings/LabsPage"));

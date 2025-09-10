@@ -19,7 +19,7 @@ import {
   ExportSettingsPage,
   SystemInfoPage,
   SettingsIndexRedirect,
-  MyWordsPage,
+  WordsPage,
   MyExpressionsPage,
   ProfilePage,
   LabsPage,
@@ -62,7 +62,7 @@ export default function App() {
                     <Route path="system" element={<SystemInfoPage />} />
                   </Route>
 
-                  <Route path="/my-words" element={<MyWordsPage />} />
+                  <Route path="/words" element={<WordsPage />} />
                   <Route path="/my-expressions" element={<MyExpressionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin/users" element={<UsersPage />} />
