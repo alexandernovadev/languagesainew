@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import LectureImportForm from "@/components/forms/LectureImportForm";
+import LectureImportForm from "../lectures/components/LectureImportForm";
 import WordImportForm from "@/components/forms/WordImportForm";
 import ExpressionImportForm from "@/components/forms/ExpressionImportForm";
 import UserImportForm from "@/components/forms/UserImportForm";

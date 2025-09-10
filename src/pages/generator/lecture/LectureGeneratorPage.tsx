@@ -20,10 +20,10 @@ import { useNavigate } from "react-router-dom";
 
 import { lectureTypes } from "@/data/lectureTypes";
 import { lectureLevels } from "@/data/lectureLevels";
-import { useLectureStore } from "@/lib/store/useLectureStore";
+import { useLectureStore } from "../../lectures/store/useLectureStore";
+import { LectureGeneratorConfigModal } from "../../lectures/components/LectureGeneratorConfigModal";
 import { Lecture } from "@/models/Lecture";
 import { getAuthHeaders } from "@/utils/services";
-import { LectureGeneratorConfigModal } from "@/components/forms/LectureGeneratorConfigModal";
 import { wordService } from "@/services/wordService";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 

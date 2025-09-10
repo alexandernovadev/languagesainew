@@ -12,7 +12,7 @@ import { LectureBooleanFilters } from "./LectureBooleanFilters";
 import { TimeRangeFilter } from "./TimeRangeFilter";
 import { DateRangeFilter } from "@/components/forms/word-filters/DateRangeFilter";
 import { SortFilter } from "./SortFilter";
-import { useLectureFilters } from "@/hooks/useLectureFilters";
+import { useLectureFilters } from "../../hooks/useLectureFilters";
 import { Check, X, Book, FileText, Search, Settings, ArrowUpDown } from "lucide-react";
 
 interface LectureFiltersModalProps {

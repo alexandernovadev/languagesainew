@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { useLectureStore } from "@/lib/store/useLectureStore";
-import { useLectureModals } from "@/hooks/useLectureModals";
-import { LectureForm } from "@/components/forms/LectureForm";
+import { useLectureStore } from "./store/useLectureStore";
+import { useLectureModals } from "./hooks/useLectureModals";
+import { LectureForm } from "./components/LectureForm";
 import { LectureCard } from "@/components/lectures/LectureCard";
 import { LecturePagination } from "@/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,10 @@ import { toast } from "sonner";
 import { ModalNova } from "@/components/ui/modal-nova";
 import { AlertDialogNova } from "@/components/ui/alert-dialog-nova";
 import { useResultHandler } from "@/hooks/useResultHandler";
-import { useLectureFilterUrlSync } from "@/hooks/useLectureFilterUrlSync";
+import { useLectureFilterUrlSync } from "./hooks/useLectureFilterUrlSync";
 import { Eye, X } from "lucide-react";
-import { LectureFiltersModal } from "@/components/forms/lecture-filters/LectureFiltersModal";
-import { useLectureFilters } from "@/hooks/useLectureFilters";
+import { LectureFiltersModal } from "./components/lecture-filters/LectureFiltersModal";
+import { useLectureFilters } from "./hooks/useLectureFilters";
 import { ActionButtonsHeader } from "@/components/ui/action-buttons-header";
 
 export default function LecturesPage() {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ModalNova } from "@/components/ui/modal-nova";
-import { useLectureStore } from "@/lib/store/useLectureStore";
+import { useLectureStore } from "./store/useLectureStore";
 import { useWordStore } from "@/lib/store/useWordStore";
 import {
   Volume2,

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useLectureStore } from "@/lib/store/useLectureStore";
+import { useLectureStore } from "../store/useLectureStore";
 
 interface LectureFilters {
   level?: string;
