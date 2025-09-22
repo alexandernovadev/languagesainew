@@ -1,9 +1,7 @@
 import type * as React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useSidebar } from "@/shared/components/ui/sidebar";
-import packageJson from "../../package.json";
 
 import {
   Sidebar,
@@ -24,8 +22,9 @@ import {
   menuItems,
   configSettingsItems,
 } from "./sidebar-menus";
-import { LoginModal } from "../pages/auth/components/LoginModal";
-import { useEnvironment } from "@/hooks/useEnvironment";
+import { useIsMobile } from "../hooks/use-mobile";
+import { useEnvironment } from "../hooks/useEnvironment";
+import { LoginModal } from "@/pages/auth/components/LoginModal";
 
 export function AppSidebar() {
   const { pathname } = useLocation();
@@ -55,7 +54,7 @@ export function AppSidebar() {
                 />
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">LanguagesAI {isDevelopment ? "DEV" : ""}</span>
-                  <span className="text-xs">v{packageJson.version} {isDevelopment ? "DEV" : ""}</span>
+                  <span className="text-xs">v1.0.0 {isDevelopment ? "DEV" : ""}</span>
                 </div>
               </div>
             </SidebarMenuButton>
