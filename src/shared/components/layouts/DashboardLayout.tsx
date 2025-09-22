@@ -10,12 +10,12 @@ import {
 import { Separator } from "@/shared/components/ui/separator";
 import { DynamicBreadcrumb } from "@/shared/components/layouts/dynamic-breadcrumb";
 import { UserDropdownMenu } from "@/shared/components/ui/UserDropdownMenu";
-import { useUserStore } from "../pages/users/store/user-store";
 import { Button } from "@/shared/components/ui/button";
 import { LogIn } from "lucide-react";
-import { LoginModal } from "../pages/auth/components/LoginModal";
-import { useLoginModal } from "../pages/users/hooks/useLoginModal";
-import { useEnvironment } from "@/hooks/useEnvironment";
+import { useUserStore } from "@/pages/users/store/user-store";
+import { useLoginModal } from "@/pages/users/hooks/useLoginModal";
+import { useEnvironment } from "@/shared/hooks/useEnvironment";
+import { LoginModal } from "@/pages/auth/components/LoginModal";
 
 export default function DashboardLayout({
   children,
