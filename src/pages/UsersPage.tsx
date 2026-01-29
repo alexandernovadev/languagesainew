@@ -8,16 +8,7 @@ import { UserDialog } from "@/shared/components/dialogs/UserDialog";
 import { useUsers } from "@/shared/hooks/useUsers";
 import { User } from "@/services/userService";
 import { Plus, Search, X } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/shared/components/ui/alert-dialog";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import {
   Pagination,
   PaginationContent,
@@ -49,6 +40,7 @@ export default function UsersPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Handle create
   const handleCreate = () => {
@@ -71,9 +63,14 @@ export default function UsersPage() {
   // Handle delete confirm
   const handleDeleteConfirm = async () => {
     if (userToDelete) {
-      await deleteUser(userToDelete._id);
-      setDeleteDialogOpen(false);
-      setUserToDelete(null);
+      setDeleteLoading(true);
+      try {
+        await deleteUser(userToDelete._id);
+        setDeleteDialogOpen(false);
+        setUserToDelete(null);
+      } finally {
+        setDeleteLoading(false);
+      }
     }
   };
 
@@ -233,23 +230,22 @@ export default function UsersPage() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the user <strong>{userToDelete?.username}</strong>.
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogNova
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="¿Eliminar usuario?"
+        description={
+          <>
+            Esto eliminará permanentemente al usuario <strong>{userToDelete?.username}</strong>.
+            Esta acción no se puede deshacer.
+          </>
+        }
+        onConfirm={handleDeleteConfirm}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        loading={deleteLoading}
+        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
     </div>
   );
 }

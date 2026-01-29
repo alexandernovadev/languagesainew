@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, UserCreate, UserUpdate } from "@/services/userService";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -109,17 +102,35 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
   const isEditMode = !!user;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{isEditMode ? "Edit User" : "Create New User"}</DialogTitle>
-          <DialogDescription>
-            {isEditMode
-              ? "Update user information. Leave password empty to keep current password."
-              : "Fill in the information to create a new user."}
-          </DialogDescription>
-        </DialogHeader>
-
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditMode ? "Edit User" : "Create New User"}
+      description={
+        isEditMode
+          ? "Update user information. Leave password empty to keep current password."
+          : "Fill in the information to create a new user."
+      }
+      size="2xl"
+      height="h-auto"
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={loading} onClick={handleSubmit}>
+            {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+            {isEditMode ? "Update User" : "Create User"}
+          </Button>
+        </>
+      }
+    >
+      <div className="px-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
@@ -131,6 +142,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 required
                 disabled={loading}
+                autoComplete="off"
               />
             </div>
 
@@ -160,6 +172,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required={!isEditMode}
               disabled={loading}
+              autoComplete="new-password"
             />
           </div>
 
@@ -259,23 +272,8 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             />
             <Label htmlFor="isActive">Active User</Label>
           </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              {isEditMode ? "Update User" : "Create User"}
-            </Button>
-          </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ModalNova>
   );
 }
