@@ -32,7 +32,7 @@ export default function LabsPage() {
       const response = await labsService.sendBackupByEmail();
       if (response.success) {
         toast.success(response.message || "Backup sent successfully");
-        
+
         // Mostrar estadísticas del backup si están disponibles
         if (response.data) {
           const { wordsCount, lecturesCount, expressionsCount } = response.data;
@@ -53,8 +53,8 @@ export default function LabsPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader 
-        title="Labs" 
+      <PageHeader
+        title="Labs"
         description="Funciones experimentales y herramientas de desarrollo"
       />
 
@@ -71,7 +71,7 @@ export default function LabsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button 
+            <Button
               onClick={handleCreateAdmin}
               disabled={isCreatingAdmin}
               className="w-full"
@@ -101,7 +101,7 @@ export default function LabsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button 
+            <Button
               onClick={handleSendBackup}
               disabled={isSendingBackup}
               variant="secondary"
