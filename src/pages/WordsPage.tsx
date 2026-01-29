@@ -2,13 +2,13 @@ import { useState } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { WordsTable } from "@/shared/components/tables/WordsTable";
 import { WordDialog } from "@/shared/components/dialogs/WordDialog";
+import { WordFiltersModal } from "@/shared/components/filters/WordFiltersModal";
 import { useWords } from "@/shared/hooks/useWords";
+import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { IWord } from "@/types/models/Word";
-import { difficultyJson, languagesJson } from "@/data/bussiness/shared";
-import { Plus, Search, X } from "lucide-react";
+import { Plus, Search, Filter, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import {
   Pagination,
@@ -19,14 +19,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
-import { Label } from "@/shared/components/ui/label";
+import { Badge } from "@/shared/components/ui/badge";
 
 export default function WordsPage() {
   const {
@@ -44,16 +37,16 @@ export default function WordsPage() {
     filters,
   } = useWords();
 
+  // Sync filters with URL
+  useFilterUrlSync(filters, updateFilters);
+
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
   const [selectedWord, setSelectedWord] = useState<IWord | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [wordToDelete, setWordToDelete] = useState<IWord | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
-
-  // Filter states
-  const [difficultyFilter, setDifficultyFilter] = useState<string>("");
-  const [languageFilter, setLanguageFilter] = useState<string>("");
 
   // Handle create
   const handleCreate = () => {
@@ -99,18 +92,17 @@ export default function WordsPage() {
   // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    updateFilters({ 
-      wordUser: searchTerm,
-      difficulty: difficultyFilter || undefined,
-      language: languageFilter || undefined,
-    });
+    updateFilters({ wordUser: searchTerm });
   };
 
-  // Clear search and filters
-  const handleClearSearch = () => {
+  // Handle apply filters from modal
+  const handleApplyFilters = (newFilters: any) => {
+    updateFilters(newFilters);
+  };
+
+  // Clear all filters
+  const handleClearFilters = () => {
     setSearchTerm("");
-    setDifficultyFilter("");
-    setLanguageFilter("");
     clearFilters();
   };
 
@@ -146,7 +138,10 @@ export default function WordsPage() {
     return pages;
   };
 
-  const hasActiveFilters = searchTerm || difficultyFilter || languageFilter || Object.keys(filters).length > 2;
+  // Count active filters (excluding page and limit)
+  const activeFiltersCount = Object.entries(filters).filter(
+    ([key, value]) => key !== "page" && key !== "limit" && value !== undefined && value !== ""
+  ).length;
 
   return (
     <div className="space-y-4">
@@ -161,81 +156,49 @@ export default function WordsPage() {
         }
       />
 
-      {/* Search and Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <form onSubmit={handleSearch} className="space-y-4">
-            {/* Search bar */}
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by word..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Button type="submit" variant="secondary">
-                Search
-              </Button>
-              {hasActiveFilters && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleClearSearch}
-                  size="icon"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
+      {/* Search Bar and Filter Button */}
+      <div className="flex gap-2">
+        <form onSubmit={handleSearch} className="flex gap-2 flex-1">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar palabra..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button type="submit" variant="secondary">
+            <Search className="h-4 w-4 mr-2" />
+            Buscar
+          </Button>
+        </form>
+        
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setFiltersModalOpen(true)}
+        >
+          <Filter className="h-4 w-4 mr-2" />
+          Filtros
+          {activeFiltersCount > 0 && (
+            <Badge variant="secondary" className="ml-2">
+              {activeFiltersCount}
+            </Badge>
+          )}
+        </Button>
 
-            {/* Filters */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Difficulty</Label>
-                <Select
-                  value={difficultyFilter}
-                  onValueChange={setDifficultyFilter}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="All difficulties" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All difficulties</SelectItem>
-                    {difficultyJson.map((diff) => (
-                      <SelectItem key={diff.value} value={diff.value}>
-                        {diff.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Language</Label>
-                <Select
-                  value={languageFilter}
-                  onValueChange={setLanguageFilter}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="All languages" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All languages</SelectItem>
-                    {languagesJson.map((lang) => (
-                      <SelectItem key={lang.value} value={lang.value}>
-                        {lang.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        {activeFiltersCount > 0 && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleClearFilters}
+            size="icon"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
 
       {/* Words Table */}
       <WordsTable
@@ -312,6 +275,15 @@ export default function WordsPage() {
         cancelText="Cancelar"
         loading={deleteLoading}
         confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
+
+      {/* Filters Modal */}
+      <WordFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        filters={filters}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
       />
     </div>
   );

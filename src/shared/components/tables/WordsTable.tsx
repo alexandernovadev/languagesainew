@@ -52,16 +52,16 @@ export function WordsTable({ words, loading, onEdit, onDelete }: WordsTableProps
     );
   }
 
-  const getDifficultyColor = (difficulty?: string) => {
+  const getDifficultyVariant = (difficulty?: string): "default" | "yellow" | "destructive" | "outline" => {
     switch (difficulty) {
       case "easy":
-        return "bg-green-500/10 text-green-500 hover:bg-green-500/20";
+        return "default";
       case "medium":
-        return "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20";
+        return "yellow";
       case "hard":
-        return "bg-red-500/10 text-red-500 hover:bg-red-500/20";
+        return "destructive";
       default:
-        return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20";
+        return "outline";
     }
   };
 
@@ -121,7 +121,7 @@ export function WordsTable({ words, loading, onEdit, onDelete }: WordsTableProps
                   )}
                 </TableCell>
                 <TableCell>
-                  <Badge className={getDifficultyColor(word.difficulty)}>
+                  <Badge variant={getDifficultyVariant(word.difficulty)}>
                     {word.difficulty || "N/A"}
                   </Badge>
                 </TableCell>

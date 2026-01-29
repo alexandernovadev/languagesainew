@@ -4,15 +4,37 @@ import { IWord } from '@/types/models/Word';
 import { toast } from 'sonner';
 
 export interface WordFilters {
+  // General filters
   wordUser?: string;
   difficulty?: string;
   language?: string;
   type?: string;
+  
+  // Spanish filters
+  spanishWord?: string;
+  spanishDefinition?: string;
+  
+  // Content filters
+  definition?: string;
+  IPA?: string;
+  hasExamples?: boolean;
+  hasSynonyms?: boolean;
+  hasCodeSwitching?: boolean;
+  hasImage?: string;
+  
+  // Advanced filters
   seenMin?: number;
   seenMax?: number;
-  hasImage?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  updatedAfter?: string;
+  updatedBefore?: string;
+  
+  // Sorting
   sortBy?: string;
   sortOrder?: string;
+  
+  // Pagination
   page?: number;
   limit?: number;
 }

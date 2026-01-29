@@ -8,18 +8,33 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const urlParams = new URLSearchParams(window.location.search);
     const filters: any = {};
     
-    // Leer filtros básicos
+    // General filters
     const difficulty = urlParams.get('difficulty');
     const language = urlParams.get('language');
     const type = urlParams.get('type');
     const wordUser = urlParams.get('wordUser');
-    const definition = urlParams.get('definition');
-    const IPA = urlParams.get('IPA');
+    
+    // Spanish filters
     const spanishWord = urlParams.get('spanishWord');
     const spanishDefinition = urlParams.get('spanishDefinition');
+    
+    // Content filters
+    const definition = urlParams.get('definition');
+    const IPA = urlParams.get('IPA');
+    const hasExamples = urlParams.get('hasExamples');
+    const hasSynonyms = urlParams.get('hasSynonyms');
+    const hasCodeSwitching = urlParams.get('hasCodeSwitching');
+    const hasImage = urlParams.get('hasImage');
+    
+    // Advanced filters
     const seenMin = urlParams.get('seenMin');
     const seenMax = urlParams.get('seenMax');
-    const hasImage = urlParams.get('hasImage');
+    const createdAfter = urlParams.get('createdAfter');
+    const createdBefore = urlParams.get('createdBefore');
+    const updatedAfter = urlParams.get('updatedAfter');
+    const updatedBefore = urlParams.get('updatedBefore');
+    
+    // Sorting
     const sortBy = urlParams.get('sortBy');
     const sortOrder = urlParams.get('sortOrder');
     
@@ -28,13 +43,20 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     if (language) filters.language = language;
     if (type) filters.type = type;
     if (wordUser) filters.wordUser = wordUser;
-    if (definition) filters.definition = definition;
-    if (IPA) filters.IPA = IPA;
     if (spanishWord) filters.spanishWord = spanishWord;
     if (spanishDefinition) filters.spanishDefinition = spanishDefinition;
+    if (definition) filters.definition = definition;
+    if (IPA) filters.IPA = IPA;
+    if (hasExamples) filters.hasExamples = hasExamples === 'true';
+    if (hasSynonyms) filters.hasSynonyms = hasSynonyms === 'true';
+    if (hasCodeSwitching) filters.hasCodeSwitching = hasCodeSwitching === 'true';
+    if (hasImage) filters.hasImage = hasImage;
     if (seenMin) filters.seenMin = parseInt(seenMin);
     if (seenMax) filters.seenMax = parseInt(seenMax);
-    if (hasImage) filters.hasImage = hasImage;
+    if (createdAfter) filters.createdAfter = createdAfter;
+    if (createdBefore) filters.createdBefore = createdBefore;
+    if (updatedAfter) filters.updatedAfter = updatedAfter;
+    if (updatedBefore) filters.updatedBefore = updatedBefore;
     if (sortBy) filters.sortBy = sortBy;
     if (sortOrder) filters.sortOrder = sortOrder;
     
@@ -47,23 +69,19 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const searchParams = url.searchParams;
     
     // Limpiar parámetros existentes
-    searchParams.delete('difficulty');
-    searchParams.delete('language');
-    searchParams.delete('type');
-    searchParams.delete('wordUser');
-    searchParams.delete('definition');
-    searchParams.delete('IPA');
-    searchParams.delete('spanishWord');
-    searchParams.delete('spanishDefinition');
-    searchParams.delete('seenMin');
-    searchParams.delete('seenMax');
-    searchParams.delete('hasImage');
-    searchParams.delete('sortBy');
-    searchParams.delete('sortOrder');
+    const filterKeys = [
+      'difficulty', 'language', 'type', 'wordUser',
+      'spanishWord', 'spanishDefinition',
+      'definition', 'IPA', 'hasExamples', 'hasSynonyms', 'hasCodeSwitching', 'hasImage',
+      'seenMin', 'seenMax', 'createdAfter', 'createdBefore', 'updatedAfter', 'updatedBefore',
+      'sortBy', 'sortOrder'
+    ];
+    
+    filterKeys.forEach(key => searchParams.delete(key));
     
     // Agregar nuevos filtros
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== '' && key !== 'page' && key !== 'limit') {
         searchParams.set(key, String(value));
       }
     });
@@ -78,19 +96,15 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     const searchParams = url.searchParams;
     
     // Limpiar todos los parámetros de filtros
-    searchParams.delete('difficulty');
-    searchParams.delete('language');
-    searchParams.delete('type');
-    searchParams.delete('wordUser');
-    searchParams.delete('definition');
-    searchParams.delete('IPA');
-    searchParams.delete('spanishWord');
-    searchParams.delete('spanishDefinition');
-    searchParams.delete('seenMin');
-    searchParams.delete('seenMax');
-    searchParams.delete('hasImage');
-    searchParams.delete('sortBy');
-    searchParams.delete('sortOrder');
+    const filterKeys = [
+      'difficulty', 'language', 'type', 'wordUser',
+      'spanishWord', 'spanishDefinition',
+      'definition', 'IPA', 'hasExamples', 'hasSynonyms', 'hasCodeSwitching', 'hasImage',
+      'seenMin', 'seenMax', 'createdAfter', 'createdBefore', 'updatedAfter', 'updatedBefore',
+      'sortBy', 'sortOrder'
+    ];
+    
+    filterKeys.forEach(key => searchParams.delete(key));
     
     // Actualizar URL sin recargar la página
     window.history.replaceState({}, '', url.toString());
