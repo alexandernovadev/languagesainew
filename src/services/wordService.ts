@@ -79,6 +79,25 @@ export const wordService = {
     return res.data;
   },
 
+  // Obtener palabras por tipo (optimizado)
+  async getWordsByTypeOptimized(options: {
+    type: string;
+    limit?: number;
+    wordUser?: string;
+    fields?: string;
+  }) {
+    const params = new URLSearchParams();
+    
+    params.append('type', options.type);
+    if (options.limit) params.append('limit', options.limit.toString());
+    if (options.wordUser) params.append('wordUser', options.wordUser);
+    if (options.fields) params.append('fields', options.fields);
+
+    const url = `/api/words/by-type-optimized?${params.toString()}`;
+    const res = await api.get(url);
+    return res.data;
+  },
+
   // --- AI Generation methods (updated) ---
   async generateWord(word: string, language = "en", provider = "openai") {
     const res = await api.post(`/api/words/generate`, { word, language, provider });
