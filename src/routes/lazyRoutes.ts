@@ -1,3 +1,18 @@
 import { lazy } from "react";
 
 // Lazy load de todas las páginas
+export const DashboardPage = lazy(() => import("../pages/DashboardPage"));
+export const LecturesPage = lazy(() => import("../pages/LecturesPage"));
+export const LectureDetailPage = lazy(() => import("../pages/LectureDetailPage"));
+export const AnkiGamePage = lazy(() => import("../pages/AnkiGamePage"));
+export const LectureGeneratorPage = lazy(() => import("../pages/LectureGeneratorPage"));
+export const SettingsPage = lazy(() => import("../pages/SettingsPage"));
+export const ImportSettingsPage = lazy(() => import("../pages/ImportSettingsPage"));
+export const ExportSettingsPage = lazy(() => import("../pages/ExportSettingsPage"));
+export const SystemInfoPage = lazy(() => import("../pages/SystemInfoPage"));
+export const SettingsIndexRedirect = lazy(() => import("../pages/SettingsIndexRedirect"));
+export const WordsPage = lazy(() => import("../pages/WordsPage"));
+export const ExpressionsPage = lazy(() => import("../pages/ExpressionsPage"));
+export const ProfilePage = lazy(() => import("../pages/ProfilePage"));
+export const LabsPage = lazy(() => import("../pages/LabsPage"));
+export const UsersPage = lazy(() => import("../pages/UsersPage"));
