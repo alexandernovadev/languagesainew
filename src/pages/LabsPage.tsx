@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function LabsPage() {
@@ -8,14 +7,9 @@ export default function LabsPage() {
         title="Labs" 
         description="Funciones experimentales"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - LabsPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de labs</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de labs</p>
+      </div>
     </div>
   );
 }

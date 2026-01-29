@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function UsersPage() {
@@ -8,14 +7,9 @@ export default function UsersPage() {
         title="Usuarios" 
         description="Gestiona los usuarios del sistema"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - UsersPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de usuarios</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de usuarios</p>
+      </div>
     </div>
   );
 }

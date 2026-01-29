@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function SystemInfoPage() {
@@ -8,14 +7,9 @@ export default function SystemInfoPage() {
         title="Información del Sistema" 
         description="Información sobre el sistema"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - SystemInfoPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de información del sistema</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de información del sistema</p>
+      </div>
     </div>
   );
 }

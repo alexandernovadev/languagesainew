@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function ProfilePage() {
@@ -8,14 +7,9 @@ export default function ProfilePage() {
         title="Mi Perfil" 
         description="Gestiona tu perfil de usuario"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - ProfilePage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido del perfil</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido del perfil</p>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function ImportSettingsPage() {
@@ -8,14 +7,9 @@ export default function ImportSettingsPage() {
         title="Importar" 
         description="Importa datos a la aplicación"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - ImportSettingsPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de importación</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de importación</p>
+      </div>
     </div>
   );
 }

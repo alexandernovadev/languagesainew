@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Card, CardDescription, CardHeader, CardTitle } from "./card";
 
 interface PageHeaderProps {
   title: ReactNode;
@@ -8,18 +9,16 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 shadow-sm">
-      <div className="flex items-center justify-between p-2">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight truncate">{title}</h1>
-          {description && (
-            <div className="text-xs text-muted-foreground truncate">
-              {description}
-            </div>
-          )}
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <CardTitle>{title}</CardTitle>
+            {description && <CardDescription>{description}</CardDescription>}
+          </div>
+          {actions && <div className="flex gap-2">{actions}</div>}
         </div>
-        {actions && <div className="flex gap-1">{actions}</div>}
-      </div>
-    </div>
+      </CardHeader>
+    </Card>
   );
 }

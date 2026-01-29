@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function ExpressionsPage() {
@@ -8,14 +7,9 @@ export default function ExpressionsPage() {
         title="Expresiones" 
         description="Gestiona tus expresiones"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - ExpressionsPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de expresiones</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de expresiones</p>
+      </div>
     </div>
   );
 }

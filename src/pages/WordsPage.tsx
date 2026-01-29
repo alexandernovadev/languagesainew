@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function WordsPage() {
@@ -8,14 +7,9 @@ export default function WordsPage() {
         title="Palabras" 
         description="Gestiona tus palabras"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - WordsPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido de palabras</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido de palabras</p>
+      </div>
     </div>
   );
 }

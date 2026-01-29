@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 export default function LectureGeneratorPage() {
@@ -8,14 +7,9 @@ export default function LectureGeneratorPage() {
         title="Generador de Lecturas" 
         description="Genera lecturas personalizadas con IA"
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>hola ruta aqui - LectureGeneratorPage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Contenido del generador</p>
-        </CardContent>
-      </Card>
+      <div className="p-4">
+        <p>Contenido del generador</p>
+      </div>
     </div>
   );
 }
