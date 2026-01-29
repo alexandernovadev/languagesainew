@@ -93,6 +93,9 @@ export default function App() {
                       </ProtectedRoute>
                     }
                   />
+                  {/* Labs es PÚBLICA - ruta independiente */}
+                  <Route path="/settings/labs" element={<LabsPage />} />
+
                   <Route
                     path="/settings"
                     element={
@@ -104,8 +107,6 @@ export default function App() {
                     <Route index element={<SettingsIndexRedirect />} />
                     <Route path="import" element={<ImportSettingsPage />} />
                     <Route path="export" element={<ExportSettingsPage />} />
-                    {/* Labs es PÚBLICA - no está dentro de ProtectedRoute */}
-                    <Route path="labs" element={<LabsPage />} />
                     <Route path="system" element={<SystemInfoPage />} />
                   </Route>
 
