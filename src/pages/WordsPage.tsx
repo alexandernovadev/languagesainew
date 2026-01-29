@@ -168,23 +168,24 @@ export default function WordsPage() {
               className="pl-10"
             />
           </div>
-          <Button type="submit" variant="secondary">
-            <Search className="h-4 w-4 mr-2" />
-            Buscar
+          <Button type="submit" variant="secondary" size="icon" title="Buscar">
+            <Search className="h-4 w-4" />
           </Button>
         </form>
         
         <Button
           type="button"
           variant="outline"
+          size="icon"
           onClick={() => setFiltersModalOpen(true)}
+          title="Filtros"
+          className="relative"
         >
-          <Filter className="h-4 w-4 mr-2" />
-          Filtros
+          <Filter className="h-4 w-4" />
           {activeFiltersCount > 0 && (
-            <Badge variant="secondary" className="ml-2">
+            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
               {activeFiltersCount}
-            </Badge>
+            </span>
           )}
         </Button>
 
@@ -194,6 +195,7 @@ export default function WordsPage() {
             variant="ghost"
             onClick={handleClearFilters}
             size="icon"
+            title="Limpiar filtros"
           >
             <X className="h-4 w-4" />
           </Button>

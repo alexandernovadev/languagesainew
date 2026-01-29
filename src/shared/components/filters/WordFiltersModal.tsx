@@ -9,7 +9,7 @@ import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
 import { difficultyJson, languagesJson, wordTypesJson } from "@/data/bussiness/shared";
 import { WordFilters } from "@/shared/hooks/useWords";
-import { Filter, X } from "lucide-react";
+import { Filter, X, Eraser } from "lucide-react";
 
 interface WordFiltersModalProps {
   open: boolean;
@@ -81,11 +81,12 @@ export function WordFiltersModal({
           <Button
             type="button"
             variant="outline"
+            size="icon"
             onClick={handleClear}
             disabled={activeFiltersCount === 0}
+            title="Limpiar filtros"
           >
-            <X className="h-4 w-4 mr-2" />
-            Limpiar Filtros
+            <Eraser className="h-4 w-4" />
           </Button>
           <div className="flex gap-2">
             <Button
