@@ -23,7 +23,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 
-import { useWordFilters } from "@/hooks/useWordFilters";
+import { useWordFilters } from "../../hooks/useWordFilters";
 import { LevelFilter } from "./LevelFilter";
 import { LanguageFilter } from "./LanguageFilter";
 import { TypeFilter } from "./TypeFilter";

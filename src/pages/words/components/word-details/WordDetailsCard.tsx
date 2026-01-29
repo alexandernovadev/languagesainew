@@ -1,17 +1,17 @@
 import { useState, useCallback, useMemo, memo, useRef, useEffect } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { RefreshCw, Eye, Volume2, X, Info, MessageCircle } from "lucide-react";
-import { Word } from "@/models/Word";
+import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
-import { WordLevelBadge } from "@/shared/components/WordLevelBadge";
+import { WordLevelBadge } from "../WordLevelBadge";
 import { SPEECH_RATES } from "@/constants/speechRates";
 import { formatDateShort } from "@/utils/common/time";
-import { useWordStore } from "@/lib/store/useWordStore";
+import { useWordStore } from "../../store/useWordStore";
 import { toast } from "sonner";
-import { useResultHandler } from "@/hooks/useResultHandler";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { WordChatTab } from "./WordChatTab";
-import { useTextSelection } from "@/hooks/useTextSelection";
+import { useTextSelection } from "@/shared/hooks/useTextSelection";
 import { TextSelectionMenu } from "@/shared/components/common/TextSelectionMenu";
 
 import { LevelButtons } from "@/shared/components/common/LevelButtons";
@@ -19,10 +19,10 @@ import { capitalize } from "@/utils";
 import "../ui/ImageUploaderCard.css";
 
 // Importar el tipo ChatMessage
-import { ChatMessage } from "@/shared/components/chat/types";
+import { ChatMessage } from "@/types/models/ChatMessage";
 
 interface WordDetailsCardProps {
-  word: Word;
+  word: IWord;
   variant?: "full" | "compact" | "modal";
   showLevelButtons?: boolean;
   showRefreshButtons?: boolean;
@@ -182,7 +182,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   showAudioButtons = true,
 }: WordDetailsCardProps) {
   const {
-    updateWordLevel,
+    updateWordDifficulty,
     updateWordImage,
     updateWordExamples,
     updateWordSynonyms,
@@ -227,10 +227,10 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   // Incrementar seen cuando se ve la palabra
   useEffect(() => {
-    if (word._id) {
-      incrementWordSeen(word._id);
+    if ((word as any)._id) {
+      incrementWordSeen((word as any)._id);
     }
-  }, [word._id, incrementWordSeen]);
+  }, [(word as any)._id, incrementWordSeen]);
 
   // Memoizar funciones de manejo de eventos
   const speakWord = useCallback(
@@ -258,22 +258,22 @@ export const WordDetailsCard = memo(function WordDetailsCard({
 
   const handleUpdateLevel = useCallback(
     async (level: "easy" | "medium" | "hard") => {
-      if (!word._id) return;
+      if (!(word as any)._id) return;
 
       try {
-        await updateWordLevel(word._id, level);
+        await updateWordDifficulty((word as any)._id, level);
       } catch (error: any) {
         handleApiResult(error, "Actualizar Nivel");
       }
     },
-    [word._id, updateWordLevel, handleApiResult]
+    [(word as any)._id, updateWordDifficulty, handleApiResult]
   );
 
   const handleRefreshImage = useCallback(async () => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
 
     try {
-      await updateWordImage(word._id, word.word, word.img || "");
+      await updateWordImage((word as any)._id, word.word, word.img || "");
       toast.success("Imagen actualizada", {
         action: {
           label: <Eye className="h-4 w-4" />,
@@ -295,17 +295,17 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Imagen");
     }
-  }, [word._id, word.word, word.img, updateWordImage, handleApiResult]);
+  }, [(word as any)._id, word.word, word.img, updateWordImage, handleApiResult]);
 
   const handleRefreshExamples = useCallback(async () => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
 
     try {
       await updateWordExamples(
-        word._id,
+        (word as any)._id,
         word.word,
         "en",
-        (word.examples || []).join("\n")
+        word.examples || []
       );
       toast.success("Ejemplos actualizados", {
         action: {
@@ -328,17 +328,17 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Ejemplos");
     }
-  }, [word._id, word.word, word.examples, updateWordExamples, handleApiResult]);
+  }, [(word as any)._id, word.word, word.examples, updateWordExamples, handleApiResult]);
 
   const handleRefreshSynonyms = useCallback(async () => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
 
     try {
       await updateWordSynonyms(
-        word._id,
+        (word as any)._id,
         word.word,
         "en",
-        (word.sinonyms || []).join("\n")
+        word.sinonyms || []
       );
       toast.success("Sinónimos actualizados", {
         action: {
@@ -361,17 +361,17 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Sinónimos");
     }
-  }, [word._id, word.word, word.sinonyms, updateWordSynonyms, handleApiResult]);
+  }, [(word as any)._id, word.word, word.sinonyms, updateWordSynonyms, handleApiResult]);
 
   const handleRefreshCodeSwitching = useCallback(async () => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
 
     try {
       await updateWordCodeSwitching(
-        word._id,
+        (word as any)._id,
         word.word,
         "en",
-        (word.codeSwitching || []).join("\n")
+        word.codeSwitching || []
       );
       toast.success("Code-switching actualizado", {
         action: {
@@ -395,7 +395,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
       handleApiResult(error, "Actualizar Code-switching");
     }
   }, [
-    word._id,
+    (word as any)._id,
     word.word,
     word.codeSwitching,
     updateWordCodeSwitching,
@@ -403,14 +403,14 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   ]);
 
   const handleRefreshTypes = useCallback(async () => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
 
     try {
       await updateWordTypes(
-        word._id,
+        (word as any)._id,
         word.word,
         "en",
-        (word.type || []).join("\n")
+        word.type || []
       );
       toast.success("Tipos actualizados", {
         action: {
@@ -433,7 +433,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     } catch (error: any) {
       handleApiResult(error, "Actualizar Tipos");
     }
-  }, [word._id, word.word, word.type, updateWordTypes, handleApiResult]);
+  }, [(word as any)._id, word.word, word.type, updateWordTypes, handleApiResult]);
 
   // Memoizar valores computados
   const isCompact = useMemo(() => variant === "compact", [variant]);
@@ -454,12 +454,12 @@ export const WordDetailsCard = memo(function WordDetailsCard({
   // 🔄 Precargar el chat cuando se monta el componente
   useEffect(() => {
     const preloadChat = async () => {
-      if (word._id) {
+      if ((word as any)._id) {
         // 🔄 Solo precargar si no tenemos chat inicial o si es muy corto
         if (!word.chat || word.chat.length === 0) {
           setIsChatLoading(true);
           try {
-            const history = await getChatHistory(word._id);
+            const history = await getChatHistory((word as any)._id);
             setChatHistory(history);
           } catch (error) {
             console.error("Error preloading chat:", error);
@@ -476,7 +476,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
     };
 
     preloadChat();
-  }, [word._id, getChatHistory, word.chat]);
+  }, [(word as any)._id, getChatHistory, word.chat]);
 
   return (
     <div className={containerClassName}>
@@ -499,7 +499,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🇺🇸</span>
-                <WordLevelBadge level={word.level} className="text-xs" />
+                <WordLevelBadge level={word.difficulty} className="text-xs" />
               </div>
               <div className="flex items-center gap-1 text-xs text-zinc-400">
                 <Eye className="h-3 w-3" />
@@ -618,7 +618,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 showRefreshButtons={showRefreshButtons}
               />
               <div ref={examplesRef} className="space-y-2 relative">
-                {word.examples.map((example, index) => (
+                {word.examples.map((example: string, index: number) => (
                   <p
                     key={index}
                     className="text-sm text-zinc-300 leading-relaxed cursor-text select-text"
@@ -653,7 +653,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 showRefreshButtons={showRefreshButtons}
               />
               <div className="space-y-2">
-                {word.codeSwitching.map((example, index) => (
+                {word.codeSwitching.map((example: string, index: number) => (
                   <p
                     key={index}
                     className="text-sm text-zinc-300 leading-relaxed"
@@ -679,7 +679,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 showRefreshButtons={showRefreshButtons}
               />
               <div ref={synonymsRef} className="space-y-2 relative">
-                {word.sinonyms.map((synonym, index) => (
+                {word.sinonyms.map((synonym: string, index: number) => (
                   <p
                     key={index}
                     className="text-sm text-zinc-300 leading-relaxed cursor-text select-text"
@@ -711,7 +711,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
                 showRefreshButtons={showRefreshButtons}
               />
               <div className="flex flex-wrap gap-2">
-                {word.type.map((type, index) => (
+                {word.type.map((type: string, index: number) => (
                   <span
                     key={index}
                     className="px-2 py-1 bg-purple-900/30 border border-purple-700/30 rounded text-xs text-purple-300 capitalize"
@@ -748,7 +748,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
             <LevelButtons
               onUpdateLevel={handleUpdateLevel}
               loading={actionLoading.updateLevel}
-              currentLevel={word.level}
+              currentLevel={word.difficulty}
               variant={variant}
             />
           )}
@@ -758,7 +758,7 @@ export const WordDetailsCard = memo(function WordDetailsCard({
           {/* 🔄 Chat ya precargado */}
           <WordChatTab 
             word={word} 
-            preloadedChat={chatHistory}
+            preloadedChat={chatHistory as any}
             isPreloading={isChatLoading}
           />
         </TabsContent>

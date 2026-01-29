@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { WordLevelBadge } from "@/shared/components/WordLevelBadge";
+import { WordLevelBadge } from "./components/WordLevelBadge";
 import {
   Table,
   TableBody,
@@ -13,11 +13,11 @@ import {
 } from "@/shared/components/ui/table";
 import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
-import { useWordStore } from "@/lib/store/useWordStore";
-import { Word } from "@/models/Word";
-import { WordForm } from "@/shared/components/forms/WordForm";
-import { WordDetailsModal } from "@/shared/components/word-details";
-import { WordFiltersModal } from "@/shared/components/forms/word-filters/WordFiltersModal";
+import { useWordStore } from "./store/useWordStore";
+import { IWord } from "@/types/models/Word";
+import { WordForm } from "./components/WordForm";
+import { WordDetailsModal } from "./components/word-details/WordDetailsModal";
+import { WordFiltersModal } from "./components/word-filters/WordFiltersModal";
 import {
   ChevronLeft,
   ChevronRight,
@@ -43,13 +43,13 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 import { toast } from "sonner";
-import { useAnimatedDots } from "@/hooks/useAnimatedDots";
+import { useAnimatedDots } from "@/shared/hooks/useAnimatedDots";
 import { SPEECH_RATES } from "@/constants/speechRates";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { PageLayout } from "@/shared/components/layouts/page-layout";
-import { useWordFilters } from "@/hooks/useWordFilters";
-import { useResultHandler } from "@/hooks/useResultHandler";
-import { useFilterUrlSync } from "@/hooks/useFilterUrlSync";
+import { useWordFilters } from "./hooks/useWordFilters";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
+import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { capitalize } from "@/utils/common/string/capitalize";
 import { ActionButtonsHeader } from "@/shared/components/ui/action-buttons-header";
 
@@ -76,7 +76,7 @@ export default function MyWordsPage() {
   const { handleApiResult } = useResultHandler();
 
   // Función para copiar palabra al portapapeles
-  const copyWordToClipboard = async (word: Word) => {
+  const copyWordToClipboard = async (word: IWord) => {
     try {
       const textToCopy = `${capitalize(word.word)}:\n${capitalize(word.spanish?.definition || word.definition || 'Sin definición')}`;
       await navigator.clipboard.writeText(textToCopy);
@@ -99,7 +99,7 @@ export default function MyWordsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [selectedWord, setSelectedWord] = useState<IWord | null>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const [localSearch, setLocalSearch] = useState("");
@@ -158,7 +158,7 @@ export default function MyWordsPage() {
   // Sync selectedWord with updated data from store
   useEffect(() => {
     if (selectedWord && detailsModalOpen) {
-      const updatedWord = words.find((w) => w._id === selectedWord._id);
+      const updatedWord = words.find((w: IWord) => (w as any)._id === (selectedWord as any)._id);
       if (
         updatedWord &&
         JSON.stringify(updatedWord) !== JSON.stringify(selectedWord)
@@ -168,10 +168,10 @@ export default function MyWordsPage() {
     }
   }, [words, selectedWord, detailsModalOpen]);
 
-  const handleFormSubmit = async (data: Partial<Word>) => {
+  const handleFormSubmit = async (data: Partial<IWord>) => {
     try {
       if (isEditing && selectedWord) {
-        await updateWord(selectedWord._id, data);
+        await updateWord((selectedWord as any)._id, data);
         toast.success("Palabra actualizada", {
           description: `La palabra "${
             data.word || selectedWord.word
@@ -186,7 +186,7 @@ export default function MyWordsPage() {
           }
         });
       } else {
-        await createWord(data as Omit<Word, "_id">);
+        await createWord(data as Omit<IWord, "_id">);
         toast.success("Palabra creada", {
           description: `La palabra "${data.word}" ha sido agregada a tu vocabulario`,
           action: {
@@ -207,26 +207,26 @@ export default function MyWordsPage() {
     }
   };
 
-  const openDialog = (word?: Word, prefillWord?: string) => {
+  const openDialog = (word?: IWord, prefillWord?: string) => {
     if (word) {
       setSelectedWord(word);
       setIsEditing(true);
     } else {
-      setSelectedWord(prefillWord ? ({ word: prefillWord } as Word) : null);
+      setSelectedWord(prefillWord ? ({ word: prefillWord } as IWord) : null);
       setIsEditing(false);
     }
     setDialogOpen(true);
   };
 
-  const openDeleteDialog = (word: Word) => {
+  const openDeleteDialog = (word: IWord) => {
     setSelectedWord(word);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (selectedWord?._id) {
+    if (selectedWord && (selectedWord as any)._id) {
       try {
-        await deleteWord(selectedWord._id);
+        await deleteWord((selectedWord as any)._id);
         toast.success("Palabra eliminada", {
           description: `La palabra "${selectedWord.word}" ha sido eliminada`,
           action: {
@@ -248,7 +248,7 @@ export default function MyWordsPage() {
     }
   };
 
-  const viewWordDetails = (word: Word) => {
+  const viewWordDetails = (word: IWord) => {
     setSelectedWord(word);
     setDetailsModalOpen(true);
   };
@@ -348,7 +348,7 @@ export default function MyWordsPage() {
                       {activeFiltersCount} filtro{activeFiltersCount !== 1 ? "s" : ""} activo{activeFiltersCount !== 1 ? "s" : ""}
                     </div>
                     <div className="space-y-1">
-                      {getActiveFiltersDescription?.map((desc, index) => (
+                      {getActiveFiltersDescription?.map((desc: string, index: number) => (
                         <div key={index} className="text-muted-foreground">
                           • {desc}
                         </div>
@@ -433,9 +433,9 @@ export default function MyWordsPage() {
                   </TableRow>
                 ))
               ) : words.length > 0 ? (
-                words.map((word) => (
+                words.map((word: IWord) => (
                   <TableRow 
-                    key={word._id}
+                    key={(word as any)._id}
                     onDoubleClick={() => viewWordDetails(word)}
                     className="cursor-pointer select-none"
                   >
@@ -524,7 +524,7 @@ export default function MyWordsPage() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <WordLevelBadge level={word.level} />
+                      <WordLevelBadge level={word.difficulty} />
                     </TableCell>
                     <TableCell>
                       <span className="flex items-center gap-1">
@@ -638,7 +638,7 @@ export default function MyWordsPage() {
                               variant="outline"
                               size="sm"
                               onClick={() =>
-                                getWords().catch((error) => {
+                                getWords().catch((error: any) => {
                                   toast.error("Error al recargar", {
                                     description:
                                       error.message ||

@@ -63,7 +63,9 @@ export default function App() {
                   </Route>
 
                   <Route path="/words" element={<WordsPage />} />
+                  <Route path="/my-words" element={<WordsPage />} />
                   <Route path="/expressions" element={<ExpressionsPage />} />
+                  <Route path="/my-expressions" element={<ExpressionsPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/users" element={<UsersPage />} />
 

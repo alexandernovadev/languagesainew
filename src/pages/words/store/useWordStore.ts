@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import { wordService } from "../../services/wordService";
-import { Word } from "../../models/Word";
-import type { ChatMessage } from "../../models/Word";
-import { WordFilters } from "@/shared/components/forms/word-filters/types";
+import { wordService } from "@/services/wordService";
+import { IWord } from "@/types/models/Word";
+import type { ChatMessage } from "@/types/models/ChatMessage";
+import { WordFilters } from "../components/word-filters/types";
 import { toast } from "sonner";
 
 interface WordStore {
-  words: Word[];
-  activeWord: Word | null;
+  words: IWord[];
+  activeWord: IWord | null;
   loading: boolean;
   actionLoading: { [key: string]: boolean };
   errors: { [key: string]: string | null } | string | null;
@@ -29,8 +29,8 @@ interface WordStore {
   retry: () => void;
   getWordById: (id: string) => Promise<void>;
   getWordByName: (word: string) => Promise<void>;
-  createWord: (wordData: Omit<Word, "_id">) => Promise<Word>;
-  updateWord: (id: string, wordData: Partial<Word>) => Promise<Word>;
+  createWord: (wordData: Omit<IWord, "_id">) => Promise<IWord>;
+  updateWord: (id: string, wordData: Partial<IWord>) => Promise<IWord>;
   updateWordDifficulty: (id: string, difficulty: string) => Promise<any>;
   incrementWordSeen: (id: string) => Promise<boolean>;
   deleteWord: (id: string) => Promise<boolean>;
@@ -40,7 +40,7 @@ interface WordStore {
     difficulty?: string[];
   }) => Promise<void>;
   clearErrors: () => void;
-  setActiveWord: (word: Word | null) => void;
+  setActiveWord: (word: IWord | null) => void;
 
   // AI Methods for updating word content
   updateWordExamples: (
@@ -48,31 +48,31 @@ interface WordStore {
     word: string,
     language: string,
     oldExamples: string[]
-  ) => Promise<Word>;
+  ) => Promise<IWord>;
   updateWordCodeSwitching: (
     wordId: string,
     word: string,
     language: string,
     oldExamples: string[]
-  ) => Promise<Word>;
+  ) => Promise<IWord>;
   updateWordSynonyms: (
     wordId: string,
     word: string,
     language: string,
     oldExamples: string[]
-  ) => Promise<Word>;
+  ) => Promise<IWord>;
   updateWordTypes: (
     wordId: string,
     word: string,
     language: string,
     oldExamples: string[]
-  ) => Promise<Word>;
+  ) => Promise<IWord>;
   updateWordImage: (
     wordId: string,
     word: string,
     imgOld?: string
-  ) => Promise<Word>;
-  generateWord: (word: string, language?: string, provider?: string) => Promise<Word>;
+  ) => Promise<IWord>;
+  generateWord: (word: string, language?: string, provider?: string) => Promise<IWord>;
 
   // Chat actions
   addChatMessage: (wordId: string, message: string) => Promise<void>;
@@ -161,14 +161,14 @@ export const useWordStore = create<WordStore>((set, get) => ({
     get().getWords();
   },
 
-  setActiveWord: (word: Word | null) => {
+  setActiveWord: (word: IWord | null) => {
     const currentActive = get().activeWord;
-    if (currentActive?._id === word?._id) return;
+    if ((currentActive as any)?._id === (word as any)?._id) return;
 
     set({ activeWord: word });
 
-    if (word?._id) {
-      get().incrementWordSeen(word._id);
+    if ((word as any)?._id) {
+      get().incrementWordSeen((word as any)._id);
     }
   },
 
@@ -193,7 +193,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     }
   },
 
-  createWord: async (wordData: Omit<Word, "_id">) => {
+  createWord: async (wordData: Omit<IWord, "_id">) => {
     set({
       actionLoading: { ...get().actionLoading, create: true },
       errors: null,
@@ -215,7 +215,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     }
   },
 
-  updateWord: async (id: string, wordData: Partial<Word>) => {
+  updateWord: async (id: string, wordData: Partial<IWord>) => {
     set({
       actionLoading: { ...get().actionLoading, update: true },
       errors: null,
@@ -223,7 +223,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
     try {
       const { data } = await wordService.updateWord(id, wordData);
       set((state) => ({
-        words: state.words.map((word) => (word._id === id ? data : word)),
+        words: state.words.map((word) => ((word as any)._id === id ? data : word)),
         activeWord: data,
         actionLoading: { ...state.actionLoading, update: false },
       }));
@@ -243,10 +243,10 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.updateWordDifficulty(id, difficulty);
       set((state) => ({
         words: state.words.map((word) =>
-          word._id === id ? { ...word, difficulty: data.difficulty, updatedAt: data.updatedAt } : word
+          (word as any)._id === id ? { ...word, difficulty: data.difficulty, updatedAt: data.updatedAt } : word
         ),
         activeWord:
-          state.activeWord && state.activeWord._id === id
+          state.activeWord && (state.activeWord as any)._id === id
             ? { ...state.activeWord, difficulty: data.difficulty, updatedAt: data.updatedAt }
             : state.activeWord,
         actionLoading: { ...state.actionLoading, updateDifficulty: false },
@@ -270,10 +270,10 @@ export const useWordStore = create<WordStore>((set, get) => ({
       await wordService.incrementWordSeen(id);
       set((state) => ({
         words: state.words.map((word) =>
-          word._id === id ? { ...word, seen: (word.seen || 0) + 1 } : word
+          (word as any)._id === id ? { ...word, seen: (word.seen || 0) + 1 } : word
         ),
         activeWord:
-          state.activeWord && state.activeWord._id === id
+          state.activeWord && (state.activeWord as any)._id === id
             ? { ...state.activeWord, seen: (state.activeWord.seen || 0) + 1 }
             : state.activeWord,
         actionLoading: { ...state.actionLoading, incrementSeen: false },
@@ -296,8 +296,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
     try {
       await wordService.deleteWord(id);
       set((state) => ({
-        words: state.words.filter((word) => word._id !== id),
-        activeWord: state.activeWord?._id === id ? null : state.activeWord,
+        words: state.words.filter((word) => (word as any)._id !== id),
+        activeWord: (state.activeWord as any)?._id === id ? null : state.activeWord,
         actionLoading: { ...state.actionLoading, delete: false },
       }));
       return true;
@@ -335,8 +335,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordExamples(wordId, word, language, oldExamples);
       const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
-        words: state.words.map((w) => (w._id === wordId ? updatedWord.data : w)),
-        activeWord: state.activeWord && state.activeWord._id === wordId ? updatedWord.data : state.activeWord,
+        words: state.words.map((w) => ((w as any)._id === wordId ? updatedWord.data : w)),
+        activeWord: state.activeWord && (state.activeWord as any)._id === wordId ? updatedWord.data : state.activeWord,
         actionLoading: { ...state.actionLoading, updateExamples: false },
       }));
       return updatedWord.data;
@@ -351,8 +351,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordCodeSwitching(wordId, word, language, oldExamples);
       const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
-        words: state.words.map((w) => (w._id === wordId ? updatedWord.data : w)),
-        activeWord: state.activeWord && state.activeWord._id === wordId ? updatedWord.data : state.activeWord,
+        words: state.words.map((w) => ((w as any)._id === wordId ? updatedWord.data : w)),
+        activeWord: state.activeWord && (state.activeWord as any)._id === wordId ? updatedWord.data : state.activeWord,
         actionLoading: { ...state.actionLoading, updateCodeSwitching: false },
       }));
       return updatedWord.data;
@@ -367,8 +367,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordSynonyms(wordId, word, language, oldExamples);
       const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
-        words: state.words.map((w) => (w._id === wordId ? updatedWord.data : w)),
-        activeWord: state.activeWord && state.activeWord._id === wordId ? updatedWord.data : state.activeWord,
+        words: state.words.map((w) => ((w as any)._id === wordId ? updatedWord.data : w)),
+        activeWord: state.activeWord && (state.activeWord as any)._id === wordId ? updatedWord.data : state.activeWord,
         actionLoading: { ...state.actionLoading, updateSynonyms: false },
       }));
       return updatedWord.data;
@@ -383,8 +383,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordTypes(wordId, word, language, oldExamples);
       const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
-        words: state.words.map((w) => (w._id === wordId ? updatedWord.data : w)),
-        activeWord: state.activeWord && state.activeWord._id === wordId ? updatedWord.data : state.activeWord,
+        words: state.words.map((w) => ((w as any)._id === wordId ? updatedWord.data : w)),
+        activeWord: state.activeWord && (state.activeWord as any)._id === wordId ? updatedWord.data : state.activeWord,
         actionLoading: { ...state.actionLoading, updateTypes: false },
       }));
       return updatedWord.data;
@@ -399,8 +399,8 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const { data } = await wordService.generateWordImage(wordId, word, imgOld);
       const updatedWord = await wordService.getWordById(wordId);
       set((state) => ({
-        words: state.words.map((w) => (w._id === wordId ? updatedWord.data : w)),
-        activeWord: state.activeWord && state.activeWord._id === wordId ? updatedWord.data : state.activeWord,
+        words: state.words.map((w) => ((w as any)._id === wordId ? updatedWord.data : w)),
+        activeWord: state.activeWord && (state.activeWord as any)._id === wordId ? updatedWord.data : state.activeWord,
         actionLoading: { ...state.actionLoading, updateImage: false },
       }));
       return updatedWord.data;
@@ -428,7 +428,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       const response = await wordService.addChatMessage(wordId, message);
       set({
         words: get().words.map((word) =>
-          word._id === wordId ? response.data.word : word
+          (word as any)._id === wordId ? response.data.word : word
         ),
       });
     } catch (error: any) {
@@ -481,7 +481,7 @@ export const useWordStore = create<WordStore>((set, get) => ({
       await wordService.clearChatHistory(wordId);
       set({
         words: get().words.map((word) =>
-          word._id === wordId ? { ...word, chat: [] } : word
+          (word as any)._id === wordId ? { ...word, chat: [] } : word
         ),
       });
       toast.success("Chat limpiado exitosamente");

@@ -1,12 +1,12 @@
 import { ModalNova } from "@/shared/components/ui/modal-nova";
-import { Word } from "@/models/Word";
+import { IWord } from "@/types/models/Word";
 import { WordDetailsCard } from "./WordDetailsCard";
 import { LevelButtons } from "@/shared/components/common/LevelButtons";
-import { useWordStore } from "@/lib/store/useWordStore";
+import { useWordStore } from "../../store/useWordStore";
 import { capitalize } from "@/utils/common/string/capitalize";
 
 interface WordDetailsModalProps {
-  word: Word;
+  word: IWord;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   showLevelButtons?: boolean;
@@ -20,13 +20,13 @@ export function WordDetailsModal({
   showLevelButtons = true,
   showRefreshButtons = true,
 }: WordDetailsModalProps) {
-  const { updateWordLevel, actionLoading } = useWordStore();
+  const { updateWordDifficulty, actionLoading } = useWordStore();
 
   // Función wrapper para adaptar la interfaz
   const handleUpdateLevel = async (level: "easy" | "medium" | "hard") => {
-    if (!word._id) return;
+    if (!(word as any)._id) return;
     try {
-      await updateWordLevel(word._id, level);
+      await updateWordDifficulty((word as any)._id, level);
     } catch (error: any) {
       console.error("Error updating level:", error);
     }
@@ -37,8 +37,8 @@ export function WordDetailsModal({
     <div className="w-full">
       <LevelButtons
         onUpdateLevel={handleUpdateLevel}
-        loading={actionLoading.updateLevel}
-        currentLevel={word.level}
+        loading={actionLoading.updateDifficulty}
+        currentLevel={word.difficulty}
         variant="modal"
       />
     </div>

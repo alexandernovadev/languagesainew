@@ -19,19 +19,19 @@ import {
   CardTitle,
   CardDescription,
 } from "@/shared/components/ui/card";
-import { Word } from "@/models/Word";
+import { IWord } from "@/types/models/Word";
 import { wordLevels } from "@/data/wordLevels";
-import { EditableList } from "./EditableList";
+import { EditableList } from "@/shared/components/forms/EditableList";
 import { Book, Sparkles, ListPlus, Stars, Image } from "lucide-react";
 import { ImageUploaderCard } from "@/shared/components/ui/ImageUploaderCard";
 import { capitalize } from "@/utils/common/string/capitalize";
 import { getAllLanguages } from "@/utils/common/language";
 import { WORD_TYPES } from "@/utils/constants/wordTypes";
-import { useResultHandler } from "@/hooks/useResultHandler";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
 
 interface WordFormProps {
-  initialData?: Partial<Word>;
-  onSubmit: (data: Partial<Word>) => void;
+  initialData?: Partial<IWord>;
+  onSubmit: (data: Partial<IWord>) => void;
   onCancel: () => void;
   loading?: boolean;
 }
@@ -51,7 +51,7 @@ export function WordForm({
     watch,
     setValue,
     reset,
-  } = useForm<Partial<Word>>({
+  } = useForm<Partial<IWord>>({
     defaultValues: {
       word: "",
       IPA: "",
@@ -64,12 +64,6 @@ export function WordForm({
       spanish: { word: "", definition: "" },
       img: "",
       type: [],
-      lastReviewed: undefined,
-      nextReview: undefined,
-      reviewCount: 0,
-      difficulty: 3,
-      interval: 1,
-      easeFactor: 2.5,
       ...initialData,
     },
   });
@@ -90,13 +84,13 @@ export function WordForm({
 
   const isFormValid = formData.word && formData.spanish?.word && formData.spanish?.definition;
 
-  const onSubmitForm = (data: Partial<Word>) => {
+  const onSubmitForm = (data: Partial<IWord>) => {
     if (isFormValid) {
       onSubmit(data);
     }
   };
 
-  const handleChange = (field: keyof Word, value: any) => {
+  const handleChange = (field: keyof IWord, value: any) => {
     setValue(field, value);
   };
 
@@ -190,7 +184,7 @@ export function WordForm({
                                   if (checked) {
                                     handleChange("type", [...currentTypes, type.key]);
                                   } else {
-                                    handleChange("type", currentTypes.filter(t => t !== type.key));
+                                    handleChange("type", currentTypes.filter((t: string) => t !== type.key));
                                   }
                                 }}
                               />
@@ -305,7 +299,7 @@ export function WordForm({
                       <SelectValue placeholder="Selecciona una dificultad" />
                     </SelectTrigger>
                     <SelectContent>
-                      {wordLevels.map((level) => (
+                      {wordLevels.map((level: string) => (
                         <SelectItem key={level} value={level}>
                           {capitalize(level)}
                         </SelectItem>
@@ -330,7 +324,7 @@ export function WordForm({
               <CardContent>
                 <EditableList
                   items={formData.sinonyms || []}
-                  onChange={(items) => handleChange("sinonyms", items)}
+                  onChange={(items: string[]) => handleChange("sinonyms", items)}
                   placeholder="Añadir sinónimo..."
                 />
               </CardContent>
@@ -347,7 +341,7 @@ export function WordForm({
               <CardContent>
                 <EditableList
                   items={formData.examples || []}
-                  onChange={(items) => handleChange("examples", items)}
+                  onChange={(items: string[]) => handleChange("examples", items)}
                   placeholder="Añadir ejemplo..."
                 />
               </CardContent>
@@ -364,7 +358,7 @@ export function WordForm({
               <CardContent>
                 <EditableList
                   items={formData.codeSwitching || []}
-                  onChange={(items) => handleChange("codeSwitching", items)}
+                  onChange={(items: string[]) => handleChange("codeSwitching", items)}
                   placeholder="Añadir expresión..."
                 />
               </CardContent>
@@ -388,7 +382,7 @@ export function WordForm({
                   imageUrl={formData.img || ""}
                   onImageChange={handleImageChange}
                   word={formData.word}
-                  entityId={initialData._id}
+                  entityId={(initialData as any)?._id}
                   entityType="word"
                   disabled={loading}
                 />
@@ -396,6 +390,7 @@ export function WordForm({
             </Card>
           </TabsContent>
 
+          {/* Anki tab removed - fields not in IWord model */}
           <TabsContent value="anki" className="pt-2 space-y-4">
             <Card>
               <CardHeader>
@@ -403,90 +398,13 @@ export function WordForm({
                   <Stars className="h-5 w-5" /> Sistema de Repaso Inteligente
                 </CardTitle>
                 <CardDescription>
-                  Configuración para el sistema de repaso tipo Anki.
+                  Los campos de Anki no están disponibles en el modelo actual.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="difficulty">Nivel de Dificultad (1-5)</Label>
-                  <Select
-                    value={formData.difficulty?.toString() || "3"}
-                    onValueChange={(value) => handleChange("difficulty", parseInt(value))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona dificultad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 - Muy Fácil</SelectItem>
-                      <SelectItem value="2">2 - Fácil</SelectItem>
-                      <SelectItem value="3">3 - Medio</SelectItem>
-                      <SelectItem value="4">4 - Difícil</SelectItem>
-                      <SelectItem value="5">5 - Muy Difícil</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="interval">Intervalo de Repaso (días)</Label>
-                  <Input
-                    id="interval"
-                    type="number"
-                    min="1"
-                    max="365"
-                    {...register("interval", { valueAsNumber: true })}
-                    placeholder="1"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="easeFactor">Factor de Facilidad</Label>
-                  <Input
-                    id="easeFactor"
-                    type="number"
-                    min="1.3"
-                    max="5.0"
-                    step="0.1"
-                    {...register("easeFactor", { valueAsNumber: true })}
-                    placeholder="2.5"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Factor que determina qué tan fácil es recordar la palabra (1.3 - 5.0)
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="reviewCount">Contador de Repasos</Label>
-                  <Input
-                    id="reviewCount"
-                    type="number"
-                    min="0"
-                    {...register("reviewCount", { valueAsNumber: true })}
-                    placeholder="0"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastReviewed">Último Repaso</Label>
-                  <Input
-                    id="lastReviewed"
-                    type="date"
-                    {...register("lastReviewed")}
-                    value={formData.lastReviewed ? new Date(formData.lastReviewed).toISOString().split('T')[0] : ''}
-                    onChange={(e) => {
-                      const date = e.target.value ? new Date(e.target.value).toISOString() : undefined;
-                      handleChange("lastReviewed", date);
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="nextReview">Próximo Repaso</Label>
-                  <Input
-                    id="nextReview"
-                    type="date"
-                    {...register("nextReview")}
-                    value={formData.nextReview ? new Date(formData.nextReview).toISOString().split('T')[0] : ''}
-                    onChange={(e) => {
-                      const date = e.target.value ? new Date(e.target.value).toISOString() : undefined;
-                      handleChange("nextReview", date);
-                    }}
-                  />
-                </div>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Esta funcionalidad será implementada en una futura versión.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
