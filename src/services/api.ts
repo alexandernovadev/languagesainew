@@ -74,34 +74,15 @@ api.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // No autorizado - intentar refresh token antes de limpiar
-          console.log("🔒 Token expirado - Intentando refresh...");
-
+          // No autorizado - limpiar sesión y redirigir a login
+          console.log("🔒 No autorizado - Limpiando sesión");
           const store = useUserStore.getState();
-          const refreshSuccess = await store.refreshAccessToken();
-
-          if (refreshSuccess) {
-            // Reintentar la petición original con el nuevo token
-            console.log("🔄 Reintentando petición con nuevo token...");
-            const newToken = store.token;
-            if (newToken) {
-              error.config.headers.Authorization = `Bearer ${newToken}`;
-              return api.request(error.config);
-            }
-          } else {
-            // Refresh falló - limpiar sesión y abrir modal de login
-            console.log(
-              "🔒 Refresh falló - Limpiando sesión y abriendo modal de login"
-            );
-            store.clearSession();
-
-            // Abrir modal de login usando query params
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set("showLogin", "true");
-            window.history.replaceState({}, "", currentUrl.toString());
-
-            // Disparar evento personalizado para notificar que se debe abrir el modal
-            window.dispatchEvent(new CustomEvent("openLoginModal"));
+          store.clearSession();
+          localStorage.removeItem("refreshToken");
+          
+          // Redirigir a login si no estamos ya allí
+          if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
           }
           break;
 

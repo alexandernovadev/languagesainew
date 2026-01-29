@@ -4,6 +4,7 @@ import React from "react";
 import DashboardLayout from "./shared/components/layouts/DashboardLayout";
 import LoadingSpinner from "./shared/components/LoadingSpinner";
 import { toast } from "sonner";
+import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 
 // Importar todas las rutas lazy load
 import {
@@ -22,6 +23,7 @@ import {
   ProfilePage,
   LabsPage,
   UsersPage,
+  LoginPage,
 } from "./routes";
 
 // Componente para manejar rutas desconocidas
@@ -39,37 +41,131 @@ function NotFoundRedirect() {
 export default function App() {
   return (
     <BrowserRouter>
-      <DashboardLayout>
-        <Suspense fallback={<LoadingSpinner size="lg" />}>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/lectures" element={<LecturesPage />} />
-            <Route path="/lectures/:id" element={<LectureDetailPage />} />
-            <Route path="/games/anki" element={<AnkiGamePage />} />
-            <Route
-              path="/generator/lecture"
-              element={<LectureGeneratorPage />}
-            />
-            <Route path="/settings" element={<SettingsPage />}>
-              <Route index element={<SettingsIndexRedirect />} />
-              <Route path="import" element={<ImportSettingsPage />} />
-              <Route path="export" element={<ExportSettingsPage />} />
-              <Route path="labs" element={<LabsPage />} />
-              <Route path="system" element={<SystemInfoPage />} />
-            </Route>
+      <Suspense fallback={<LoadingSpinner size="lg" />}>
+        <Routes>
+          {/* Ruta pública de login (sin DashboardLayout) */}
+          <Route path="/login" element={<LoginPage />} />
 
-            <Route path="/words" element={<WordsPage />} />
-            <Route path="/my-words" element={<WordsPage />} />
-            <Route path="/expressions" element={<ExpressionsPage />} />
-            <Route path="/my-expressions" element={<ExpressionsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/users" element={<UsersPage />} />
+          {/* Rutas con DashboardLayout */}
+          <Route
+            path="/*"
+            element={
+              <DashboardLayout>
+                <Routes>
+                  {/* Rutas protegidas */}
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/lectures"
+                    element={
+                      <ProtectedRoute>
+                        <LecturesPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/lectures/:id"
+                    element={
+                      <ProtectedRoute>
+                        <LectureDetailPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/games/anki"
+                    element={
+                      <ProtectedRoute>
+                        <AnkiGamePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/generator/lecture"
+                    element={
+                      <ProtectedRoute>
+                        <LectureGeneratorPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute>
+                        <SettingsPage />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<SettingsIndexRedirect />} />
+                    <Route path="import" element={<ImportSettingsPage />} />
+                    <Route path="export" element={<ExportSettingsPage />} />
+                    {/* Labs es PÚBLICA - no está dentro de ProtectedRoute */}
+                    <Route path="labs" element={<LabsPage />} />
+                    <Route path="system" element={<SystemInfoPage />} />
+                  </Route>
 
-            {/* Catch-all route para rutas desconocidas */}
-            <Route path="*" element={<NotFoundRedirect />} />
-          </Routes>
-        </Suspense>
-      </DashboardLayout>
+                  <Route
+                    path="/words"
+                    element={
+                      <ProtectedRoute>
+                        <WordsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/my-words"
+                    element={
+                      <ProtectedRoute>
+                        <WordsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/expressions"
+                    element={
+                      <ProtectedRoute>
+                        <ExpressionsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/my-expressions"
+                    element={
+                      <ProtectedRoute>
+                        <ExpressionsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/users"
+                    element={
+                      <ProtectedRoute>
+                        <UsersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* Catch-all route para rutas desconocidas */}
+                  <Route path="*" element={<NotFoundRedirect />} />
+                </Routes>
+              </DashboardLayout>
+            }
+          />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

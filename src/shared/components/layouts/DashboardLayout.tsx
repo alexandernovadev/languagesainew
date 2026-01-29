@@ -23,6 +23,9 @@ import {
   gamesItems,
   configSettingsItems,
 } from "../sidebar-menus";
+import { useAuth } from "@/shared/hooks/useAuth";
+import { UserMenu } from "../UserMenu";
+import { LoginButton } from "../LoginButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -30,6 +33,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const isActive = (url: string) => {
     if (url === "/") {
@@ -107,7 +111,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <div className="flex flex-1 items-center justify-end gap-4">
-          comming soon...
+            {isAuthenticated ? <UserMenu /> : <LoginButton />}
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 overflow-auto">
