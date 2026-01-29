@@ -12,8 +12,8 @@ import {
 import { Loader2, Wand2, Upload, X, Image } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/services/api";
-import { useResultHandler } from "@/hooks/useResultHandler";
-import useImageUpload from "@/hooks/useImageUpload";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
+import useImageUpload from "@/shared/hooks/useImageUpload";
 import "./ImageUploaderCard.css";
 
 interface ImageUploaderCardProps {

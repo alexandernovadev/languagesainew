@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { LecturesPage, MyWordsPage } from "../routes/lazyRoutes";
+import { LecturesPage, WordsPage } from "../../routes/lazyRoutes";
 
 // Rutas importantes para preload
 const importantRoutes = [
   () => LecturesPage,
-  () => MyWordsPage,
+  () => WordsPage,
 ];
 
 export const RoutePreloader: React.FC = () => {

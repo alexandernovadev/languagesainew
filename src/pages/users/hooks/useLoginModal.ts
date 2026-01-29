@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useUserStore } from "@/lib/store/user-store";
+import { useUserStore } from "../store/user-store";
 
 export const useLoginModal = () => {
   const [searchParams, setSearchParams] = useSearchParams();

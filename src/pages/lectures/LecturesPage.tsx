@@ -5,10 +5,10 @@ import { Input } from "@/shared/components/ui/input";
 import { useLectureStore } from "./store/useLectureStore";
 import { useLectureModals } from "./hooks/useLectureModals";
 import { LectureForm } from "./components/LectureForm";
-import { LectureCard } from "@/shared/components/lectures/LectureCard";
+import { LectureCard } from "./components/lectures/LectureCard";
 import { LecturePagination } from "@/shared/components/ui/LecturePagination";
 import { useNavigate } from "react-router-dom";
-import type { Lecture } from "@/models/Lecture";
+import type { ILecture } from "@/types/models/Lecture";
 import { Plus, RefreshCw, Search, X as XIcon, SlidersHorizontal } from "lucide-react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { PageLayout } from "@/shared/components/layouts/page-layout";
@@ -16,7 +16,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import { toast } from "sonner";
 import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
-import { useResultHandler } from "@/hooks/useResultHandler";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
 import { useLectureFilterUrlSync } from "./hooks/useLectureFilterUrlSync";
 import { Eye, X } from "lucide-react";
 import { LectureFiltersModal } from "./components/lecture-filters/LectureFiltersModal";
@@ -109,10 +109,10 @@ export default function LecturesPage() {
   };
 
   const handleAddLecture = async (
-    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+    data: Omit<ILecture, "_id" | "createdAt" | "updatedAt">
   ) => {
     try {
-      await postLecture(data as Lecture);
+      await postLecture(data as ILecture);
       toast.success("Lectura creada exitosamente", {
         action: {
           label: <Eye className="h-4 w-4" />,
@@ -130,11 +130,11 @@ export default function LecturesPage() {
   };
 
   const handleEditLecture = async (
-    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+    data: Omit<ILecture, "_id" | "createdAt" | "updatedAt">
   ) => {
     if (selectedLectureId) {
       try {
-        const updatedLecture = await putLecture(selectedLectureId, data as Lecture);
+        const updatedLecture = await putLecture(selectedLectureId, data as ILecture);
         toast.success("Lectura actualizada exitosamente", {
           action: {
             label: <Eye className="h-4 w-4" />,

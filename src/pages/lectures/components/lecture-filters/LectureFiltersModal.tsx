@@ -10,7 +10,7 @@ import { LanguageFilter } from "./LanguageFilter";
 import { TypeWriteFilter } from "./TypeWriteFilter";
 import { LectureBooleanFilters } from "./LectureBooleanFilters";
 import { TimeRangeFilter } from "./TimeRangeFilter";
-import { DateRangeFilter } from "@/shared/components/forms/word-filters/DateRangeFilter";
+import { DateRangeFilter } from "@/shared/components/forms/common/DateRangeFilter";
 import { SortFilter } from "./SortFilter";
 import { useLectureFilters } from "../../hooks/useLectureFilters";
 import { Check, X, Book, FileText, Search, Settings, ArrowUpDown } from "lucide-react";

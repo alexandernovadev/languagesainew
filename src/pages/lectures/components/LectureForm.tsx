@@ -18,18 +18,18 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Settings, FileText, Image } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
-import { Lecture } from "@/models/Lecture";
+import { ILecture } from "@/types/models/Lecture";
 import { lectureLevels } from "@/data/lectureLevels";
 import { lectureTypes } from "@/data/lectureTypes";
-import { getAllowedLanguages } from "@/constants/identity";
+import { getAllowedLanguages } from "@/utils/common/language";
 import { toast } from "sonner";
-import { useResultHandler } from "@/hooks/useResultHandler";
+import { useResultHandler } from "@/shared/hooks/useResultHandler";
 import { ImageUploaderCard } from "@/shared/components/ui/ImageUploaderCard";
 
 interface LectureFormProps {
-  initialData?: Partial<Lecture>;
+  initialData?: Partial<ILecture>;
   onSubmit: (
-    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+    data: Omit<ILecture, "_id" | "createdAt" | "updatedAt">
   ) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
@@ -68,7 +68,7 @@ export function LectureForm({ initialData = {}, onSubmit }: LectureFormProps) {
     formData.time > 0;
 
   const onSubmitForm = async (
-    data: Omit<Lecture, "_id" | "createdAt" | "updatedAt">
+    data: Omit<ILecture, "_id" | "createdAt" | "updatedAt">
   ) => {
     if (isFormValid) {
       await onSubmit(data);
