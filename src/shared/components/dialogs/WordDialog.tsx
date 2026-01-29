@@ -1,0 +1,493 @@
+import { useState, useEffect } from "react";
+import { IWord } from "@/types/models/Word";
+import { WordCreate, WordUpdate } from "@/shared/hooks/useWords";
+import { Difficulty, Language, WordType } from "@/types/business";
+import { difficultyJson, languagesJson, wordTypesJson } from "@/data/bussiness/shared";
+import { ModalNova } from "../ui/modal-nova";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Loader2, Plus, X } from "lucide-react";
+import { Badge } from "../ui/badge";
+
+interface WordDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  word?: IWord | null;
+  onSave: (wordData: WordCreate | WordUpdate) => Promise<boolean>;
+}
+
+export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps) {
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    word: "",
+    definition: "",
+    language: "en" as Language,
+    difficulty: "medium" as Difficulty,
+    IPA: "",
+    img: "",
+    spanishWord: "",
+    spanishDefinition: "",
+    // Arrays
+    type: [] as WordType[],
+    examples: [] as string[],
+    sinonyms: [] as string[],
+    codeSwitching: [] as string[],
+  });
+
+  // Temporary inputs for arrays
+  const [typeSelect, setTypeSelect] = useState<WordType | "">("");
+  const [exampleInput, setExampleInput] = useState("");
+  const [synonymInput, setSynonymInput] = useState("");
+  const [codeSwitchingInput, setCodeSwitchingInput] = useState("");
+
+  // Reset form when word changes or dialog opens
+  useEffect(() => {
+    if (word) {
+      setFormData({
+        word: word.word || "",
+        definition: word.definition || "",
+        language: (word.language as Language) || "en",
+        difficulty: (word.difficulty as Difficulty) || "medium",
+        IPA: word.IPA || "",
+        img: word.img || "",
+        spanishWord: word.spanish?.word || "",
+        spanishDefinition: word.spanish?.definition || "",
+        type: (word.type as WordType[]) || [],
+        examples: word.examples || [],
+        sinonyms: word.sinonyms || [],
+        codeSwitching: word.codeSwitching || [],
+      });
+    } else {
+      // Reset for new word
+      setFormData({
+        word: "",
+        definition: "",
+        language: "en",
+        difficulty: "medium",
+        IPA: "",
+        img: "",
+        spanishWord: "",
+        spanishDefinition: "",
+        type: [],
+        examples: [],
+        sinonyms: [],
+        codeSwitching: [],
+      });
+    }
+    // Clear temporary inputs
+    setTypeSelect("");
+    setExampleInput("");
+    setSynonymInput("");
+    setCodeSwitchingInput("");
+  }, [word, open]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const wordData: any = {
+        word: formData.word,
+        definition: formData.definition,
+        language: formData.language,
+        difficulty: formData.difficulty,
+        IPA: formData.IPA || undefined,
+        img: formData.img || undefined,
+        type: formData.type.length > 0 ? formData.type : undefined,
+        examples: formData.examples.length > 0 ? formData.examples : undefined,
+        sinonyms: formData.sinonyms.length > 0 ? formData.sinonyms : undefined,
+        codeSwitching: formData.codeSwitching.length > 0 ? formData.codeSwitching : undefined,
+      };
+
+      // Add spanish if provided
+      if (formData.spanishWord || formData.spanishDefinition) {
+        wordData.spanish = {
+          word: formData.spanishWord || "",
+          definition: formData.spanishDefinition || "",
+        };
+      }
+
+      const success = await onSave(wordData);
+      if (success) {
+        onOpenChange(false);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Array management functions
+  const addToArray = (field: 'type' | 'examples' | 'sinonyms' | 'codeSwitching', value: string | WordType) => {
+    if (value && (typeof value === 'string' ? value.trim() : true)) {
+      const valueToAdd = typeof value === 'string' ? value.trim() : value;
+      setFormData(prev => ({
+        ...prev,
+        [field]: [...prev[field], valueToAdd]
+      }));
+      // Clear input
+      if (field === 'type') setTypeSelect("");
+      if (field === 'examples') setExampleInput("");
+      if (field === 'sinonyms') setSynonymInput("");
+      if (field === 'codeSwitching') setCodeSwitchingInput("");
+    }
+  };
+
+  const removeFromArray = (field: 'type' | 'examples' | 'sinonyms' | 'codeSwitching', index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index)
+    }));
+  };
+
+  const isEditMode = !!word;
+
+  return (
+    <ModalNova
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditMode ? "Edit Word" : "Create New Word"}
+      description={
+        isEditMode
+          ? "Update word information"
+          : "Fill in the information to create a new word"
+      }
+      size="4xl"
+      height="h-[90vh]"
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={loading} onClick={handleSubmit}>
+            {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+            {isEditMode ? "Update Word" : "Create Word"}
+          </Button>
+        </>
+      }
+    >
+      <div className="px-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Info */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="word">Word *</Label>
+              <Input
+                id="word"
+                value={formData.word}
+                onChange={(e) => setFormData({ ...formData, word: e.target.value })}
+                required
+                disabled={loading}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="IPA">IPA (Pronunciation)</Label>
+              <Input
+                id="IPA"
+                value={formData.IPA}
+                onChange={(e) => setFormData({ ...formData, IPA: e.target.value })}
+                disabled={loading}
+                placeholder="e.g., /həˈloʊ/"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          {/* Definition */}
+          <div className="space-y-2">
+            <Label htmlFor="definition">Definition *</Label>
+            <Textarea
+              id="definition"
+              value={formData.definition}
+              onChange={(e) => setFormData({ ...formData, definition: e.target.value })}
+              required
+              disabled={loading}
+              rows={3}
+            />
+          </div>
+
+          {/* Language, Difficulty */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="language">Language *</Label>
+              <Select
+                value={formData.language}
+                onValueChange={(value: Language) => setFormData({ ...formData, language: value })}
+                disabled={loading}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {languagesJson.map((lang) => (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      {lang.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="difficulty">Difficulty *</Label>
+              <Select
+                value={formData.difficulty}
+                onValueChange={(value: Difficulty) => setFormData({ ...formData, difficulty: value })}
+                disabled={loading}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {difficultyJson.map((diff) => (
+                    <SelectItem key={diff.value} value={diff.value}>
+                      {diff.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Image URL */}
+          <div className="space-y-2">
+            <Label htmlFor="img">Image URL</Label>
+            <Input
+              id="img"
+              value={formData.img}
+              onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+              disabled={loading}
+              placeholder="https://..."
+              autoComplete="off"
+            />
+          </div>
+
+          {/* Spanish Translation */}
+          <div className="space-y-4 border-t pt-4">
+            <h3 className="text-sm font-semibold">Spanish Translation (Optional)</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="spanishWord">Spanish Word</Label>
+                <Input
+                  id="spanishWord"
+                  value={formData.spanishWord}
+                  onChange={(e) => setFormData({ ...formData, spanishWord: e.target.value })}
+                  disabled={loading}
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="spanishDefinition">Spanish Definition</Label>
+                <Input
+                  id="spanishDefinition"
+                  value={formData.spanishDefinition}
+                  onChange={(e) => setFormData({ ...formData, spanishDefinition: e.target.value })}
+                  disabled={loading}
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Word Types */}
+          <div className="space-y-2">
+            <Label>Word Types</Label>
+            <div className="flex gap-2">
+              <Select
+                value={typeSelect}
+                onValueChange={(value: WordType) => setTypeSelect(value)}
+                disabled={loading}
+              >
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Select word type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {wordTypesJson.map((wt) => (
+                    <SelectItem key={wt.value} value={wt.value}>
+                      {wt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => typeSelect && addToArray('type', typeSelect)}
+                disabled={loading || !typeSelect}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.type.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {formData.type.map((t, idx) => {
+                  const typeLabel = wordTypesJson.find(wt => wt.value === t)?.label || t;
+                  return (
+                    <Badge key={idx} variant="secondary">
+                      {typeLabel}
+                      <button
+                        type="button"
+                        onClick={() => removeFromArray('type', idx)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Examples */}
+          <div className="space-y-2">
+            <Label>Examples</Label>
+            <div className="flex gap-2">
+              <Input
+                value={exampleInput}
+                onChange={(e) => setExampleInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addToArray('examples', exampleInput);
+                  }
+                }}
+                disabled={loading}
+                placeholder="Add example and press Enter"
+                autoComplete="off"
+              />
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => addToArray('examples', exampleInput)}
+                disabled={loading}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.examples.length > 0 && (
+              <div className="space-y-1 mt-2">
+                {formData.examples.map((ex, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-sm bg-muted p-2 rounded">
+                    <span className="flex-1">{ex}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeFromArray('examples', idx)}
+                      className="hover:text-destructive"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Synonyms */}
+          <div className="space-y-2">
+            <Label>Synonyms</Label>
+            <div className="flex gap-2">
+              <Input
+                value={synonymInput}
+                onChange={(e) => setSynonymInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addToArray('sinonyms', synonymInput);
+                  }
+                }}
+                disabled={loading}
+                placeholder="Add synonym and press Enter"
+                autoComplete="off"
+              />
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => addToArray('sinonyms', synonymInput)}
+                disabled={loading}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.sinonyms.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {formData.sinonyms.map((s, idx) => (
+                  <Badge key={idx} variant="outline">
+                    {s}
+                    <button
+                      type="button"
+                      onClick={() => removeFromArray('sinonyms', idx)}
+                      className="ml-1 hover:text-destructive"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Code Switching */}
+          <div className="space-y-2">
+            <Label>Code Switching Examples</Label>
+            <div className="flex gap-2">
+              <Input
+                value={codeSwitchingInput}
+                onChange={(e) => setCodeSwitchingInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addToArray('codeSwitching', codeSwitchingInput);
+                  }
+                }}
+                disabled={loading}
+                placeholder="Add code switching example and press Enter"
+                autoComplete="off"
+              />
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => addToArray('codeSwitching', codeSwitchingInput)}
+                disabled={loading}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.codeSwitching.length > 0 && (
+              <div className="space-y-1 mt-2">
+                {formData.codeSwitching.map((cs, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-sm bg-muted p-2 rounded">
+                    <span className="flex-1">{cs}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeFromArray('codeSwitching', idx)}
+                      className="hover:text-destructive"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </form>
+      </div>
+    </ModalNova>
+  );
+}

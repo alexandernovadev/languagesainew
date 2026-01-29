@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, UserCreate, UserUpdate } from "@/services/userService";
+import { systemRolesJson, languagesJson } from "@/data/bussiness/shared";
 import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -212,9 +213,11 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="teacher">Teacher</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
+                  {systemRolesJson.map((role) => (
+                    <SelectItem key={role.value} value={role.value}>
+                      {role.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -230,10 +233,11 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Spanish</SelectItem>
-                  <SelectItem value="fr">French</SelectItem>
-                  <SelectItem value="de">German</SelectItem>
+                  {languagesJson.map((lang) => (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      {lang.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
