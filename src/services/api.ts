@@ -1,4 +1,4 @@
-import { useUserStore } from "@/pages/users/store/user-store";
+import { useUserStore } from "@/lib/store/user-store";
 import axios from "axios";
 
 export const api = axios.create({

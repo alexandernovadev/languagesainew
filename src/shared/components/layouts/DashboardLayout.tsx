@@ -100,9 +100,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          <div className="px-2 py-2">comming soon...</div>
-        </SidebarFooter>
+
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
