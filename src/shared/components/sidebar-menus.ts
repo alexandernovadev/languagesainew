@@ -55,7 +55,7 @@ export const gamesItems = [
 export const configSettingsItems = [
   {
     title: "Usuarios",
-    url: "/admin/users",
+    url: "/users",
     icon: Users,
   },
   {
