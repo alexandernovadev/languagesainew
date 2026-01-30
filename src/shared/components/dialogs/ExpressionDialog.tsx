@@ -10,6 +10,7 @@ import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-r
 import { IExpression } from "@/types/models/Expression";
 import { ExpressionType } from "@/types/business";
 import { difficultyJson, languagesJson, expressionTypesJson } from "@/data/bussiness/shared";
+import { ImageUploaderCard } from "../ui/ImageUploaderCard";
 
 interface ExpressionDialogProps {
   open: boolean;
@@ -406,30 +407,22 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
           </TabsContent>
 
           {/* Media Tab */}
-          <TabsContent value="media" className="space-y-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="img">Image URL</Label>
-              <Input
-                id="img"
-                type="url"
-                value={formData.img}
-                onChange={(e) => setFormData({ ...formData, img: e.target.value })}
-                disabled={loading}
-                placeholder="https://example.com/image.jpg"
-              />
-              {formData.img && (
-                <div className="mt-2">
-                  <img
-                    src={formData.img}
-                    alt="Preview"
-                    className="max-w-xs max-h-48 rounded-md border"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/placeholder.svg";
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+          <TabsContent value="media" className="mt-4">
+            <ImageUploaderCard
+              title="Imagen de la Expresión"
+              description={
+                isEditMode
+                  ? "Sube una nueva imagen, genera con IA, o usa una URL"
+                  : "Ingresa una URL de imagen. Podrás subir una imagen después de crear la expresión."
+              }
+              imageUrl={formData.img || ""}
+              onImageChange={(url) => setFormData({ ...formData, img: url })}
+              entityId={expression?._id}
+              entityType="expression"
+              word={formData.expression}
+              disabled={loading}
+              className="mt-0"
+            />
           </TabsContent>
         </Tabs>
       </form>

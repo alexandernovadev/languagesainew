@@ -1,11 +1,12 @@
-import { useResultContext } from '@/contexts/ResultContext';
+import { toast } from 'sonner';
 
 export function useResultHandler() {
-  const { showResult, hideResult, clearResult } = useResultContext();
-
-  const handleApiResult = (result: any, context?: string) => {
-    console.log(`Resultado en ${context || 'API'}:`, result);
-    showResult(result, context);
+  const handleApiResult = (error: any, context?: string) => {
+    const contextName = context || 'Operación';
+    const errorMessage = error?.response?.data?.message || error?.message || `Error en ${contextName}`;
+    
+    console.error(`Error en ${contextName}:`, error);
+    toast.error(errorMessage);
   };
 
   const withResultHandler = <T extends any[], R>(
@@ -15,7 +16,6 @@ export function useResultHandler() {
     return async (...args: T): Promise<R | undefined> => {
       try {
         const result = await fn(...args);
-        handleApiResult(result, context);
         return result;
       } catch (error) {
         handleApiResult(error, context);
@@ -27,7 +27,5 @@ export function useResultHandler() {
   return {
     handleApiResult,
     withResultHandler,
-    hideResult,
-    clearResult,
   };
 } 

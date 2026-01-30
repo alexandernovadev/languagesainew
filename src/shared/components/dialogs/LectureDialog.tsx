@@ -12,6 +12,8 @@ import { CertificationLevel, Language, ReadingType } from "@/types/business";
 import { certificationLevelsJson, languagesJson, readingTypesJson } from "@/data/bussiness/shared";
 import { lectureService } from "@/services/lectureService";
 import { QuillEditor } from "../ui/quill-editor";
+import { ImageUploaderCard } from "../ui/ImageUploaderCard";
+import { getMarkdownTitle } from "@/utils/common/string/markdown";
 
 // Helper functions to convert between Markdown and HTML
 const markdownToHtml = (markdown: string): string => {
@@ -343,33 +345,24 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
             </TabsContent>
 
             {/* Media Tab */}
-            <TabsContent value="media" className="space-y-4 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="img">URL de Imagen</Label>
-                <Input
-                  id="img"
-                  type="url"
-                  value={formData.img}
-                  onChange={(e) => setFormData({ ...formData, img: e.target.value })}
-                  disabled={loading}
-                  placeholder="https://..."
-                  autoComplete="off"
-                />
-                {formData.img && (
-                  <div className="mt-2">
-                    <img
-                      src={formData.img}
-                      alt="Preview"
-                      className="w-full h-48 object-cover rounded border"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+            <TabsContent value="media" className="mt-4">
+              <ImageUploaderCard
+                title="Imagen de la Lectura"
+                description={
+                  isEditMode 
+                    ? "Sube una nueva imagen, genera con IA, o usa una URL"
+                    : "Ingresa una URL de imagen. Podrás subir una imagen después de crear la lectura."
+                }
+                imageUrl={formData.img || ""}
+                onImageChange={(url) => setFormData({ ...formData, img: url })}
+                entityId={lecture?._id}
+                entityType="lecture"
+                word={getMarkdownTitle(formData.content) || ""}
+                disabled={loading || loadingLecture}
+                className="mt-0"
+              />
 
-              <div className="space-y-2">
+              <div className="space-y-2 mt-4">
                 <Label htmlFor="urlAudio">URL de Audio</Label>
                 <Input
                   id="urlAudio"

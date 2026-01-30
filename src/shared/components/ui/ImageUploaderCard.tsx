@@ -248,7 +248,7 @@ export function ImageUploaderCard({
                   <img
                     src={dragImagePreview}
                     alt="Vista previa de imagen"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <button
                     onClick={handleRemoveDragImage}
@@ -262,7 +262,7 @@ export function ImageUploaderCard({
                   <img
                     src={imageUrl}
                     alt={word || "Image"}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <button
                     onClick={() => onImageChange("")}

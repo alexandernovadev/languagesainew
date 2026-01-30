@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { ImageUploaderCard } from "../ui/ImageUploaderCard";
 
 interface WordDialogProps {
   open: boolean;
@@ -510,31 +511,22 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
         </TabsContent>
 
         {/* Media Tab */}
-        <TabsContent value="media" className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="img">Image URL</Label>
-            <Input
-              id="img"
-              type="url"
-              value={formData.img}
-              onChange={(e) => setFormData({ ...formData, img: e.target.value })}
-              disabled={loading}
-              placeholder="https://..."
-              autoComplete="off"
-            />
-            {formData.img && (
-              <div className="mt-2">
-                <img
-                  src={formData.img}
-                  alt="Preview"
-                  className="w-full h-48 object-cover rounded border"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
-          </div>
+        <TabsContent value="media" className="mt-4">
+          <ImageUploaderCard
+            title="Imagen de la Palabra"
+            description={
+              word
+                ? "Sube una nueva imagen, genera con IA, o usa una URL"
+                : "Ingresa una URL de imagen. Podrás subir una imagen después de crear la palabra."
+            }
+            imageUrl={formData.img || ""}
+            onImageChange={(url) => setFormData({ ...formData, img: url })}
+            entityId={word?._id}
+            entityType="word"
+            word={formData.word}
+            disabled={loading}
+            className="mt-0"
+          />
         </TabsContent>
       </Tabs>
         </form>
