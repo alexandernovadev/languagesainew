@@ -108,7 +108,7 @@ export default function SystemInfoPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Estado:</span>
-                  <Badge variant="default" className="bg-green-500">
+                  <Badge variant="default">
                     En línea
                   </Badge>
                 </div>
