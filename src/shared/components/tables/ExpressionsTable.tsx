@@ -2,7 +2,7 @@ import { IExpression } from "@/types/models/Expression";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Edit, Trash2, Image as ImageIcon, Volume2, MessageSquare } from "lucide-react";
+import { Edit, Trash2, Image as ImageIcon, Volume2, MessageSquare, Sparkles } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getDifficultyVariant } from "@/utils/common";
 
@@ -11,9 +11,20 @@ interface ExpressionsTableProps {
   loading: boolean;
   onEdit: (expression: IExpression) => void;
   onDelete: (expression: IExpression) => void;
+  searchTerm?: string;
+  onGenerateWithAI?: (expression: string) => void;
+  isGenerating?: boolean;
 }
 
-export function ExpressionsTable({ expressions, loading, onEdit, onDelete }: ExpressionsTableProps) {
+export function ExpressionsTable({ 
+  expressions, 
+  loading, 
+  onEdit, 
+  onDelete,
+  searchTerm,
+  onGenerateWithAI,
+  isGenerating = false
+}: ExpressionsTableProps) {
   const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -44,10 +55,25 @@ export function ExpressionsTable({ expressions, loading, onEdit, onDelete }: Exp
       <Card>
         <CardContent className="pt-6">
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No expressions found</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Try adjusting your search or filters
+            <p className="text-muted-foreground">
+              {searchTerm ? `No se encontró la expresión "${searchTerm}"` : "No expressions found"}
             </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {searchTerm 
+                ? "¿Quieres generar esta expresión con IA?" 
+                : "Try adjusting your search or filters"}
+            </p>
+            {searchTerm && onGenerateWithAI && (
+              <Button
+                onClick={() => onGenerateWithAI(searchTerm)}
+                disabled={isGenerating}
+                className={`mt-4 ${isGenerating ? 'animate-pulse' : ''}`}
+                variant="default"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                {isGenerating ? "Generando..." : "Generar con AI"}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

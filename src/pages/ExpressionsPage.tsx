@@ -9,6 +9,8 @@ import { useExpressions } from "@/shared/hooks/useExpressions";
 import { IExpression } from "@/types/models/Expression";
 import { Plus, Search, Filter, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
+import { expressionService } from "@/services/expressionService";
+import { toast } from "sonner";
 import {
   Pagination,
   PaginationContent,
@@ -34,6 +36,7 @@ export default function ExpressionsPage() {
     clearFilters,
     goToPage,
     filters,
+    refreshExpressions,
   } = useExpressions();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -43,6 +46,7 @@ export default function ExpressionsPage() {
   const [expressionToDelete, setExpressionToDelete] = useState<IExpression | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Handle create
   const handleCreate = () => {
@@ -100,6 +104,43 @@ export default function ExpressionsPage() {
   const handleClearFilters = () => {
     setSearchTerm("");
     clearFilters();
+  };
+
+  // Handle generate with AI
+  const handleGenerateWithAI = async (expressionPrompt: string) => {
+    setIsGenerating(true);
+    try {
+      // Generar la expresión con AI
+      const response = await expressionService.generateExpression(expressionPrompt, "en", { provider: "openai" });
+      
+      // La respuesta tiene estructura: { success: true, message: "...", data: expressionData }
+      if (response.data.success && response.data.data) {
+        const generatedData = response.data.data;
+        
+        // Crear la expresión con los datos generados
+        const success = await createExpression({
+          expression: generatedData.expression || expressionPrompt,
+          definition: generatedData.definition || "",
+          language: generatedData.language || "en",
+          difficulty: generatedData.difficulty,
+          type: generatedData.type || [],
+          context: generatedData.context,
+          examples: generatedData.examples || [],
+          img: generatedData.img,
+          spanish: generatedData.spanish,
+        });
+
+        if (success) {
+          toast.success(`Expresión "${expressionPrompt}" generada exitosamente`);
+          // La expresión aparecerá automáticamente porque el filtro search sigue activo
+        }
+      }
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error generando expresión con AI';
+      toast.error(errorMsg);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Generate page numbers
@@ -208,6 +249,9 @@ export default function ExpressionsPage() {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+        searchTerm={filters.search || searchTerm}
+        onGenerateWithAI={handleGenerateWithAI}
+        isGenerating={isGenerating}
       />
 
       {/* Pagination */}
