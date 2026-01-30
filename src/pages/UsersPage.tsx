@@ -99,7 +99,7 @@ export default function UsersPage() {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const showPages = 5;
-    
+
     if (totalPages <= showPages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -123,7 +123,7 @@ export default function UsersPage() {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -143,9 +143,6 @@ export default function UsersPage() {
                 className="pl-10"
               />
             </div>
-            <Button type="submit" variant="secondary" size="icon" title="Buscar">
-              <Search className="h-4 w-4" />
-            </Button>
             {(searchTerm || Object.keys(filters).length > 2) && (
               <Button
                 type="button"
@@ -157,6 +154,10 @@ export default function UsersPage() {
                 <X className="h-4 w-4" />
               </Button>
             )}
+            <Button type="submit" variant="secondary" size="icon" title="Buscar">
+              <Search className="h-4 w-4" />
+            </Button>
+
             <Button
               type="button"
               variant="default"
@@ -184,7 +185,7 @@ export default function UsersPage() {
           <p className="text-sm text-muted-foreground">
             Showing {users.length > 0 ? ((currentPage - 1) * 10) + 1 : 0} to {Math.min(currentPage * 10, total)} of {total} users
           </p>
-          
+
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -193,7 +194,7 @@ export default function UsersPage() {
                   className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                 />
               </PaginationItem>
-              
+
               {getPageNumbers().map((page, index) => (
                 <PaginationItem key={index}>
                   {page === '...' ? (
@@ -209,7 +210,7 @@ export default function UsersPage() {
                   )}
                 </PaginationItem>
               ))}
-              
+
               <PaginationItem>
                 <PaginationNext
                   onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}

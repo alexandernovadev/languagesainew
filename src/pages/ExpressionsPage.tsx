@@ -197,6 +197,17 @@ export default function ExpressionsPage() {
                   className="pl-10"
                 />
               </div>
+              {activeFiltersCount > 0 && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleClearFilters}
+                size="icon"
+                title="Limpiar filtros"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
               <Button type="submit" variant="secondary" size="icon" title="Buscar">
                 <Search className="h-4 w-4" />
               </Button>
@@ -217,18 +228,6 @@ export default function ExpressionsPage() {
                 </span>
               )}
             </Button>
-
-            {activeFiltersCount > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleClearFilters}
-                size="icon"
-                title="Limpiar filtros"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
 
             <Button
               type="button"
