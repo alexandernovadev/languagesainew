@@ -171,6 +171,7 @@ export function ExpressionsTable({
                     variant="outline"
                     size="sm"
                     onClick={() => onEdit(expression)}
+                    className="z-10"
                   >
                     <Edit className="h-4 w-4 mr-1" />
                     Edit

@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions, filters }: PageHeaderProps) {
   return (
-    <div className="sticky top-[-0.1rem] z-11 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 mb-4">
+    <div className="sticky top-[-0.1rem] z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 mb-4">
       {/* Title Section */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">

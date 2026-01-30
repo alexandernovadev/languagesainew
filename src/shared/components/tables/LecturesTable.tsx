@@ -74,7 +74,7 @@ export function LecturesTable({
   };
 
   return (
-    <div className="space-y-4 overflow-x-hidden max-w-full">
+    <div className="space-y-4 overflow-x-hidden max-w-full pt-2">
       {lectures.map((lecture) => {
         const lectureTitle = getMarkdownTitle(lecture.content) || lecture.typeWrite || "Sin título";
         
