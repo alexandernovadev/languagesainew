@@ -4,9 +4,11 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { LecturesTable } from "@/shared/components/tables/LecturesTable";
 import { LectureDialog } from "@/shared/components/dialogs/LectureDialog";
+import { LectureFiltersModal } from "@/shared/components/filters/LectureFiltersModal";
 import { useLectures } from "@/shared/hooks/useLectures";
+import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { ILecture } from "@/types/models/Lecture";
-import { Plus, Search, X } from "lucide-react";
+import { Plus, Search, X, Filter } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { toast } from "sonner";
 import {
@@ -36,7 +38,11 @@ export default function LecturesPage() {
     refreshLectures,
   } = useLectures();
 
+  // Sync filters with URL
+  useFilterUrlSync(filters, updateFilters);
+
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
   const [selectedLecture, setSelectedLecture] = useState<ILecture | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [lectureToDelete, setLectureToDelete] = useState<ILecture | null>(null);
@@ -90,6 +96,11 @@ export default function LecturesPage() {
     updateFilters({ search: searchTerm });
   };
 
+  // Handle apply filters from modal
+  const handleApplyFilters = (newFilters: any) => {
+    updateFilters(newFilters);
+  };
+
   // Clear all filters
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -129,9 +140,13 @@ export default function LecturesPage() {
   };
 
   // Count active filters (excluding page and limit)
-  const activeFiltersCount = Object.entries(filters).filter(
-    ([key, value]) => key !== "page" && key !== "limit" && value !== undefined && value !== ""
-  ).length;
+  const activeFiltersCount = Object.entries(filters).filter(([key, value]) => {
+    if (key === "page" || key === "limit") return false;
+    if (value === undefined || value === "") return false;
+    // For arrays, check if they have at least one item
+    if (Array.isArray(value)) return value.length > 0;
+    return true;
+  }).length;
 
   return (
     <div className="space-y-4">
@@ -166,6 +181,22 @@ export default function LecturesPage() {
                 <Search className="h-4 w-4" />
               </Button>
             </form>
+            
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setFiltersModalOpen(true)}
+              title="Filtros"
+              className="relative"
+            >
+              <Filter className="h-4 w-4" />
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </Button>
 
             <Button
               type="button"
@@ -291,6 +322,15 @@ export default function LecturesPage() {
         cancelText="Cancelar"
         loading={deleteLoading}
         confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
+
+      {/* Filters Modal */}
+      <LectureFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        filters={filters}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
       />
     </div>
   );

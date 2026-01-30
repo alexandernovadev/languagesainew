@@ -9,7 +9,13 @@ export const lectureService = {
     if (search.trim()) params.append("search", search.trim());
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== "" && value !== null) {
-        params.append(key, String(value));
+        // Handle arrays for level, language, typeWrite
+        if (Array.isArray(value) && value.length > 0) {
+          // Backend expects comma-separated string or array
+          params.append(key, value.join(","));
+        } else if (!Array.isArray(value)) {
+          params.append(key, String(value));
+        }
       }
     });
     const res = await api.get(`/api/lectures?${params.toString()}`);

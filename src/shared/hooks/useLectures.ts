@@ -6,17 +6,23 @@ import { toast } from 'sonner';
 export interface LectureFilters {
   // General filters
   search?: string;
-  level?: string; // CertificationLevel
-  language?: string;
-  typeWrite?: string;
+  level?: string | string[]; // CertificationLevel - can be multiple
+  language?: string | string[]; // can be multiple
+  typeWrite?: string | string[]; // can be multiple
   
   // Time filters
   timeMin?: number;
   timeMax?: number;
   
+  // Boolean filters
+  hasImg?: "true" | "false";
+  hasUrlAudio?: "true" | "false";
+  
   // Date filters
   createdAfter?: string;
   createdBefore?: string;
+  updatedAfter?: string;
+  updatedBefore?: string;
   
   // Sorting
   sortBy?: string;

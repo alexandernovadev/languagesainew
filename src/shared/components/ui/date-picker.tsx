@@ -20,8 +20,10 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ value, onChange, placeholder = "Seleccionar fecha", disabled }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false)
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -30,16 +32,20 @@ export function DatePicker({ value, onChange, placeholder = "Seleccionar fecha",
             !value && "text-muted-foreground"
           )}
           disabled={disabled}
+          type="button"
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {value ? format(value, "PPP", { locale: es }) : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0 z-[10000]" align="start">
         <Calendar
           mode="single"
           selected={value}
-          onSelect={onChange}
+          onSelect={(date) => {
+            onChange?.(date)
+            setOpen(false)
+          }}
           initialFocus
           locale={es}
         />
