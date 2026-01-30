@@ -2,7 +2,7 @@ import { IWord } from "@/types/models/Word";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Edit, Trash2, Image as ImageIcon, Volume2 } from "lucide-react";
+import { Edit, Trash2, Image as ImageIcon, Volume2, Sparkles } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getDifficultyVariant } from "@/utils/common";
 
@@ -11,9 +11,20 @@ interface WordsTableProps {
   loading: boolean;
   onEdit: (word: IWord) => void;
   onDelete: (word: IWord) => void;
+  searchTerm?: string;
+  onGenerateWithAI?: (word: string) => void;
+  isGenerating?: boolean;
 }
 
-export function WordsTable({ words, loading, onEdit, onDelete }: WordsTableProps) {
+export function WordsTable({ 
+  words, 
+  loading, 
+  onEdit, 
+  onDelete,
+  searchTerm,
+  onGenerateWithAI,
+  isGenerating = false
+}: WordsTableProps) {
   const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -44,10 +55,25 @@ export function WordsTable({ words, loading, onEdit, onDelete }: WordsTableProps
       <Card>
         <CardContent className="pt-6">
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No words found</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Try adjusting your search or filters
+            <p className="text-muted-foreground">
+              {searchTerm ? `No se encontró la palabra "${searchTerm}"` : "No words found"}
             </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {searchTerm 
+                ? "¿Quieres generar esta palabra con IA?" 
+                : "Try adjusting your search or filters"}
+            </p>
+            {searchTerm && onGenerateWithAI && (
+              <Button
+                onClick={() => onGenerateWithAI(searchTerm)}
+                disabled={isGenerating}
+                className={`mt-4 ${isGenerating ? 'animate-pulse' : ''}`}
+                variant="default"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                {isGenerating ? "Generando..." : "Generar con AI"}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

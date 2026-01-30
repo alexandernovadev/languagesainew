@@ -10,6 +10,8 @@ import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { IWord } from "@/types/models/Word";
 import { Plus, Search, Filter, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
+import { wordService } from "@/services/wordService";
+import { toast } from "sonner";
 import {
   Pagination,
   PaginationContent,
@@ -35,6 +37,7 @@ export default function WordsPage() {
     clearFilters,
     goToPage,
     filters,
+    refreshWords,
   } = useWords();
 
   // Sync filters with URL
@@ -47,6 +50,7 @@ export default function WordsPage() {
   const [wordToDelete, setWordToDelete] = useState<IWord | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Handle create
   const handleCreate = () => {
@@ -104,6 +108,27 @@ export default function WordsPage() {
   const handleClearFilters = () => {
     setSearchTerm("");
     clearFilters();
+  };
+
+  // Handle generate with AI
+  const handleGenerateWithAI = async (word: string) => {
+    setIsGenerating(true);
+    try {
+      const response = await wordService.generateWord(word, "en", "openai");
+      
+      // La respuesta tiene estructura: { success: true, message: "...", data: savedWord }
+      if (response.success && response.data) {
+        toast.success(`Palabra "${word}" generada exitosamente`);
+        
+        // Refrescar la lista - la palabra aparecerá automáticamente porque el filtro wordUser sigue activo
+        await refreshWords();
+      }
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error generando palabra con AI';
+      toast.error(errorMsg);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Generate page numbers
@@ -212,6 +237,9 @@ export default function WordsPage() {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+        searchTerm={filters.wordUser || searchTerm}
+        onGenerateWithAI={handleGenerateWithAI}
+        isGenerating={isGenerating}
       />
 
       {/* Pagination */}
