@@ -15,7 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Loader2, Plus, X } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-react";
 import { Badge } from "../ui/badge";
 
 interface WordDialogProps {
@@ -49,8 +50,11 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   const [synonymInput, setSynonymInput] = useState("");
   const [codeSwitchingInput, setCodeSwitchingInput] = useState("");
 
-  // Reset form when word changes or dialog opens
+  // Reset form when dialog opens with word data
   useEffect(() => {
+    // SOLO actuar cuando el diálogo está abierto
+    if (!open) return;
+    
     if (word) {
       setFormData({
         word: word.word || "",
@@ -180,9 +184,31 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       }
     >
       <div className="px-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit}>
+          <Tabs defaultValue="general" className="w-full">
+            <TabsList className="sticky top-0 z-10 grid w-full grid-cols-4 shadow-md">
+              <TabsTrigger value="general" className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                <span>General</span>
+              </TabsTrigger>
+              <TabsTrigger value="spanish" className="flex items-center gap-2">
+                <Languages className="h-4 w-4" />
+                <span>Español</span>
+              </TabsTrigger>
+              <TabsTrigger value="content" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <span>Contenido</span>
+              </TabsTrigger>
+              <TabsTrigger value="media" className="flex items-center gap-2">
+                <Image className="h-4 w-4" />
+                <span>Imagen</span>
+              </TabsTrigger>
+            </TabsList>
+
+            {/* General Tab */}
+            <TabsContent value="general" className="space-y-4 mt-4">
+              {/* Basic Info */}
+              <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="word">Word *</Label>
               <Input
@@ -263,48 +289,43 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               </Select>
             </div>
           </div>
+        </TabsContent>
 
-          {/* Image URL */}
-          <div className="space-y-2">
-            <Label htmlFor="img">Image URL</Label>
-            <Input
-              id="img"
-              value={formData.img}
-              onChange={(e) => setFormData({ ...formData, img: e.target.value })}
-              disabled={loading}
-              placeholder="https://..."
-              autoComplete="off"
-            />
-          </div>
+        {/* Spanish Tab */}
+        <TabsContent value="spanish" className="space-y-4 mt-4">
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Traducción al español (opcional)
+            </p>
+            
+            <div className="space-y-2">
+              <Label htmlFor="spanishWord">Spanish Word</Label>
+              <Input
+                id="spanishWord"
+                value={formData.spanishWord}
+                onChange={(e) => setFormData({ ...formData, spanishWord: e.target.value })}
+                disabled={loading}
+                autoComplete="off"
+                placeholder="e.g., hola"
+              />
+            </div>
 
-          {/* Spanish Translation */}
-          <div className="space-y-4 border-t pt-4">
-            <h3 className="text-sm font-semibold">Spanish Translation (Optional)</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="spanishWord">Spanish Word</Label>
-                <Input
-                  id="spanishWord"
-                  value={formData.spanishWord}
-                  onChange={(e) => setFormData({ ...formData, spanishWord: e.target.value })}
-                  disabled={loading}
-                  autoComplete="off"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="spanishDefinition">Spanish Definition</Label>
-                <Input
-                  id="spanishDefinition"
-                  value={formData.spanishDefinition}
-                  onChange={(e) => setFormData({ ...formData, spanishDefinition: e.target.value })}
-                  disabled={loading}
-                  autoComplete="off"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="spanishDefinition">Spanish Definition</Label>
+              <Textarea
+                id="spanishDefinition"
+                value={formData.spanishDefinition}
+                onChange={(e) => setFormData({ ...formData, spanishDefinition: e.target.value })}
+                disabled={loading}
+                rows={4}
+                placeholder="Definición en español..."
+              />
             </div>
           </div>
+        </TabsContent>
 
+        {/* Content Tab */}
+        <TabsContent value="content" className="space-y-4 mt-4">
           {/* Word Types */}
           <div className="space-y-2">
             <Label>Word Types</Label>
@@ -486,6 +507,36 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               </div>
             )}
           </div>
+        </TabsContent>
+
+        {/* Media Tab */}
+        <TabsContent value="media" className="space-y-4 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="img">Image URL</Label>
+            <Input
+              id="img"
+              type="url"
+              value={formData.img}
+              onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+              disabled={loading}
+              placeholder="https://..."
+              autoComplete="off"
+            />
+            {formData.img && (
+              <div className="mt-2">
+                <img
+                  src={formData.img}
+                  alt="Preview"
+                  className="w-full h-48 object-cover rounded border"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
         </form>
       </div>
     </ModalNova>

@@ -37,8 +37,11 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
     address: "",
   });
 
-  // Reset form when user changes or dialog opens
+  // Reset form when dialog opens with user data
   useEffect(() => {
+    // SOLO actuar cuando el diálogo está abierto
+    if (!open) return;
+    
     if (user) {
       setFormData({
         username: user.username || "",
