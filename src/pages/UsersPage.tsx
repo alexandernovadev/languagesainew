@@ -132,11 +132,7 @@ export default function UsersPage() {
       <PageHeader
         title="Usuarios"
         description="Gestiona los usuarios del sistema"
-      />
-
-      {/* Search and Filters */}
-      <Card>
-        <CardContent className="pt-6">
+        filters={
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -171,8 +167,8 @@ export default function UsersPage() {
               <Plus className="h-4 w-4" />
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        }
+      />
 
       {/* Users Table */}
       <UsersTable

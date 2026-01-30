@@ -144,63 +144,63 @@ export default function ExpressionsPage() {
       <PageHeader
         title="Expresiones"
         description="Gestiona tus expresiones idiomáticas"
-      />
+        filters={
+          <div className="flex gap-2">
+            <form onSubmit={handleSearch} className="flex gap-2 flex-1">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar expresión..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button type="submit" variant="secondary" size="icon" title="Buscar">
+                <Search className="h-4 w-4" />
+              </Button>
+            </form>
+            
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setFiltersModalOpen(true)}
+              title="Filtros"
+              className="relative"
+            >
+              <Filter className="h-4 w-4" />
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </Button>
 
-      {/* Search Bar and Filter Button */}
-      <div className="flex gap-2">
-        <form onSubmit={handleSearch} className="flex gap-2 flex-1">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar expresión..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+            {activeFiltersCount > 0 && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleClearFilters}
+                size="icon"
+                title="Limpiar filtros"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+
+            <Button
+              type="button"
+              variant="default"
+              onClick={handleCreate}
+              size="icon"
+              title="Crear expresión"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
           </div>
-          <Button type="submit" variant="secondary" size="icon" title="Buscar">
-            <Search className="h-4 w-4" />
-          </Button>
-        </form>
-        
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={() => setFiltersModalOpen(true)}
-          title="Filtros"
-          className="relative"
-        >
-          <Filter className="h-4 w-4" />
-          {activeFiltersCount > 0 && (
-            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-              {activeFiltersCount}
-            </span>
-          )}
-        </Button>
-
-        {activeFiltersCount > 0 && (
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleClearFilters}
-            size="icon"
-            title="Limpiar filtros"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-
-        <Button
-          type="button"
-          variant="default"
-          onClick={handleCreate}
-          size="icon"
-          title="Crear expresión"
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
+        }
+      />
 
       {/* Expressions Table */}
       <ExpressionsTable
