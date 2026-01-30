@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Loader2, Plus, X } from "lucide-react";
+import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-react";
 import { IExpression } from "@/types/models/Expression";
 import { ExpressionType } from "@/types/business";
 import { difficultyJson, languagesJson, expressionTypesJson } from "@/data/bussiness/shared";
@@ -41,9 +41,12 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
   const [currentExample, setCurrentExample] = useState("");
   const [currentTypeInput, setCurrentTypeInput] = useState("");
 
-  // Reset form when dialog opens/closes or expression changes
+  // Reset form when dialog opens with expression data
   useEffect(() => {
-    if (expression && open) {
+    // SOLO actuar cuando el diálogo está abierto
+    if (!open) return;
+    
+    if (expression) {
       setFormData({
         expression: expression.expression || "",
         definition: expression.definition || "",
@@ -58,7 +61,7 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
           definition: expression.spanish?.definition || "",
         },
       });
-    } else if (open) {
+    } else {
       // Reset for new expression
       setFormData({
         expression: "",
@@ -161,11 +164,23 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
     >
       <form id="expression-form" onSubmit={handleSubmit} className="px-6 py-4">
         <Tabs defaultValue="general" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="spanish">Español</TabsTrigger>
-            <TabsTrigger value="content">Contenido</TabsTrigger>
-            <TabsTrigger value="media">Imagen</TabsTrigger>
+          <TabsList className="sticky top-0 z-10 grid w-full grid-cols-4 shadow-md">
+            <TabsTrigger value="general" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              <span>General</span>
+            </TabsTrigger>
+            <TabsTrigger value="spanish" className="flex items-center gap-2">
+              <Languages className="h-4 w-4" />
+              <span>Español</span>
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>Contenido</span>
+            </TabsTrigger>
+            <TabsTrigger value="media" className="flex items-center gap-2">
+              <Image className="h-4 w-4" />
+              <span>Imagen</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* General Tab */}
@@ -227,7 +242,6 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
                     <SelectValue placeholder="Select difficulty" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
                     {difficultyJson.map((diff) => (
                       <SelectItem key={diff.value} value={diff.value}>
                         {diff.label}

@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Loader2, UserCircle, Contact, Settings } from "lucide-react";
 import { Switch } from "../ui/switch";
 
 interface UserDialogProps {
@@ -135,9 +136,26 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
       }
     >
       <div className="px-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Basic Info */}
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit}>
+          <Tabs defaultValue="account" className="w-full">
+            <TabsList className="sticky top-0 z-10 grid w-full grid-cols-3 shadow-md">
+              <TabsTrigger value="account" className="flex items-center gap-2">
+                <UserCircle className="h-4 w-4" />
+                <span>Cuenta</span>
+              </TabsTrigger>
+              <TabsTrigger value="personal" className="flex items-center gap-2">
+                <Contact className="h-4 w-4" />
+                <span>Personal</span>
+              </TabsTrigger>
+              <TabsTrigger value="config" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                <span>Configuración</span>
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Account Tab */}
+            <TabsContent value="account" className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username *</Label>
               <Input
@@ -179,7 +197,10 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
               autoComplete="new-password"
             />
           </div>
+        </TabsContent>
 
+        {/* Personal Tab */}
+        <TabsContent value="personal" className="space-y-4 mt-4">
           {/* Name */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -203,6 +224,32 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             </div>
           </div>
 
+          {/* Contact Info */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Config Tab */}
+        <TabsContent value="config" className="space-y-4 mt-4">
           {/* Role and Language */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -246,29 +293,6 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                disabled={loading}
-              />
-            </div>
-          </div>
-
           {/* Status */}
           <div className="flex items-center space-x-2">
             <Switch
@@ -279,6 +303,8 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             />
             <Label htmlFor="isActive">Active User</Label>
           </div>
+        </TabsContent>
+      </Tabs>
         </form>
       </div>
     </ModalNova>
