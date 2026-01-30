@@ -73,10 +73,11 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
     setLoadingImage(true);
     try {
       const response = await wordService.generateWordImage(currentWord._id, currentWord.word, currentWord.img || "");
-      const updatedWord = response.data || response;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      const updatedData = response.data || response;
+      // Actualizar solo el campo img, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, img: updatedData.img || updatedData.data?.img } : null);
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({ ...word, img: updatedData.img || updatedData.data?.img });
       }
       toast.success('Imagen generada exitosamente');
     } catch (err: any) {
@@ -101,10 +102,11 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         currentWord.examples || [],
         "openai"
       );
-      const updatedWord = response.data || response;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      const updatedData = response.data || response;
+      // Actualizar solo el campo sinonyms, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, sinonyms: updatedData.sinonyms || updatedData.data?.sinonyms } : null);
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({ ...word, sinonyms: updatedData.sinonyms || updatedData.data?.sinonyms });
       }
       toast.success('Sinónimos generados exitosamente');
     } catch (err: any) {
@@ -129,10 +131,11 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         currentWord.examples || [],
         "openai"
       );
-      const updatedWord = response.data || response;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      const updatedData = response.data || response;
+      // Actualizar solo el campo examples, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, examples: updatedData.examples || updatedData.data?.examples } : null);
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({ ...word, examples: updatedData.examples || updatedData.data?.examples });
       }
       toast.success('Ejemplos generados exitosamente');
     } catch (err: any) {
@@ -157,10 +160,11 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         currentWord.examples || [],
         "openai"
       );
-      const updatedWord = response.data || response;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      const updatedData = response.data || response;
+      // Actualizar solo el campo type, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, type: updatedData.type || updatedData.data?.type } : null);
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({ ...word, type: updatedData.type || updatedData.data?.type });
       }
       toast.success('Tipos generados exitosamente');
     } catch (err: any) {
@@ -185,10 +189,11 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         currentWord.examples || [],
         "openai"
       );
-      const updatedWord = response.data || response;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      const updatedData = response.data || response;
+      // Actualizar solo el campo codeSwitching, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, codeSwitching: updatedData.codeSwitching || updatedData.data?.codeSwitching } : null);
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({ ...word, codeSwitching: updatedData.codeSwitching || updatedData.data?.codeSwitching });
       }
       toast.success('Code-switching generado exitosamente');
     } catch (err: any) {
@@ -215,13 +220,34 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         wordService.generateWordCodeSwitching(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || [], "openai"),
       ]);
       
-      // Use the last response to update the word (it will have all the latest data)
-      const lastResponse = responses[responses.length - 1];
-      const updatedWord = lastResponse.data || lastResponse;
-      setWord(updatedWord);
-      if (onWordUpdateRef.current) {
-        onWordUpdateRef.current(updatedWord);
+      // Actualizar todos los campos en paralelo, manteniendo todo lo demás
+      const [imgResponse, synonymsResponse, examplesResponse, typesResponse, codeSwitchingResponse] = responses;
+      const imgData = imgResponse.data || imgResponse;
+      const synonymsData = synonymsResponse.data || synonymsResponse;
+      const examplesData = examplesResponse.data || examplesResponse;
+      const typesData = typesResponse.data || typesResponse;
+      const codeSwitchingData = codeSwitchingResponse.data || codeSwitchingResponse;
+      
+      setWord(prev => prev ? {
+        ...prev,
+        img: imgData.img || imgData.data?.img || prev.img,
+        sinonyms: synonymsData.sinonyms || synonymsData.data?.sinonyms || prev.sinonyms,
+        examples: examplesData.examples || examplesData.data?.examples || prev.examples,
+        type: typesData.type || typesData.data?.type || prev.type,
+        codeSwitching: codeSwitchingData.codeSwitching || codeSwitchingData.data?.codeSwitching || prev.codeSwitching,
+      } : null);
+      
+      if (onWordUpdateRef.current && word) {
+        onWordUpdateRef.current({
+          ...word,
+          img: imgData.img || imgData.data?.img || word.img,
+          sinonyms: synonymsData.sinonyms || synonymsData.data?.sinonyms || word.sinonyms,
+          examples: examplesData.examples || examplesData.data?.examples || word.examples,
+          type: typesData.type || typesData.data?.type || word.type,
+          codeSwitching: codeSwitchingData.codeSwitching || codeSwitchingData.data?.codeSwitching || word.codeSwitching,
+        });
       }
+      
       toast.success('Todas las secciones actualizadas exitosamente');
     } catch (err: any) {
       toast.error('Error actualizando algunas secciones');

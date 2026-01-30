@@ -107,7 +107,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
               <img 
                 src={displayWord.img} 
                 alt={displayWord.word}
-                className="w-80 h-96 object-cover rounded-lg mb-6"
+                className="w-80 h-96 object-contain rounded-xl mb-6"
               />
             )}
             
