@@ -115,11 +115,11 @@ export default function WordsPage() {
     setIsGenerating(true);
     try {
       const response = await wordService.generateWord(word, "en", "openai");
-      
+
       // La respuesta tiene estructura: { success: true, message: "...", data: savedWord }
       if (response.success && response.data) {
         toast.success(`Palabra "${word}" generada exitosamente`);
-        
+
         // Refrescar la lista - la palabra aparecerá automáticamente porque el filtro wordUser sigue activo
         await refreshWords();
       }
@@ -135,7 +135,7 @@ export default function WordsPage() {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const showPages = 5;
-    
+
     if (totalPages <= showPages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -159,7 +159,7 @@ export default function WordsPage() {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -185,6 +185,18 @@ export default function WordsPage() {
                   className="pl-10"
                 />
               </div>
+              {activeFiltersCount > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleClearFilters}
+                  size="icon"
+                  title="Limpiar filtros"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+
               <Button type="submit" variant="secondary" size="icon" title="Buscar">
                 <Search className="h-4 w-4" />
               </Button>
@@ -206,17 +218,7 @@ export default function WordsPage() {
               )}
             </Button>
 
-            {activeFiltersCount > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleClearFilters}
-                size="icon"
-                title="Limpiar filtros"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+
 
             <Button
               type="button"
@@ -248,7 +250,7 @@ export default function WordsPage() {
           <p className="text-sm text-muted-foreground">
             Showing {words.length > 0 ? ((currentPage - 1) * 10) + 1 : 0} to {Math.min(currentPage * 10, total)} of {total} words
           </p>
-          
+
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -257,7 +259,7 @@ export default function WordsPage() {
                   className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                 />
               </PaginationItem>
-              
+
               {getPageNumbers().map((page, index) => (
                 <PaginationItem key={index}>
                   {page === '...' ? (
@@ -273,7 +275,7 @@ export default function WordsPage() {
                   )}
                 </PaginationItem>
               ))}
-              
+
               <PaginationItem>
                 <PaginationNext
                   onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
