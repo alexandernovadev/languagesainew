@@ -148,12 +148,6 @@ export default function WordsPage() {
       <PageHeader
         title="Palabras"
         description="Gestiona tu vocabulario"
-        actions={
-          <Button onClick={handleCreate} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Word
-          </Button>
-        }
       />
 
       {/* Search Bar and Filter Button */}
@@ -200,6 +194,16 @@ export default function WordsPage() {
             <X className="h-4 w-4" />
           </Button>
         )}
+
+        <Button
+          type="button"
+          variant="default"
+          onClick={handleCreate}
+          size="icon"
+          title="Crear palabra"
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
       </div>
 
       {/* Words Table */}

@@ -144,12 +144,6 @@ export default function ExpressionsPage() {
       <PageHeader
         title="Expresiones"
         description="Gestiona tus expresiones idiomáticas"
-        actions={
-          <Button onClick={handleCreate} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Expression
-          </Button>
-        }
       />
 
       {/* Search Bar and Filter Button */}
@@ -196,6 +190,16 @@ export default function ExpressionsPage() {
             <X className="h-4 w-4" />
           </Button>
         )}
+
+        <Button
+          type="button"
+          variant="default"
+          onClick={handleCreate}
+          size="icon"
+          title="Crear expresión"
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
       </div>
 
       {/* Expressions Table */}

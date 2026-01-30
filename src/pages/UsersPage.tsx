@@ -132,12 +132,6 @@ export default function UsersPage() {
       <PageHeader
         title="Usuarios"
         description="Gestiona los usuarios del sistema"
-        actions={
-          <Button onClick={handleCreate} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Create User
-          </Button>
-        }
       />
 
       {/* Search and Filters */}
@@ -153,8 +147,8 @@ export default function UsersPage() {
                 className="pl-10"
               />
             </div>
-            <Button type="submit" variant="secondary">
-              Search
+            <Button type="submit" variant="secondary" size="icon" title="Buscar">
+              <Search className="h-4 w-4" />
             </Button>
             {(searchTerm || Object.keys(filters).length > 2) && (
               <Button
@@ -162,10 +156,20 @@ export default function UsersPage() {
                 variant="ghost"
                 onClick={handleClearSearch}
                 size="icon"
+                title="Limpiar búsqueda"
               >
                 <X className="h-4 w-4" />
               </Button>
             )}
+            <Button
+              type="button"
+              variant="default"
+              onClick={handleCreate}
+              size="icon"
+              title="Crear usuario"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
           </form>
         </CardContent>
       </Card>
