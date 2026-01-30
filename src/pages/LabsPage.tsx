@@ -247,10 +247,10 @@ export default function LabsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Delete All Words */}
-          <div className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
-              <h3 className="font-medium">Delete All Words</h3>
-              <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-lg">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-base sm:text-lg">Delete All Words</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">
                 Elimina TODAS las palabras de la base de datos. No se puede deshacer.
               </p>
             </div>
@@ -258,6 +258,8 @@ export default function LabsPage() {
               onClick={handleDeleteAllWords}
               disabled={isDeletingWords}
               variant="destructive"
+              className="w-full sm:w-auto flex-shrink-0"
+              size="sm"
             >
               {isDeletingWords ? (
                 <>
@@ -274,10 +276,10 @@ export default function LabsPage() {
           </div>
 
           {/* Delete All Expressions */}
-          <div className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
-              <h3 className="font-medium">Delete All Expressions</h3>
-              <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-lg">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-base sm:text-lg">Delete All Expressions</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">
                 Elimina TODAS las expresiones de la base de datos. No se puede deshacer.
               </p>
             </div>
@@ -285,6 +287,8 @@ export default function LabsPage() {
               onClick={handleDeleteAllExpressions}
               disabled={isDeletingExpressions}
               variant="destructive"
+              className="w-full sm:w-auto flex-shrink-0"
+              size="sm"
             >
               {isDeletingExpressions ? (
                 <>
@@ -301,10 +305,10 @@ export default function LabsPage() {
           </div>
 
           {/* Delete All Lectures */}
-          <div className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
-              <h3 className="font-medium">Delete All Lectures</h3>
-              <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-lg">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-base sm:text-lg">Delete All Lectures</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">
                 Elimina TODAS las lecturas de la base de datos. No se puede deshacer.
               </p>
             </div>
@@ -312,6 +316,8 @@ export default function LabsPage() {
               onClick={handleDeleteAllLectures}
               disabled={isDeletingLectures}
               variant="destructive"
+              className="w-full sm:w-auto flex-shrink-0"
+              size="sm"
             >
               {isDeletingLectures ? (
                 <>
