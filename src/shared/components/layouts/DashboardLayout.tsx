@@ -33,7 +33,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const isActive = (url: string) => {
     if (url === "/") {
@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="text-sm font-semibold">LanguagesAI</span>
-              <span className="text-xs text-muted-foreground">v1.0.0</span>
+              <span className="text-xs text-muted-foreground">v3.1.0</span>
             </div>
           </div>
         </SidebarHeader>
@@ -105,15 +105,40 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </SidebarGroup>
         </SidebarContent>
 
+        <SidebarFooter>
+          {isAuthenticated && user ? (
+            <div className="flex flex-col gap-2 px-2 py-2">
+              {/* User Info with Name */}
+              <div className="flex items-center gap-2">
+                <UserMenu />
+                <div className="flex-1 group-data-[collapsible=icon]:hidden">
+                  <p className="text-sm font-medium">
+                    {user.firstName && user.lastName
+                      ? `${user.firstName} ${user.lastName}`
+                      : user.username}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
+              
+              {/* Collapse Button */}
+              <div className="flex items-center">
+                <SidebarTrigger className="h-8 w-8 border-none" />
+                <span className="text-sm group-data-[collapsible=icon]:hidden">
+                  Cerrar
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="px-2 py-2">
+              <LoginButton />
+            </div>
+          )}
+        </SidebarFooter>
+
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <div className="flex flex-1 items-center justify-end gap-4">
-            {isAuthenticated ? <UserMenu /> : <LoginButton />}
-          </div>
-        </header>
         <div className="flex flex-1 flex-col gap-4 p-4 overflow-auto">
           {children}
         </div>
