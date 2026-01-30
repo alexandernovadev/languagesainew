@@ -30,10 +30,10 @@ export function useUsers() {
         limit,
       });
       
-      // Backend returns { data: { data: [], total, pages } }
-      setUsers(response.data.data || []);
-      setTotal(response.data.total || 0);
-      setTotalPages(response.data.pages || 1);
+      // userService already returns { data: [], total, pages }
+      setUsers(response.data || []);
+      setTotal(response.total || 0);
+      setTotalPages(response.pages || 1);
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Error loading users';
       setError(errorMsg);
