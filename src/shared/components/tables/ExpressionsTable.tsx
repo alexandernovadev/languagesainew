@@ -4,6 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, MessageSquare } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { getDifficultyVariant } from "@/utils/common";
 
 interface ExpressionsTableProps {
   expressions: IExpression[];
@@ -52,25 +53,6 @@ export function ExpressionsTable({ expressions, loading, onEdit, onDelete }: Exp
       </Card>
     );
   }
-
-  const getDifficultyVariant = (difficulty?: string): "default" | "secondary" | "yellow" | "destructive" | "blue" | "outline" => {
-    switch (difficulty) {
-      case "A1":
-        return "default";
-      case "A2":
-        return "secondary";
-      case "B1":
-        return "yellow";
-      case "B2":
-        return "blue";
-      case "C1":
-        return "destructive";
-      case "C2":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -133,7 +115,6 @@ export function ExpressionsTable({ expressions, loading, onEdit, onDelete }: Exp
                     <Badge variant={getDifficultyVariant(expression.difficulty)}>
                       {expression.difficulty || "N/A"}
                     </Badge>
-                    <Badge variant="outline">{expression.language.toUpperCase()}</Badge>
                   </div>
                 </div>
 

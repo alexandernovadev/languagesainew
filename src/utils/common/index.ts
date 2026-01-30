@@ -3,6 +3,7 @@ export * from "./classnames";
 export * from "./time";
 export * from "./shuffle";
 export * from "./language";
+export * from "./badgeVariants";
 
 /**
  * Downloads data as a JSON file to the user's device

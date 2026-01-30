@@ -4,6 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2 } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { getDifficultyVariant } from "@/utils/common";
 
 interface WordsTableProps {
   words: IWord[];
@@ -52,19 +53,6 @@ export function WordsTable({ words, loading, onEdit, onDelete }: WordsTableProps
       </Card>
     );
   }
-
-  const getDifficultyVariant = (difficulty?: string): "default" | "yellow" | "destructive" | "outline" => {
-    switch (difficulty) {
-      case "easy":
-        return "default";
-      case "medium":
-        return "yellow";
-      case "hard":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
 
   return (
     <div className="space-y-4">
