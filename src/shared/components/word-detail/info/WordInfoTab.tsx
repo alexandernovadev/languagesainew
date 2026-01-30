@@ -21,6 +21,7 @@ interface WordInfoTabProps {
   onRefreshTypes: () => void;
   onRefreshCodeSwitching: () => void;
   onRefreshAll?: () => void;
+  onUpdateDifficulty?: (difficulty: string) => void;
 }
 
 export function WordInfoTab({
@@ -37,6 +38,7 @@ export function WordInfoTab({
   onRefreshTypes,
   onRefreshCodeSwitching,
   onRefreshAll,
+  onUpdateDifficulty,
 }: WordInfoTabProps) {
   return (
     <div className="px-6 py-4 h-full space-y-3">
@@ -50,6 +52,7 @@ export function WordInfoTab({
         word={word}
         onRefreshAll={onRefreshAll}
         loadingAll={loadingAll}
+        onUpdateDifficulty={onUpdateDifficulty}
       />
       
       <WordDefinitionSection word={word} />

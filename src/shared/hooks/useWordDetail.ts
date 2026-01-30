@@ -322,6 +322,35 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
     }
   }, [word]);
 
+  // Increment seen count
+  const incrementSeen = useCallback(async () => {
+    const currentWord = word;
+    if (!currentWord) return;
+    
+    try {
+      await wordService.incrementWordSeen(currentWord._id);
+      await loadWord(); // Recargar para actualizar seen
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || 'Error incrementando contador';
+      toast.error(errorMsg);
+    }
+  }, [word, loadWord]);
+
+  // Update difficulty
+  const updateDifficulty = useCallback(async (difficulty: string) => {
+    const currentWord = word;
+    if (!currentWord) return;
+    
+    try {
+      await wordService.updateWordDifficulty(currentWord._id, difficulty);
+      await loadWord(); // Recargar para actualizar difficulty
+      toast.success(`Dificultad actualizada a ${difficulty}`);
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || 'Error actualizando dificultad';
+      toast.error(errorMsg);
+    }
+  }, [word, loadWord]);
+
   return {
     word,
     loading,
@@ -341,6 +370,8 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
     refreshAll,
     sendMessage,
     clearChat,
+    incrementSeen,
+    updateDifficulty,
     reloadWord: loadWord,
   };
 }

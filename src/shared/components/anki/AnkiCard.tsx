@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
 import { IWord } from '@/types/models/Word';
 import { Card, CardContent } from '@/shared/components/ui/card';
@@ -32,6 +33,8 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
     refreshAll,
     sendMessage,
     clearChat,
+    incrementSeen,
+    updateDifficulty,
   } = useWordDetail({ 
     wordId: word._id,
     onWordUpdate: (updated) => {
@@ -41,6 +44,18 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
 
   // Use updated word if available, otherwise use original
   const displayWord = updatedWord || word;
+
+  // Track previous flipped state to detect when card is flipped
+  const prevFlippedRef = useRef(false);
+
+  // Increment seen when card is flipped (only once per flip)
+  useEffect(() => {
+    if (isFlipped && !prevFlippedRef.current && displayWord) {
+      // Card was just flipped from false to true
+      incrementSeen();
+    }
+    prevFlippedRef.current = isFlipped;
+  }, [isFlipped, displayWord, incrementSeen]);
 
   const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
     if ('speechSynthesis' in window) {
@@ -161,6 +176,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
                   onRefreshAll={refreshAll}
                   onSendMessage={sendMessage}
                   onClearChat={clearChat}
+                  onUpdateDifficulty={updateDifficulty}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full">

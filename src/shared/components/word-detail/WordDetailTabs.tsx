@@ -22,6 +22,7 @@ interface WordDetailTabsProps {
   onRefreshAll?: () => void;
   onSendMessage: (message: string) => void;
   onClearChat: () => void;
+  onUpdateDifficulty?: (difficulty: string) => void;
 }
 
 export function WordDetailTabs({
@@ -41,6 +42,7 @@ export function WordDetailTabs({
   onRefreshAll,
   onSendMessage,
   onClearChat,
+  onUpdateDifficulty,
 }: WordDetailTabsProps) {
   const chatMessagesCount = word.chat?.length || 0;
 
@@ -77,6 +79,7 @@ export function WordDetailTabs({
           onRefreshTypes={onRefreshTypes}
           onRefreshCodeSwitching={onRefreshCodeSwitching}
           onRefreshAll={onRefreshAll}
+          onUpdateDifficulty={onUpdateDifficulty}
         />
       </TabsContent>
 

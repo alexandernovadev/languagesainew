@@ -10,9 +10,10 @@ interface WordHeaderSectionProps {
   word: IWord;
   onRefreshAll?: () => void;
   loadingAll?: boolean;
+  onUpdateDifficulty?: (difficulty: string) => void;
 }
 
-export function WordHeaderSection({ word, onRefreshAll, loadingAll = false }: WordHeaderSectionProps) {
+export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUpdateDifficulty }: WordHeaderSectionProps) {
   const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -91,6 +92,39 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false }: Wo
                 {word.language.toUpperCase()}
               </Badge>
             </div>
+            
+            {/* Botones de dificultad */}
+            {onUpdateDifficulty && (
+              <div className="flex gap-2 mt-3">
+                <Button
+                  size="sm"
+                  variant={getDifficultyVariant('easy')}
+                  disabled={word.difficulty === 'easy'}
+                  onClick={() => onUpdateDifficulty('easy')}
+                  className="text-xs"
+                >
+                  Easy
+                </Button>
+                <Button
+                  size="sm"
+                  variant={getDifficultyVariant('medium')}
+                  disabled={word.difficulty === 'medium'}
+                  onClick={() => onUpdateDifficulty('medium')}
+                  className="text-xs"
+                >
+                  Medium
+                </Button>
+                <Button
+                  size="sm"
+                  variant={getDifficultyVariant('hard')}
+                  disabled={word.difficulty === 'hard'}
+                  onClick={() => onUpdateDifficulty('hard')}
+                  className="text-xs"
+                >
+                  Hard
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>

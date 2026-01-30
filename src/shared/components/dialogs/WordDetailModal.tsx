@@ -1,5 +1,4 @@
 import { ModalNova } from "@/shared/components/ui/modal-nova";
-import { WordDetailHeader } from "../word-detail/WordDetailHeader";
 import { WordDetailTabs } from "../word-detail/WordDetailTabs";
 import { useWordDetail } from "@/shared/hooks/useWordDetail";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -35,6 +34,7 @@ export function WordDetailModal({
     refreshAll,
     sendMessage,
     clearChat,
+    updateDifficulty,
   } = useWordDetail({ wordId: open ? wordId : null, onWordUpdate });
 
   if (!word && loading) {
@@ -84,6 +84,7 @@ export function WordDetailModal({
             onRefreshAll={refreshAll}
             onSendMessage={sendMessage}
             onClearChat={clearChat}
+            onUpdateDifficulty={updateDifficulty}
           />
         </div>
       </div>
