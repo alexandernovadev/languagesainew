@@ -27,6 +27,7 @@ import { useAuth } from "@/shared/hooks/useAuth";
 import { useEnvironment } from "@/shared/hooks/useEnvironment";
 import { UserMenu } from "../UserMenu";
 import { LoginButton } from "../LoginButton";
+import packageJson from "../../../../package.json";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -70,12 +71,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <img 
                 src={isDevelopment ? "/logodev.png" : "/loogo.png"} 
                 alt="LanguagesAI Logo" 
-                className="h-8 w-8 object-contain"
+                className="h-8 w-8 object-cover"
               />
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="text-sm font-semibold">LanguagesAI</span>
-              <span className="text-xs text-muted-foreground">v3.1.0</span>
+              <span className="text-xs text-muted-foreground">v{packageJson.version}</span>
             </div>
           </div>
         </SidebarHeader>
