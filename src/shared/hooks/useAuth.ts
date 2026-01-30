@@ -1,5 +1,6 @@
 import { useUserStore } from "@/lib/store/user-store";
 import { authService, LoginCredentials } from "@/services/authService";
+import { userService } from "@/services/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -62,6 +63,17 @@ export function useAuth() {
     }
   };
 
+  const refreshUser = async () => {
+    if (!user?._id) return;
+    
+    try {
+      const updatedUser = await userService.getUserById(user._id);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+  };
+
   return {
     user,
     token,
@@ -70,5 +82,6 @@ export function useAuth() {
     login,
     logout,
     refreshAccessToken,
+    refreshUser,
   };
 }

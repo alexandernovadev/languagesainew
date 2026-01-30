@@ -24,6 +24,7 @@ import {
   configSettingsItems,
 } from "../sidebar-menus";
 import { useAuth } from "@/shared/hooks/useAuth";
+import { useEnvironment } from "@/shared/hooks/useEnvironment";
 import { UserMenu } from "../UserMenu";
 import { LoginButton } from "../LoginButton";
 
@@ -34,6 +35,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const { isAuthenticated, user } = useAuth();
+  const { isDevelopment } = useEnvironment();
 
   const isActive = (url: string) => {
     if (url === "/") {
@@ -64,8 +66,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <span className="text-sm font-bold">LA</span>
+            <div className="flex h-8 w-8 items-center justify-center">
+              <img 
+                src={isDevelopment ? "/logodev.png" : "/loogo.png"} 
+                alt="LanguagesAI Logo" 
+                className="h-8 w-8 object-contain"
+              />
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="text-sm font-semibold">LanguagesAI</span>
