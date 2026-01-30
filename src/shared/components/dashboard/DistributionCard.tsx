@@ -49,14 +49,14 @@ export function DistributionCard({
   const calculatedTotal = total || items.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
+    <Card className="h-full overflow-hidden">
+      <CardHeader className="pb-3 px-4 sm:px-6">
         <div className="flex items-center gap-2">
-          <Icon className="h-5 w-5 text-primary" />
-          <CardTitle className="text-lg">{title}</CardTitle>
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+          <CardTitle className="text-base sm:text-lg truncate">{title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6">
         {items.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
             No hay datos disponibles
@@ -65,22 +65,22 @@ export function DistributionCard({
           items.map((item) => {
             const percentage = calculatedTotal > 0 ? (item.value / calculatedTotal) * 100 : 0;
             return (
-              <div key={item.label} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className={cn("h-3 w-3 rounded-full", item.color)} />
-                    <span className="font-medium">{item.label}</span>
+              <div key={item.label} className="space-y-1.5 sm:space-y-2">
+                <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                    <div className={cn("h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full flex-shrink-0", item.color)} />
+                    <span className="font-medium truncate">{item.label}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold">{item.value}</span>
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                    <span className="font-semibold whitespace-nowrap">{item.value}</span>
                     {showPercentage && (
-                      <span className="text-muted-foreground">
+                      <span className="text-muted-foreground text-xs whitespace-nowrap">
                         ({percentage.toFixed(1)}%)
                       </span>
                     )}
                   </div>
                 </div>
-                <Progress value={percentage} className="h-2" />
+                <Progress value={percentage} className="h-1.5 sm:h-2" />
               </div>
             );
           })

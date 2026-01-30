@@ -38,18 +38,18 @@ export function StatCard({
       {/* Background gradient */}
       <div className={cn("absolute inset-0 bg-gradient-to-br", bgGradient)} />
       
-      <CardContent className="relative p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-muted-foreground mb-1">
+      <CardContent className="relative p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-2 sm:gap-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground mb-1 truncate">
               {title}
             </p>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-bold">{value}</h3>
+            <div className="flex items-baseline gap-1 sm:gap-2 flex-wrap">
+              <h3 className="text-2xl sm:text-3xl font-bold break-words">{value}</h3>
               {trend && (
                 <span
                   className={cn(
-                    "text-sm font-medium",
+                    "text-xs sm:text-sm font-medium whitespace-nowrap",
                     trend.isPositive ? "text-green-600" : "text-red-600"
                   )}
                 >
@@ -58,16 +58,16 @@ export function StatCard({
               )}
             </div>
             {subtitle && (
-              <p className="text-xs text-muted-foreground mt-2">{subtitle}</p>
+              <p className="text-xs text-muted-foreground mt-1 sm:mt-2 truncate">{subtitle}</p>
             )}
           </div>
           <div
             className={cn(
-              "rounded-full p-3 bg-background/50 backdrop-blur-sm",
+              "rounded-full p-2 sm:p-3 bg-background/50 backdrop-blur-sm flex-shrink-0",
               iconColor
             )}
           >
-            <Icon className="h-6 w-6" />
+            <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
           </div>
         </div>
       </CardContent>

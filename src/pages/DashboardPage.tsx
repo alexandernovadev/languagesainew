@@ -79,14 +79,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
+    <div className="space-y-4 sm:space-y-6 overflow-x-hidden max-w-full">
+      <PageHeader 
         title="Dashboard Gerencial"
         description="Vista general de tu plataforma LanguagesAI"
       />
 
       {/* Main Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Total Palabras"
           value={stats.words.total.toLocaleString()}
@@ -126,7 +126,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Vistas Totales"
           value={stats.words.totalViews.toLocaleString()}
@@ -160,7 +160,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Distribution Charts */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <DistributionCard
           title="Palabras por Dificultad"
           icon={BarChart3}
@@ -204,7 +204,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Language Distribution */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         <DistributionCard
           title="Palabras por Idioma"
           icon={BookOpen}
@@ -220,7 +220,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <RecentActivityCard
           title="Palabras Recientes"
           icon={BookOpen}
@@ -257,47 +257,47 @@ export default function DashboardPage() {
       </div>
 
       {/* Additional Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Palabras con Ejemplos</CardTitle>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2 px-4 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-medium truncate">Palabras con Ejemplos</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.words.withExamples}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="px-4 sm:px-6">
+            <div className="text-xl sm:text-2xl font-bold break-words">{stats.words.withExamples}</div>
+            <p className="text-xs text-muted-foreground truncate">
               {((stats.words.withExamples / stats.words.total) * 100).toFixed(1)}% del total
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Palabras con Sinónimos</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2 px-4 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-medium truncate">Palabras con Sinónimos</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.words.withSynonyms}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="px-4 sm:px-6">
+            <div className="text-xl sm:text-2xl font-bold break-words">{stats.words.withSynonyms}</div>
+            <p className="text-xs text-muted-foreground truncate">
               {((stats.words.withSynonyms / stats.words.total) * 100).toFixed(1)}% del total
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Expresiones con Contexto</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2 px-4 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-medium truncate">Expresiones con Contexto</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.expressions.withContext}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="px-4 sm:px-6">
+            <div className="text-xl sm:text-2xl font-bold break-words">{stats.expressions.withContext}</div>
+            <p className="text-xs text-muted-foreground truncate">
               {((stats.expressions.withContext / stats.expressions.total) * 100).toFixed(1)}% del total
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Usuarios Activos</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2 px-4 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-medium truncate">Usuarios Activos</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.users.active}</div>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="px-4 sm:px-6">
+            <div className="text-xl sm:text-2xl font-bold break-words">{stats.users.active}</div>
+            <p className="text-xs text-muted-foreground truncate">
               {((stats.users.active / stats.users.total) * 100).toFixed(1)}% del total
             </p>
           </CardContent>

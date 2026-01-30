@@ -37,14 +37,14 @@ export function RecentActivityCard({
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
+    <Card className="h-full overflow-hidden">
+      <CardHeader className="pb-3 px-4 sm:px-6">
         <div className="flex items-center gap-2">
-          <Icon className="h-5 w-5 text-primary" />
-          <CardTitle className="text-lg">{title}</CardTitle>
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+          <CardTitle className="text-base sm:text-lg truncate">{title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 sm:px-6">
         {items.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
             No hay actividad reciente
@@ -60,29 +60,29 @@ export function RecentActivityCard({
               return (
                 <div
                   key={id || index}
-                  className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+                  className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer overflow-hidden"
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-sm truncate">
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                      <p className="font-medium text-xs sm:text-sm truncate flex-1 min-w-0">
                         {getItemTitle(item)}
                       </p>
                       {getItemBadge && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs flex-shrink-0">
                           {getItemBadge(item)}
                         </Badge>
                       )}
                     </div>
                     {getItemSubtitle && (
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-muted-foreground truncate break-words">
                         {getItemSubtitle(item)}
                       </p>
                     )}
                     {createdAt && (
                       <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        <span>
+                        <Clock className="h-3 w-3 flex-shrink-0" />
+                        <span className="truncate">
                           {formatDistanceToNow(createdAt, {
                             addSuffix: true,
                             locale: es,
