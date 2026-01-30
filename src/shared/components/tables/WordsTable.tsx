@@ -11,6 +11,7 @@ interface WordsTableProps {
   loading: boolean;
   onEdit: (word: IWord) => void;
   onDelete: (word: IWord) => void;
+  onView?: (word: IWord) => void;
   searchTerm?: string;
   onGenerateWithAI?: (word: string) => void;
   isGenerating?: boolean;
@@ -21,6 +22,7 @@ export function WordsTable({
   loading, 
   onEdit, 
   onDelete,
+  onView,
   searchTerm,
   onGenerateWithAI,
   isGenerating = false
@@ -87,7 +89,7 @@ export function WordsTable({
           <CardContent className="p-4">
             <div className="flex gap-4 items-start">
               {/* Image */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 cursor-pointer" onClick={() => onView?.(word)}>
                 {word.img ? (
                   <img
                     src={word.img}
@@ -105,9 +107,14 @@ export function WordsTable({
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
                   {/* Word Info */}
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-2xl capitalize">{word.word}</h3>
+                      <h3 
+                        className="font-bold text-2xl capitalize cursor-pointer hover:text-primary transition-colors"
+                        onClick={() => onView?.(word)}
+                      >
+                        {word.word}
+                      </h3>
                       <button
                         onClick={() => speak(word.word, 'en-US', 1)}
                         className="p-1 border rounded hover:bg-muted transition-colors"
@@ -165,6 +172,15 @@ export function WordsTable({
 
                 {/* Actions */}
                 <div className="flex gap-2 mt-2">
+                  {onView && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => onView(word)}
+                    >
+                      Ver Detalle
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"

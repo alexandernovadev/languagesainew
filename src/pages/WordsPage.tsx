@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { WordsTable } from "@/shared/components/tables/WordsTable";
 import { WordDialog } from "@/shared/components/dialogs/WordDialog";
+import { WordDetailModal } from "@/shared/components/dialogs/WordDetailModal";
 import { WordFiltersModal } from "@/shared/components/filters/WordFiltersModal";
 import { useWords } from "@/shared/hooks/useWords";
 import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
@@ -51,6 +52,8 @@ export default function WordsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
 
   // Handle create
   const handleCreate = () => {
@@ -63,6 +66,18 @@ export default function WordsPage() {
     setSelectedWord(word);
     setDialogOpen(true);
   };
+
+  // Handle view detail
+  const handleView = (word: IWord) => {
+    setSelectedWordId(word._id);
+    setDetailModalOpen(true);
+  };
+
+  // Handle word update from detail modal
+  const handleWordUpdate = useCallback((updatedWord: IWord) => {
+    // Refresh the words list
+    refreshWords();
+  }, [refreshWords]);
 
   // Handle delete click
   const handleDeleteClick = (word: IWord) => {
@@ -239,6 +254,7 @@ export default function WordsPage() {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+        onView={handleView}
         searchTerm={filters.wordUser || searchTerm}
         onGenerateWithAI={handleGenerateWithAI}
         isGenerating={isGenerating}
@@ -320,6 +336,14 @@ export default function WordsPage() {
         filters={filters}
         onApplyFilters={handleApplyFilters}
         onClearFilters={handleClearFilters}
+      />
+
+      {/* Word Detail Modal */}
+      <WordDetailModal
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+        wordId={selectedWordId}
+        onWordUpdate={handleWordUpdate}
       />
     </div>
   );
