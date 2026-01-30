@@ -1,0 +1,165 @@
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { cn } from "@/utils/common/classnames";
+
+interface MarkdownRendererProps {
+  content: string;
+  variant?: "chat" | "reading";
+  className?: string;
+}
+
+export function MarkdownRenderer({ 
+  content, 
+  variant = "reading",
+  className 
+}: MarkdownRendererProps) {
+  const isReading = variant === "reading";
+  const isChat = variant === "chat";
+
+  // Chat variant components (compact, primary colors)
+  const chatComponents = {
+    p: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
+    h1: ({ children }: any) => <h1 className="text-lg font-bold mb-2 mt-3 first:mt-0 text-primary">{children}</h1>,
+    h2: ({ children }: any) => <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-primary/90">{children}</h2>,
+    h3: ({ children }: any) => <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0 text-primary/80">{children}</h3>,
+    h4: ({ children }: any) => <h4 className="text-sm font-medium mb-2 mt-2 first:mt-0 text-primary/70">{children}</h4>,
+    h5: ({ children }: any) => <h5 className="text-xs font-medium mb-2 mt-2 first:mt-0 text-primary/60">{children}</h5>,
+    h6: ({ children }: any) => <h6 className="text-xs font-normal mb-2 mt-2 first:mt-0 text-primary/50">{children}</h6>,
+    ul: ({ children }: any) => <ul className="list-disc list-outside mb-2 ml-4 space-y-1">{children}</ul>,
+    ol: ({ children }: any) => <ol className="list-decimal list-outside mb-2 ml-4 space-y-1">{children}</ol>,
+    li: ({ children }: any) => <li className="text-sm pl-1">{children}</li>,
+    strong: ({ children }: any) => <strong className="font-bold">{children}</strong>,
+    em: ({ children }: any) => <em className="italic">{children}</em>,
+    code: ({ children, className: codeClassName }: any) => {
+      const isInline = !codeClassName;
+      return isInline ? (
+        <code className="bg-black/20 px-1 py-0.5 rounded text-xs font-mono">{children}</code>
+      ) : (
+        <code className="block bg-black/20 p-2 rounded text-xs font-mono overflow-x-auto">{children}</code>
+      );
+    },
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-2 border-primary/30 pl-3 my-2 italic">{children}</blockquote>
+    ),
+    a: ({ children, href }: any) => (
+      <a href={href} className="text-primary underline hover:text-primary/80" target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    ),
+    table: ({ children }: any) => (
+      <div className="overflow-x-auto my-2">
+        <table className="min-w-full border-collapse border border-border">
+          {children}
+        </table>
+      </div>
+    ),
+    thead: ({ children }: any) => <thead className="bg-muted">{children}</thead>,
+    tbody: ({ children }: any) => <tbody>{children}</tbody>,
+    tr: ({ children }: any) => <tr className="border-b border-border">{children}</tr>,
+    th: ({ children }: any) => <th className="border border-border px-2 py-1 text-left text-xs font-semibold">{children}</th>,
+    td: ({ children }: any) => <td className="border border-border px-2 py-1 text-xs">{children}</td>,
+  };
+
+  // Reading variant components (spacious, better readability)
+  const readingComponents = {
+    p: ({ children }: any) => <p className="mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">{children}</p>,
+    h1: ({ children }: any) => (
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 mt-6 sm:mt-8 first:mt-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 first:mt-0 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-3 sm:mb-4 mt-5 sm:mt-6 first:mt-0 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }: any) => (
+      <h4 className="text-base sm:text-lg md:text-xl font-medium mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 bg-clip-text text-transparent">
+        {children}
+      </h4>
+    ),
+    h5: ({ children }: any) => (
+      <h5 className="text-sm sm:text-base md:text-lg font-medium mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+        {children}
+      </h5>
+    ),
+    h6: ({ children }: any) => (
+      <h6 className="text-sm sm:text-base font-normal mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
+        {children}
+      </h6>
+    ),
+    ul: ({ children }: any) => <ul className="list-disc list-outside mb-4 sm:mb-6 ml-4 sm:ml-6 space-y-2 text-base sm:text-lg">{children}</ul>,
+    ol: ({ children }: any) => <ol className="list-decimal list-outside mb-4 sm:mb-6 ml-4 sm:ml-6 space-y-2 text-base sm:text-lg">{children}</ol>,
+    li: ({ children }: any) => <li className="pl-2 text-base sm:text-lg leading-relaxed">{children}</li>,
+    strong: ({ children }: any) => <strong className="font-bold text-foreground">{children}</strong>,
+    em: ({ children }: any) => <em className="italic">{children}</em>,
+    code: ({ children, className: codeClassName }: any) => {
+      const isInline = !codeClassName;
+      return isInline ? (
+        <code className="bg-muted px-1.5 py-0.5 rounded text-sm sm:text-base font-mono text-foreground">{children}</code>
+      ) : (
+        <code className="block bg-muted p-3 sm:p-4 rounded text-sm sm:text-base font-mono overflow-x-auto my-4 sm:my-6">
+          {children}
+        </code>
+      );
+    },
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-4 border-primary/50 pl-4 sm:pl-6 my-4 sm:my-6 italic text-foreground/80 bg-muted/50 py-2 sm:py-3 rounded-r">
+        {children}
+      </blockquote>
+    ),
+    a: ({ children, href }: any) => (
+      <a 
+        href={href} 
+        className="text-primary underline hover:text-primary/80 transition-colors" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    ),
+    table: ({ children }: any) => (
+      <div className="overflow-x-auto my-4 sm:my-6">
+        <table className="min-w-full border-collapse border border-border rounded-lg">
+          {children}
+        </table>
+      </div>
+    ),
+    thead: ({ children }: any) => <thead className="bg-muted">{children}</thead>,
+    tbody: ({ children }: any) => <tbody>{children}</tbody>,
+    tr: ({ children }: any) => <tr className="border-b border-border hover:bg-muted/50 transition-colors">{children}</tr>,
+    th: ({ children }: any) => <th className="border border-border px-3 sm:px-4 py-2 sm:py-3 text-left text-sm sm:text-base font-semibold">{children}</th>,
+    td: ({ children }: any) => <td className="border border-border px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base">{children}</td>,
+    hr: () => <hr className="my-6 sm:my-8 border-border" />,
+    img: ({ src, alt }: any) => (
+      <img 
+        src={src} 
+        alt={alt} 
+        className="my-4 sm:my-6 rounded-lg max-w-full h-auto"
+      />
+    ),
+  };
+
+  const components = isReading ? readingComponents : chatComponents;
+
+  return (
+    <div className={cn(
+      "break-words",
+      isReading && "prose prose-sm sm:prose-base dark:prose-invert max-w-none",
+      isChat && "text-sm",
+      className
+    )}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={components}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}

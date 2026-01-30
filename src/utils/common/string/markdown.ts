@@ -35,6 +35,83 @@ export const getMarkdownTitle = (content: string): string | null => {
 };
 
 /**
+ * Removes the first H1 markdown header from content
+ * 
+ * @param content - The markdown content to process
+ * @returns The content without the first H1 header
+ * 
+ * @example
+ * ```typescript
+ * const content = "# Title\n\nSome content";
+ * removeFirstH1(content);
+ * // Returns: "Some content"
+ * ```
+ */
+export const removeFirstH1 = (content: string): string => {
+  if (!content) return content;
+
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let firstH1Removed = false;
+
+  for (const line of lines) {
+    if (!firstH1Removed && line.trim().startsWith("# ")) {
+      firstH1Removed = true;
+      // Skip this line (the H1)
+      continue;
+    }
+    result.push(line);
+  }
+
+  return result.join("\n").trim();
+};
+
+/**
+ * Strips all markdown formatting from text, returning plain text
+ * 
+ * @param text - The markdown text to strip
+ * @returns Plain text without markdown formatting
+ * 
+ * @example
+ * ```typescript
+ * const markdown = "# Title\n\nThis is **bold** and *italic* text.";
+ * stripMarkdown(markdown);
+ * // Returns: "Title\n\nThis is bold and italic text."
+ * ```
+ */
+export const stripMarkdown = (text: string): string => {
+  if (!text) return text;
+
+  return text
+    // Remove headers (#, ##, ###, etc.)
+    .replace(/^#{1,6}\s+(.+)$/gm, '$1')
+    // Remove bold (**text** or __text__)
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    // Remove italic (*text* or _text_)
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/_(.+?)_/g, '$1')
+    // Remove links [text](url) -> text
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    // Remove images ![alt](url) -> alt
+    .replace(/!\[([^\]]*)\]\([^\)]+\)/g, '$1')
+    // Remove code blocks ```code``` -> code
+    .replace(/```[\s\S]*?```/g, '')
+    // Remove inline code `code` -> code
+    .replace(/`([^`]+)`/g, '$1')
+    // Remove list markers (-, *, +, 1.)
+    .replace(/^[\s]*[-*+]\s+/gm, '')
+    .replace(/^[\s]*\d+\.\s+/gm, '')
+    // Remove blockquotes (> text)
+    .replace(/^>\s+/gm, '')
+    // Remove horizontal rules (---, ***)
+    .replace(/^[-*]{3,}$/gm, '')
+    // Clean up multiple newlines
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
+/**
  * Converts markdown text to HTML with Tailwind CSS classes
  * 
  * This function transforms common markdown syntax into HTML elements
