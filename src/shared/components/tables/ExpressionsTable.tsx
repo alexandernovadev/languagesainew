@@ -81,22 +81,22 @@ export function ExpressionsTable({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden max-w-full">
       {expressions.map((expression) => (
-        <Card key={expression._id} className="hover:shadow-md transition-shadow">
-          <CardContent className="p-4">
-            <div className="flex gap-4 items-start">
+        <Card key={expression._id} className="hover:shadow-md transition-shadow overflow-hidden max-w-full">
+          <CardContent className="p-2 sm:p-4 max-w-full">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start max-w-full">
               {/* Image */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 cursor-pointer w-full sm:w-auto flex justify-center sm:justify-start" onClick={() => onView?.(expression)}>
                 {expression.img ? (
                   <img
                     src={expression.img}
                     alt={expression.expression}
-                    className="h-28 w-28 object-cover rounded"
+                    className="h-32 w-32 sm:h-24 sm:w-24 md:h-28 md:w-28 object-contain rounded max-w-full"
                   />
                 ) : (
-                  <div className="h-28 w-28 bg-muted rounded flex items-center justify-center">
-                    <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                  <div className="h-32 w-32 sm:h-24 sm:w-24 md:h-28 md:w-28 bg-muted rounded flex items-center justify-center max-w-full">
+                    <ImageIcon className="h-12 w-12 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground" />
                   </div>
                 )}
               </div>

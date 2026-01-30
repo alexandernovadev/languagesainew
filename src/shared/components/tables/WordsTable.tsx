@@ -94,11 +94,11 @@ export function WordsTable({
                   <img
                     src={word.img}
                     alt={word.word}
-                    className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 object-cover rounded max-w-full"
+                    className="h-32 w-32 sm:h-20 sm:w-20 md:h-28 md:w-28 object-contain rounded max-w-full"
                   />
                 ) : (
-                  <div className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 bg-muted rounded flex items-center justify-center max-w-full">
-                    <ImageIcon className="h-6 w-6 sm:h-8 sm:w-8 md:h-12 md:w-12 text-muted-foreground" />
+                  <div className="h-32 w-32 sm:h-20 sm:w-20 md:h-28 md:w-28 bg-muted rounded flex items-center justify-center max-w-full">
+                    <ImageIcon className="h-12 w-12 sm:h-8 sm:w-8 md:h-12 md:w-12 text-muted-foreground" />
                   </div>
                 )}
               </div>
@@ -186,7 +186,7 @@ export function WordsTable({
                     variant="outline"
                     size="sm"
                     onClick={() => onEdit(word)}
-                    className="w-full sm:w-auto sm:flex-initial text-xs sm:text-sm"
+                    className="w-full sm:w-auto sm:flex-initial text-xs sm:text-sm z-10"
                   >
                     <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Edit
