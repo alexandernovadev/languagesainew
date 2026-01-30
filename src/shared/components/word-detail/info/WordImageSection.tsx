@@ -14,7 +14,7 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
-        <div className="relative w-full h-48 bg-muted flex items-center justify-center group">
+        <div className="relative w-full h-64 bg-muted flex items-center justify-center group">
           {word.img ? (
             <img
               src={word.img}
