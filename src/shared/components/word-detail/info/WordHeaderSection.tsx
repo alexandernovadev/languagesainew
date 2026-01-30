@@ -24,7 +24,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
   };
 
   return (
-    <Card className="relative">
+    <Card className="relative overflow-hidden">
       {onRefreshAll && (
         <Button
           onClick={onRefreshAll}
@@ -32,12 +32,20 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
           variant="outline"
           size="sm"
           className={cn(
-            "absolute top-3 right-3 z-10 shadow-md",
+            "absolute top-2 right-2 sm:top-3 sm:right-3 z-10 shadow-md",
+            "text-xs sm:text-sm",
+            "px-2 sm:px-3 py-1.5 sm:py-2",
+            "max-w-[calc(100%-1rem)] sm:max-w-none",
             loadingAll && "animate-pulse"
           )}
         >
-          <Sparkles className={cn("h-3 w-3 mr-1.5", loadingAll && "animate-spin")} />
-          {loadingAll ? "Generando..." : "Refresh All Data with AI"}
+          <Sparkles className={cn("h-3 w-3 sm:mr-1.5 flex-shrink-0", loadingAll && "animate-spin")} />
+          <span className="hidden sm:inline">
+            {loadingAll ? "Generando..." : "Refresh All Data with AI"}
+          </span>
+          <span className="sm:hidden">
+            {loadingAll ? "..." : "AI"}
+          </span>
         </Button>
       )}
       <CardContent className="p-4">
