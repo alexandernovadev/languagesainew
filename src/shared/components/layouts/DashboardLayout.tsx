@@ -145,7 +145,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4 overflow-auto">
+        <div className="flex flex-1 flex-col gap-4 p-4">
           {children}
         </div>
       </SidebarInset>

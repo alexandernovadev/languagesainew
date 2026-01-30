@@ -5,6 +5,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
+import { PageHeader } from "@/shared/components/ui/page-header";
 import { Edit, Save, X, User as UserIcon } from "lucide-react";
 import {
   Select,
@@ -62,10 +63,10 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       {/* Page Title */}
-      <div>
-        <h1 className="text-3xl font-bold">Profile</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
-      </div>
+      <PageHeader
+        title="Profile"
+        description="Manage your account settings and preferences"
+      />
 
       {/* Header Card - Avatar and Basic Info */}
       <Card>
