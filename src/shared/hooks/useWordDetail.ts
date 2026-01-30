@@ -263,20 +263,7 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
     
     setLoadingChat(true);
     try {
-      // Add user message optimistically
-      const userMessage = {
-        id: Date.now().toString(),
-        role: 'user' as const,
-        content: message,
-        timestamp: new Date(),
-      };
-      
-      setWord(prev => prev ? {
-        ...prev,
-        chat: [...(prev.chat || []), userMessage]
-      } : null);
-
-      // Stream response
+      // Stream response (backend will add user message automatically)
       const stream = await wordService.streamChatMessage(currentWord._id, message);
       if (!stream) {
         throw new Error('No stream received');
@@ -286,7 +273,7 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
       const decoder = new TextDecoder();
       let aiResponse = '';
 
-      // Add AI message placeholder
+      // Add AI message placeholder (user message will be added by backend)
       const aiMessageId = (Date.now() + 1).toString();
       setWord(prev => prev ? {
         ...prev,
@@ -318,12 +305,12 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
         });
       }
 
-      // Reload word to get updated chat from server
+      // Reload word to get updated chat from server (includes user message + assistant message)
       await loadWord();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Error enviando mensaje';
       toast.error(errorMsg);
-      // Remove optimistic messages on error
+      // Reload to sync state with server
       await loadWord();
     } finally {
       setLoadingChat(false);
