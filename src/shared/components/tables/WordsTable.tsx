@@ -83,78 +83,78 @@ export function WordsTable({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden max-w-full">
       {words.map((word) => (
-        <Card key={word._id} className="hover:shadow-md transition-shadow">
-          <CardContent className="p-4">
-            <div className="flex gap-4 items-start">
+        <Card key={word._id} className="hover:shadow-md transition-shadow overflow-hidden max-w-full">
+          <CardContent className="p-2 sm:p-4 max-w-full">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start max-w-full">
               {/* Image */}
-              <div className="flex-shrink-0 cursor-pointer" onClick={() => onView?.(word)}>
+              <div className="flex-shrink-0 cursor-pointer w-full sm:w-auto flex justify-center sm:justify-start" onClick={() => onView?.(word)}>
                 {word.img ? (
                   <img
                     src={word.img}
                     alt={word.word}
-                    className="h-28 w-28 object-cover rounded"
+                    className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 object-cover rounded max-w-full"
                   />
                 ) : (
-                  <div className="h-28 w-28 bg-muted rounded flex items-center justify-center">
-                    <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                  <div className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 bg-muted rounded flex items-center justify-center max-w-full">
+                    <ImageIcon className="h-6 w-6 sm:h-8 sm:w-8 md:h-12 md:w-12 text-muted-foreground" />
                   </div>
                 )}
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
+              <div className="flex-1 min-w-0 w-full sm:w-auto max-w-full overflow-hidden">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2 max-w-full">
                   {/* Word Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
+                  <div className="flex-1 min-w-0 max-w-full overflow-hidden">
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                       <h3 
-                        className="font-bold text-2xl capitalize cursor-pointer hover:text-primary transition-colors"
+                        className="font-bold text-lg sm:text-xl md:text-2xl capitalize cursor-pointer hover:text-primary transition-colors break-words max-w-full overflow-wrap-anywhere"
                         onClick={() => onView?.(word)}
                       >
                         {word.word}
                       </h3>
                       <button
                         onClick={() => speak(word.word, 'en-US', 1)}
-                        className="p-1 border rounded hover:bg-muted transition-colors"
+                        className="p-1 border rounded hover:bg-muted transition-colors flex-shrink-0"
                         title="Play normal speed"
                       >
-                        <Volume2 className="h-5 w-5" />
+                        <Volume2 className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
                       </button>
                       <button
                         onClick={() => speak(word.word, 'en-US', 0.1)}
-                        className="p-1 border rounded hover:bg-muted transition-colors text-xl leading-none"
+                        className="p-0.5 sm:p-1 border rounded hover:bg-muted transition-colors text-base sm:text-xl leading-none flex-shrink-0"
                         title="Play very slow speed"
                       >
                         🐢
                       </button>
                     </div>
                     {word.IPA && (
-                      <p className="text-xs text-muted-foreground">/{word.IPA}/</p>
+                      <p className="text-xs text-muted-foreground break-words overflow-wrap-anywhere max-w-full">/{word.IPA}/</p>
                     )}
                     {word.spanish?.word && (
-                      <p className="text-lg capitalize text-blue-600 dark:text-blue-400">
+                      <p className="text-base sm:text-lg capitalize text-blue-600 dark:text-blue-400 break-words overflow-wrap-anywhere max-w-full">
                         {word.spanish.word}
                       </p>
                     )}
                   </div>
 
                   {/* Badges */}
-                  <div className="flex flex-wrap gap-2 items-center">
-                    <Badge variant={getDifficultyVariant(word.difficulty)}>
+                  <div className="flex flex-wrap gap-1 sm:gap-2 items-center">
+                    <Badge variant={getDifficultyVariant(word.difficulty)} className="text-xs">
                       {word.difficulty || "N/A"}
                     </Badge>
-                    <Badge variant="outline">Seen: {word.seen || 0}</Badge>
+                    <Badge variant="outline" className="text-xs">Seen: {word.seen || 0}</Badge>
                   </div>
                 </div>
 
                 {/* Definition */}
-                <p className="text-sm mb-2">{word.definition}</p>
+                <p className="text-xs sm:text-sm mb-2 break-words overflow-wrap-anywhere max-w-full">{word.definition}</p>
                 
                 {/* Spanish Definition */}
                 {word.spanish?.definition && (
-                  <p className="text-sm font-bold text-amber-700 dark:text-amber-400 mb-2">
+                  <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400 mb-2 break-words overflow-wrap-anywhere max-w-full">
                     {word.spanish.definition}
                   </p>
                 )}
@@ -171,12 +171,13 @@ export function WordsTable({
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-2 mt-2">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-1 sm:gap-2 mt-2">
                   {onView && (
                     <Button
                       variant="default"
                       size="sm"
                       onClick={() => onView(word)}
+                      className="w-full sm:w-auto sm:flex-initial text-xs sm:text-sm"
                     >
                       Ver Detalle
                     </Button>
@@ -185,16 +186,18 @@ export function WordsTable({
                     variant="outline"
                     size="sm"
                     onClick={() => onEdit(word)}
+                    className="w-full sm:w-auto sm:flex-initial text-xs sm:text-sm"
                   >
-                    <Edit className="h-4 w-4 mr-1" />
+                    <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Edit
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => onDelete(word)}
+                    className="w-full sm:w-auto sm:flex-initial text-xs sm:text-sm"
                   >
-                    <Trash2 className="h-4 w-4 mr-1" />
+                    <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Delete
                   </Button>
                 </div>
