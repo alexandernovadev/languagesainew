@@ -1,8 +1,8 @@
-import { Document } from "mongoose";
 import { ChatMessage } from "./ChatMessage";
 import { Difficulty, Language } from "../business/index";
 
-export interface IExpression extends Document {
+export interface IExpression {
+  _id: string;
   expression: string;
   definition: string;
   examples?: string[];

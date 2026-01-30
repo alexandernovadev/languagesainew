@@ -1,9 +1,10 @@
 import { User } from "@/services/userService";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { Edit, Trash2, Loader2 } from "lucide-react";
+import { Card, CardContent } from "../ui/card";
+import { Edit, Trash2, Loader2, Mail, Globe } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Skeleton } from "../ui/skeleton";
 
 interface UsersTableProps {
   users: User[];
@@ -16,22 +17,31 @@ export function UsersTable({ users, loading, onEdit, onDelete }: UsersTableProps
   // Loading skeleton
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading users...</span>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   // Empty state
   if (!users || users.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <p className="text-lg font-medium text-muted-foreground">No users found</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Try adjusting your filters or create a new user
-        </p>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No users found</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Try adjusting your filters or create a new user
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -56,88 +66,79 @@ export function UsersTable({ users, loading, onEdit, onDelete }: UsersTableProps
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Language</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user._id}>
-              {/* User with Avatar */}
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.image} alt={user.username} />
-                    <AvatarFallback>{getInitials(user)}</AvatarFallback>
-                  </Avatar>
+    <div className="space-y-4">
+      {users.map((user) => (
+        <Card key={user._id} className="hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex gap-4 items-start">
+              {/* Avatar */}
+              <div className="flex-shrink-0">
+                <Avatar className="h-20 w-20">
+                  <AvatarImage src={user.image} alt={user.username} />
+                  <AvatarFallback className="text-lg">{getInitials(user)}</AvatarFallback>
+                </Avatar>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
+                  {/* User Info */}
                   <div>
-                    <div className="font-medium">{user.username}</div>
+                    <h3 className="font-bold text-2xl capitalize">{user.username}</h3>
                     {(user.firstName || user.lastName) && (
-                      <div className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         {user.firstName} {user.lastName}
-                      </div>
+                      </p>
                     )}
                   </div>
+
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <Badge variant={getRoleVariant(user.role)}>
+                      {user.role}
+                    </Badge>
+                    <Badge variant={user.isActive ? "default" : "outline"}>
+                      {user.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </div>
                 </div>
-              </TableCell>
 
-              {/* Email */}
-              <TableCell>{user.email}</TableCell>
+                {/* Email */}
+                <div className="flex items-center gap-2 text-sm mb-1">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <span>{user.email}</span>
+                </div>
 
-              {/* Role */}
-              <TableCell>
-                <Badge variant={getRoleVariant(user.role)}>
-                  {user.role}
-                </Badge>
-              </TableCell>
+                {/* Language */}
+                <div className="flex items-center gap-2 text-sm mb-3">
+                  <Globe className="h-4 w-4 text-muted-foreground" />
+                  <span className="uppercase font-medium">{user.language}</span>
+                </div>
 
-              {/* Language */}
-              <TableCell>
-                <span className="uppercase text-xs font-medium">
-                  {user.language}
-                </span>
-              </TableCell>
-
-              {/* Status */}
-              <TableCell>
-                <Badge variant={user.isActive ? "default" : "outline"}>
-                  {user.isActive ? "Active" : "Inactive"}
-                </Badge>
-              </TableCell>
-
-              {/* Actions */}
-              <TableCell className="text-right">
-                <div className="flex gap-2 justify-end">
+                {/* Actions */}
+                <div className="flex gap-2 mt-2">
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant="outline"
+                    size="sm"
                     onClick={() => onEdit(user)}
-                    title="Edit user"
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-4 w-4 mr-1" />
+                    Edit
                   </Button>
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant="destructive"
+                    size="sm"
                     onClick={() => onDelete(user)}
-                    title="Delete user"
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete
                   </Button>
                 </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
