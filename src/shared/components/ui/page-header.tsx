@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { SidebarTrigger } from "./sidebar";
 
 interface PageHeaderProps {
   title: ReactNode;
@@ -19,6 +20,8 @@ export function PageHeader({ title, description, actions, filters }: PageHeaderP
           )}
         </div>
         {actions && <div className="flex gap-2 pt-4">{actions}</div>}
+        <SidebarTrigger className="h-8 w-8 pt-5 border-none md:hidden" />
+
       </div>
 
       {/* Filters Section */}

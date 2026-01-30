@@ -16,6 +16,7 @@ import {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  useSidebar,
 } from "@/shared/components/ui/sidebar";
 import {
   menuItems,
@@ -33,10 +34,9 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+function MenuItems({ items }: { items: typeof menuItems }) {
   const location = useLocation();
-  const { isAuthenticated, user } = useAuth();
-  const { isDevelopment } = useEnvironment();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const isActive = (url: string) => {
     if (url === "/") {
@@ -45,22 +45,35 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return location.pathname.startsWith(url);
   };
 
-  const renderMenuItems = (items: typeof menuItems) => {
-    return items.map((item) => {
-      const Icon = item.icon;
-      const active = isActive(item.url);
-      return (
-        <SidebarMenuItem key={item.url}>
-          <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-            <Link to={item.url}>
-              <Icon />
-              <span>{item.title}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      );
-    });
+  const handleClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
+
+  return (
+    <>
+      {items.map((item) => {
+        const Icon = item.icon;
+        const active = isActive(item.url);
+        return (
+          <SidebarMenuItem key={item.url}>
+            <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+              <Link to={item.url} onClick={handleClick}>
+                <Icon />
+                <span>{item.title}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
+    </>
+  );
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { isAuthenticated, user } = useAuth();
+  const { isDevelopment } = useEnvironment();
 
   return (
     <SidebarProvider>
@@ -84,21 +97,27 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <SidebarGroup>
             <SidebarGroupLabel>Navegación</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderMenuItems(menuItems)}</SidebarMenu>
+              <SidebarMenu>
+                <MenuItems items={menuItems} />
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
 
           <SidebarGroup>
             <SidebarGroupLabel>Generadores</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderMenuItems(generatorItems)}</SidebarMenu>
+              <SidebarMenu>
+                <MenuItems items={generatorItems} />
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
 
           <SidebarGroup>
             <SidebarGroupLabel>Juegos</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderMenuItems(gamesItems)}</SidebarMenu>
+              <SidebarMenu>
+                <MenuItems items={gamesItems} />
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
 
@@ -107,7 +126,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <SidebarGroup>
             <SidebarGroupLabel>Configuración</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderMenuItems(configSettingsItems)}</SidebarMenu>
+              <SidebarMenu>
+                <MenuItems items={configSettingsItems} />
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
