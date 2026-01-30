@@ -2,13 +2,26 @@ import { useState } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { toast } from "sonner";
 import { labsService } from "@/services/labsService";
-import { UserPlus, Mail, Loader2 } from "lucide-react";
+import { UserPlus, Mail, Loader2, AlertTriangle, Trash2 } from "lucide-react";
+
+type DangerousOperation = "words" | "expressions" | "lectures" | null;
 
 export default function LabsPage() {
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
   const [isSendingBackup, setIsSendingBackup] = useState(false);
+  
+  // Dangerous operations states
+  const [isDeletingWords, setIsDeletingWords] = useState(false);
+  const [isDeletingExpressions, setIsDeletingExpressions] = useState(false);
+  const [isDeletingLectures, setIsDeletingLectures] = useState(false);
+  
+  // Confirmation dialogs state
+  const [pendingOperation, setPendingOperation] = useState<DangerousOperation>(null);
+  const [showFirstConfirm, setShowFirstConfirm] = useState(false);
+  const [showSecondConfirm, setShowSecondConfirm] = useState(false);
 
   const handleCreateAdmin = async () => {
     setIsCreatingAdmin(true);
@@ -49,6 +62,92 @@ export default function LabsPage() {
     } finally {
       setIsSendingBackup(false);
     }
+  };
+
+  // Dangerous Operations - Initial Click Handlers
+  const handleDeleteAllWords = () => {
+    setPendingOperation("words");
+    setShowFirstConfirm(true);
+  };
+
+  const handleDeleteAllExpressions = () => {
+    setPendingOperation("expressions");
+    setShowFirstConfirm(true);
+  };
+
+  const handleDeleteAllLectures = () => {
+    setPendingOperation("lectures");
+    setShowFirstConfirm(true);
+  };
+
+  // First confirmation handler
+  const handleFirstConfirm = () => {
+    setShowFirstConfirm(false);
+    setShowSecondConfirm(true);
+  };
+
+  // Second confirmation handler - Execute the operation
+  const handleSecondConfirm = async () => {
+    if (!pendingOperation) return;
+
+    const operationMap = {
+      words: {
+        execute: labsService.deleteAllWords.bind(labsService),
+        setLoading: setIsDeletingWords,
+        successLabel: "palabras",
+      },
+      expressions: {
+        execute: labsService.deleteAllExpressions.bind(labsService),
+        setLoading: setIsDeletingExpressions,
+        successLabel: "expresiones",
+      },
+      lectures: {
+        execute: labsService.deleteAllLectures.bind(labsService),
+        setLoading: setIsDeletingLectures,
+        successLabel: "lecturas",
+      },
+    };
+
+    const operation = operationMap[pendingOperation];
+    operation.setLoading(true);
+
+    try {
+      const response = await operation.execute();
+      if (response.success) {
+        const { deletedCount, timestamp } = response.data;
+        toast.success(`✅ ${deletedCount} ${operation.successLabel} eliminadas exitosamente`);
+        toast.info(`Eliminado a las: ${new Date(timestamp).toLocaleString()}`, { duration: 5000 });
+        setShowSecondConfirm(false);
+        setPendingOperation(null);
+      } else {
+        toast.error(response.message || `Failed to delete ${pendingOperation}`);
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || `Error deleting ${pendingOperation}`);
+    } finally {
+      operation.setLoading(false);
+    }
+  };
+
+  // Cancel handler
+  const handleCancelConfirm = () => {
+    setShowFirstConfirm(false);
+    setShowSecondConfirm(false);
+    setPendingOperation(null);
+  };
+
+  // Get operation labels for dialogs
+  const getOperationLabel = () => {
+    const labels = {
+      words: "palabras",
+      expressions: "expresiones",
+      lectures: "lecturas",
+    };
+    return pendingOperation ? labels[pendingOperation] : "";
+  };
+
+  const isOperationLoading = () => {
+    return isDeletingWords || isDeletingExpressions || isDeletingLectures;
   };
 
   return (
@@ -134,6 +233,146 @@ export default function LabsPage() {
           </ul>
         </CardContent>
       </Card>
+
+      {/* Danger Zone Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-destructive">
+            <AlertTriangle className="h-5 w-5" />
+            Danger Zone
+          </CardTitle>
+          <CardDescription>
+            ⚠️ Operaciones IRREVERSIBLES que eliminarán datos permanentemente
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Delete All Words */}
+          <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div>
+              <h3 className="font-medium">Delete All Words</h3>
+              <p className="text-sm text-muted-foreground">
+                Elimina TODAS las palabras de la base de datos. No se puede deshacer.
+              </p>
+            </div>
+            <Button
+              onClick={handleDeleteAllWords}
+              disabled={isDeletingWords}
+              variant="destructive"
+            >
+              {isDeletingWords ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Words
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Delete All Expressions */}
+          <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div>
+              <h3 className="font-medium">Delete All Expressions</h3>
+              <p className="text-sm text-muted-foreground">
+                Elimina TODAS las expresiones de la base de datos. No se puede deshacer.
+              </p>
+            </div>
+            <Button
+              onClick={handleDeleteAllExpressions}
+              disabled={isDeletingExpressions}
+              variant="destructive"
+            >
+              {isDeletingExpressions ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Expressions
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Delete All Lectures */}
+          <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div>
+              <h3 className="font-medium">Delete All Lectures</h3>
+              <p className="text-sm text-muted-foreground">
+                Elimina TODAS las lecturas de la base de datos. No se puede deshacer.
+              </p>
+            </div>
+            <Button
+              onClick={handleDeleteAllLectures}
+              disabled={isDeletingLectures}
+              variant="destructive"
+            >
+              {isDeletingLectures ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Lectures
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* First Confirmation Dialog */}
+      <AlertDialogNova
+        open={showFirstConfirm}
+        onOpenChange={setShowFirstConfirm}
+        title="⚠️ ¿Estás ABSOLUTAMENTE SEGURO?"
+        description={
+          <>
+            Esto eliminará <strong>TODAS las {getOperationLabel()}</strong> de la base de datos.
+            <br />
+            <br />
+            Esta es una operación <strong className="text-destructive">IRREVERSIBLE</strong>.
+          </>
+        }
+        onConfirm={handleFirstConfirm}
+        onCancel={handleCancelConfirm}
+        confirmText="Sí, continuar"
+        cancelText="Cancelar"
+        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
+
+      {/* Second Confirmation Dialog (Final Warning) */}
+      <AlertDialogNova
+        open={showSecondConfirm}
+        onOpenChange={setShowSecondConfirm}
+        title="⚠️ ÚLTIMA ADVERTENCIA"
+        description={
+          <>
+            Esta acción <strong className="text-destructive">NO SE PUEDE DESHACER</strong>.
+            <br />
+            <br />
+            Se eliminarán <strong>PERMANENTEMENTE</strong> todas las {getOperationLabel()}.
+            <br />
+            <br />
+            ¿Deseas continuar con la eliminación?
+          </>
+        }
+        onConfirm={handleSecondConfirm}
+        onCancel={handleCancelConfirm}
+        confirmText="Sí, eliminar todo"
+        cancelText="No, cancelar"
+        loading={isOperationLoading()}
+        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        shouldAutoCloseOnConfirm={false}
+      />
     </div>
   );
 }
