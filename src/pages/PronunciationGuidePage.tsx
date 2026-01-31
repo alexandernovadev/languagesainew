@@ -48,8 +48,8 @@ export default function PronunciationGuidePage() {
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8 overflow-x-hidden max-w-full">
       <PageHeader 
-        title="Guía de Pronunciación IPA" 
-        description="Sistema completo de pronunciación en inglés basado en IPA"
+        title="Guía IPA" 
+        description="Pronunciación en inglés basado en IPA"
       />
 
       {/* CHULETA RÁPIDA */}
