@@ -22,6 +22,7 @@ export function WordChatTab({ word, onSendMessage, onClearChat, loading }: WordC
         messages={messages} 
         loading={loading && messages.length === 0}
         onSuggestionClick={handleSuggestionClick}
+        wordId={word._id}
       />
       <WordChatInput
         onSendMessage={onSendMessage}

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Info, MessageSquare } from "lucide-react";
 import { IWord } from "@/types/models/Word";
@@ -45,6 +46,21 @@ export function WordDetailTabs({
   onUpdateDifficulty,
 }: WordDetailTabsProps) {
   const chatMessagesCount = word.chat?.length || 0;
+  const infoTabRef = useRef<HTMLDivElement>(null);
+  const chatTabRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll when word changes
+  useEffect(() => {
+    // Reset scroll for info tab
+    if (infoTabRef.current) {
+      infoTabRef.current.scrollTop = 0;
+    }
+    // Reset scroll for chat tab (the scroll is inside WordChatHistory, handled there)
+    // But we can also reset the tab container if needed
+    if (chatTabRef.current) {
+      chatTabRef.current.scrollTop = 0;
+    }
+  }, [word._id]);
 
   return (
     <Tabs defaultValue="info" className="w-full h-full flex flex-col">
@@ -64,7 +80,11 @@ export function WordDetailTabs({
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="info" className="flex-1 overflow-y-auto mt-0 min-h-0 data-[state=inactive]:hidden">
+      <TabsContent 
+        ref={infoTabRef}
+        value="info" 
+        className="flex-1 overflow-y-auto mt-0 min-h-0 data-[state=inactive]:hidden"
+      >
         <WordInfoTab
           word={word}
           loadingImage={loadingImage}
@@ -83,7 +103,11 @@ export function WordDetailTabs({
         />
       </TabsContent>
 
-      <TabsContent value="chat" className="flex-1 overflow-hidden mt-0 flex flex-col min-h-0 data-[state=inactive]:hidden">
+      <TabsContent 
+        ref={chatTabRef}
+        value="chat" 
+        className="flex-1 overflow-hidden mt-0 flex flex-col min-h-0 data-[state=inactive]:hidden"
+      >
         <WordChatTab
           word={word}
           onSendMessage={onSendMessage}

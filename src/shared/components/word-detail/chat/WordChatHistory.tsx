@@ -8,15 +8,24 @@ interface WordChatHistoryProps {
   messages: ChatMessage[];
   loading: boolean;
   onSuggestionClick?: (suggestion: string) => void;
+  wordId?: string;
 }
 
-export function WordChatHistory({ messages, loading, onSuggestionClick }: WordChatHistoryProps) {
+export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }: WordChatHistoryProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Reset scroll when word changes
+  useEffect(() => {
+    if (wordId && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [wordId]);
 
   const suggestions = [
     "Dame ejemplos en una conversación",
@@ -64,7 +73,7 @@ export function WordChatHistory({ messages, loading, onSuggestionClick }: WordCh
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2">
+    <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-2">
       {messages.map((message) => (
         <WordChatMessage key={message.id} message={message} />
       ))}
