@@ -35,7 +35,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
     clearChat,
     incrementSeen,
     updateDifficulty,
-  } = useWordDetail({ 
+  } = useWordDetail({
     wordId: word._id,
     onWordUpdate: (updated) => {
       // Word is updated automatically by the hook
@@ -76,7 +76,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
   };
 
   return (
-    <div 
+    <div
       className="relative w-full h-[600px] cursor-pointer"
       style={{ perspective: '1000px' }}
       onClick={handleFlip}
@@ -91,7 +91,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
         }}
       >
         {/* FRENTE */}
-        <Card 
+        <Card
           className={cn(
             "absolute w-full h-full",
             "flex flex-col items-center justify-center p-8"
@@ -104,39 +104,42 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
         >
           <CardContent className="flex flex-col items-center justify-center h-full w-full">
             {displayWord.img && (
-              <img 
-                src={displayWord.img} 
+              <img
+                src={displayWord.img}
                 alt={displayWord.word}
                 className="w-80 h-96 object-contain rounded-xl mb-6"
               />
             )}
-            
-            <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-5xl font-bold capitalize">{displayWord.word}</h2>
-              
+
+            <div className="flex flex-col items-center gap-3 mb-4">
+
               {/* Botones de audio - FRENTE */}
-              <button
-                onClick={(e) => handleAudioClick(e, 1)}
-                className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
-                title="Reproducir velocidad normal"
-              >
-                <Volume2 className="h-5 w-5" />
-              </button>
-              <button
-                onClick={(e) => handleAudioClick(e, 0.1)}
-                className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 text-xl leading-none"
-                title="Reproducir velocidad lenta"
-              >
-                🐢
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => handleAudioClick(e, 1)}
+                  className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
+                  title="Reproducir velocidad normal"
+                >
+                  <Volume2 className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={(e) => handleAudioClick(e, 0.1)}
+                  className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 text-xl leading-none"
+                  title="Reproducir velocidad lenta"
+                >
+                  🐢
+                </button>
+              </div>
+              <h2 className="text-5xl font-bold capitalize">{displayWord.word}</h2>
+
             </div>
-            
+
             {displayWord.IPA && (
               <span className="text-lg font-mono text-muted-foreground bg-muted px-3 py-1 rounded">
                 /{displayWord.IPA}/
               </span>
             )}
-            
+
             <p className="text-sm text-muted-foreground mt-6">
               Click para voltear
             </p>
@@ -144,7 +147,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
         </Card>
 
         {/* REVERSO */}
-        <Card 
+        <Card
           className={cn(
             "absolute w-full h-full",
             "flex flex-col overflow-hidden"
