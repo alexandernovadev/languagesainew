@@ -11,6 +11,7 @@ import {
   Info,
   BookOpenCheck,
   Quote,
+  Volume2,
 } from "lucide-react";
 
 export const menuItems = [
@@ -33,6 +34,11 @@ export const menuItems = [
     title: "Mis Expresiones",
     url: "/my-expressions",
     icon: Quote,
+  },
+  {
+    title: "Guía de Pronunciación",
+    url: "/pronunciation",
+    icon: Volume2,
   },
 ];
 

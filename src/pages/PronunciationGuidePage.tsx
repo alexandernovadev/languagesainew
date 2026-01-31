@@ -1,0 +1,903 @@
+import { PageHeader } from "@/shared/components/ui/page-header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Badge } from "@/shared/components/ui/badge";
+import { Target, Volume2, Languages, FileText, BookOpen, GraduationCap } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
+import { Separator } from "@/shared/components/ui/separator";
+import { cn } from "@/utils/common/classnames";
+
+// Helper function para colores de badges IPA
+const getIPABadgeColor = (ipa: string) => {
+  // Vocales cortas - azul
+  if (['/ɪ/', '/e/', '/æ/', '/ʌ/', '/ɒ/'].includes(ipa)) {
+    return "bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700";
+  }
+  // Vocales largas - verde
+  if (['/iː/', '/ɑː/', '/ɔː/', '/uː/'].includes(ipa)) {
+    return "bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700";
+  }
+  // Diptongos - púrpura
+  if (['/eɪ/', '/aɪ/', '/ɔɪ/', '/oʊ/', '/aʊ/'].includes(ipa)) {
+    return "bg-purple-100 text-purple-700 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700";
+  }
+  // Schwa - gris
+  if (ipa === '/ə/') {
+    return "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600";
+  }
+  // Consonantes fricativas/africadas - naranja
+  if (['/ʃ/', '/tʃ/', '/dʒ/'].includes(ipa)) {
+    return "bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700";
+  }
+  // TH - rojo
+  if (['/θ/', '/ð/'].includes(ipa)) {
+    return "bg-red-100 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700";
+  }
+  // N/NG - cian
+  if (['/n/', '/ŋ/'].includes(ipa)) {
+    return "bg-cyan-100 text-cyan-700 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700";
+  }
+  // R - rosa
+  if (ipa === '/ɹ/') {
+    return "bg-pink-100 text-pink-700 border-pink-300 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-700";
+  }
+  // Default
+  return "bg-primary/10 text-primary border-primary/20";
+};
+
+export default function PronunciationGuidePage() {
+  return (
+    <div className="space-y-8">
+      <PageHeader 
+        title="Guía de Pronunciación IPA" 
+        description="Sistema completo de pronunciación en inglés basado en IPA"
+      />
+
+      {/* CHULETA RÁPIDA */}
+      <section id="quickref">
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+          <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Target className="h-6 w-6 text-primary" />
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Chuleta Rápida
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">Vocales clave</h3>
+              <div className="space-y-4">
+                <div className="space-y-2 p-3 rounded-lg bg-blue-50/50 dark:bg-blue-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/ɪ/"))}>/ɪ/</Badge>
+                    <span className="font-semibold text-base">ship</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/iː/"))}>/iː/</Badge>
+                    <span className="font-semibold text-base">sheep</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/ɪ/</strong>: Boca relajada, lengua en posición media-alta, sonido corto y relajado. 
+                    <strong>/iː/</strong>: Boca estirada hacia los lados (como sonrisa), lengua alta, sonido largo y tenso.
+                  </p>
+                </div>
+                <div className="space-y-2 p-3 rounded-lg bg-blue-50/50 dark:bg-blue-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/æ/"))}>/æ/</Badge>
+                    <span className="font-semibold text-base">cat</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/ʌ/"))}>/ʌ/</Badge>
+                    <span className="font-semibold text-base">cup</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/æ/</strong>: Boca muy abierta, lengua baja y adelante, sonido corto y abierto. 
+                    <strong>/ʌ/</strong>: Boca medio abierta, lengua en posición central, sonido corto y relajado.
+                  </p>
+                </div>
+                <div className="space-y-2 p-3 rounded-lg bg-purple-50/50 dark:bg-purple-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/eɪ/"))}>/eɪ/</Badge>
+                    <span className="font-semibold text-base">wait</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge>
+                    <span className="font-semibold text-base">time</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/eɪ/</strong>: Comienza con boca medio abierta y se desliza hacia /i/, como "ei" en español pero más cerrado al final. 
+                    <strong>/aɪ/</strong>: Comienza con boca muy abierta y se desliza hacia /i/, como "ai" pero más marcado.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-orange-600 dark:text-orange-400">Consonantes críticas</h3>
+              <div className="space-y-4">
+                <div className="space-y-2 p-3 rounded-lg bg-orange-50/50 dark:bg-orange-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/ʃ/"))}>/ʃ/</Badge>
+                    <span className="font-semibold text-base">shop</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/tʃ/"))}>/tʃ/</Badge>
+                    <span className="font-semibold text-base">chop</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/dʒ/"))}>/dʒ/</Badge>
+                    <span className="font-semibold text-base">job</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/ʃ/</strong>: Lengua hacia atrás, labios redondeados, aire pasa creando fricción (como "sh" suave). 
+                    <strong>/tʃ/</strong>: Primero bloqueas el aire con la lengua, luego lo sueltas con fricción (como "ch" en español). 
+                    <strong>/dʒ/</strong>: Igual que /tʃ/ pero con vibración de cuerdas vocales (sonido sonoro).
+                  </p>
+                </div>
+                <div className="space-y-2 p-3 rounded-lg bg-red-50/50 dark:bg-red-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/θ/"))}>/θ/</Badge>
+                    <span className="font-semibold text-base">think</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/ð/"))}>/ð/</Badge>
+                    <span className="font-semibold text-base">this</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/θ/</strong>: Punta de la lengua entre los dientes, aire pasa sin vibración (sorda, sin voz). 
+                    <strong>/ð/</strong>: Misma posición pero con vibración de cuerdas vocales (sonora, con voz).
+                  </p>
+                </div>
+                <div className="space-y-2 p-3 rounded-lg bg-cyan-50/50 dark:bg-cyan-950/20">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/n/"))}>/n/</Badge>
+                    <span className="font-semibold text-base">seen</span>
+                    <span className="text-muted-foreground text-xl">≠</span>
+                    <Badge variant="outline" className={cn("font-mono text-lg font-bold px-3 py-1", getIPABadgeColor("/ŋ/"))}>/ŋ/</Badge>
+                    <span className="font-semibold text-base">sing</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground pl-2">
+                    <strong>/n/</strong>: Lengua toca el paladar detrás de los dientes superiores, aire sale por la nariz. 
+                    <strong>/ŋ/</strong>: Lengua toca el paladar blando (parte posterior), aire sale por la nariz, sonido más atrás en la boca.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-amber-600 dark:text-amber-400">Reglas de oro</h3>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary font-bold">•</span>
+                  <span>El <strong>acento manda</strong></span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary font-bold">•</span>
+                  <span>Las sílabas débiles → <Badge variant="outline" className="font-mono">/ə/</Badge></span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary font-bold">•</span>
+                  <span>La escritura miente; el IPA no</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* VOCALES */}
+      <section id="vowels">
+        <Card className="border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20">
+          <CardHeader className="bg-gradient-to-r from-blue-100/50 to-indigo-100/50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Volume2 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                Vocales (MAPA COMPLETO)
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">Vocales Cortas (Lax)</h3>
+              <p className="text-muted-foreground mb-4">
+                Las vocales cortas se pronuncian de forma relajada, sin tensar los músculos de la boca. 
+                Son sonidos breves y naturales. La lengua está en posición relajada y la boca no se estira.
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IPA</TableHead>
+                    <TableHead>Ejemplos</TableHead>
+                    <TableHead>Boca</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɪ/"))}>/ɪ/</Badge></TableCell>
+                    <TableCell className="font-semibold">sit, ship, bit, hit, fit, win, thin, this</TableCell>
+                    <TableCell>relajada</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/e/"))}>/e/</Badge></TableCell>
+                    <TableCell className="font-semibold">bed, red, head, said, dead, bread, friend, end</TableCell>
+                    <TableCell>media</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/æ/"))}>/æ/</Badge></TableCell>
+                    <TableCell className="font-semibold">cat, hat, bat, sat, man, can, hand, stand</TableCell>
+                    <TableCell>abierta</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʌ/"))}>/ʌ/</Badge></TableCell>
+                    <TableCell className="font-semibold">cup, up, but, cut, sun, fun, run, love</TableCell>
+                    <TableCell>central</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɒ/"))}>/ɒ/</Badge> <span className="text-xs">(UK)</span></TableCell>
+                    <TableCell className="font-semibold">hot, not, lot, got, stop, box, dog, job</TableCell>
+                    <TableCell>muy abierta</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">Vocales Largas (Tense)</h3>
+              <p className="text-muted-foreground mb-4">
+                Las vocales largas requieren tensar los músculos de la boca y mantener el sonido más tiempo. 
+                La lengua se posiciona de forma específica y la boca se estira o redondea según el sonido. 
+                Se mantienen más tiempo que las cortas.
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IPA</TableHead>
+                    <TableHead>Ejemplos</TableHead>
+                    <TableHead>Boca</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/iː/"))}>/iː/</Badge></TableCell>
+                    <TableCell className="font-semibold">seen, sheep, meet, seat, beat, read, need, tree</TableCell>
+                    <TableCell>estirada</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɑː/"))}>/ɑː/</Badge></TableCell>
+                    <TableCell className="font-semibold">car, far, star, hard, card, park, dark, start</TableCell>
+                    <TableCell>abierta</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɔː/"))}>/ɔː/</Badge></TableCell>
+                    <TableCell className="font-semibold">law, saw, raw, draw, door, more, four, floor</TableCell>
+                    <TableCell>redondeada</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/uː/"))}>/uː/</Badge></TableCell>
+                    <TableCell className="font-semibold">food, moon, soon, room, blue, true, shoe, move</TableCell>
+                    <TableCell>cerrada</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-purple-600 dark:text-purple-400">Diptongos</h3>
+              <p className="text-muted-foreground mb-4">
+                Los diptongos son combinaciones de dos vocales en una sola sílaba. La pronunciación comienza 
+                con un sonido y se desliza hacia otro. Es importante hacer el movimiento completo de la boca 
+                y la lengua durante la pronunciación.
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IPA</TableHead>
+                    <TableHead>Movimiento</TableHead>
+                    <TableHead>Ejemplos</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/eɪ/"))}>/eɪ/</Badge></TableCell>
+                    <TableCell className="font-semibold">e → i</TableCell>
+                    <TableCell className="font-semibold">wait, way, say, day, make, take, name, same</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge></TableCell>
+                    <TableCell className="font-semibold">a → i</TableCell>
+                    <TableCell className="font-semibold">time, like, find, mind, light, right, night, high</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɔɪ/"))}>/ɔɪ/</Badge></TableCell>
+                    <TableCell className="font-semibold">o → i</TableCell>
+                    <TableCell className="font-semibold">boy, toy, joy, coin, join, point, voice, choice</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/oʊ/"))}>/oʊ/</Badge></TableCell>
+                    <TableCell className="font-semibold">o → u</TableCell>
+                    <TableCell className="font-semibold">go, no, so, show, know, low, slow, home</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aʊ/"))}>/aʊ/</Badge></TableCell>
+                    <TableCell className="font-semibold">a → u</TableCell>
+                    <TableCell className="font-semibold">now, how, cow, down, town, found, sound, round</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-gray-600 dark:text-gray-400">Schwa <Badge variant="outline" className={cn("font-mono text-lg font-bold ml-2", getIPABadgeColor("/ə/"))}>/ə/</Badge></h3>
+              <p className="text-muted-foreground mb-3">
+                El schwa es la vocal más común en inglés. Se pronuncia con la boca completamente relajada, 
+                la lengua en posición central y sin tensión. Es el sonido "uh" muy suave. Solo aparece en 
+                sílabas <strong>sin acento</strong>.
+              </p>
+              <div>
+                <h4 className="font-semibold mb-2">Ejemplos:</h4>
+                <ul className="space-y-1 list-disc list-inside">
+                  <li>a<strong>bout</strong></li>
+                  <li>teach<strong>er</strong></li>
+                  <li>fami<strong>ly</strong></li>
+                </ul>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Diagramas de Boca</h3>
+              <div>
+                <h4 className="font-semibold mb-2">Vocal frontal vs posterior</h4>
+                <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
+{`FRONTAL        CENTRAL        POSTERIOR
+ iː   ɪ            ə             uː
+       e        ʌ         ɔː
+           æ        ɑː`}
+                </pre>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* CONSONANTES */}
+      <section id="consonants">
+        <Card className="border-2 border-orange-200 dark:border-orange-800 bg-gradient-to-br from-orange-50/50 to-red-50/50 dark:from-orange-950/20 dark:to-red-950/20">
+          <CardHeader className="bg-gradient-to-r from-orange-100/50 to-red-100/50 dark:from-orange-900/30 dark:to-red-900/30 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Languages className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+                Consonantes (CLASIFICADAS)
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-orange-600 dark:text-orange-400">Fricativas y Africadas</h3>
+              <p className="text-muted-foreground mb-4">
+                <strong>Fricativas:</strong> Se producen cuando el aire pasa por un espacio estrecho entre 
+                los órganos articulatorios, creando fricción (como /ʃ/ en "shop").<br />
+                <strong>Africadas:</strong> Comienzan como una oclusiva (bloqueo de aire) y terminan como 
+                fricativa (como /tʃ/ en "chop" - primero bloqueas el aire con la lengua, luego lo sueltas 
+                con fricción).
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IPA</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead>Ejemplos</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʃ/"))}>/ʃ/</Badge></TableCell>
+                    <TableCell className="font-semibold">fricativa</TableCell>
+                    <TableCell className="font-semibold">shop, ship, she, show, wish, fish, push, cash</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/tʃ/"))}>/tʃ/</Badge></TableCell>
+                    <TableCell className="font-semibold">africada</TableCell>
+                    <TableCell className="font-semibold">chop, chat, check, chair, much, such, watch, catch</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/dʒ/"))}>/dʒ/</Badge></TableCell>
+                    <TableCell className="font-semibold">africada</TableCell>
+                    <TableCell className="font-semibold">job, jump, judge, large, age, page, change, bridge</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-red-600 dark:text-red-400">TH (dos fonemas)</h3>
+              <p className="text-muted-foreground mb-4">
+                Para pronunciar TH, coloca la punta de la lengua entre los dientes superiores e inferiores 
+                (o justo detrás de los dientes superiores). El aire debe pasar entre la lengua y los dientes.<br />
+                <strong>/θ/</strong> (sorda): Sin vibración de cuerdas vocales, como en "think".<br />
+                <strong>/ð/</strong> (sonora): Con vibración de cuerdas vocales, como en "this".
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IPA</TableHead>
+                    <TableHead>Voz</TableHead>
+                    <TableHead>Ejemplos</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/θ/"))}>/θ/</Badge></TableCell>
+                    <TableCell className="font-semibold">sorda</TableCell>
+                    <TableCell className="font-semibold">think, thing, three, through, both, path, math, health</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ð/"))}>/ð/</Badge></TableCell>
+                    <TableCell className="font-semibold">sonora</TableCell>
+                    <TableCell className="font-semibold">this, that, the, they, there, then, other, mother</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3">R inglesa /ɹ/</h3>
+              <p className="text-muted-foreground mb-4">
+                La R inglesa es diferente a la española. La lengua se curva hacia atrás sin tocar el paladar, 
+                creando un sonido suave. No hay vibración como en español. La punta de la lengua se eleva 
+                hacia el paladar pero sin contacto. En inglés británico, la R solo se pronuncia antes de vocales.
+              </p>
+              <ul className="space-y-1 list-disc list-inside text-muted-foreground mb-4">
+                <li>Aproximante</li>
+                <li>No vibra</li>
+                <li>Lengua no toca</li>
+              </ul>
+              <div className="space-y-1">
+                <p><strong>UK:</strong> <em>car</em> <Badge variant="outline" className="font-mono">/kɑː/</Badge></p>
+                <p><strong>US:</strong> <em>car</em> <Badge variant="outline" className="font-mono">/kɑɹ/</Badge></p>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Diagramas de Boca</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">NG /ŋ/ vs N /n/</h4>
+                  <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
+{`/n/  → lengua adelante (seen)
+/ŋ/  → lengua atrás (sing)
+        ↑ sin soltar aire`}
+                  </pre>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">TH /θ/ /ð/</h4>
+                  <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
+{`Dientes
+  ↓
+  θ  ← lengua sale un poco`}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* ACENTO Y REDUCCIÓN */}
+      <section id="stress">
+        <Card className="border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 dark:from-amber-950/20 dark:to-yellow-950/20">
+          <CardHeader className="bg-gradient-to-r from-amber-100/50 to-yellow-100/50 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <FileText className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+              <span className="bg-gradient-to-r from-amber-600 to-yellow-600 dark:from-amber-400 dark:to-yellow-400 bg-clip-text text-transparent">
+                Acento y Reducción
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-amber-600 dark:text-amber-400">Cambio de acento = cambio de vocal</h3>
+              <p className="text-muted-foreground mb-4">
+                Cuando cambia el acento en una palabra, las vocales también cambian. Las sílabas acentuadas 
+                mantienen su sonido completo, mientras que las sílabas sin acento se reducen al schwa /ə/. 
+                Esto es fundamental para la pronunciación natural del inglés.
+              </p>
+              <div className="space-y-2">
+                <p className="text-lg"><strong className="text-amber-600 dark:text-amber-400">PHO</strong>tograph <Badge variant="outline" className={cn("font-mono text-base font-bold ml-2", getIPABadgeColor("/ə/"))}>/ˈfoʊtəgræf/</Badge></p>
+                <p className="text-lg">pho<strong className="text-amber-600 dark:text-amber-400">TO</strong>graphy <Badge variant="outline" className={cn("font-mono text-base font-bold ml-2", getIPABadgeColor("/ə/"))}>/fəˈtɑːgrəfi/</Badge></p>
+              </div>
+              <p className="text-muted-foreground mt-3 text-base font-semibold">Las sílabas débiles → <Badge variant="outline" className={cn("font-mono text-base font-bold ml-2", getIPABadgeColor("/ə/"))}>/ə/</Badge></p>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-amber-600 dark:text-amber-400">Palabras funcionales reducidas</h3>
+              <p className="text-muted-foreground mb-4">
+                En el habla natural, las palabras funcionales (artículos, preposiciones, conjunciones) se 
+                pronuncian de forma reducida y rápida. No reciben acento y sus vocales se convierten en 
+                schwa /ə/ o se eliminan completamente.
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Escritura</TableHead>
+                    <TableHead>Habla real</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-semibold text-lg">to</TableCell>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ə/"))}>/tə/</Badge></TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-semibold text-lg">of</TableCell>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ə/"))}>/əv/</Badge></TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-semibold text-lg">and</TableCell>
+                    <TableCell><Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ə/"))}>/ən/</Badge></TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* ORTOGRAFÍA */}
+      <section id="orthography">
+        <Card className="border-2 border-teal-200 dark:border-teal-800 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20">
+          <CardHeader className="bg-gradient-to-r from-teal-100/50 to-cyan-100/50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <BookOpen className="h-6 w-6 text-teal-600 dark:text-teal-400" />
+              <span className="bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                Ortografía → Sonido
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-600 dark:text-teal-400">E muda (V + C + e)</h3>
+              <p className="text-muted-foreground mb-4">
+                Cuando una palabra termina en "vocal + consonante + e", la "e" final es muda (no se pronuncia) 
+                pero hace que la vocal anterior sea larga. Ejemplo: "kit" (corta) vs "kite" (larga - la "e" 
+                no se pronuncia pero alarga la "i").
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Corta</TableHead>
+                    <TableHead>Larga</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>kit, bit, sit, hit, fit</TableCell>
+                    <TableCell>kite, bite, site, white, write</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>hop, not, lot, got, dot</TableCell>
+                    <TableCell>hope, note, vote, rope, cope</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>cut, but, nut, hut, shut</TableCell>
+                    <TableCell>cute, mute, flute, route, suit</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>plan, can, man, pan, ran</TableCell>
+                    <TableCell>plane, cane, mane, pane, rain</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-600 dark:text-teal-400">Doble consonante</h3>
+              <p className="text-muted-foreground mb-4">
+                Las consonantes dobles en inglés no se pronuncian dos veces. Su función es indicar que la 
+                vocal anterior es corta. La doble consonante "bloquea" la vocal larga. Ejemplos: 
+                <strong>sitting</strong> (la "i" es corta), <strong>better</strong> (la "e" es corta).
+              </p>
+              <div className="space-y-2">
+                <p className="text-sm font-semibold">Ejemplos:</p>
+                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                  <li><strong>sitting</strong> (vs. siting), <strong>better</strong> (vs. beter)</li>
+                  <li><strong>running</strong>, <strong>stopping</strong>, <strong>getting</strong>, <strong>putting</strong></li>
+                  <li><strong>happy</strong>, <strong>summer</strong>, <strong>letter</strong>, <strong>matter</strong></li>
+                </ul>
+                <p className="text-sm mt-2">Bloquea vocal larga, <strong>no</strong> duplica sonido.</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-600 dark:text-teal-400">Dos vocales juntas</h3>
+              <p className="text-muted-foreground mb-4">
+                Cuando dos vocales aparecen juntas, generalmente forman un diptongo o una vocal larga. 
+                La primera vocal suele ser la que se pronuncia más fuerte, y la segunda indica el sonido 
+                resultante. No se pronuncian ambas vocales por separado.
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold mb-1"><strong>ea</strong> → <Badge variant="outline" className="font-mono">/iː/</Badge></p>
+                  <p className="text-sm text-muted-foreground">sea, tea, read, eat, meat, beat, heat, seat</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1"><strong>ai</strong> → <Badge variant="outline" className="font-mono">/eɪ/</Badge></p>
+                  <p className="text-sm text-muted-foreground">wait, rain, train, pain, main, gain, chain, plain</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1"><strong>oa</strong> → <Badge variant="outline" className="font-mono">/oʊ/</Badge></p>
+                  <p className="text-sm text-muted-foreground">boat, coat, road, load, soap, goal, coal, float</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1"><strong>ee</strong> → <Badge variant="outline" className="font-mono">/iː/</Badge></p>
+                  <p className="text-sm text-muted-foreground">see, tree, free, meet, keep, sleep, deep, green</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1"><strong>oo</strong> → <Badge variant="outline" className="font-mono">/uː/</Badge></p>
+                  <p className="text-sm text-muted-foreground">moon, soon, food, cool, tool, pool, school, room</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* PRÁCTICA */}
+      <section id="practice">
+        <Card className="border-2 border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20">
+          <CardHeader className="bg-gradient-to-r from-violet-100/50 to-purple-100/50 dark:from-violet-900/30 dark:to-purple-900/30 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <GraduationCap className="h-6 w-6 text-violet-600 dark:text-violet-400" />
+              <span className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
+                Práctica y Variación
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-violet-600 dark:text-violet-400">Pares Mínimos (Entrenamiento)</h3>
+              <p className="text-muted-foreground mb-4">
+                Los pares mínimos son palabras que solo difieren en un sonido. Practicar con ellos ayuda 
+                a entrenar el oído y la pronunciación para distinguir sonidos similares. Pronuncia cada 
+                par enfocándote en la diferencia del sonido que cambia.
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Vocales</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>ship</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɪ/"))}>/ɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>sheep</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/iː/"))}>/iː/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>bit</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ɪ/"))}>/ɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>beat</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/iː/"))}>/iː/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>full</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʊ/"))}>/ʊ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>fool</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/uː/"))}>/uː/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>pull</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʊ/"))}>/ʊ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>pool</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/uː/"))}>/uː/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>cat</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/æ/"))}>/æ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>cut</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʌ/"))}>/ʌ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>hat</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/æ/"))}>/æ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>hut</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʌ/"))}>/ʌ/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>bed</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/e/"))}>/e/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>bad</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/æ/"))}>/æ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>pen</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/e/"))}>/e/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>pan</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/æ/"))}>/æ/</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-2">Consonantes</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>shop</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʃ/"))}>/ʃ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>chop</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/tʃ/"))}>/tʃ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>wish</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ʃ/"))}>/ʃ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>which</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/tʃ/"))}>/tʃ/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>thin</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/θ/"))}>/θ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>tin</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600")}>/t/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>think</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/θ/"))}>/θ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>tink</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600")}>/t/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>seen</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/n/"))}>/n/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>sing</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ŋ/"))}>/ŋ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>sin</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/n/"))}>/n/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>sing</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ŋ/"))}>/ŋ/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>this</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ð/"))}>/ð/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>dis</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600")}>/d/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>they</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/ð/"))}>/ð/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>day</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600")}>/d/</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-2">Diptongos</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>late</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/eɪ/"))}>/eɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>light</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>wait</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/eɪ/"))}>/eɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>white</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>coat</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/oʊ/"))}>/oʊ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>cow</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aʊ/"))}>/aʊ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>go</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/oʊ/"))}>/oʊ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>how</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aʊ/"))}>/aʊ/</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span>boy</span>
+                      <Badge variant="outline" className="font-mono">/ɔɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>buy</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge>
+                      <span className="text-muted-foreground">|</span>
+                      <span>toy</span>
+                      <Badge variant="outline" className="font-mono">/ɔɪ/</Badge>
+                      <span className="text-muted-foreground">–</span>
+                      <span>tie</span>
+                      <Badge variant="outline" className={cn("font-mono text-base font-bold", getIPABadgeColor("/aɪ/"))}>/aɪ/</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-violet-600 dark:text-violet-400">Variación y Homófonos</h3>
+              <p className="text-muted-foreground mb-4">
+                <strong>Homófonos:</strong> Palabras que suenan igual pero se escriben diferente. Se pronuncian 
+                exactamente igual, así que el contexto es clave para entenderlas.<br />
+                <strong>Variación UK vs US:</strong> El inglés británico y americano tienen diferencias en 
+                la pronunciación de ciertos sonidos. Ambas son correctas, pero es importante ser consistente 
+                con el dialecto que estés aprendiendo.
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Homófonos</h4>
+                  <div className="space-y-1">
+                    <p>wait / weigh / way</p>
+                    <p>see / sea</p>
+                    <p>two / too / to</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-2">UK vs US</h4>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Palabra</TableHead>
+                        <TableHead>UK</TableHead>
+                        <TableHead>US</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>hot</TableCell>
+                        <TableCell><Badge variant="outline" className="font-mono">/ɒ/</Badge></TableCell>
+                        <TableCell><Badge variant="outline" className="font-mono">/ɑ/</Badge></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>better</TableCell>
+                        <TableCell><Badge variant="outline" className="font-mono">/ˈbetə/</Badge></TableCell>
+                        <TableCell><Badge variant="outline" className="font-mono">/ˈbedɚ/</Badge></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
+  );
+}

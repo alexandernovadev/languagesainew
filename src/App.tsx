@@ -24,6 +24,7 @@ import {
   LabsPage,
   UsersPage,
   LoginPage,
+  PronunciationGuidePage,
 } from "./routes";
 
 // Componente para manejar rutas desconocidas
@@ -155,6 +156,14 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <UsersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/pronunciation"
+                    element={
+                      <ProtectedRoute>
+                        <PronunciationGuidePage />
                       </ProtectedRoute>
                     }
                   />
