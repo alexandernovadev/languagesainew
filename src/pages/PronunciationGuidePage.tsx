@@ -47,8 +47,8 @@ const getIPABadgeColor = (ipa: string) => {
 export default function PronunciationGuidePage() {
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8 overflow-x-hidden max-w-full">
-      <PageHeader 
-        title="Guía IPA" 
+      <PageHeader
+        title="Guía IPA"
         description="Pronunciación en inglés basado en IPA"
       />
 
@@ -76,7 +76,7 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">sheep</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/ɪ/</strong>: Boca relajada, lengua en posición media-alta, sonido corto y relajado. 
+                    <strong>/ɪ/</strong>: Boca relajada, lengua en posición media-alta, sonido corto y relajado.
                     <strong>/iː/</strong>: Boca estirada hacia los lados (como sonrisa), lengua alta, sonido largo y tenso.
                   </p>
                 </div>
@@ -89,7 +89,7 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">cup</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/æ/</strong>: Boca muy abierta, lengua baja y adelante, sonido corto y abierto. 
+                    <strong>/æ/</strong>: Boca muy abierta, lengua baja y adelante, sonido corto y abierto.
                     <strong>/ʌ/</strong>: Boca medio abierta, lengua en posición central, sonido corto y relajado.
                   </p>
                 </div>
@@ -102,7 +102,7 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">time</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/eɪ/</strong>: Comienza con boca medio abierta y se desliza hacia /i/, como "ei" en español pero más cerrado al final. 
+                    <strong>/eɪ/</strong>: Comienza con boca medio abierta y se desliza hacia /i/, como "ei" en español pero más cerrado al final.
                     <strong>/aɪ/</strong>: Comienza con boca muy abierta y se desliza hacia /i/, como "ai" pero más marcado.
                   </p>
                 </div>
@@ -126,8 +126,8 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">job</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/ʃ/</strong>: Lengua hacia atrás, labios redondeados, aire pasa creando fricción (como "sh" suave). 
-                    <strong>/tʃ/</strong>: Primero bloqueas el aire con la lengua, luego lo sueltas con fricción (como "ch" en español). 
+                    <strong>/ʃ/</strong>: Lengua hacia atrás, labios redondeados, aire pasa creando fricción (como "sh" suave).
+                    <strong>/tʃ/</strong>: Primero bloqueas el aire con la lengua, luego lo sueltas con fricción (como "ch" en español).
                     <strong>/dʒ/</strong>: Igual que /tʃ/ pero con vibración de cuerdas vocales (sonido sonoro).
                   </p>
                 </div>
@@ -140,7 +140,7 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">this</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/θ/</strong>: Punta de la lengua entre los dientes, aire pasa sin vibración (sorda, sin voz). 
+                    <strong>/θ/</strong>: Punta de la lengua entre los dientes, aire pasa sin vibración (sorda, sin voz).
                     <strong>/ð/</strong>: Misma posición pero con vibración de cuerdas vocales (sonora, con voz).
                   </p>
                 </div>
@@ -153,7 +153,7 @@ export default function PronunciationGuidePage() {
                     <span className="font-semibold text-sm sm:text-base">sing</span>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground pl-2">
-                    <strong>/n/</strong>: Lengua toca el paladar detrás de los dientes superiores, aire sale por la nariz. 
+                    <strong>/n/</strong>: Lengua toca el paladar detrás de los dientes superiores, aire sale por la nariz.
                     <strong>/ŋ/</strong>: Lengua toca el paladar blando (parte posterior), aire sale por la nariz, sonido más atrás en la boca.
                   </p>
                 </div>
@@ -198,7 +198,7 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-blue-600 dark:text-blue-400">Vocales Cortas (Lax)</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Las vocales cortas se pronuncian de forma relajada, sin tensar los músculos de la boca. 
+                Las vocales cortas se pronuncian de forma relajada, sin tensar los músculos de la boca.
                 Son sonidos breves y naturales. La lengua está en posición relajada y la boca no se estira.
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -248,8 +248,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-green-600 dark:text-green-400">Vocales Largas (Tense)</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Las vocales largas requieren tensar los músculos de la boca y mantener el sonido más tiempo. 
-                La lengua se posiciona de forma específica y la boca se estira o redondea según el sonido. 
+                Las vocales largas requieren tensar los músculos de la boca y mantener el sonido más tiempo.
+                La lengua se posiciona de forma específica y la boca se estira o redondea según el sonido.
                 Se mantienen más tiempo que las cortas.
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -294,8 +294,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-purple-600 dark:text-purple-400">Diptongos</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Los diptongos son combinaciones de dos vocales en una sola sílaba. La pronunciación comienza 
-                con un sonido y se desliza hacia otro. Es importante hacer el movimiento completo de la boca 
+                Los diptongos son combinaciones de dos vocales en una sola sílaba. La pronunciación comienza
+                con un sonido y se desliza hacia otro. Es importante hacer el movimiento completo de la boca
                 y la lengua durante la pronunciación.
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -345,8 +345,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-gray-600 dark:text-gray-400">Schwa <Badge variant="outline" className={cn("font-mono text-sm sm:text-base lg:text-lg font-bold ml-2", getIPABadgeColor("/ə/"))}>/ə/</Badge></h3>
               <p className="text-muted-foreground mb-3">
-                El schwa es la vocal más común en inglés. Se pronuncia con la boca completamente relajada, 
-                la lengua en posición central y sin tensión. Es el sonido "uh" muy suave. Solo aparece en 
+                El schwa es la vocal más común en inglés. Se pronuncia con la boca completamente relajada,
+                la lengua en posición central y sin tensión. Es el sonido "uh" muy suave. Solo aparece en
                 sílabas <strong>sin acento</strong>.
               </p>
               <div>
@@ -359,20 +359,6 @@ export default function PronunciationGuidePage() {
               </div>
             </div>
 
-            <Separator />
-
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Diagramas de Boca</h3>
-              <div>
-                <h4 className="font-semibold mb-2">Vocal frontal vs posterior</h4>
-                <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
-{`FRONTAL        CENTRAL        POSTERIOR
- iː   ɪ            ə             uː
-       e        ʌ         ɔː
-           æ        ɑː`}
-                </pre>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </section>
@@ -392,10 +378,10 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-orange-600 dark:text-orange-400">Fricativas y Africadas</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                <strong>Fricativas:</strong> Se producen cuando el aire pasa por un espacio estrecho entre 
+                <strong>Fricativas:</strong> Se producen cuando el aire pasa por un espacio estrecho entre
                 los órganos articulatorios, creando fricción (como /ʃ/ en "shop").<br />
-                <strong>Africadas:</strong> Comienzan como una oclusiva (bloqueo de aire) y terminan como 
-                fricativa (como /tʃ/ en "chop" - primero bloqueas el aire con la lengua, luego lo sueltas 
+                <strong>Africadas:</strong> Comienzan como una oclusiva (bloqueo de aire) y terminan como
+                fricativa (como /tʃ/ en "chop" - primero bloqueas el aire con la lengua, luego lo sueltas
                 con fricción).
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -435,7 +421,7 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-red-600 dark:text-red-400">TH (dos fonemas)</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Para pronunciar TH, coloca la punta de la lengua entre los dientes superiores e inferiores 
+                Para pronunciar TH, coloca la punta de la lengua entre los dientes superiores e inferiores
                 (o justo detrás de los dientes superiores). El aire debe pasar entre la lengua y los dientes.<br />
                 <strong>/θ/</strong> (sorda): Sin vibración de cuerdas vocales, como en "think".<br />
                 <strong>/ð/</strong> (sonora): Con vibración de cuerdas vocales, como en "this".
@@ -472,8 +458,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg font-semibold mb-3">R inglesa /ɹ/</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                La R inglesa es diferente a la española. La lengua se curva hacia atrás sin tocar el paladar, 
-                creando un sonido suave. No hay vibración como en español. La punta de la lengua se eleva 
+                La R inglesa es diferente a la española. La lengua se curva hacia atrás sin tocar el paladar,
+                creando un sonido suave. No hay vibración como en español. La punta de la lengua se eleva
                 hacia el paladar pero sin contacto. En inglés británico, la R solo se pronuncia antes de vocales.
               </p>
               <ul className="space-y-1 list-disc list-inside text-muted-foreground mb-4">
@@ -495,7 +481,7 @@ export default function PronunciationGuidePage() {
                 <div>
                   <h4 className="font-semibold mb-2">NG /ŋ/ vs N /n/</h4>
                   <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
-{`/n/  → lengua adelante (seen)
+                    {`/n/  → lengua adelante (seen)
 /ŋ/  → lengua atrás (sing)
         ↑ sin soltar aire`}
                   </pre>
@@ -503,7 +489,7 @@ export default function PronunciationGuidePage() {
                 <div>
                   <h4 className="font-semibold mb-2">TH /θ/ /ð/</h4>
                   <pre className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
-{`Dientes
+                    {`Dientes
   ↓
   θ  ← lengua sale un poco`}
                   </pre>
@@ -529,8 +515,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-amber-600 dark:text-amber-400">Cambio de acento = cambio de vocal</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Cuando cambia el acento en una palabra, las vocales también cambian. Las sílabas acentuadas 
-                mantienen su sonido completo, mientras que las sílabas sin acento se reducen al schwa /ə/. 
+                Cuando cambia el acento en una palabra, las vocales también cambian. Las sílabas acentuadas
+                mantienen su sonido completo, mientras que las sílabas sin acento se reducen al schwa /ə/.
                 Esto es fundamental para la pronunciación natural del inglés.
               </p>
               <div className="space-y-2">
@@ -545,8 +531,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-amber-600 dark:text-amber-400">Palabras funcionales reducidas</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                En el habla natural, las palabras funcionales (artículos, preposiciones, conjunciones) se 
-                pronuncian de forma reducida y rápida. No reciben acento y sus vocales se convierten en 
+                En el habla natural, las palabras funcionales (artículos, preposiciones, conjunciones) se
+                pronuncian de forma reducida y rápida. No reciben acento y sus vocales se convierten en
                 schwa /ə/ o se eliminan completamente.
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -595,8 +581,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-teal-600 dark:text-teal-400">E muda (V + C + e)</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Cuando una palabra termina en "vocal + consonante + e", la "e" final es muda (no se pronuncia) 
-                pero hace que la vocal anterior sea larga. Ejemplo: "kit" (corta) vs "kite" (larga - la "e" 
+                Cuando una palabra termina en "vocal + consonante + e", la "e" final es muda (no se pronuncia)
+                pero hace que la vocal anterior sea larga. Ejemplo: "kit" (corta) vs "kite" (larga - la "e"
                 no se pronuncia pero alarga la "i").
               </p>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -636,8 +622,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-teal-600 dark:text-teal-400">Doble consonante</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Las consonantes dobles en inglés no se pronuncian dos veces. Su función es indicar que la 
-                vocal anterior es corta. La doble consonante "bloquea" la vocal larga. Ejemplos: 
+                Las consonantes dobles en inglés no se pronuncian dos veces. Su función es indicar que la
+                vocal anterior es corta. La doble consonante "bloquea" la vocal larga. Ejemplos:
                 <strong>sitting</strong> (la "i" es corta), <strong>better</strong> (la "e" es corta).
               </p>
               <div className="space-y-2">
@@ -656,8 +642,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-teal-600 dark:text-teal-400">Dos vocales juntas</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Cuando dos vocales aparecen juntas, generalmente forman un diptongo o una vocal larga. 
-                La primera vocal suele ser la que se pronuncia más fuerte, y la segunda indica el sonido 
+                Cuando dos vocales aparecen juntas, generalmente forman un diptongo o una vocal larga.
+                La primera vocal suele ser la que se pronuncia más fuerte, y la segunda indica el sonido
                 resultante. No se pronuncian ambas vocales por separado.
               </p>
               <div className="space-y-3">
@@ -702,8 +688,8 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-violet-600 dark:text-violet-400">Pares Mínimos (Entrenamiento)</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                Los pares mínimos son palabras que solo difieren en un sonido. Practicar con ellos ayuda 
-                a entrenar el oído y la pronunciación para distinguir sonidos similares. Pronuncia cada 
+                Los pares mínimos son palabras que solo difieren en un sonido. Practicar con ellos ayuda
+                a entrenar el oído y la pronunciación para distinguir sonidos similares. Pronuncia cada
                 par enfocándote en la diferencia del sonido que cambia.
               </p>
               <div className="space-y-4">
@@ -879,10 +865,10 @@ export default function PronunciationGuidePage() {
             <div>
               <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-violet-600 dark:text-violet-400">Variación y Homófonos</h3>
               <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                <strong>Homófonos:</strong> Palabras que suenan igual pero se escriben diferente. Se pronuncian 
+                <strong>Homófonos:</strong> Palabras que suenan igual pero se escriben diferente. Se pronuncian
                 exactamente igual, así que el contexto es clave para entenderlas.<br />
-                <strong>Variación UK vs US:</strong> El inglés británico y americano tienen diferencias en 
-                la pronunciación de ciertos sonidos. Ambas son correctas, pero es importante ser consistente 
+                <strong>Variación UK vs US:</strong> El inglés británico y americano tienen diferencias en
+                la pronunciación de ciertos sonidos. Ambas son correctas, pero es importante ser consistente
                 con el dialecto que estés aprendiendo.
               </p>
               <div className="space-y-4">
