@@ -16,6 +16,7 @@ interface AnkiCardProps {
 export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
 
   // Use wordDetail hook for managing word state and functions
+  // Pasar word como initialWord para evitar llamada API innecesaria
   const {
     word: updatedWord,
     loadingImage,
@@ -37,6 +38,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
     updateDifficulty,
   } = useWordDetail({
     wordId: word._id,
+    initialWord: word, // Pasar la palabra completa para evitar llamada API
     onWordUpdate: (updated) => {
       // Word is updated automatically by the hook
     }

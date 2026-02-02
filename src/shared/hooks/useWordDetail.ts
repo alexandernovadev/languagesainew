@@ -5,11 +5,12 @@ import { toast } from 'sonner';
 
 interface UseWordDetailProps {
   wordId: string | null;
+  initialWord?: IWord | null; // Palabra inicial para evitar llamada API innecesaria
   onWordUpdate?: (word: IWord) => void;
 }
 
-export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
-  const [word, setWord] = useState<IWord | null>(null);
+export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDetailProps) {
+  const [word, setWord] = useState<IWord | null>(initialWord || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -54,16 +55,32 @@ export function useWordDetail({ wordId, onWordUpdate }: UseWordDetailProps) {
   }, [wordId]);
 
   // Load word when wordId changes (only when it actually changes)
+  // Si hay initialWord y coincide con el wordId, no hacer llamada API
   useEffect(() => {
     if (wordId !== wordIdRef.current) {
       wordIdRef.current = wordId;
       if (wordId) {
-        loadWord();
+        // Si hay initialWord y coincide con el wordId actual, usarlo directamente
+        if (initialWord && initialWord._id === wordId) {
+          setWord(initialWord);
+          if (onWordUpdateRef.current) {
+            onWordUpdateRef.current(initialWord);
+          }
+        } else {
+          // Solo hacer llamada API si no hay initialWord o no coincide
+          loadWord();
+        }
       } else {
         setWord(null);
       }
+    } else if (wordId && initialWord && initialWord._id === wordId) {
+      // Si el wordId no cambió pero initialWord sí, actualizar si coincide
+      setWord(initialWord);
+      if (onWordUpdateRef.current) {
+        onWordUpdateRef.current(initialWord);
+      }
     }
-  }, [wordId, loadWord]);
+  }, [wordId, initialWord, loadWord]);
 
   // Refresh image
   const refreshImage = useCallback(async () => {
