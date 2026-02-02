@@ -25,10 +25,10 @@ export function MarkdownRenderer({
     h4: ({ children }: any) => <h4 className="text-sm font-medium mb-2 mt-2 first:mt-0 text-primary/70">{children}</h4>,
     h5: ({ children }: any) => <h5 className="text-xs font-medium mb-2 mt-2 first:mt-0 text-primary/60">{children}</h5>,
     h6: ({ children }: any) => <h6 className="text-xs font-normal mb-2 mt-2 first:mt-0 text-primary/50">{children}</h6>,
-    ul: ({ children }: any) => <ul className="list-disc list-outside mb-2 ml-4 space-y-1">{children}</ul>,
-    ol: ({ children }: any) => <ol className="list-decimal list-outside mb-2 ml-4 space-y-1">{children}</ol>,
+    ul: ({ children }: any) => <ul className="list-disc list-outside mb-2 ml-4 space-y-1 [&>li>p>strong]:text-yellow-500 [&>li>strong]:text-yellow-500">{children}</ul>,
+    ol: ({ children }: any) => <ol className="list-decimal list-outside mb-2 ml-4 space-y-1 [&>li>p>strong]:text-yellow-500 [&>li>strong]:text-yellow-500">{children}</ol>,
     li: ({ children }: any) => <li className="text-sm pl-1">{children}</li>,
-    strong: ({ children }: any) => <strong className="font-bold">{children}</strong>,
+    strong: ({ children }: any) => <strong className="font-bold text-yellow-500">{children}</strong>,
     em: ({ children }: any) => <em className="italic">{children}</em>,
     code: ({ children, className: codeClassName }: any) => {
       const isInline = !codeClassName;

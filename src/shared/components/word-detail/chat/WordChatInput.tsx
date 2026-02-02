@@ -33,8 +33,8 @@ export function WordChatInput({ onSendMessage, onClearChat, loading }: WordChatI
         <Button
           type="submit"
           disabled={!message.trim() || loading}
-          size="default"
-          className="px-3"
+          size="sm"
+          variant="yellow"
         >
           <Send className="h-4 w-4" />
         </Button>

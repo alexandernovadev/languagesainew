@@ -33,7 +33,7 @@ export function WordChatTab({ word, onSendMessage, onClearChat, loading }: WordC
           variant="ghost"
           size="icon"
           disabled={loading}
-          className="absolute bottom-16 right-2 h-8 w-8 text-destructive z-50 border border-destructive bg-destructive/10 hover:bg-destructive/20 transition-all duration-300"
+          className="absolute bottom-16 right-2 h-8 w-8 text-white z-50 border border-destructive bg-destructive hover:bg-destructive/90 transition-all duration-300"
           title="Limpiar chat"
         >
           <Trash2 className="h-4 w-4" />
