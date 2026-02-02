@@ -198,7 +198,7 @@ export default function SystemInfoPage() {
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between flex-wrap gap-2">
-                      <span className="text-sm text-muted-foreground">Backend URL:</span>
+                      <span className="text-sm text-muted-foreground">URL:</span>
                       <span className="text-xs font-mono text-muted-foreground truncate max-w-[60%]" title={import.meta.env.VITE_BACK_URL}>
                         {import.meta.env.VITE_BACK_URL || "No configurado"}
                       </span>
