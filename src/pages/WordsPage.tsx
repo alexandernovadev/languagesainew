@@ -42,7 +42,7 @@ export default function WordsPage() {
   } = useWords();
 
   // Sync filters with URL
-  useFilterUrlSync(filters, updateFilters);
+  const { isReady: filtersReady } = useFilterUrlSync(filters, updateFilters);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);

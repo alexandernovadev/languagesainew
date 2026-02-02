@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { wordService } from '@/services/wordService';
 import { IWord } from '@/types/models/Word';
 import { toast } from 'sonner';
@@ -75,6 +75,11 @@ export function useWords() {
     limit: 10,
   });
 
+  // Flag para saber si ya se hizo la primera carga
+  const hasInitialLoad = useRef(false);
+  // Ref para rastrear si los filtros han cambiado desde el estado inicial
+  const initialFiltersSet = useRef(false);
+
   // Fetch words
   const fetchWords = useCallback(async () => {
     setLoading(true);
@@ -139,7 +144,14 @@ export function useWords() {
 
   // Update filters
   const updateFilters = (newFilters: Partial<WordFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters(prev => {
+      const updated = { ...prev, ...newFilters };
+      // Marcar que los filtros han sido establecidos (probablemente desde la URL)
+      if (!initialFiltersSet.current) {
+        initialFiltersSet.current = true;
+      }
+      return updated;
+    });
     setCurrentPage(1); // Reset to first page when filters change
   };
 
@@ -156,7 +168,25 @@ export function useWords() {
 
   // Load words on mount and when dependencies change
   useEffect(() => {
-    fetchWords();
+    // Solo hacer la primera llamada después de que los filtros hayan sido establecidos
+    // Esto evita hacer una llamada sin filtros y luego otra con filtros
+    if (!hasInitialLoad.current) {
+      // Si los filtros ya fueron establecidos (desde la URL), hacer la llamada inmediatamente
+      if (initialFiltersSet.current) {
+        hasInitialLoad.current = true;
+        fetchWords();
+      } else {
+        // Si aún no se han establecido los filtros, esperar un pequeño delay
+        // para dar tiempo a que useFilterUrlSync cargue los filtros de la URL
+        const timeoutId = setTimeout(() => {
+          hasInitialLoad.current = true;
+          fetchWords();
+        }, 50); // Delay suficiente para que useFilterUrlSync se ejecute
+        return () => clearTimeout(timeoutId);
+      }
+    } else {
+      fetchWords();
+    }
   }, [fetchWords]);
 
   return {

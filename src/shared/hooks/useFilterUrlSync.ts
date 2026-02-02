@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any) => void) => {
   const isInitialLoad = useRef(true);
+  const [isReady, setIsReady] = useState(false);
 
   // Función para leer filtros de la URL
   const loadFiltersFromURL = () => {
@@ -164,6 +165,8 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     if (Object.keys(filtersFromURL).length > 0) {
       setFilters(filtersFromURL);
     }
+    // Marcar como listo después de cargar los filtros (o si no hay filtros en la URL)
+    setIsReady(true);
   }, []); // Solo ejecutar una vez al montar
 
   // Sincronizar filtros con la URL
@@ -191,6 +194,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
   return {
     loadFiltersFromURL,
     updateURLWithFilters,
-    clearURLFilters
+    clearURLFilters,
+    isReady // Flag para indicar si ya se cargaron los filtros de la URL
   };
 };
