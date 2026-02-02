@@ -5,7 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { systemService, SystemInfo } from "@/services/systemService";
 import { formatDateTimeSpanish } from "@/utils/common/time/formatDate";
-import { Server, Calendar, Code, Globe } from "lucide-react";
+import { Server, Calendar, Code, Globe, Monitor } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SystemInfoPage() {
@@ -98,69 +98,116 @@ export default function SystemInfoPage() {
       )}
 
       {!loading && !error && systemInfo && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Server className="h-5 w-5 text-muted-foreground" />
-                <h3 className="text-lg font-semibold">Estado del Servidor</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Estado:</span>
-                  <Badge variant="default">
-                    En línea
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Ambiente:</span>
-                  <Badge variant={getEnvironmentVariant(systemInfo.environment)}>
-                    {getEnvironmentLabel(systemInfo.environment)}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="space-y-6">
+          {/* Sección Backend */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Server className="h-5 w-5" />
+              Backend (Servidor)
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Server className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold">Estado del Servidor</h3>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Estado:</span>
+                      <Badge variant="default">
+                        En línea
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Ambiente:</span>
+                      <Badge variant={getEnvironmentVariant(systemInfo.environment)}>
+                        {getEnvironmentLabel(systemInfo.environment)}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Code className="h-5 w-5 text-muted-foreground" />
-                <h3 className="text-lg font-semibold">Versión</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Versión:</span>
-                  <Badge variant="outline" className="font-mono">
-                    {systemInfo.version}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Code className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold">Versión del Backend</h3>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Versión:</span>
+                      <Badge variant="outline" className="font-mono">
+                        {systemInfo.version}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="md:col-span-2">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <h3 className="text-lg font-semibold">Fecha y Hora del Servidor</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-sm text-muted-foreground">Última actualización:</span>
-                  <span className="text-sm font-medium">
-                    {formatDateTimeSpanish(systemInfo.date)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-sm text-muted-foreground">Fecha ISO:</span>
-                  <span className="text-xs font-mono text-muted-foreground">
-                    {systemInfo.date}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="md:col-span-2">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Calendar className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold">Fecha y Hora del Servidor</h3>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="text-sm text-muted-foreground">Última actualización:</span>
+                      <span className="text-sm font-medium">
+                        {formatDateTimeSpanish(systemInfo.date)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="text-sm text-muted-foreground">Fecha ISO:</span>
+                      <span className="text-xs font-mono text-muted-foreground">
+                        {systemInfo.date}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Sección Frontend */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Monitor className="h-5 w-5" />
+              Frontend (Cliente)
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="md:col-span-2">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Monitor className="h-5 w-5 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold">Información del Frontend</h3>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Versión:</span>
+                      <Badge variant="outline" className="font-mono">
+                        3.50.20Gamma
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Modo:</span>
+                      <Badge variant={import.meta.env.DEV ? "secondary" : "default"}>
+                        {import.meta.env.DEV ? "Development" : "Production"}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="text-sm text-muted-foreground">Backend URL:</span>
+                      <span className="text-xs font-mono text-muted-foreground truncate max-w-[60%]" title={import.meta.env.VITE_BACK_URL}>
+                        {import.meta.env.VITE_BACK_URL || "No configurado"}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       )}
     </div>
