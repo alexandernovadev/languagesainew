@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { ImageUploaderCard } from "../ui/ImageUploaderCard";
+import { wordService } from "@/services/wordService";
 
 interface WordDialogProps {
   open: boolean;
@@ -29,6 +30,8 @@ interface WordDialogProps {
 
 export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps) {
   const [loading, setLoading] = useState(false);
+  const [loadingWord, setLoadingWord] = useState(false);
+  const [fullWord, setFullWord] = useState<IWord | null>(null);
   const [formData, setFormData] = useState({
     word: "",
     definition: "",
@@ -51,27 +54,78 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   const [synonymInput, setSynonymInput] = useState("");
   const [codeSwitchingInput, setCodeSwitchingInput] = useState("");
 
-  // Reset form when dialog opens with word data
+  // Cargar palabra completa desde el servidor cuando se abre el dialog de edición
   useEffect(() => {
-    // SOLO actuar cuando el diálogo está abierto
-    if (!open) return;
-    
-    if (word) {
-      setFormData({
-        word: word.word || "",
-        definition: word.definition || "",
-        language: (word.language as Language) || "en",
-        difficulty: (word.difficulty as Difficulty) || "medium",
-        IPA: word.IPA || "",
-        img: word.img || "",
-        spanishWord: word.spanish?.word || "",
-        spanishDefinition: word.spanish?.definition || "",
-        type: (word.type as WordType[]) || [],
-        examples: word.examples || [],
-        sinonyms: word.sinonyms || [],
-        codeSwitching: word.codeSwitching || [],
-      });
+    if (!open) {
+      setFullWord(null);
+      return;
+    }
+
+    // Si hay una palabra para editar, cargar la versión completa desde el servidor
+    if (word && word._id) {
+      setLoadingWord(true);
+      wordService.getWordById(word._id)
+        .then((response) => {
+          const wordData = response.data || response;
+          setFullWord(wordData);
+        })
+        .catch((error) => {
+          console.error("Error loading word:", error);
+          // Si falla, usar la palabra que se pasó como prop
+          setFullWord(word);
+        })
+        .finally(() => {
+          setLoadingWord(false);
+        });
     } else {
+      // Si no hay palabra, es modo crear
+      setFullWord(null);
+    }
+  }, [open, word?._id]);
+
+  // Actualizar formData cuando fullWord cambia
+  useEffect(() => {
+    if (!open) {
+      // Reset form when dialog closes
+      setFormData({
+        word: "",
+        definition: "",
+        language: "en",
+        difficulty: "medium",
+        IPA: "",
+        img: "",
+        spanishWord: "",
+        spanishDefinition: "",
+        type: [],
+        examples: [],
+        sinonyms: [],
+        codeSwitching: [],
+      });
+      return;
+    }
+
+    if (fullWord) {
+      // Asegurar que los arrays sean arrays, no undefined
+      const wordType = Array.isArray(fullWord.type) ? fullWord.type : [];
+      const wordExamples = Array.isArray(fullWord.examples) ? fullWord.examples : [];
+      const wordSinonyms = Array.isArray(fullWord.sinonyms) ? fullWord.sinonyms : [];
+      const wordCodeSwitching = Array.isArray(fullWord.codeSwitching) ? fullWord.codeSwitching : [];
+      
+      setFormData({
+        word: fullWord.word || "",
+        definition: fullWord.definition || "",
+        language: (fullWord.language as Language) || "en",
+        difficulty: (fullWord.difficulty as Difficulty) || "medium",
+        IPA: fullWord.IPA || "",
+        img: fullWord.img || "",
+        spanishWord: fullWord.spanish?.word || "",
+        spanishDefinition: fullWord.spanish?.definition || "",
+        type: wordType as WordType[],
+        examples: wordExamples,
+        sinonyms: wordSinonyms,
+        codeSwitching: wordCodeSwitching,
+      });
+    } else if (!word) {
       // Reset for new word
       setFormData({
         word: "",
@@ -93,7 +147,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
     setExampleInput("");
     setSynonymInput("");
     setCodeSwitchingInput("");
-  }, [word, open]);
+  }, [fullWord, open, word]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,7 +207,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
     }));
   };
 
-  const isEditMode = !!word;
+  const isEditMode = !!word && !!fullWord;
 
   return (
     <ModalNova
@@ -173,11 +227,11 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
-            disabled={loading}
+            disabled={loading || loadingWord}
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={loading} onClick={handleSubmit}>
+          <Button type="submit" disabled={loading || loadingWord} onClick={handleSubmit}>
             {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
             {isEditMode ? "Update Word" : "Create Word"}
           </Button>
@@ -185,7 +239,13 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       }
     >
       <div className="px-6">
-        <form onSubmit={handleSubmit}>
+        {loadingWord && isEditMode ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-muted-foreground">Cargando palabra...</span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
           <Tabs defaultValue="general" className="w-full">
             <TabsList className="sticky top-0 z-10 grid w-full grid-cols-4 shadow-md">
               <TabsTrigger value="general" className="flex items-center gap-2">
@@ -217,7 +277,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 value={formData.word}
                 onChange={(e) => setFormData({ ...formData, word: e.target.value })}
                 required
-                disabled={loading}
+                disabled={loading || loadingWord}
                 autoComplete="off"
               />
             </div>
@@ -228,7 +288,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 id="IPA"
                 value={formData.IPA}
                 onChange={(e) => setFormData({ ...formData, IPA: e.target.value })}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 placeholder="e.g., /həˈloʊ/"
                 autoComplete="off"
               />
@@ -255,7 +315,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               <Select
                 value={formData.language}
                 onValueChange={(value: Language) => setFormData({ ...formData, language: value })}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -275,7 +335,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               <Select
                 value={formData.difficulty}
                 onValueChange={(value: Difficulty) => setFormData({ ...formData, difficulty: value })}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -305,7 +365,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 id="spanishWord"
                 value={formData.spanishWord}
                 onChange={(e) => setFormData({ ...formData, spanishWord: e.target.value })}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 autoComplete="off"
                 placeholder="e.g., hola"
               />
@@ -317,7 +377,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 id="spanishDefinition"
                 value={formData.spanishDefinition}
                 onChange={(e) => setFormData({ ...formData, spanishDefinition: e.target.value })}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 rows={4}
                 placeholder="Definición en español..."
               />
@@ -334,7 +394,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               <Select
                 value={typeSelect}
                 onValueChange={(value: WordType) => setTypeSelect(value)}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Select word type" />
@@ -390,7 +450,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                     addToArray('examples', exampleInput);
                   }
                 }}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 placeholder="Add example and press Enter"
                 autoComplete="off"
               />
@@ -398,7 +458,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 type="button"
                 size="icon"
                 onClick={() => addToArray('examples', exampleInput)}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -434,7 +494,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                     addToArray('sinonyms', synonymInput);
                   }
                 }}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 placeholder="Add synonym and press Enter"
                 autoComplete="off"
               />
@@ -442,7 +502,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 type="button"
                 size="icon"
                 onClick={() => addToArray('sinonyms', synonymInput)}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -478,7 +538,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                     addToArray('codeSwitching', codeSwitchingInput);
                   }
                 }}
-                disabled={loading}
+                disabled={loading || loadingWord}
                 placeholder="Add code switching example and press Enter"
                 autoComplete="off"
               />
@@ -486,7 +546,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 type="button"
                 size="icon"
                 onClick={() => addToArray('codeSwitching', codeSwitchingInput)}
-                disabled={loading}
+                disabled={loading || loadingWord}
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -521,15 +581,16 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
             }
             imageUrl={formData.img || ""}
             onImageChange={(url) => setFormData({ ...formData, img: url })}
-            entityId={word?._id}
+            entityId={fullWord?._id || word?._id}
             entityType="word"
             word={formData.word}
-            disabled={loading}
+            disabled={loading || loadingWord}
             className="mt-0"
           />
         </TabsContent>
       </Tabs>
-        </form>
+          </form>
+        )}
       </div>
     </ModalNova>
   );
