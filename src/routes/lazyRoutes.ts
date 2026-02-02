@@ -11,6 +11,7 @@ export const ImportSettingsPage = lazy(() => import("../pages/ImportSettingsPage
 export const ExportSettingsPage = lazy(() => import("../pages/ExportSettingsPage"));
 export const SystemInfoPage = lazy(() => import("../pages/SystemInfoPage"));
 export const SettingsIndexRedirect = lazy(() => import("../pages/SettingsIndexRedirect"));
+export const AIConfigPage = lazy(() => import("../pages/AIConfigPage"));
 export const WordsPage = lazy(() => import("../pages/WordsPage"));
 export const ExpressionsPage = lazy(() => import("../pages/ExpressionsPage"));
 export const ProfilePage = lazy(() => import("../pages/ProfilePage"));

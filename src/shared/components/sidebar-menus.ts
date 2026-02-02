@@ -12,6 +12,7 @@ import {
   BookOpenCheck,
   Quote,
   Volume2,
+  Sparkles,
 } from "lucide-react";
 
 export const menuItems = [
@@ -63,6 +64,11 @@ export const configSettingsItems = [
     title: "Usuarios",
     url: "/users",
     icon: Users,
+  },
+  {
+    title: "Configuración de AI",
+    url: "/settings/ai-config",
+    icon: Sparkles,
   },
   {
     title: "Importar",

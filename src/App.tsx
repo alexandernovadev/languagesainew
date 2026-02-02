@@ -18,6 +18,7 @@ import {
   ExportSettingsPage,
   SystemInfoPage,
   SettingsIndexRedirect,
+  AIConfigPage,
   WordsPage,
   ExpressionsPage,
   ProfilePage,
@@ -109,6 +110,7 @@ export default function App() {
                     <Route path="import" element={<ImportSettingsPage />} />
                     <Route path="export" element={<ExportSettingsPage />} />
                     <Route path="system" element={<SystemInfoPage />} />
+                    <Route path="ai-config" element={<AIConfigPage />} />
                   </Route>
 
                   <Route
