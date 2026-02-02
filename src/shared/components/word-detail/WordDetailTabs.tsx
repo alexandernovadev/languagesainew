@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Info, MessageSquare } from "lucide-react";
 import { IWord } from "@/types/models/Word";
@@ -48,9 +48,11 @@ export function WordDetailTabs({
   const chatMessagesCount = word.chat?.length || 0;
   const infoTabRef = useRef<HTMLDivElement>(null);
   const chatTabRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("info");
 
-  // Reset scroll when word changes
+  // Reset tab to "info" and scroll when word changes
   useEffect(() => {
+    setActiveTab("info");
     // Reset scroll for info tab
     if (infoTabRef.current) {
       infoTabRef.current.scrollTop = 0;
@@ -63,7 +65,7 @@ export function WordDetailTabs({
   }, [word._id]);
 
   return (
-    <Tabs defaultValue="info" className="w-full h-full flex flex-col">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
       <TabsList className="flex-shrink-0 grid w-full grid-cols-2 shadow-md bg-transparent border-b">
         <TabsTrigger value="info" className="flex items-center gap-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
           <Info className="h-4 w-4" />
