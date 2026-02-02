@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { Send, Trash2 } from "lucide-react";
+import { Send } from "lucide-react";
 
 interface WordChatInputProps {
   onSendMessage: (message: string) => void;
-  onClearChat: () => void;
+  onClearChat?: () => void;
   loading: boolean;
 }
 
@@ -22,19 +22,6 @@ export function WordChatInput({ onSendMessage, onClearChat, loading }: WordChatI
 
   return (
     <div className="border-t p-4 bg-background">
-      <div className="flex gap-2 mb-2">
-        <Button
-          onClick={onClearChat}
-          variant="ghost"
-          size="sm"
-          disabled={loading}
-          className="text-muted-foreground"
-        >
-          <Trash2 className="h-4 w-4 mr-2" />
-          Limpiar Chat
-        </Button>
-      </div>
-      
       <form onSubmit={handleSubmit} className="flex gap-2">
         <Input
           value={message}
@@ -47,9 +34,9 @@ export function WordChatInput({ onSendMessage, onClearChat, loading }: WordChatI
           type="submit"
           disabled={!message.trim() || loading}
           size="default"
+          className="px-3"
         >
-          <Send className="h-4 w-4 mr-2" />
-          Enviar
+          <Send className="h-4 w-4" />
         </Button>
       </form>
     </div>
