@@ -17,15 +17,28 @@ export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
-  // Reset scroll when word changes
+  // Scroll to bottom when word changes or component mounts (if there are messages)
   useEffect(() => {
-    if (wordId && scrollContainerRef.current) {
+    if (scrollContainerRef.current && messages.length > 0) {
+      // Scroll to bottom when word changes or component first loads with messages
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: "smooth"
+          });
+        }
+      }, 100);
+    } else if (scrollContainerRef.current && messages.length === 0) {
+      // If no messages, reset to top
       scrollContainerRef.current.scrollTop = 0;
     }
-  }, [wordId]);
+  }, [wordId, messages.length]);
 
   const suggestions = [
     "Dame ejemplos en una conversación",
@@ -38,7 +51,7 @@ export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }
 
   if (loading && messages.length === 0) {
     return (
-      <div className="space-y-4 p-4">
+      <div className="h-full overflow-y-auto space-y-4 p-4">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="flex gap-3">
             <Skeleton className="h-8 w-8 rounded-full" />
@@ -53,7 +66,7 @@ export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }
 
   if (messages.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full p-8">
+      <div className="h-full overflow-y-auto flex items-center justify-center p-8">
         <div className="w-full max-w-2xl space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {suggestions.map((suggestion, index) => (
@@ -73,7 +86,7 @@ export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }
   }
 
   return (
-    <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-2">
+    <div ref={scrollContainerRef} className="h-full overflow-y-auto p-4 space-y-2">
       {messages.map((message) => (
         <WordChatMessage key={message.id} message={message} />
       ))}

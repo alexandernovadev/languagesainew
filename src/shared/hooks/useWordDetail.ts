@@ -280,6 +280,18 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
     
     setLoadingChat(true);
     try {
+      // Add user message immediately to show it right away
+      const userMessageId = Date.now().toString();
+      setWord(prev => prev ? {
+        ...prev,
+        chat: [...(prev.chat || []), {
+          id: userMessageId,
+          role: 'user' as const,
+          content: message.trim(),
+          timestamp: new Date(),
+        }]
+      } : null);
+
       // Stream response (backend will add user message automatically)
       const stream = await wordService.streamChatMessage(currentWord._id, message);
       if (!stream) {
@@ -290,7 +302,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
       const decoder = new TextDecoder();
       let aiResponse = '';
 
-      // Add AI message placeholder (user message will be added by backend)
+      // Add AI message placeholder
       const aiMessageId = (Date.now() + 1).toString();
       setWord(prev => prev ? {
         ...prev,

@@ -20,12 +20,14 @@ export function WordChatTab({ word, onSendMessage, onClearChat, loading }: WordC
 
   return (
     <div className="flex flex-col h-full relative">
-      <WordChatHistory 
-        messages={messages} 
-        loading={loading && messages.length === 0}
-        onSuggestionClick={handleSuggestionClick}
-        wordId={word._id}
-      />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <WordChatHistory 
+          messages={messages} 
+          loading={loading && messages.length === 0}
+          onSuggestionClick={handleSuggestionClick}
+          wordId={word._id}
+        />
+      </div>
       {/* Botón flotante de limpiar */}
       {messages.length > 0 && (
         <Button
@@ -39,11 +41,13 @@ export function WordChatTab({ word, onSendMessage, onClearChat, loading }: WordC
           <Trash2 className="h-4 w-4" />
         </Button>
       )}
-      <WordChatInput
-        onSendMessage={onSendMessage}
-        onClearChat={onClearChat}
-        loading={loading}
-      />
+      <div className="flex-shrink-0">
+        <WordChatInput
+          onSendMessage={onSendMessage}
+          onClearChat={onClearChat}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }
