@@ -83,6 +83,8 @@ export const lectureService = {
   },
 
   // --- AI Generation ---
+  // Note: Streaming is handled directly with fetch in useLectureGenerator hook
+  // These methods are kept for backward compatibility but may not be used
   async generateLectureText(body: Record<string, any>) {
     // body: { prompt, level, typeWrite, addEasyWords, language, ... }
     const res = await api.post(`/api/lectures/generate-text`, body, {

@@ -8,7 +8,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { lectureService } from "@/services/lectureService";
 import { ILecture } from "@/types/models/Lecture";
-import { ArrowLeft, Edit, Clock, BookOpen, Volume2 } from "lucide-react";
+import { ArrowLeft, Clock, BookOpen, Volume2 } from "lucide-react";
 import { getDifficultyVariant } from "@/utils/common";
 import { getMarkdownTitle, removeFirstH1 } from "@/utils/common/string/markdown";
 import { toast } from "sonner";
@@ -43,11 +43,6 @@ export default function LectureDetailPage() {
     }
   };
 
-  const handleEdit = () => {
-    if (lecture) {
-      navigate(`/lectures?edit=${lecture._id}`);
-    }
-  };
 
   if (loading) {
     return (
@@ -99,24 +94,14 @@ export default function LectureDetailPage() {
         title={lectureTitle} 
         description="Lee y disfruta del contenido"
         actions={
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleEdit}
-              size="sm"
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              Editar
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/lectures")}
-              size="sm"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Volver
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/lectures")}
+            size="sm"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver
+          </Button>
         }
       />
 
