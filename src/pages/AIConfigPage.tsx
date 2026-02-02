@@ -224,18 +224,30 @@ export default function AIConfigPage() {
                                 value as AIProvider
                               )
                             }
+                            disabled={op.operation === "image"}
                           >
                             <SelectTrigger className="w-[180px]">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {Object.entries(PROVIDER_CONFIG).map(([key, config]) => (
-                                <SelectItem key={key} value={key}>
-                                  <span className={config.color}>{config.label}</span>
-                                </SelectItem>
-                              ))}
+                              {Object.entries(PROVIDER_CONFIG).map(([key, config]) => {
+                                // Las imágenes solo pueden usar OpenAI
+                                if (op.operation === "image" && key === "deepseek") {
+                                  return null;
+                                }
+                                return (
+                                  <SelectItem key={key} value={key}>
+                                    <span className={config.color}>{config.label}</span>
+                                  </SelectItem>
+                                );
+                              })}
                             </SelectContent>
                           </Select>
+                          {op.operation === "image" && (
+                            <span className="text-xs text-muted-foreground">
+                              Solo OpenAI (DALL-E)
+                            </span>
+                          )}
 
                           {hasChange && (
                             <Button
