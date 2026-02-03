@@ -24,6 +24,7 @@ import {
   ExpressionsPage,
   ProfilePage,
   LabsPage,
+  LogsPage,
   UsersPage,
   LoginPage,
   PronunciationGuidePage,
@@ -99,6 +100,7 @@ export default function App() {
                   />
                   {/* Labs es PÚBLICA - ruta independiente */}
                   <Route path="/settings/labs" element={<LabsPage />} />
+                  <Route path="/settings/logs" element={<LogsPage />} />
 
                   <Route
                     path="/settings"
