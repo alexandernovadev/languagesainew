@@ -87,11 +87,6 @@ export const configSettingsItems = [
     icon: Settings,
   },
   {
-    title: "Logs",
-    url: "/settings/logs",
-    icon: FileCode,
-  },
-  {
     title: "Información del Sistema",
     url: "/settings/system",
     icon: Info,
