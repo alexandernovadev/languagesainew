@@ -7,6 +7,7 @@ import { systemService, SystemInfo } from "@/services/systemService";
 import { formatDateTimeSpanish } from "@/utils/common/time/formatDate";
 import { Server, Calendar, Code, Globe, Monitor } from "lucide-react";
 import { toast } from "sonner";
+import packageJson from "../../package.json";
 
 export default function SystemInfoPage() {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
@@ -188,7 +189,7 @@ export default function SystemInfoPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Versión:</span>
                       <Badge variant="outline" className="font-mono">
-                        3.50.20Gamma
+                        {packageJson.version}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
