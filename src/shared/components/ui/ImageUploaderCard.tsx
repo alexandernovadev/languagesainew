@@ -89,15 +89,15 @@ export function ImageUploaderCard({
 
     try {
       // Determinar el endpoint según el tipo de entidad
-      let endpoint = `/api/ai/generate-image/${entityId}`;
+      let endpoint = `/api/words/${entityId}/generate-image`;
       let payload: any = { word, imgOld: imageUrl || "" };
 
       if (entityType === "lecture") {
-        endpoint = `/api/ai/generate-image-lecture/${entityId}`;
+        endpoint = `/api/lectures/generate-image/${entityId}`;
         payload = { content: word, imgOld: imageUrl || "" };
       } else if (entityType === "expression") {
-        endpoint = `/api/ai/generate-image-expression/${entityId}`;
-        payload = { expression: word, imgOld: imageUrl || "" };
+        endpoint = `/api/expressions/${entityId}/generate-image`;
+        payload = { expressionString: word, imgOld: imageUrl || "" };
       }
 
       // Llamar al endpoint de generación de imagen
