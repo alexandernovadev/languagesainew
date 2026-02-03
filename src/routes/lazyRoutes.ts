@@ -16,6 +16,7 @@ export const WordsPage = lazy(() => import("../pages/WordsPage"));
 export const ExpressionsPage = lazy(() => import("../pages/ExpressionsPage"));
 export const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 export const LabsPage = lazy(() => import("../pages/LabsPage"));
+export const LogsPage = lazy(() => import("../pages/LogsPage"));
 export const UsersPage = lazy(() => import("../pages/UsersPage"));
 export const LoginPage = lazy(() => import("../pages/LoginPage"));
 export const PronunciationGuidePage = lazy(() => import("../pages/PronunciationGuidePage"));
