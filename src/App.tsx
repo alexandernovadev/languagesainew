@@ -5,6 +5,7 @@ import DashboardLayout from "./shared/components/layouts/DashboardLayout";
 import LoadingSpinner from "./shared/components/LoadingSpinner";
 import { toast } from "sonner";
 import { ProtectedRoute } from "./shared/components/ProtectedRoute";
+import { Toaster } from "./shared/components/ui/sonner";
 
 // Importar todas las rutas lazy load
 import {
@@ -43,6 +44,7 @@ function NotFoundRedirect() {
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster />
       <Suspense fallback={<LoadingSpinner size="lg" />}>
         <Routes>
           {/* Ruta pública de login (sin DashboardLayout) */}

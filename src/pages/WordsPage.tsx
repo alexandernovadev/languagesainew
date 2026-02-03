@@ -266,7 +266,7 @@ export default function WordsPage() {
           {/* Mobile & Tablet: Simple pagination */}
           <div className="flex items-center justify-between lg:hidden">
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Página {currentPage} de {totalPages}
+              Página {currentPage} de {totalPages} de {total}
             </p>
             <div className="flex gap-2">
               <Button

@@ -10,6 +10,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
+import { buttonVariants } from "@/shared/components/ui/button";
+import { cn } from "@/utils/common/classnames";
+import type { VariantProps } from "class-variance-authority";
 
 interface AlertDialogNovaProps {
   open: boolean;
@@ -21,7 +24,7 @@ interface AlertDialogNovaProps {
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
-  confirmClassName?: string;
+  confirmVariant?: VariantProps<typeof buttonVariants>["variant"];
   shouldAutoCloseOnConfirm?: boolean;
 }
 
@@ -35,7 +38,7 @@ export function AlertDialogNova({
   confirmText = "Confirmar",
   cancelText = "Cancelar",
   loading = false,
-  confirmClassName = "",
+  confirmVariant = "default",
   shouldAutoCloseOnConfirm = true,
 }: AlertDialogNovaProps) {
   const handleCancel = () => {
@@ -68,7 +71,7 @@ export function AlertDialogNova({
           {shouldAutoCloseOnConfirm ? (
             <AlertDialogAction
               onClick={onConfirm}
-              className={confirmClassName}
+              className={cn(buttonVariants({ variant: confirmVariant }))}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -77,7 +80,7 @@ export function AlertDialogNova({
           ) : (
             <button
               onClick={onConfirm}
-              className={confirmClassName}
+              className={cn(buttonVariants({ variant: confirmVariant }))}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />}

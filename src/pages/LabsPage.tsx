@@ -352,7 +352,7 @@ export default function LabsPage() {
         onCancel={handleCancelConfirm}
         confirmText="Sí, continuar"
         cancelText="Cancelar"
-        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        confirmVariant="destructive"
       />
 
       {/* Second Confirmation Dialog (Final Warning) */}
@@ -376,7 +376,7 @@ export default function LabsPage() {
         confirmText="Sí, eliminar todo"
         cancelText="No, cancelar"
         loading={isOperationLoading()}
-        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        confirmVariant="destructive"
         shouldAutoCloseOnConfirm={false}
       />
     </div>

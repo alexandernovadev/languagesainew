@@ -166,21 +166,21 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
       <form id="expression-form" onSubmit={handleSubmit} className="px-6 py-4">
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="sticky top-0 z-10 grid w-full grid-cols-4 shadow-md">
-            <TabsTrigger value="general" className="flex items-center gap-2">
+            <TabsTrigger value="general" className="flex items-center justify-center gap-2">
               <BookOpen className="h-4 w-4" />
-              <span>General</span>
+              <span className="hidden sm:inline">General</span>
             </TabsTrigger>
-            <TabsTrigger value="spanish" className="flex items-center gap-2">
+            <TabsTrigger value="spanish" className="flex items-center justify-center gap-2">
               <Languages className="h-4 w-4" />
-              <span>Español</span>
+              <span className="hidden sm:inline">Español</span>
             </TabsTrigger>
-            <TabsTrigger value="content" className="flex items-center gap-2">
+            <TabsTrigger value="content" className="flex items-center justify-center gap-2">
               <FileText className="h-4 w-4" />
-              <span>Contenido</span>
+              <span className="hidden sm:inline">Contenido</span>
             </TabsTrigger>
-            <TabsTrigger value="media" className="flex items-center gap-2">
+            <TabsTrigger value="media" className="flex items-center justify-center gap-2">
               <Image className="h-4 w-4" />
-              <span>Imagen</span>
+              <span className="hidden sm:inline">Imagen</span>
             </TabsTrigger>
           </TabsList>
 
