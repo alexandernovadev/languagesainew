@@ -198,9 +198,9 @@ export default function SystemInfoPage() {
                         {import.meta.env.DEV ? "Development" : "Production"}
                       </Badge>
                     </div>
-                    <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-start justify-between flex-wrap gap-2">
                       <span className="text-sm text-muted-foreground">URL:</span>
-                      <span className="text-xs font-mono text-muted-foreground truncate max-w-[60%]" title={import.meta.env.VITE_BACK_URL}>
+                      <span className="text-xs font-mono text-muted-foreground break-all text-right flex-1 min-w-0" title={import.meta.env.VITE_BACK_URL}>
                         {import.meta.env.VITE_BACK_URL || "No configurado"}
                       </span>
                     </div>
