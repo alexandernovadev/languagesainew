@@ -13,7 +13,6 @@ import {
   Quote,
   Volume2,
   Sparkles,
-  FileCode,
 } from "lucide-react";
 
 export const menuItems = [
@@ -85,11 +84,6 @@ export const configSettingsItems = [
     title: "Labs",
     url: "/settings/labs",
     icon: Settings,
-  },
-  {
-    title: "Logs",
-    url: "/settings/logs",
-    icon: FileCode,
   },
   {
     title: "Información del Sistema",
