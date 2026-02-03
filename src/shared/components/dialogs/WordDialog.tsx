@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { IWord } from "@/types/models/Word";
 import { WordCreate, WordUpdate } from "@/shared/hooks/useWords";
 import { Difficulty, Language, WordType } from "@/types/business";
@@ -54,6 +54,27 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   const [synonymInput, setSynonymInput] = useState("");
   const [codeSwitchingInput, setCodeSwitchingInput] = useState("");
 
+  // Función para cargar/refrescar la palabra completa
+  const loadFullWord = useCallback(async () => {
+    if (!word || !word._id) {
+      setFullWord(null);
+      return;
+    }
+
+    setLoadingWord(true);
+    try {
+      const response = await wordService.getWordById(word._id);
+      const wordData = response.data || response;
+      setFullWord(wordData);
+    } catch (error) {
+      console.error("Error loading word:", error);
+      // Si falla, usar la palabra que se pasó como prop
+      setFullWord(word);
+    } finally {
+      setLoadingWord(false);
+    }
+  }, [word]);
+
   // Cargar palabra completa desde el servidor cuando se abre el dialog de edición
   useEffect(() => {
     if (!open) {
@@ -61,27 +82,13 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       return;
     }
 
-    // Si hay una palabra para editar, cargar la versión completa desde el servidor
     if (word && word._id) {
-      setLoadingWord(true);
-      wordService.getWordById(word._id)
-        .then((response) => {
-          const wordData = response.data || response;
-          setFullWord(wordData);
-        })
-        .catch((error) => {
-          console.error("Error loading word:", error);
-          // Si falla, usar la palabra que se pasó como prop
-          setFullWord(word);
-        })
-        .finally(() => {
-          setLoadingWord(false);
-        });
+      loadFullWord();
     } else {
       // Si no hay palabra, es modo crear
       setFullWord(null);
     }
-  }, [open, word?._id]);
+  }, [open, word?._id, loadFullWord]);
 
   // Actualizar formData cuando fullWord cambia
   useEffect(() => {
@@ -580,7 +587,13 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 : "Ingresa una URL de imagen. Podrás subir una imagen después de crear la palabra."
             }
             imageUrl={formData.img || ""}
-            onImageChange={(url) => setFormData({ ...formData, img: url })}
+            onImageChange={(url) => {
+              setFormData({ ...formData, img: url });
+              // Refrescar la palabra completa después de actualizar la imagen
+              if (fullWord?._id || word?._id) {
+                loadFullWord();
+              }
+            }}
             entityId={fullWord?._id || word?._id}
             entityType="word"
             word={formData.word}

@@ -103,11 +103,16 @@ export function ImageUploaderCard({
       // Llamar al endpoint de generación de imagen
       const response = await api.post(endpoint, payload);
 
-      if (response.data.success) {
+      if (response.data.success && response.data.data) {
         const newImageUrl = response.data.data.img;
-        onImageChange(newImageUrl);
+        if (newImageUrl) {
+          onImageChange(newImageUrl);
+          toast.success("Imagen generada exitosamente");
+        } else {
+          throw new Error("La imagen se generó pero no se recibió la URL");
+        }
       } else {
-        throw new Error("Error al generar imagen");
+        throw new Error(response.data.error || "Error al generar imagen");
       }
     } catch (error: any) {
       handleApiResult(error, "Generar Imagen");
