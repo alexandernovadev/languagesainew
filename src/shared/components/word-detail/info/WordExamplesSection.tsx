@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { RefreshCw, Sparkles, FileText } from "lucide-react";
+import { RefreshCw, Sparkles, FileText, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
 
@@ -11,6 +11,15 @@ interface WordExamplesSectionProps {
 }
 
 export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSectionProps) {
+  const speak = (text: string, lang: string = "en-US", rate: number = 1) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
@@ -43,6 +52,14 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
                   {index + 1}
                 </span>
                 <p className="text-sm text-foreground flex-1 leading-relaxed">{example}</p>
+                <button
+                  type="button"
+                  onClick={() => speak(example)}
+                  className="p-1.5 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
+                  title="Escuchar ejemplo"
+                >
+                  <Volume2 className="h-4 w-4" />
+                </button>
               </div>
             ))}
           </div>

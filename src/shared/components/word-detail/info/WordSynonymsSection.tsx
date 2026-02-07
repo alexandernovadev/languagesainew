@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { RefreshCw, Sparkles, Hash } from "lucide-react";
+import { RefreshCw, Sparkles, Hash, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
 
@@ -12,6 +12,15 @@ interface WordSynonymsSectionProps {
 }
 
 export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSectionProps) {
+  const speak = (text: string, lang: string = "en-US", rate: number = 1) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
@@ -39,9 +48,17 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
               <Badge
                 key={index}
                 variant="secondary"
-                className="text-xs px-2.5 py-1 hover:bg-secondary/80 transition-colors cursor-default"
+                className="text-xs px-2.5 py-1 hover:bg-secondary/80 transition-colors cursor-default flex items-center gap-1 pr-1"
               >
-                {synonym}
+                <span>{synonym}</span>
+                <button
+                  type="button"
+                  onClick={() => speak(synonym)}
+                  className="p-0.5 border rounded-md hover:bg-muted transition-colors hover:scale-110"
+                  title="Escuchar sinónimo"
+                >
+                  <Volume2 className="h-3.5 w-3.5" />
+                </button>
               </Badge>
             ))}
           </div>
