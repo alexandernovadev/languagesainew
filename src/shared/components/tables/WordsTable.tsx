@@ -48,7 +48,7 @@ export function WordsTable({
       ? word.type.join(', ') 
       : 'unknown';
     
-    const prompt = `Generate an image related to '${word.word}', whose definition is '${word.spanish?.definition || word.definition}', and whose word type is '${types}'. Make sure not to include any text in the image.`;
+    const prompt = `Generate an image related to '${word.word}', whose definition is '${word.spanish?.definition || word.definition}', and whose word type is '${types}'. If the word has homonyms or multiple meanings, include 2-3 distinct visual representations in the same image. Make sure not to include any text in the image.`;
     
     navigator.clipboard.writeText(prompt).then(() => {
       toast.success(`Texto copiado de "${word.word}"`, {
