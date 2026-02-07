@@ -45,8 +45,8 @@ export function WordChatHistory({ messages, loading, onSuggestionClick, wordId }
     "¿Cuál es la pronunciación correcta?",
     "Explícame la diferencia con palabras similares",
     "Dame sinónimos y antónimos",
-    "¿Cómo se usa en diferentes contextos?",
-    "Dame frases comunes con esta palabra"
+    "Tiene otros significados?",
+    "Es una palabra común que se usa en la vida cotidiana?"
   ];
 
   if (loading && messages.length === 0) {
