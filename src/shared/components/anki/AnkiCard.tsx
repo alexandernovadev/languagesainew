@@ -165,6 +165,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
             <div className="flex-1 min-h-0" onClick={(e) => e.stopPropagation()}>
               {displayWord ? (
                 <WordDetailTabs
+                  cardId={displayWord._id}
                   word={displayWord}
                   loadingImage={loadingImage}
                   loadingSynonyms={loadingSynonyms}

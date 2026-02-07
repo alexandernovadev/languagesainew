@@ -8,6 +8,7 @@ import { Badge } from "@/shared/components/ui/badge";
 
 interface WordDetailTabsProps {
   word: IWord;
+  cardId: string;
   loadingImage: boolean;
   loadingSynonyms: boolean;
   loadingExamples: boolean;
@@ -28,6 +29,7 @@ interface WordDetailTabsProps {
 
 export function WordDetailTabs({
   word,
+  cardId,
   loadingImage,
   loadingSynonyms,
   loadingExamples,
@@ -50,7 +52,7 @@ export function WordDetailTabs({
   const chatTabRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState("info");
 
-  // Reset tab to "info" and scroll when word changes
+  // Reset tab to "info" and scroll only when card changes
   useEffect(() => {
     setActiveTab("info");
     // Reset scroll for info tab
@@ -61,7 +63,7 @@ export function WordDetailTabs({
     if (chatTabRef.current) {
       chatTabRef.current.scrollTop = 0;
     }
-  }, [word._id]);
+  }, [cardId]);
 
   // Tabs header component
   const TabsHeader = () => (
@@ -88,45 +90,6 @@ export function WordDetailTabs({
     </TabsList>
   );
 
-  // Content components
-  const InfoContent = () => (
-    <div 
-      ref={infoTabRef}
-      className="flex-1 overflow-y-auto min-h-0 h-full"
-    >
-      <WordInfoTab
-        word={word}
-        loadingImage={loadingImage}
-        loadingSynonyms={loadingSynonyms}
-        loadingExamples={loadingExamples}
-        loadingTypes={loadingTypes}
-        loadingCodeSwitching={loadingCodeSwitching}
-        loadingAll={loadingAll}
-        onRefreshImage={onRefreshImage}
-        onRefreshSynonyms={onRefreshSynonyms}
-        onRefreshExamples={onRefreshExamples}
-        onRefreshTypes={onRefreshTypes}
-        onRefreshCodeSwitching={onRefreshCodeSwitching}
-        onRefreshAll={onRefreshAll}
-        onUpdateDifficulty={onUpdateDifficulty}
-      />
-    </div>
-  );
-
-  const ChatContent = () => (
-    <div 
-      ref={chatTabRef}
-      className="flex-1 overflow-hidden flex flex-col min-h-0 h-full"
-    >
-      <WordChatTab
-        word={word}
-        onSendMessage={onSendMessage}
-        onClearChat={onClearChat}
-        loading={loadingChat}
-      />
-    </div>
-  );
-
   // Tabs component (same for mobile and desktop)
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
@@ -136,14 +99,44 @@ export function WordDetailTabs({
         value="info" 
         className="flex-1 overflow-y-auto mt-0 min-h-0 data-[state=inactive]:hidden"
       >
-        <InfoContent />
+        <div 
+          ref={infoTabRef}
+          className="flex-1 overflow-y-auto min-h-0 h-full"
+        >
+          <WordInfoTab
+            word={word}
+            loadingImage={loadingImage}
+            loadingSynonyms={loadingSynonyms}
+            loadingExamples={loadingExamples}
+            loadingTypes={loadingTypes}
+            loadingCodeSwitching={loadingCodeSwitching}
+            loadingAll={loadingAll}
+            onRefreshImage={onRefreshImage}
+            onRefreshSynonyms={onRefreshSynonyms}
+            onRefreshExamples={onRefreshExamples}
+            onRefreshTypes={onRefreshTypes}
+            onRefreshCodeSwitching={onRefreshCodeSwitching}
+            onRefreshAll={onRefreshAll}
+            onUpdateDifficulty={onUpdateDifficulty}
+          />
+        </div>
       </TabsContent>
 
       <TabsContent 
         value="chat" 
         className="flex-1 overflow-hidden mt-0 flex flex-col min-h-0 data-[state=inactive]:hidden"
       >
-        <ChatContent />
+        <div 
+          ref={chatTabRef}
+          className="flex-1 overflow-hidden flex flex-col min-h-0 h-full"
+        >
+          <WordChatTab
+            word={word}
+            onSendMessage={onSendMessage}
+            onClearChat={onClearChat}
+            loading={loadingChat}
+          />
+        </div>
       </TabsContent>
     </Tabs>
   );
