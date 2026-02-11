@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { wordService } from "@/services/wordService";
 import { IWord } from "@/types/models/Word";
@@ -8,25 +8,28 @@ import { Button } from "@/shared/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { AnkiCard } from "@/shared/components/anki/AnkiCard";
+import {
+  AnkiFilter,
+  AnkiFilterValues,
+  DEFAULT_FILTERS,
+} from "@/shared/components/anki/AnkiFilter";
 
 export default function AnkiGamePage() {
   const [cards, setCards] = useState<IWord[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [filters, setFilters] = useState<AnkiFilterValues>(DEFAULT_FILTERS);
 
-  // Cargar cards al montar
-  useEffect(() => {
-    loadCards();
-  }, []);
-
-  const loadCards = async () => {
+  const loadCards = useCallback(async () => {
     setLoading(true);
     try {
+      const difficulty =
+        filters.difficulty.length > 0 ? filters.difficulty : DEFAULT_FILTERS.difficulty;
       const response = await wordService.getAnkiCards({
-        mode: 'random',
-        limit: 30,
-        difficulty: ['hard', 'medium']
+        mode: "random",
+        limit: filters.limit,
+        difficulty,
       });
       
       if (response.success && response.data) {
@@ -42,7 +45,11 @@ export default function AnkiGamePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    loadCards();
+  }, [loadCards]);
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
@@ -62,9 +69,16 @@ export default function AnkiGamePage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader 
-        title="Juego Anki" 
+      <PageHeader
+        title="Juego Anki"
         description="Practica con tarjetas Anki"
+        actions={
+          <AnkiFilter
+            values={filters}
+            onChange={setFilters}
+            disabled={loading}
+          />
+        }
       />
 
       {/* Loading State */}
