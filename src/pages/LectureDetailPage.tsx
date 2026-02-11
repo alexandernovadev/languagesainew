@@ -85,6 +85,24 @@ export default function LectureDetailPage() {
     }
   }, [wordLookup]);
 
+  const speakWord = useCallback(
+    (word: string, rate: number = 1) => {
+      if (!word || !("speechSynthesis" in window)) return;
+      const lang = lecture?.language === "es" ? "es-ES" : "en-US";
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = lang;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    },
+    [lecture?.language]
+  );
+
+  useEffect(() => {
+    if (selectedWord) {
+      speakWord(selectedWord, 1);
+    }
+  }, [selectedWord, speakWord]);
+
   const handleAddWord = useCallback(async () => {
     if (!selectedWord || !lecture) return;
     setAddingWord(true);
@@ -242,11 +260,45 @@ export default function LectureDetailPage() {
                 <p className="text-sm text-muted-foreground mb-1">
                   Palabra seleccionada
                 </p>
-                <p className="font-semibold text-lg capitalize">
-                  {selectedWord ||
-                    (wordLookup?.exists ? wordLookup.word.word : null) ||
-                    "—"}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-lg capitalize">
+                    {selectedWord ||
+                      (wordLookup?.exists ? wordLookup.word.word : null) ||
+                      "—"}
+                  </p>
+                  {(selectedWord || (wordLookup?.exists && wordLookup.word.word)) && (
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          speakWord(
+                            selectedWord || (wordLookup?.exists ? wordLookup.word.word : "") || "",
+                            1
+                          );
+                        }}
+                        className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
+                        title="Reproducir velocidad normal"
+                      >
+                        <Volume2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          speakWord(
+                            selectedWord || (wordLookup?.exists ? wordLookup.word.word : "") || "",
+                            0.01
+                          );
+                        }}
+                        className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 text-base leading-none"
+                        title="Reproducir velocidad lenta"
+                      >
+                        🐢
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {wordLookupLoading ? (
