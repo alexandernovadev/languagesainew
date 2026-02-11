@@ -182,17 +182,21 @@ export default function LectureDetailPage() {
       />
 
       {/* Image */}
-      {lecture.img && (
-        <Card>
-          <CardContent className="p-0">
+      <Card>
+        <CardContent className="p-0">
+          {lecture.img ? (
             <img
               src={lecture.img}
               alt={lecture.typeWrite || "Lecture"}
               className="w-full h-auto max-h-96 object-cover rounded-t-lg"
             />
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <div className="flex items-center justify-center h-48 bg-muted/50 rounded-t-lg text-muted-foreground text-sm">
+              Image should appear here
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Metadata */}
       <Card>
