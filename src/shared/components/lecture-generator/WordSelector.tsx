@@ -45,7 +45,7 @@ export function WordSelector({
     const loadWordsByDifficulty = async () => {
       const loadWords = async (difficulty: "easy" | "medium" | "hard") => {
         try {
-          const response = await wordService.getWords(1, 5, {
+          const response = await wordService.getWords(1, 11, {
             difficulty,
             language: language,
             sortBy: "createdAt",
@@ -53,12 +53,7 @@ export function WordSelector({
           });
 
           const words = response.data?.data || [];
-          // Filtrar palabras ya seleccionadas
-          const filtered = words.filter(
-            (word: IWord) => !selected.includes(word.word)
-          );
-
-          return { words: filtered, loading: false };
+          return { words, loading: false };
         } catch (error) {
           console.error(`Error loading ${difficulty} words:`, error);
           return { words: [], loading: false };
@@ -82,7 +77,7 @@ export function WordSelector({
     };
 
     loadWordsByDifficulty();
-  }, [language, selected]);
+  }, [language]);
 
   // Buscar palabras cuando el usuario escribe
   useEffect(() => {
@@ -101,13 +96,8 @@ export function WordSelector({
         });
 
         const words = response.data?.data || [];
-        // Filtrar palabras ya seleccionadas
-        const filtered = words.filter(
-          (word: IWord) => !selected.includes(word.word)
-        );
-        
-        setSearchResults(filtered);
-        setShowSearchResults(filtered.length > 0);
+        setSearchResults(words);
+        setShowSearchResults(words.length > 0);
       } catch (error) {
         console.error("Error searching words:", error);
         setSearchResults([]);
@@ -119,7 +109,7 @@ export function WordSelector({
 
     const timeoutId = setTimeout(searchWords, 300); // Debounce
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, language, selected]);
+  }, [searchQuery, language]);
 
   // Cerrar resultados de búsqueda al hacer click fuera
   useEffect(() => {
@@ -264,24 +254,24 @@ export function WordSelector({
 
       {/* Últimas 5 Fáciles */}
       {renderWordGroup(
-        "Últimas 5 Fáciles",
-        easyWords.words,
+        "Últimas 11 Fáciles",
+        easyWords.words.filter((w) => !selected.includes(w.word)),
         easyWords.loading,
         <BookOpen className="h-4 w-4 text-green-500" />
       )}
 
       {/* Últimas 5 Medias */}
       {renderWordGroup(
-        "Últimas 5 Medias",
-        mediumWords.words,
+        "Últimas 11 Medias",
+        mediumWords.words.filter((w) => !selected.includes(w.word)),
         mediumWords.loading,
         <BookOpen className="h-4 w-4 text-yellow-500" />
       )}
 
       {/* Últimas 5 Difíciles */}
       {renderWordGroup(
-        "Últimas 5 Difíciles",
-        hardWords.words,
+        "Últimas 11 Difíciles",
+        hardWords.words.filter((w) => !selected.includes(w.word)),
         hardWords.loading,
         <BookOpen className="h-4 w-4 text-red-500" />
       )}
@@ -318,7 +308,9 @@ export function WordSelector({
                   <span>Buscando...</span>
                 </div>
               )}
-              {searchResults.map((word) => (
+              {searchResults
+                .filter((word) => !selected.includes(word.word))
+                .map((word) => (
                 <button
                   key={word._id}
                   type="button"
