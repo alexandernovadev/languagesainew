@@ -32,8 +32,10 @@ export const wordService = {
   },
 
   async getWordByName(word: string) {
-    const res = await api.get(`/api/words/${word}/word`);
-    return res.data;
+    const encoded = encodeURIComponent(word);
+    const res = await api.get(`/api/words/${encoded}/word`);
+    const body = res.data;
+    return body?.data ?? body;
   },
 
   async createWord(wordData: Omit<Word, "_id">) {

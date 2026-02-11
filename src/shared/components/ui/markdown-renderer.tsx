@@ -1,3 +1,4 @@
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/utils/common/classnames";
@@ -6,28 +7,72 @@ interface MarkdownRendererProps {
   content: string;
   variant?: "chat" | "reading";
   className?: string;
+  onWordClick?: (word: string) => void;
+}
+
+function processChildrenWithWordClick(
+  children: React.ReactNode,
+  onWordClick: (word: string) => void
+): React.ReactNode {
+  return React.Children.map(children, (child, idx) => {
+    if (typeof child === "string") {
+      const parts = child.split(/(\s+)/);
+      return (
+        <React.Fragment key={idx}>
+          {parts.map((part, i) => {
+            const cleanWord = part.replace(/^\W+|\W+$/g, "");
+            if (cleanWord.length >= 1 && /^[a-zA-Z'-]+$/.test(cleanWord)) {
+              return (
+                <span
+                  key={i}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onWordClick(cleanWord);
+                  }}
+                  className="cursor-pointer hover:bg-primary/10 rounded px-0.5 transition-colors inline"
+                >
+                  {part}
+                </span>
+              );
+            }
+            return <React.Fragment key={i}>{part}</React.Fragment>;
+          })}
+        </React.Fragment>
+      );
+    }
+    if (React.isValidElement(child) && child.props.children != null) {
+      return React.cloneElement(child as React.ReactElement<any>, {
+        children: processChildrenWithWordClick(child.props.children, onWordClick),
+      });
+    }
+    return child;
+  });
 }
 
 export function MarkdownRenderer({ 
   content, 
   variant = "reading",
-  className 
+  className,
+  onWordClick,
 }: MarkdownRendererProps) {
   const isReading = variant === "reading";
   const isChat = variant === "chat";
 
+  const wrapIfClickable = (children: React.ReactNode) =>
+    onWordClick ? processChildrenWithWordClick(children, onWordClick) : children;
+
   // Chat variant components (compact, primary colors)
   const chatComponents = {
-    p: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
-    h1: ({ children }: any) => <h1 className="text-lg font-bold mb-2 mt-3 first:mt-0 text-primary">{children}</h1>,
-    h2: ({ children }: any) => <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-primary/90">{children}</h2>,
-    h3: ({ children }: any) => <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0 text-primary/80">{children}</h3>,
-    h4: ({ children }: any) => <h4 className="text-sm font-medium mb-2 mt-2 first:mt-0 text-primary/70">{children}</h4>,
-    h5: ({ children }: any) => <h5 className="text-xs font-medium mb-2 mt-2 first:mt-0 text-primary/60">{children}</h5>,
-    h6: ({ children }: any) => <h6 className="text-xs font-normal mb-2 mt-2 first:mt-0 text-primary/50">{children}</h6>,
+    p: ({ children }: any) => <p className="mb-2 last:mb-0">{wrapIfClickable(children)}</p>,
+    h1: ({ children }: any) => <h1 className="text-lg font-bold mb-2 mt-3 first:mt-0 text-primary">{wrapIfClickable(children)}</h1>,
+    h2: ({ children }: any) => <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-primary/90">{wrapIfClickable(children)}</h2>,
+    h3: ({ children }: any) => <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0 text-primary/80">{wrapIfClickable(children)}</h3>,
+    h4: ({ children }: any) => <h4 className="text-sm font-medium mb-2 mt-2 first:mt-0 text-primary/70">{wrapIfClickable(children)}</h4>,
+    h5: ({ children }: any) => <h5 className="text-xs font-medium mb-2 mt-2 first:mt-0 text-primary/60">{wrapIfClickable(children)}</h5>,
+    h6: ({ children }: any) => <h6 className="text-xs font-normal mb-2 mt-2 first:mt-0 text-primary/50">{wrapIfClickable(children)}</h6>,
     ul: ({ children }: any) => <ul className="list-disc list-outside mb-2 ml-4 space-y-1 [&>li>p>strong]:text-yellow-500 [&>li>strong]:text-yellow-500">{children}</ul>,
     ol: ({ children }: any) => <ol className="list-decimal list-outside mb-2 ml-4 space-y-1 [&>li>p>strong]:text-yellow-500 [&>li>strong]:text-yellow-500">{children}</ol>,
-    li: ({ children }: any) => <li className="text-sm pl-1">{children}</li>,
+    li: ({ children }: any) => <li className="text-sm pl-1">{wrapIfClickable(children)}</li>,
     strong: ({ children }: any) => <strong className="font-bold text-yellow-500">{children}</strong>,
     em: ({ children }: any) => <em className="italic">{children}</em>,
     code: ({ children, className: codeClassName }: any) => {
@@ -62,40 +107,40 @@ export function MarkdownRenderer({
 
   // Reading variant components (spacious, better readability)
   const readingComponents = {
-    p: ({ children }: any) => <p className="mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">{children}</p>,
+    p: ({ children }: any) => <p className="mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">{wrapIfClickable(children)}</p>,
     h1: ({ children }: any) => (
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 mt-6 sm:mt-8 first:mt-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h1>
     ),
     h2: ({ children }: any) => (
       <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 first:mt-0 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h2>
     ),
     h3: ({ children }: any) => (
       <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-3 sm:mb-4 mt-5 sm:mt-6 first:mt-0 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h3>
     ),
     h4: ({ children }: any) => (
       <h4 className="text-base sm:text-lg md:text-xl font-medium mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h4>
     ),
     h5: ({ children }: any) => (
       <h5 className="text-sm sm:text-base md:text-lg font-medium mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h5>
     ),
     h6: ({ children }: any) => (
       <h6 className="text-sm sm:text-base font-normal mb-2 sm:mb-3 mt-4 sm:mt-5 first:mt-0 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
-        {children}
+        {wrapIfClickable(children)}
       </h6>
     ),
     ul: ({ children }: any) => <ul className="list-disc list-outside mb-4 sm:mb-6 ml-4 sm:ml-6 space-y-2 text-base sm:text-lg">{children}</ul>,
     ol: ({ children }: any) => <ol className="list-decimal list-outside mb-4 sm:mb-6 ml-4 sm:ml-6 space-y-2 text-base sm:text-lg">{children}</ol>,
-    li: ({ children }: any) => <li className="pl-2 text-base sm:text-lg leading-relaxed">{children}</li>,
+    li: ({ children }: any) => <li className="pl-2 text-base sm:text-lg leading-relaxed">{wrapIfClickable(children)}</li>,
     strong: ({ children }: any) => <strong className="font-bold text-foreground">{children}</strong>,
     em: ({ children }: any) => <em className="italic">{children}</em>,
     code: ({ children, className: codeClassName }: any) => {
