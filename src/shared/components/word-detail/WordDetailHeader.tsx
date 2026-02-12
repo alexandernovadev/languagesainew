@@ -1,5 +1,5 @@
 import { Button } from "@/shared/components/ui/button";
-import { RefreshCw, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 
 interface WordDetailHeaderProps {
@@ -14,14 +14,11 @@ export function WordDetailHeader({ onRefreshAll, loading }: WordDetailHeaderProp
         onClick={onRefreshAll}
         disabled={loading}
         variant="outline"
-        size="sm"
-        className={cn(
-          "absolute right-4 top-4 z-10",
-          loading && "animate-pulse"
-        )}
+        size="icon"
+        title="Refresh AI"
+        className="absolute right-4 top-4 z-10 h-9 w-9"
       >
-        <Sparkles className="h-4 w-4 mr-2" />
-        {loading ? "Generando..." : "Refresh AI"}
+        <Sparkles className={cn("h-4 w-4", loading && "animate-spin")} />
       </Button>
     </div>
   );

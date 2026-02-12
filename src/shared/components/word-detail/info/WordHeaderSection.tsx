@@ -30,22 +30,13 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
           onClick={onRefreshAll}
           disabled={loadingAll}
           variant="outline"
-          size="sm"
+          size="icon"
+          title="Refresh All Data with AI"
           className={cn(
-            "absolute top-2 right-2 sm:top-3 sm:right-3 z-10 shadow-md",
-            "text-xs sm:text-sm",
-            "px-2 sm:px-3 py-1.5 sm:py-2",
-            "max-w-[calc(100%-1rem)] sm:max-w-none",
-            loadingAll && "animate-pulse"
+            "absolute top-2 right-2 sm:top-3 sm:right-3 z-10 shadow-md h-9 w-9"
           )}
         >
-          <Sparkles className={cn("h-3 w-3 sm:mr-1.5 flex-shrink-0", loadingAll && "animate-spin")} />
-          <span className="hidden sm:inline">
-            {loadingAll ? "Generando..." : "Refresh All Data with AI"}
-          </span>
-          <span className="sm:hidden">
-            {loadingAll ? "..." : "AI"}
-          </span>
+          <Sparkles className={cn("h-4 w-4", loadingAll && "animate-spin")} />
         </Button>
       )}
       <CardContent className="p-4">
