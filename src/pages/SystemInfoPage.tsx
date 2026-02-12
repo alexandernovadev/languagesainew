@@ -193,6 +193,14 @@ export default function SystemInfoPage() {
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Último deploy:</span>
+                      <span className="text-sm font-medium">
+                        {(packageJson as { buildDate?: string }).buildDate
+                          ? formatDateTimeSpanish((packageJson as { buildDate?: string }).buildDate!)
+                          : "N/A (modo desarrollo)"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Modo:</span>
                       <Badge variant={import.meta.env.DEV ? "secondary" : "default"}>
                         {import.meta.env.DEV ? "Development" : "Production"}
