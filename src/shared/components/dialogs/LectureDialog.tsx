@@ -47,9 +47,8 @@ const htmlToMarkdown = (html: string): string => {
   if (!html) return "";
   // Check if already Markdown (no HTML tags)
   if (!html.includes("<")) return html;
-  
-  // Simple HTML to Markdown conversion
-  return html
+
+  let result = html
     .replace(/<h1>(.*?)<\/h1>/gi, '# $1\n\n')
     .replace(/<h2>(.*?)<\/h2>/gi, '## $1\n\n')
     .replace(/<h3>(.*?)<\/h3>/gi, '### $1\n\n')
@@ -69,6 +68,9 @@ const htmlToMarkdown = (html: string): string => {
     .replace(/<li>(.*?)<\/li>/gi, '- $1\n')
     .replace(/<p>(.*?)<\/p>/gi, '$1\n\n')
     .replace(/<br\s*\/?>/gi, '\n')
+    // Remove orphan p tags from Quill output (e.g. </p><p>...</p> leaves </p>)
+    .replace(/<\/p>\s*<p>/gi, '\n\n')
+    .replace(/<\/?p>/gi, '')
     .replace(/\n{3,}/g, '\n\n')
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
@@ -76,6 +78,8 @@ const htmlToMarkdown = (html: string): string => {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .trim();
+
+  return result;
 };
 
 interface LectureDialogProps {

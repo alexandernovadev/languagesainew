@@ -24,6 +24,7 @@ export function QuillEditor({
   const modules = useMemo(() => quillModules, []);
   const editorRef = useRef<HTMLDivElement>(null);
 
+  // Quill 2: "bullet" is a list type, not a format. Only "list" is valid.
   const formats = [
     "header",
     "bold",
@@ -33,7 +34,6 @@ export function QuillEditor({
     "color",
     "background",
     "list",
-    "bullet",
     "link",
     "image",
   ];
