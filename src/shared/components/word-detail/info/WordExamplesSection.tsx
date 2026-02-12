@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { RefreshCw, Sparkles, FileText, Volume2 } from "lucide-react";
+import { Sparkles, FileText, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
 
@@ -32,11 +32,11 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
             onClick={onRefresh}
             disabled={loading}
             variant="outline"
-            size="sm"
-            className={cn(loading && "animate-pulse", "h-7")}
+            size="icon"
+            title="Generar ejemplos con AI"
+            className="h-7 w-7"
           >
-            <Sparkles className={cn("h-3 w-3 mr-1.5", loading && "animate-spin")} />
-            {loading ? "Generando..." : "AI"}
+            <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
           </Button>
         </div>
       </CardHeader>

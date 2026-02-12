@@ -1,4 +1,4 @@
-import { Volume2, Languages, TrendingUp, Sparkles } from "lucide-react";
+import { Languages, TrendingUp, Sparkles } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
@@ -14,15 +14,6 @@ interface WordHeaderSectionProps {
 }
 
 export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUpdateDifficulty }: WordHeaderSectionProps) {
-  const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-      utterance.rate = rate;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
   return (
     <Card className="relative overflow-hidden">
       {onRefreshAll && (
@@ -46,20 +37,6 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
               <h1 className="text-3xl font-bold capitalize bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
                 {word.word}
               </h1>
-              <button
-                onClick={() => speak(word.word, 'en-US', 1)}
-                className="p-1.5 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
-                title="Reproducir velocidad normal"
-              >
-                <Volume2 className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => speak(word.word, 'en-US', 0.1)}
-                className="p-1.5 border rounded-lg hover:bg-muted transition-colors hover:scale-110 text-lg leading-none"
-                title="Reproducir velocidad lenta"
-              >
-                🐢
-              </button>
             </div>
             
             {word.IPA && (
