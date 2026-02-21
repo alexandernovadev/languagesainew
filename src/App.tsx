@@ -27,6 +27,7 @@ import {
   UsersPage,
   LoginPage,
   PronunciationGuidePage,
+  GrammarPage,
   ExamsPage,
   ExamGeneratorPage,
   ExamStartPage,
@@ -204,6 +205,14 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <PronunciationGuidePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/grammar"
+                    element={
+                      <ProtectedRoute>
+                        <GrammarPage />
                       </ProtectedRoute>
                     }
                   />

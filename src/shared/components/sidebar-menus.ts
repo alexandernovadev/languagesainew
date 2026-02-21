@@ -16,6 +16,7 @@ import {
   FileCode,
   ClipboardList,
   FileEdit,
+  BookText,
 } from "lucide-react";
 
 export const menuItems = [
@@ -44,10 +45,18 @@ export const menuItems = [
     url: "/my-expressions",
     icon: Quote,
   },
+];
+
+export const guiaItems = [
   {
     title: "Guía de Pronunciación",
     url: "/pronunciation",
     icon: Volume2,
+  },
+  {
+    title: "Grammar",
+    url: "/grammar",
+    icon: BookText,
   },
 ];
 
