@@ -46,7 +46,7 @@ export function ExamQuestionInput({ question: q, index, value, onChange, shuffle
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         {q.type === "translateText" ? (
           <>
             <p className="text-xs text-muted-foreground font-medium">Texto a traducir:</p>

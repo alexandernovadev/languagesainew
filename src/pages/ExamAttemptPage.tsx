@@ -318,7 +318,7 @@ export default function ExamAttemptPage() {
 
   return (
     <div className="flex flex-col min-h-[calc(100dvh-120px)] p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 shrink-0">
         <PageHeader
           title={exam.title}
           description={
@@ -342,7 +342,7 @@ export default function ExamAttemptPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col py-6">
+      <div className="flex-1 flex flex-col py-4">
         <ExamQuestionInput
           key={originalIndex}
           question={exam.questions[originalIndex]}
@@ -352,7 +352,7 @@ export default function ExamAttemptPage() {
           shuffleOptions={shuffledOrder != null}
         />
 
-        <div className="flex items-center justify-end gap-2 mt-8 pt-6 border-t">
+        <div className="flex items-center justify-end gap-2 mt-4 pt-4">
           <Button
             variant="outline"
             size="icon"
