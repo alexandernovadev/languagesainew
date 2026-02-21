@@ -8,13 +8,20 @@ interface PageHeaderProps {
   filters?: ReactNode;
 }
 
+const MAX_TITLE_LENGTH = 20;
+
 export function PageHeader({ title, description, actions, filters }: PageHeaderProps) {
+  const displayTitle =
+    typeof title === "string" && title.length > MAX_TITLE_LENGTH
+      ? `${title.slice(0, MAX_TITLE_LENGTH)}...`
+      : title;
+
   return (
     <div className="sticky top-[-0.1rem] z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 mb-4">
       {/* Title Section */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold pt-4">{title}</h1>
+          <h1 className="text-3xl font-bold pt-4" title={typeof title === "string" ? title : undefined}>{displayTitle}</h1>
           {description && (
             <p className="text-muted-foreground mt-1">{description}</p>
           )}
