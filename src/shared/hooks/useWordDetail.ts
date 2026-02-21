@@ -371,7 +371,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
     
     try {
       await wordService.incrementWordSeen(currentWord._id);
-      await loadWord(); // Recargar para actualizar seen
+      await loadWord();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Error incrementando contador';
       toast.error(errorMsg);
@@ -385,8 +385,8 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
     
     try {
       await wordService.updateWordDifficulty(currentWord._id, difficulty);
-      await loadWord(); // Recargar para actualizar difficulty
-      toast.success(`Dificultad actualizada a ${difficulty}`);
+      await loadWord(); 
+      toast.success(`👍`,);
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Error actualizando dificultad';
       toast.error(errorMsg);
