@@ -38,12 +38,12 @@ export function ExamQuestionCard({ question: q, index }: ExamQuestionCardProps) 
           <p className="text-sm">{q.text}</p>
         )}
         {hasOptions && (
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1.5 text-sm">
             {q.options?.map((opt, i) => (
               <li
                 key={i}
                 className={cn(
-                  "pl-2 py-1 rounded",
+                  "pl-3 py-2 rounded-md border border-gray-300 dark:border-gray-600",
                   i === q.correctIndex && "bg-primary/10 text-primary font-medium"
                 )}
               >
