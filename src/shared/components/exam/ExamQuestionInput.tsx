@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { Label } from "@/shared/components/ui/label";
-import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { IExamQuestion } from "@/types/models";
@@ -136,13 +136,13 @@ export function ExamQuestionInput({ question: q, index, value, onChange, shuffle
             <Label htmlFor={`q${index}-input`} className="text-sm font-medium">
               Tu respuesta
             </Label>
-            <Input
+            <Textarea
               id={`q${index}-input`}
-              type="text"
               value={value != null ? String(value) : ""}
               onChange={(e) => onChange(e.target.value)}
               placeholder="Escribe aquí..."
-              className="min-h-[44px]"
+              rows={3}
+              className="min-h-[100px] resize-y"
             />
           </div>
         )}
