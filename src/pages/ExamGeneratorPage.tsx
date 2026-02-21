@@ -39,7 +39,7 @@ export default function ExamGeneratorPage() {
           <div
             className={cn(
               "flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg text-sm font-medium transition-all flex-1 sm:flex-initial justify-center",
-              step === 1 && "bg-muted-foreground text-white shadow-md ring-2 ring-muted-foreground/30",
+              step === 1 && "bg-white dark:bg-background border-2 border-border",
               step > 1 && "bg-muted text-foreground",
               step < 1 && "text-muted-foreground opacity-60"
             )}
@@ -55,7 +55,7 @@ export default function ExamGeneratorPage() {
           <div
             className={cn(
               "flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg text-sm font-medium transition-all flex-1 sm:flex-initial justify-center",
-              step === 2 && "bg-muted-foreground text-muted shadow-md ring-2 ring-muted-foreground/30",
+              step === 2 && "bg-muted border-2 border-border",
               step > 2 && "bg-muted text-foreground",
               step < 2 && "text-muted-foreground opacity-60"
             )}
@@ -75,7 +75,7 @@ export default function ExamGeneratorPage() {
           <div
             className={cn(
               "flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg text-sm font-medium transition-all flex-1 sm:flex-initial justify-center",
-              step === 3 && "bg-muted-foreground text-white shadow-md ring-2 ring-muted-foreground/30",
+              step === 3 && "bg-muted border-2 border-border",
               step < 3 && "text-muted-foreground opacity-60"
             )}
           >
