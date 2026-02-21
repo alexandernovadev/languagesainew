@@ -48,7 +48,7 @@ export default function ExamGeneratorPage() {
               {step > 1 ? "✓" : "1"}
             </span>
             <FileQuestion className="h-4 w-4 shrink-0" />
-            <span>Parámetros</span>
+            <span className="hidden sm:inline">Parámetros</span>
           </div>
           <div className={cn("h-px w-4 sm:w-6 flex-shrink-0", step >= 2 ? "bg-muted-foreground/50" : "bg-border")} />
           {/* Paso 2 */}
@@ -68,7 +68,7 @@ export default function ExamGeneratorPage() {
             ) : (
               <Loader2 className="h-4 w-4 shrink-0" />
             )}
-            <span>Generando</span>
+            <span className="hidden sm:inline">Generando</span>
           </div>
           <div className={cn("h-px w-4 sm:w-6 flex-shrink-0", step >= 3 ? "bg-muted-foreground/50" : "bg-border")} />
           {/* Paso 3 */}
@@ -83,7 +83,7 @@ export default function ExamGeneratorPage() {
               3
             </span>
             <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>Resultado</span>
+            <span className="hidden sm:inline">Resultado</span>
           </div>
         </div>
       </div>
