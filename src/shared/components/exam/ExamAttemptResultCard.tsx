@@ -112,7 +112,10 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                         <Badge variant="blue">seleccionada</Badge>
                       )}
                       {isCorrect && (
-                        <Badge variant="emerald">correcta</Badge>
+                        <Badge variant="emerald">✓</Badge>
+                      )}
+                      {isSelected && !isCorrect && (
+                        <Badge variant="destructive">✗</Badge>
                       )}
                     </span>
                   </li>
