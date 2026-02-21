@@ -150,19 +150,6 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
               </div>
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto pb-2">
-              {attempts.map((a, i) => (
-                <Button
-                  key={a._id}
-                  variant={selectedIndex === i ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedIndex(i)}
-                >
-                  #{i + 1} {a.score}%
-                </Button>
-              ))}
-            </div>
-
             {meta && (
               <ExamDetailBar
                 meta={meta}

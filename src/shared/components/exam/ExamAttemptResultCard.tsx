@@ -2,8 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Badge } from "@/shared/components/ui/badge";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import type { IAttemptQuestion } from "@/types/models";
-import { CheckCircle2, XCircle, MessageSquare } from "lucide-react";
+import { CheckCircle2, XCircle, MessageSquare, MinusCircle } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
+
+const QUESTION_TYPE_LABELS: Record<string, string> = {
+  multiple: "Opción múltiple",
+  unique: "Respuesta única",
+  fillInBlank: "Completar huecos",
+  translateText: "Traducir",
+};
 
 interface ExamAttemptResultCardProps {
   aq: IAttemptQuestion;
@@ -21,23 +28,41 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
     ? aq.options![correctIndex]
     : String(aq.correctAnswer ?? "—");
 
+  const isPartial = aq.isPartial === true;
+
   return (
     <Card className="overflow-hidden border-white">
       <CardHeader className="pb-3 pt-4">
         <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1 min-w-0">
-            <CardTitle className="text-base font-semibold leading-tight">
-              Pregunta {index + 1}
-            </CardTitle>
+          <div className="space-y-1 min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <CardTitle className="text-base font-semibold leading-tight">
+                Pregunta {index + 1}
+              </CardTitle>
+              <span className="text-muted-foreground">|</span>
+              <Badge variant="outline" className="text-xs">
+                {QUESTION_TYPE_LABELS[aq.questionType] ?? aq.questionType}
+              </Badge>
+            </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {aq.questionText}
             </p>
           </div>
-          <Badge variant={aq.isCorrect ? "emerald" : "destructive"} className="shrink-0">
+          <Badge
+            variant={
+              aq.isCorrect ? "emerald" : isPartial ? "secondary" : "destructive"
+            }
+            className="shrink-0"
+          >
             {aq.isCorrect ? (
               <>
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
                 Correcta
+              </>
+            ) : isPartial ? (
+              <>
+                <MinusCircle className="h-3.5 w-3.5 mr-1" />
+                Parcial ({aq.partialScore}%)
               </>
             ) : (
               <>
@@ -96,7 +121,9 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                   "text-sm font-medium",
                   aq.isCorrect
                     ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-red-600 dark:text-red-400"
+                    : isPartial
+                      ? "text-purple-600 dark:text-purple-400"
+                      : "text-red-600 dark:text-red-400"
                 )}
               >
                 {userAnswerDisplay}
