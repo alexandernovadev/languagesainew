@@ -121,7 +121,7 @@ export default function ExamStartPage() {
               className="flex items-center gap-2 text-sm font-normal cursor-pointer"
             >
               <Shuffle className="h-4 w-4" />
-              Mezclar orden de preguntas
+              Mezclar preguntas y opciones
             </Label>
           </div>
         </div>

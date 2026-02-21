@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { Label } from "@/shared/components/ui/label";
@@ -6,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { IExamQuestion } from "@/types/models";
 import { cn } from "@/utils/common/classnames";
+import { shuffleArray } from "@/utils/common/shuffle";
 
 const QUESTION_TYPE_LABELS: Record<string, string> = {
   multiple: "Opción múltiple",
@@ -19,13 +21,20 @@ interface ExamQuestionInputProps {
   index: number;
   value: number | string | number[] | null;
   onChange: (value: number | string | number[]) => void;
+  shuffleOptions?: boolean;
 }
 
-export function ExamQuestionInput({ question: q, index, value, onChange }: ExamQuestionInputProps) {
+export function ExamQuestionInput({ question: q, index, value, onChange, shuffleOptions = false }: ExamQuestionInputProps) {
   const hasOptions = q.options && q.options.length > 0;
   const isMultipleSelect = q.type === "multiple" && hasOptions;
   const isSingleSelect =
     (q.type === "unique" && hasOptions) || (q.type === "fillInBlank" && hasOptions);
+
+  const optionsToDisplay = useMemo(() => {
+    if (!q.options?.length) return [];
+    const withIndex = q.options.map((opt, i) => ({ opt, originalIndex: i }));
+    return shuffleOptions ? shuffleArray(withIndex) : withIndex;
+  }, [q.options, shuffleOptions]);
 
   return (
     <Card className="overflow-hidden">
@@ -49,11 +58,11 @@ export function ExamQuestionInput({ question: q, index, value, onChange }: ExamQ
 
         {isMultipleSelect && hasOptions && (
           <div className="space-y-2">
-            {q.options!.map((opt, i) => {
-              const selected = Array.isArray(value) ? value.includes(i) : false;
+            {optionsToDisplay.map(({ opt, originalIndex }, displayIdx) => {
+              const selected = Array.isArray(value) ? value.includes(originalIndex) : false;
               return (
                 <div
-                  key={i}
+                  key={originalIndex}
                   role="button"
                   tabIndex={0}
                   className={cn(
@@ -62,24 +71,24 @@ export function ExamQuestionInput({ question: q, index, value, onChange }: ExamQ
                   )}
                   onClick={() => {
                     const current = Array.isArray(value) ? [...value] : [];
-                    const next = current.includes(i)
-                      ? current.filter((x) => x !== i)
-                      : [...current, i].sort((a, b) => a - b);
+                    const next = current.includes(originalIndex)
+                      ? current.filter((x) => x !== originalIndex)
+                      : [...current, originalIndex].sort((a, b) => a - b);
                     onChange(next);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       const current = Array.isArray(value) ? [...value] : [];
-                      const next = current.includes(i)
-                        ? current.filter((x) => x !== i)
-                        : [...current, i].sort((a, b) => a - b);
+                      const next = current.includes(originalIndex)
+                        ? current.filter((x) => x !== originalIndex)
+                        : [...current, originalIndex].sort((a, b) => a - b);
                       onChange(next);
                     }
                   }}
                 >
                   <Checkbox
-                    id={`q${index}-opt${i}`}
+                    id={`q${index}-opt${originalIndex}`}
                     checked={selected}
                     tabIndex={-1}
                     className="pointer-events-none"
@@ -87,7 +96,7 @@ export function ExamQuestionInput({ question: q, index, value, onChange }: ExamQ
                   <Label
                     className="flex-1 cursor-pointer text-sm font-normal"
                   >
-                    {String.fromCharCode(65 + i)}. {opt}
+                    {String.fromCharCode(65 + displayIdx)}. {opt}
                   </Label>
                 </div>
               );
@@ -101,21 +110,21 @@ export function ExamQuestionInput({ question: q, index, value, onChange }: ExamQ
             onValueChange={(v) => onChange(parseInt(v, 10))}
             className="space-y-2"
           >
-            {q.options!.map((opt, i) => (
+            {optionsToDisplay.map(({ opt, originalIndex }, displayIdx) => (
               <div
-                key={i}
+                key={originalIndex}
                 className={cn(
                   "flex items-center space-x-2 rounded-lg border p-3 cursor-pointer transition-colors",
-                  value === i && "border-primary bg-primary/5"
+                  value === originalIndex && "border-primary bg-primary/5"
                 )}
-                onClick={() => onChange(i)}
+                onClick={() => onChange(originalIndex)}
               >
-                <RadioGroupItem value={String(i)} id={`q${index}-opt${i}`} />
+                <RadioGroupItem value={String(originalIndex)} id={`q${index}-opt${originalIndex}`} />
                 <Label
-                  htmlFor={`q${index}-opt${i}`}
+                  htmlFor={`q${index}-opt${originalIndex}`}
                   className="flex-1 cursor-pointer text-sm font-normal"
                 >
-                  {String.fromCharCode(65 + i)}. {opt}
+                  {String.fromCharCode(65 + displayIdx)}. {opt}
                 </Label>
               </div>
             ))}

@@ -349,6 +349,7 @@ export default function ExamAttemptPage() {
           index={currentQuestionIndex}
           value={answers[originalIndex] ?? null}
           onChange={(v) => handleAnswerChange(originalIndex, v)}
+          shuffleOptions={shuffledOrder != null}
         />
 
         <div className="flex items-center justify-end gap-2 mt-8 pt-6 border-t">
