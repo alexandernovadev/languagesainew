@@ -386,7 +386,10 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
     try {
       await wordService.updateWordDifficulty(currentWord._id, difficulty);
       await loadWord(); 
-      toast.success(`👍`,);
+      toast.success(`Dificultad actualizada a ${difficulty}`,{
+        position: 'top-center',
+        duration: 800,
+      });
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || 'Error actualizando dificultad';
       toast.error(errorMsg);
