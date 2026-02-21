@@ -6,6 +6,50 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+// Token refresh: evitar múltiples refreshes concurrentes
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function tryRefreshToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem("refreshToken");
+  if (!refreshToken) return null;
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACK_URL}/api/auth/refresh`,
+      { refreshToken },
+      { withCredentials: true }
+    );
+    const data = response.data?.data || response.data;
+    const newToken = data?.accessToken || data?.token;
+    const newRefreshToken = data?.refreshToken;
+    const user = data?.user;
+
+    if (!newToken) return null;
+
+    const store = useUserStore.getState();
+    store.setToken(newToken);
+    if (user) store.setUser(user);
+    if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
+
+    return newToken;
+  } catch {
+    return null;
+  }
+}
+
+async function handleTokenRefresh(): Promise<string | null> {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise;
+  }
+  isRefreshing = true;
+  refreshPromise = tryRefreshToken().finally(() => {
+    isRefreshing = false;
+    refreshPromise = null;
+  });
+  return refreshPromise;
+}
+
 // Interceptor de Request - Agregar headers automáticamente
 api.interceptors.request.use(
   (config) => {
@@ -71,24 +115,42 @@ api.interceptors.response.use(
     if (error.response) {
       // Error de respuesta del servidor (4xx, 5xx)
       const { status, data } = error.response;
+      const isRefreshRequest = error.config?.url?.includes?.("auth/refresh");
+
+      // 401/403: token expirado o inválido - intentar refresh
+      if ((status === 401 || status === 403) && !isRefreshRequest) {
+        const newToken = await handleTokenRefresh();
+
+        if (newToken && error.config) {
+          error.config.headers.Authorization = `Bearer ${newToken}`;
+          return api.request(error.config);
+        }
+
+        // Refresh falló: limpiar sesión y redirigir
+        const store = useUserStore.getState();
+        store.clearSession();
+        localStorage.removeItem("refreshToken");
+        if (!window.location.pathname.includes("/login")) {
+          window.location.href = "/login";
+        }
+        return Promise.reject(error);
+      }
+
+      // Si fue la petición de refresh la que falló
+      if ((status === 401 || status === 403) && isRefreshRequest) {
+        const store = useUserStore.getState();
+        store.clearSession();
+        localStorage.removeItem("refreshToken");
+        if (!window.location.pathname.includes("/login")) {
+          window.location.href = "/login";
+        }
+        return Promise.reject(error);
+      }
 
       switch (status) {
         case 401:
-          // No autorizado - limpiar sesión y redirigir a login
-          console.log("🔒 No autorizado - Limpiando sesión");
-          const store = useUserStore.getState();
-          store.clearSession();
-          localStorage.removeItem("refreshToken");
-          
-          // Redirigir a login si no estamos ya allí
-          if (!window.location.pathname.includes('/login')) {
-            window.location.href = '/login';
-          }
-          break;
-
         case 403:
-          // Prohibido - mostrar mensaje de permisos
-          console.error("🔒 Acceso prohibido");
+          // Ya manejados arriba; por si acaso
           break;
 
         case 404:

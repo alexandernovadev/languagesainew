@@ -28,6 +28,7 @@ export interface LoginResponse {
 
 export interface RefreshTokenResponse {
   token: string;
+  refreshToken?: string;
   user: LoginResponse["user"];
 }
 
@@ -45,7 +46,13 @@ class AuthService {
    */
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
     const response = await api.post("/api/auth/refresh", { refreshToken });
-    return response.data.data;
+    const data = response.data?.data || response.data;
+    // Backend devuelve accessToken; mapear a token para consistencia
+    return {
+      token: data?.accessToken || data?.token,
+      refreshToken: data?.refreshToken,
+      user: data?.user,
+    };
   }
 
   /**

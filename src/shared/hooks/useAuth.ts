@@ -53,6 +53,9 @@ export function useAuth() {
       const response = await authService.refreshToken(refreshToken);
       setToken(response.token);
       setUser(response.user);
+      if (response.refreshToken) {
+        localStorage.setItem("refreshToken", response.refreshToken);
+      }
       
       return true;
     } catch (error) {
