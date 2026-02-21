@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { Button } from "@/shared/components/ui/button";
 import { ExamsTable } from "@/shared/components/exam/ExamsTable";
 import { ExamPreviewModal } from "@/shared/components/exam/ExamPreviewModal";
 import { ExamAttemptsModal } from "@/shared/components/exam/ExamAttemptsModal";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useExams } from "@/shared/hooks/useExams";
 import type { IExam } from "@/types/models";
-import { Plus } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Pagination,
@@ -82,16 +80,10 @@ export default function ExamsPage() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <PageHeader
-          title="Exámenes"
-          description="Lista de exámenes de gramática disponibles"
-        />
-        <Button onClick={() => navigate("/exams/generator")}>
-          <Plus className="h-4 w-4 mr-2" />
-          Generar examen
-        </Button>
-      </div>
+      <PageHeader
+        title="Exámenes"
+        description="Lista de exámenes de gramática disponibles"
+      />
 
       <ExamsTable
         exams={exams}
