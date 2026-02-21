@@ -1,6 +1,6 @@
 {
   "name": "languagesai",
-  "version": "4.1.22",
+  "version": "5.0.21",
   "private": true,
   "scripts": {
     "dev": "vite",
