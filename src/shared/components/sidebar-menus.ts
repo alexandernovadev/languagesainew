@@ -14,6 +14,8 @@ import {
   Volume2,
   Sparkles,
   FileCode,
+  ClipboardList,
+  FileEdit,
 } from "lucide-react";
 
 export const menuItems = [
@@ -26,6 +28,11 @@ export const menuItems = [
     title: "Lecturas",
     url: "/lectures",
     icon: BookOpen,
+  },
+  {
+    title: "Exámenes",
+    url: "/exams",
+    icon: ClipboardList,
   },
   {
     title: "Mis Palabras",
@@ -49,6 +56,11 @@ export const generatorItems = [
     title: "Generador de Lecturas",
     url: "/generator/lecture",
     icon: BookOpenCheck,
+  },
+  {
+    title: "Generador de Exámenes",
+    url: "/exams/generator",
+    icon: FileEdit,
   },
 ];
 

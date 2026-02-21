@@ -19,3 +19,5 @@ export const LabsPage = lazy(() => import("../pages/LabsPage"));
 export const UsersPage = lazy(() => import("../pages/UsersPage"));
 export const LoginPage = lazy(() => import("../pages/LoginPage"));
 export const PronunciationGuidePage = lazy(() => import("../pages/PronunciationGuidePage"));
+export const ExamsPage = lazy(() => import("../pages/ExamsPage"));
+export const ExamGeneratorPage = lazy(() => import("../pages/ExamGeneratorPage"));

@@ -4,3 +4,13 @@ export type { IUser } from './User';
 export type { IWord } from './Word';
 export type { IExpression } from './Expression';
 export type { ILecture } from './Lecture';
+export type {
+  IExam,
+  IExamQuestion,
+  IExamAttempt,
+  IAttemptQuestion,
+  ExamQuestionType,
+  GenerateExamParams,
+  GeneratedExam,
+  ValidationResult,
+} from './Exam';
