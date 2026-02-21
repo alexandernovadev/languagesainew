@@ -217,7 +217,7 @@ export default function ExamAttemptPage() {
 
   if (loading || !exam || !attempt) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh]">
+      <div className="flex items-center justify-center min-h-[40dvh]">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -321,11 +321,7 @@ export default function ExamAttemptPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 shrink-0">
         <PageHeader
           title={exam.title}
-          description={
-            remainingMs != null
-              ? `Pregunta ${currentQuestionIndex + 1} de ${questionCount} · Quedan ${formatCountdown(remainingMs)}`
-              : `Pregunta ${currentQuestionIndex + 1} de ${questionCount} · Tiempo: ${formatElapsed(elapsedMs)}`
-          }
+          description={`Pregunta ${currentQuestionIndex + 1} de ${questionCount}`}
         />
         <div className="flex items-center gap-2">
           <span

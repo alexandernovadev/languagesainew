@@ -35,7 +35,7 @@ export function ExamPreviewModal({ open, onOpenChange, exam }: ExamPreviewModalP
         <ExamPreview
           exam={examPreviewData}
           meta={meta}
-          scrollHeight="60vh"
+          scrollHeight="60dvh"
         />
       </div>
     </ModalNova>

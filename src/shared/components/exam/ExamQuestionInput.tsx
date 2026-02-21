@@ -142,7 +142,7 @@ export function ExamQuestionInput({ question: q, index, value, onChange, shuffle
               onChange={(e) => onChange(e.target.value)}
               placeholder="Escribe aquí..."
               rows={3}
-              className="min-h-[100px] resize-y"
+              className="min-h-[15dvh] resize-y"
             />
           </div>
         )}

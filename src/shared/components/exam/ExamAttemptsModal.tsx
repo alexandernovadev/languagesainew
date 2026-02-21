@@ -159,7 +159,7 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Resultados por pregunta</h3>
-              <ScrollArea className="h-[45vh] pr-4">
+              <ScrollArea className="h-[45dvh] pr-4">
                 <div className="space-y-4 pb-8">
                   {selectedAttempt.attemptQuestions.map((aq, i) => (
                     <ExamAttemptResultCard key={i} aq={aq} index={i} />

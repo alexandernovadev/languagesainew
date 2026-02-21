@@ -83,7 +83,7 @@ export default function AnkiGamePage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center min-h-[500px]">
+        <div className="flex items-center justify-center min-h-[50dvh]">
           <Card className="w-full max-w-2xl">
             <CardContent className="p-8">
               <Skeleton className="h-64 w-full mb-4" />

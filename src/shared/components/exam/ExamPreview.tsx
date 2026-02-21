@@ -17,7 +17,7 @@ interface ExamPreviewProps {
   scrollHeight?: string;
 }
 
-export function ExamPreview({ exam, meta, actions, middleContent, scrollHeight = "50vh" }: ExamPreviewProps) {
+export function ExamPreview({ exam, meta, actions, middleContent, scrollHeight = "50dvh" }: ExamPreviewProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -31,7 +31,7 @@ export function ExamPreview({ exam, meta, actions, middleContent, scrollHeight =
 
       <ScrollArea
         className="pr-4"
-        style={{ height: `min(${scrollHeight}, 60vh)` }}
+        style={{ height: `min(${scrollHeight}, 60dvh)` }}
       >
         <div className="space-y-4 pb-4">
           {exam.questions.map((q, i) => (

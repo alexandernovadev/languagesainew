@@ -119,7 +119,7 @@ export function ExamResultTab({
       meta={meta}
       actions={actions}
       middleContent={validationCard}
-      scrollHeight="50vh"
+      scrollHeight="50dvh"
     />
   );
 }
