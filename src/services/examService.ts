@@ -63,6 +63,10 @@ export const examService = {
     return res.data.data as IExamAttempt;
   },
 
+  async deleteAttempt(examId: string, attemptId: string) {
+    await api.delete(`/api/exams/${examId}/attempts/${attemptId}`);
+  },
+
   async listAttemptsByExam(examId: string, limit = 20) {
     const params = new URLSearchParams();
     params.append("limit", String(limit));

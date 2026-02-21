@@ -3,13 +3,16 @@ import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useExamAttempts } from "@/shared/hooks/useExamAttempts";
 import { ExamAttemptResultCard } from "./ExamAttemptResultCard";
 import { ExamDetailBar } from "./ExamDetailBar";
+import { examService } from "@/services/examService";
 import type { IExam } from "@/types/models";
 import type { IExamAttempt } from "@/types/models";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
+import { toast } from "sonner";
 
 interface ExamAttemptsModalProps {
   open: boolean;
@@ -18,8 +21,10 @@ interface ExamAttemptsModalProps {
 }
 
 export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModalProps) {
-  const { attempts, loading } = useExamAttempts(exam?._id ?? null);
+  const { attempts, loading, refreshAttempts } = useExamAttempts(exam?._id ?? null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [attemptToDelete, setAttemptToDelete] = useState<IExamAttempt | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const selectedAttempt = attempts[selectedIndex];
 
   const formatDate = (d: Date) => {
@@ -31,6 +36,26 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleDeleteClick = () => {
+    if (selectedAttempt) setAttemptToDelete(selectedAttempt);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!attemptToDelete || !exam) return;
+    setDeleteLoading(true);
+    try {
+      await examService.deleteAttempt(exam._id, attemptToDelete._id);
+      await refreshAttempts();
+      setAttemptToDelete(null);
+      setSelectedIndex((i) => Math.max(0, i - 1));
+      toast.success("Intento eliminado");
+    } catch {
+      toast.error("Error al eliminar el intento");
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   const resultExam = selectedAttempt
@@ -93,23 +118,33 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
+                      disabled={selectedIndex === 0}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
+                      }
+                      disabled={selectedIndex === attempts.length - 1}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
-                    disabled={selectedIndex === 0}
+                    onClick={handleDeleteClick}
+                    className="text-destructive hover:text-destructive"
                   >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
-                    }
-                    disabled={selectedIndex === attempts.length - 1}
-                  >
-                    <ChevronRight className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -148,6 +183,24 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
           </>
         ) : null}
       </div>
+
+      <AlertDialogNova
+        open={!!attemptToDelete}
+        onOpenChange={(o) => !o && setAttemptToDelete(null)}
+        title="¿Eliminar intento?"
+        description={
+          attemptToDelete ? (
+            <span>
+              Se eliminará el intento con {attemptToDelete.score}% de puntuación. Esta acción no se puede deshacer.
+            </span>
+          ) : undefined
+        }
+        onConfirm={handleDeleteConfirm}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        loading={deleteLoading}
+        confirmVariant="destructive"
+      />
     </ModalNova>
   );
 }

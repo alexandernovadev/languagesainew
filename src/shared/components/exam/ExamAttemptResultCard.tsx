@@ -22,14 +22,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
     : String(aq.correctAnswer ?? "—");
 
   return (
-    <Card
-      className={cn(
-        "overflow-hidden transition-colors",
-        aq.isCorrect
-          ? "border-l-4 border-l-emerald-500/80"
-          : "border-l-4 border-l-amber-500/80"
-      )}
-    >
+    <Card className="overflow-hidden border-white">
       <CardHeader className="pb-3 pt-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 min-w-0">
@@ -40,7 +33,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
               {aq.questionText}
             </p>
           </div>
-          <Badge variant={aq.isCorrect ? "default" : "yellow"} className="shrink-0">
+          <Badge variant={aq.isCorrect ? "emerald" : "destructive"} className="shrink-0">
             {aq.isCorrect ? (
               <>
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -69,21 +62,22 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                   <li
                     key={i}
                     className={cn(
-                      "flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm",
-                      isSelected && isCorrect && "bg-emerald-500/15 border border-emerald-500/30",
-                      isSelected && !isCorrect && "bg-amber-500/15 border border-amber-500/30",
-                      !isSelected && isCorrect && "bg-emerald-500/10 border border-emerald-500/20"
+                      "flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm border",
+                      isSelected && isCorrect && "bg-emerald-500/10 border-emerald-500/30",
+                      isSelected && !isCorrect && "bg-red-500/10 border-red-500/30",
+                      !isSelected && isCorrect && "bg-emerald-500/5 border-emerald-500/20",
+                      !isSelected && !isCorrect && "border-gray-300 dark:border-gray-600"
                     )}
                   >
                     <span className="font-medium">
                       {String.fromCharCode(65 + i)}. {opt}
                     </span>
                     <span className="flex gap-1.5 shrink-0">
-                      {isSelected && !isCorrect && (
-                        <Badge variant="yellow">seleccionada</Badge>
+                      {isSelected && (
+                        <Badge variant="blue">seleccionada</Badge>
                       )}
                       {isCorrect && (
-                        <Badge variant="blue">correcta</Badge>
+                        <Badge variant="emerald">correcta</Badge>
                       )}
                     </span>
                   </li>
@@ -93,7 +87,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border bg-muted/30 p-3">
+            <div className="rounded-md border border-border bg-muted/30 p-3">
               <p className="text-xs font-medium text-muted-foreground mb-1.5">
                 Tu respuesta
               </p>
@@ -102,14 +96,14 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                   "text-sm font-medium",
                   aq.isCorrect
                     ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-amber-600 dark:text-amber-400"
+                    : "text-red-600 dark:text-red-400"
                 )}
               >
                 {userAnswerDisplay}
               </p>
             </div>
             {!aq.isCorrect && (
-              <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3">
+              <div className="rounded-md border border-border bg-muted/30 p-3">
                 <p className="text-xs font-medium text-muted-foreground mb-1.5">
                   Respuesta correcta
                 </p>
@@ -122,7 +116,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
         )}
 
         {aq.aiFeedback && (
-          <div className="rounded-lg border border-primary/10 bg-primary/5 p-4">
+          <div className="rounded-lg border border-border bg-muted/30 p-4">
             <div className="flex items-center gap-2 mb-3">
               <MessageSquare className="h-4 w-4 text-primary" />
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">

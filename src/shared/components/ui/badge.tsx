@@ -24,6 +24,8 @@ const badgeVariants = cva(
           "border-gray-400 text-gray-300 hover:shadow-[0_0_8px] hover:shadow-gray-400/70 hover:text-gray-100",
         magenta:
           "border-pink-500 text-pink-400 hover:shadow-[0_0_8px] hover:shadow-pink-500/70 hover:text-pink-200",
+        emerald:
+          "border-emerald-500 text-emerald-400 hover:shadow-[0_0_8px] hover:shadow-emerald-500/70 hover:text-emerald-200",
       },
     },
     defaultVariants: {

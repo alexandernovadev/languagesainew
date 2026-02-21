@@ -59,22 +59,10 @@ export function ExamsTable({
     <div className="space-y-4">
       {exams.map((exam) => (
         <Card key={exam._id} className="overflow-hidden">
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-lg">{exam.title}</h3>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <Badge variant="secondary" className="text-xs">
-                    {getDiffLabel(exam.difficulty)}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {exam.questions.length} preguntas
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {getLangLabel(exam.language)}
-                  </Badge>
-                </div>
-              </div>
+          <CardContent className="p-4 sm:p-6 space-y-4">
+            {/* Mobile/Tablet: title, btns, detalles. Desktop: title | btns, luego detalles */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <h3 className="font-semibold text-lg">{exam.title}</h3>
               <div className="flex flex-wrap gap-2 shrink-0">
                 <Button variant="outline" size="sm" onClick={() => onPreview(exam)}>
                   <Eye className="h-4 w-4 mr-2" />
@@ -84,7 +72,12 @@ export function ExamsTable({
                   <Play className="h-4 w-4 mr-2" />
                   Iniciar
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => onAttempts(exam)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onAttempts(exam)}
+                  disabled={exam.attemptCount === 0}
+                >
                   <History className="h-4 w-4 mr-2" />
                   Intentos
                 </Button>
@@ -93,6 +86,23 @@ export function ExamsTable({
                   Eliminar
                 </Button>
               </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary" className="text-xs">
+                {getDiffLabel(exam.difficulty)}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {exam.questions.length} preguntas
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {getLangLabel(exam.language)}
+              </Badge>
+              {typeof exam.attemptCount === "number" && (
+                <Badge variant="blue" className="text-xs">
+                  {exam.attemptCount} {exam.attemptCount === 1 ? "intento" : "intentos"}
+                </Badge>
+              )}
             </div>
           </CardContent>
         </Card>

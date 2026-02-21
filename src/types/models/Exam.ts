@@ -24,6 +24,8 @@ export interface IExam {
   createdBy?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  /** Number of user's attempts (from API list when authenticated) */
+  attemptCount?: number;
 }
 
 export interface IAttemptQuestion {
