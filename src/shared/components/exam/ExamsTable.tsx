@@ -80,7 +80,7 @@ export function ExamsTable({
                   <Eye className="h-4 w-4 mr-2" />
                   Preview
                 </Button>
-                <Button variant="default" size="sm" onClick={() => onStart(exam)} disabled>
+                <Button variant="default" size="sm" onClick={() => onStart(exam)}>
                   <Play className="h-4 w-4 mr-2" />
                   Iniciar
                 </Button>

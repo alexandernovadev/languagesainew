@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { ExamsTable } from "@/shared/components/exam/ExamsTable";
@@ -8,7 +8,7 @@ import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { useExams } from "@/shared/hooks/useExams";
 import type { IExam } from "@/types/models";
 import { Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Pagination,
   PaginationContent,
@@ -20,6 +20,7 @@ import {
 
 export default function ExamsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     exams,
     loading,
@@ -38,9 +39,22 @@ export default function ExamsPage() {
   const [examToDelete, setExamToDelete] = useState<IExam | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  useEffect(() => {
+    const state = location.state as { openAttemptsExam?: IExam } | null;
+    if (state?.openAttemptsExam) {
+      setAttemptsExam(state.openAttemptsExam);
+      setAttemptsOpen(true);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
+
   const handlePreview = (exam: IExam) => {
     setPreviewExam(exam);
     setPreviewOpen(true);
+  };
+
+  const handleStart = (exam: IExam) => {
+    navigate(`/exams/${exam._id}/start`);
   };
 
   const handleAttempts = (exam: IExam) => {
@@ -83,7 +97,7 @@ export default function ExamsPage() {
         exams={exams}
         loading={loading}
         onPreview={handlePreview}
-        onStart={() => {}}
+        onStart={handleStart}
         onAttempts={handleAttempts}
         onDelete={handleDeleteClick}
       />

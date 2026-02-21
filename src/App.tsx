@@ -29,6 +29,8 @@ import {
   PronunciationGuidePage,
   ExamsPage,
   ExamGeneratorPage,
+  ExamStartPage,
+  ExamAttemptPage,
 } from "./routes";
 
 // Componente para manejar rutas desconocidas
@@ -112,6 +114,22 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <ExamGeneratorPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/exams/:id/start"
+                    element={
+                      <ProtectedRoute>
+                        <ExamStartPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/exams/:id/attempt/:attemptId"
+                    element={
+                      <ProtectedRoute>
+                        <ExamAttemptPage />
                       </ProtectedRoute>
                     }
                   />
