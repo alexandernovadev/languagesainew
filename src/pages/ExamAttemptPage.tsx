@@ -323,7 +323,7 @@ export default function ExamAttemptPage() {
           title={exam.title}
           description={`Pregunta ${currentQuestionIndex + 1} de ${questionCount}`}
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           <span
             className={`text-lg font-mono font-medium tabular-nums ${
               remainingMs != null && remainingMs < 60000 ? "text-destructive" : ""
