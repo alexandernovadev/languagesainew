@@ -63,6 +63,13 @@ export const examService = {
     return res.data.data as IExamAttempt;
   },
 
+  async listAttemptsByExam(examId: string, limit = 20) {
+    const params = new URLSearchParams();
+    params.append("limit", String(limit));
+    const res = await api.get(`/api/exams/${examId}/attempts?${params.toString()}`);
+    return res.data.data as IExamAttempt[];
+  },
+
   async listMyAttempts(limit = 20) {
     const params = new URLSearchParams();
     params.append("limit", String(limit));
