@@ -1,54 +1,20 @@
 import { useState } from "react";
 import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { Badge } from "@/shared/components/ui/badge";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useExamAttempts } from "@/shared/hooks/useExamAttempts";
+import { ExamAttemptResultCard } from "./ExamAttemptResultCard";
+import { ExamDetailBar } from "./ExamDetailBar";
 import type { IExam } from "@/types/models";
-import type { IExamAttempt, IAttemptQuestion } from "@/types/models";
-import { CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import type { IExamAttempt } from "@/types/models";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 
 interface ExamAttemptsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   exam: IExam | null;
-}
-
-function AttemptDetailCard({ aq, index }: { aq: IAttemptQuestion; index: number }) {
-  return (
-    <Card className={cn("overflow-hidden", !aq.isCorrect && "border-destructive/50")}>
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="text-sm">Pregunta {index + 1}</CardTitle>
-          {aq.isCorrect ? (
-            <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-          ) : (
-            <XCircle className="h-4 w-4 text-destructive shrink-0" />
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-2 text-sm">
-        <p>{aq.questionText}</p>
-        <p className="text-muted-foreground">
-          <span className="font-medium">Tu respuesta:</span>{" "}
-          {typeof aq.userAnswer === "number" && aq.options
-            ? aq.options[aq.userAnswer]
-            : String(aq.userAnswer)}
-        </p>
-        {!aq.isCorrect && (
-          <p className="text-sm">
-            <span className="font-medium text-green-600">Correcta:</span>{" "}
-            {typeof aq.correctIndex === "number" && aq.options?.length
-              ? aq.options[aq.correctIndex]
-              : String(aq.correctAnswer ?? "")}
-          </p>
-        )}
-      </CardContent>
-    </Card>
-  );
 }
 
 export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModalProps) {
@@ -67,20 +33,27 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
     });
   };
 
+  const resultExam = selectedAttempt
+    ? (typeof selectedAttempt.examId === "object" ? selectedAttempt.examId : exam)
+    : null;
+  const meta = resultExam
+    ? {
+        language: resultExam.language,
+        difficulty: resultExam.difficulty,
+        grammarTopics: resultExam.grammarTopics,
+        topic: resultExam.topic,
+      }
+    : null;
+
   return (
     <ModalNova
       open={open}
       onOpenChange={onOpenChange}
       title={exam ? `Intentos: ${exam.title}` : "Intentos"}
       size="2xl"
-      height="h-[85dvh]"
-      footer={
-        <Button variant="outline" onClick={() => onOpenChange(false)}>
-          Cerrar
-        </Button>
-      }
+      height="h-[90dvh]"
     >
-      <div className="px-2 sm:px-4 py-4 space-y-4">
+      <div className="px-2 sm:px-4 py-4 space-y-6 max-w-4xl mx-auto">
         {loading ? (
           <div className="space-y-3">
             <Skeleton className="h-12 w-full" />
@@ -90,63 +63,90 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
           <p className="text-center text-muted-foreground py-8">
             No hay intentos para este examen
           </p>
-        ) : (
+        ) : selectedAttempt ? (
           <>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="flex items-center gap-2 overflow-x-auto">
-                {attempts.map((a, i) => (
-                  <Button
-                    key={a._id}
-                    variant={selectedIndex === i ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedIndex(i)}
-                  >
-                    #{i + 1} {a.score}%
-                  </Button>
-                ))}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+              <div className="space-y-1">
+                <h2 className="text-xl font-bold tracking-tight">
+                  {resultExam?.title ?? exam?.title ?? "Intentos"}
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  Intento #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
+                </p>
               </div>
-              {selectedAttempt && (
-                <div className="text-sm text-muted-foreground shrink-0">
-                  {formatDate(selectedAttempt.completedAt)}
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="flex flex-col items-center justify-center rounded-xl border bg-card px-6 py-4 min-w-[100px]">
+                  <span
+                    className={cn(
+                      "text-3xl font-bold tabular-nums",
+                      selectedAttempt.score >= 70
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : selectedAttempt.score >= 50
+                          ? "text-amber-600 dark:text-amber-400"
+                          : "text-rose-600 dark:text-rose-400"
+                    )}
+                  >
+                    {selectedAttempt.score}%
+                  </span>
+                  <span className="text-xs font-medium text-muted-foreground mt-0.5">
+                    Puntuación
+                  </span>
                 </div>
-              )}
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
+                    disabled={selectedIndex === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
+                    }
+                    disabled={selectedIndex === attempts.length - 1}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
 
-            {selectedAttempt && (
-              <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
+              {attempts.map((a, i) => (
                 <Button
-                  variant="outline"
+                  key={a._id}
+                  variant={selectedIndex === i ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
-                  disabled={selectedIndex === 0}
+                  onClick={() => setSelectedIndex(i)}
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  #{i + 1} {a.score}%
                 </Button>
-                <Badge variant="secondary">Score: {selectedAttempt.score}%</Badge>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
-                  }
-                  disabled={selectedIndex === attempts.length - 1}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+              ))}
+            </div>
+
+            {meta && (
+              <ExamDetailBar
+                meta={meta}
+                questionCount={selectedAttempt.attemptQuestions.length}
+              />
             )}
 
-            {selectedAttempt && (
-              <ScrollArea className="h-[50vh] pr-4">
-                <div className="space-y-4 pb-4">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Resultados por pregunta</h3>
+              <ScrollArea className="h-[45vh] pr-4">
+                <div className="space-y-4 pb-8">
                   {selectedAttempt.attemptQuestions.map((aq, i) => (
-                    <AttemptDetailCard key={i} aq={aq} index={i} />
+                    <ExamAttemptResultCard key={i} aq={aq} index={i} />
                   ))}
                 </div>
               </ScrollArea>
-            )}
+            </div>
           </>
-        )}
+        ) : null}
       </div>
     </ModalNova>
   );
