@@ -1,10 +1,21 @@
+import { useRef } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Target, Volume2, Languages, FileText, BookOpen, GraduationCap } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/utils/common/classnames";
+
+const PRONUNCIATION_SECTIONS = [
+  { id: "quickref", label: "Chuleta Rápida", icon: Target },
+  { id: "vowels", label: "Vocales", icon: Volume2 },
+  { id: "consonants", label: "Consonantes", icon: Languages },
+  { id: "stress", label: "Acento y Reducción", icon: FileText },
+  { id: "orthography", label: "Ortografía → Sonido", icon: BookOpen },
+  { id: "practice", label: "Práctica y Variación", icon: GraduationCap },
+];
 
 // Helper function para colores de badges IPA
 const getIPABadgeColor = (ipa: string) => {
@@ -45,15 +56,55 @@ const getIPABadgeColor = (ipa: string) => {
 };
 
 export default function PronunciationGuidePage() {
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const scrollToSection = (id: string) => {
+    sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <div className="space-y-4 sm:space-y-6 lg:space-y-8 overflow-x-hidden max-w-full">
+    <div className="space-y-4 flex flex-col flex-1 min-h-0">
       <PageHeader
         title="Guía IPA"
         description="Pronunciación en inglés basado en IPA"
       />
 
-      {/* CHULETA RÁPIDA */}
-      <section id="quickref">
+      <div className="flex flex-1 min-h-0 gap-4">
+        {/* Sidebar - navegación fija, scroll propio */}
+        <Card className="w-56 shrink-0 flex flex-col overflow-hidden h-[calc(100vh-12rem)] min-h-[280px] sticky top-20 self-start">
+          <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
+            <div className="py-3 px-4 shrink-0 border-b">
+              <h3 className="text-sm font-medium flex items-center gap-2 text-foreground">
+                <Volume2 className="h-4 w-4 shrink-0" />
+                Secciones
+              </h3>
+            </div>
+            <ScrollArea className="flex-1 min-h-0">
+              <nav className="p-2 space-y-0.5">
+                {PRONUNCIATION_SECTIONS.map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    onClick={() => scrollToSection(id)}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-muted rounded-md transition-colors text-left"
+                  >
+                    <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="truncate">{label}</span>
+                  </button>
+                ))}
+              </nav>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        {/* Contenido principal */}
+        <Card className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <ScrollArea className="flex-1 h-[calc(100vh-12rem)] min-h-[400px]">
+            <div className="p-6 space-y-6 sm:space-y-8">
+              {/* CHULETA RÁPIDA */}
+              <section
+                id="quickref"
+                ref={(el) => { sectionRefs.current["quickref"] = el; }}
+              >
         <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -183,8 +234,11 @@ export default function PronunciationGuidePage() {
         </Card>
       </section>
 
-      {/* VOCALES */}
-      <section id="vowels">
+              {/* VOCALES */}
+              <section
+                id="vowels"
+                ref={(el) => { sectionRefs.current["vowels"] = el; }}
+              >
         <Card className="border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/20 dark:to-indigo-950/20">
           <CardHeader className="bg-gradient-to-r from-blue-100/50 to-indigo-100/50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -361,10 +415,13 @@ export default function PronunciationGuidePage() {
 
           </CardContent>
         </Card>
-      </section>
+              </section>
 
-      {/* CONSONANTES */}
-      <section id="consonants">
+              {/* CONSONANTES */}
+              <section
+                id="consonants"
+                ref={(el) => { sectionRefs.current["consonants"] = el; }}
+              >
         <Card className="border-2 border-orange-200 dark:border-orange-800 bg-gradient-to-br from-orange-50/50 to-red-50/50 dark:from-orange-950/20 dark:to-red-950/20">
           <CardHeader className="bg-gradient-to-r from-orange-100/50 to-red-100/50 dark:from-orange-900/30 dark:to-red-900/30 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -498,10 +555,13 @@ export default function PronunciationGuidePage() {
             </div>
           </CardContent>
         </Card>
-      </section>
+              </section>
 
-      {/* ACENTO Y REDUCCIÓN */}
-      <section id="stress">
+              {/* ACENTO Y REDUCCIÓN */}
+              <section
+                id="stress"
+                ref={(el) => { sectionRefs.current["stress"] = el; }}
+              >
         <Card className="border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 dark:from-amber-950/20 dark:to-yellow-950/20">
           <CardHeader className="bg-gradient-to-r from-amber-100/50 to-yellow-100/50 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -564,10 +624,13 @@ export default function PronunciationGuidePage() {
             </div>
           </CardContent>
         </Card>
-      </section>
+              </section>
 
-      {/* ORTOGRAFÍA */}
-      <section id="orthography">
+              {/* ORTOGRAFÍA */}
+              <section
+                id="orthography"
+                ref={(el) => { sectionRefs.current["orthography"] = el; }}
+              >
         <Card className="border-2 border-teal-200 dark:border-teal-800 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20">
           <CardHeader className="bg-gradient-to-r from-teal-100/50 to-cyan-100/50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -671,10 +734,13 @@ export default function PronunciationGuidePage() {
             </div>
           </CardContent>
         </Card>
-      </section>
+              </section>
 
-      {/* PRÁCTICA */}
-      <section id="practice">
+              {/* PRÁCTICA */}
+              <section
+                id="practice"
+                ref={(el) => { sectionRefs.current["practice"] = el; }}
+              >
         <Card className="border-2 border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20">
           <CardHeader className="bg-gradient-to-r from-violet-100/50 to-purple-100/50 dark:from-violet-900/30 dark:to-purple-900/30 rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl lg:text-2xl">
@@ -915,7 +981,11 @@ export default function PronunciationGuidePage() {
             </div>
           </CardContent>
         </Card>
-      </section>
+              </section>
+            </div>
+          </ScrollArea>
+        </Card>
+      </div>
     </div>
   );
 }
