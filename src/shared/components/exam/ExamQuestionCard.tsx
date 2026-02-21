@@ -44,7 +44,7 @@ export function ExamQuestionCard({ question: q, index }: ExamQuestionCardProps) 
                 key={i}
                 className={cn(
                   "pl-3 py-2 rounded-md border border-gray-300 dark:border-gray-600",
-                  i === q.correctIndex && "bg-primary/10 text-primary font-medium"
+                  (q.correctIndices?.includes(i) ?? i === q.correctIndex) && "bg-primary/10 text-primary font-medium"
                 )}
               >
                 {String.fromCharCode(65 + i)}. {opt}

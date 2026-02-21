@@ -51,7 +51,7 @@ export const examService = {
     return res.data.data as IExamAttempt;
   },
 
-  async submitAttempt(examId: string, attemptId: string, answers: (number | string)[]) {
+  async submitAttempt(examId: string, attemptId: string, answers: (number | string | number[])[]) {
     const res = await api.post(`/api/exams/${examId}/attempts/${attemptId}/submit`, {
       answers,
     });

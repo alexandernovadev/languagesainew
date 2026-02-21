@@ -41,7 +41,7 @@ export default function ExamAttemptPage() {
   const [attempt, setAttempt] = useState<IExamAttempt | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [answers, setAnswers] = useState<(number | string | null)[]>([]);
+  const [answers, setAnswers] = useState<(number | string | number[] | null)[]>([]);
   const [submittedAttempt, setSubmittedAttempt] = useState<IExamAttempt | null>(null);
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [timeLimitMinutes, setTimeLimitMinutes] = useState(0);
@@ -80,7 +80,9 @@ export default function ExamAttemptPage() {
           setShuffledOrder(draft.shuffledOrder);
         }
       } else {
-        const initial: (number | string | null)[] = examData.questions.map(() => null);
+        const initial: (number | string | number[] | null)[] = examData.questions.map((q) =>
+          q.type === "multiple" ? [] : null
+        );
         const tl = startOptions.timeLimitMinutes ?? 0;
         const shuffle = startOptions.shuffleQuestions ?? false;
         const order = shuffle
@@ -145,11 +147,11 @@ export default function ExamAttemptPage() {
       (async () => {
         setSubmitting(true);
         try {
-          const answersToSend = exam.questions.map((_, i) => answers[i] ?? "");
-          const numericOrString = answersToSend.map((a) =>
-            typeof a === "number" ? a : String(a ?? "")
+          const answersToSend = exam.questions.map((_, i) => answers[i] ?? (exam.questions[i].type === "multiple" ? [] : ""));
+          const normalized = answersToSend.map((a) =>
+            Array.isArray(a) ? a : typeof a === "number" ? a : String(a ?? "")
           );
-          const result = await examService.submitAttempt(id, attemptId, numericOrString);
+          const result = await examService.submitAttempt(id, attemptId, normalized);
           clearExamAttemptDraft(id, attemptId);
           setSubmittedAttempt(result);
           toast.success(`Tiempo agotado. Puntuación: ${result.score}%`);
@@ -176,7 +178,7 @@ export default function ExamAttemptPage() {
   }, [currentQuestionIndex, id, attemptId, startedAt, exam, answers, timeLimitMinutes, shuffledOrder]);
 
   const handleAnswerChange = useCallback(
-    (index: number, value: number | string) => {
+    (index: number, value: number | string | number[]) => {
       if (!id || !attemptId || !exam || startedAt == null) return;
       setAnswers((prev) => {
         const next = [...prev];
@@ -198,11 +200,11 @@ export default function ExamAttemptPage() {
     if (!id || !attemptId || !exam) return;
     setSubmitting(true);
     try {
-      const answersToSend = exam.questions.map((_, i) => answers[i] ?? ("" as string));
-      const numericOrString = answersToSend.map((a) =>
-        typeof a === "number" ? a : String(a ?? "")
+      const answersToSend = exam.questions.map((_, i) => answers[i] ?? (exam.questions[i].type === "multiple" ? [] : ""));
+      const normalized = answersToSend.map((a) =>
+        Array.isArray(a) ? a : typeof a === "number" ? a : String(a ?? "")
       );
-      const result = await examService.submitAttempt(id, attemptId, numericOrString);
+      const result = await examService.submitAttempt(id, attemptId, normalized);
       clearExamAttemptDraft(id, attemptId);
       setSubmittedAttempt(result);
       toast.success(`Examen completado. Puntuación: ${result.score}%`);
@@ -310,7 +312,9 @@ export default function ExamAttemptPage() {
   const currentAnswer = answers[originalIndex];
   const hasAnswer =
     currentAnswer != null &&
-    (typeof currentAnswer !== "string" || currentAnswer.trim() !== "");
+    (Array.isArray(currentAnswer)
+      ? currentAnswer.length > 0
+      : typeof currentAnswer !== "string" || currentAnswer.trim() !== "");
 
   return (
     <div className="flex flex-col min-h-[calc(100dvh-120px)] p-4 sm:p-6">

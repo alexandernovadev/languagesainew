@@ -19,13 +19,23 @@ interface ExamAttemptResultCardProps {
 
 export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps) {
   const hasOptions = aq.options && aq.options.length > 0;
-  const userAnswerIndex = typeof aq.userAnswer === "number" ? aq.userAnswer : -1;
+  const isMultipleSelect = aq.questionType === "multiple" && hasOptions;
+  const userAnswerIndices = Array.isArray(aq.userAnswer)
+    ? aq.userAnswer
+    : typeof aq.userAnswer === "number"
+      ? [aq.userAnswer]
+      : [];
+  const correctIndices = aq.correctIndices ?? (aq.correctIndex != null ? [aq.correctIndex] : []);
   const correctIndex = aq.correctIndex ?? -1;
   const userAnswerDisplay = hasOptions
-    ? aq.options![userAnswerIndex]
+    ? isMultipleSelect
+      ? userAnswerIndices.map((i) => aq.options![i]).filter(Boolean).join(", ") || "—"
+      : aq.options![userAnswerIndices[0] ?? -1] ?? "—"
     : String(aq.userAnswer || "—");
   const correctAnswerDisplay = hasOptions
-    ? aq.options![correctIndex]
+    ? isMultipleSelect
+      ? correctIndices.map((i) => aq.options![i]).filter(Boolean).join(", ") || "—"
+      : aq.options![correctIndex] ?? "—"
     : String(aq.correctAnswer ?? "—");
 
   const isPartial = aq.isPartial === true;
@@ -81,8 +91,8 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
             </p>
             <ul className="space-y-1.5">
               {aq.options!.map((opt, i) => {
-                const isSelected = i === userAnswerIndex;
-                const isCorrect = i === correctIndex;
+                const isSelected = isMultipleSelect ? userAnswerIndices.includes(i) : i === userAnswerIndices[0];
+                const isCorrect = isMultipleSelect ? correctIndices.includes(i) : i === correctIndex;
                 return (
                   <li
                     key={i}

@@ -7,7 +7,10 @@ export interface IExamQuestion {
   type: ExamQuestionType;
   text: string;
   options?: string[];
+  /** Single correct (unique/fillInBlank) */
   correctIndex?: number;
+  /** Multiple correct (multiple = select all that apply) */
+  correctIndices?: number[];
   correctAnswer?: string;
   grammarTopic: string;
   explanation: string;
@@ -34,8 +37,9 @@ export interface IAttemptQuestion {
   questionType: ExamQuestionType;
   options?: string[];
   correctIndex?: number;
+  correctIndices?: number[];
   correctAnswer?: string;
-  userAnswer: number | string;
+  userAnswer: number | number[] | string;
   isCorrect: boolean;
   aiFeedback?: string;
   chat: Array<{ role: string; content: string }>;

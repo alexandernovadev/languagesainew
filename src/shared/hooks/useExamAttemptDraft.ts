@@ -2,7 +2,7 @@ const STORAGE_KEY_PREFIX = "exam_attempt_";
 
 export interface ExamAttemptDraft {
   startedAt: number;
-  answers: (number | string | null)[];
+  answers: (number | string | number[] | null)[];
   timeLimitMinutes?: number;
   shuffleQuestions?: boolean;
   shuffledOrder?: number[];
