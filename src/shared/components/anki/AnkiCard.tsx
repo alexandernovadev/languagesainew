@@ -137,7 +137,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
             </div>
 
             {displayWord.IPA && (
-              <span className="text-lg font-mono text-muted-foreground bg-muted px-3 py-1 rounded">
+              <span className="text-[13px] font-mono text-muted-foreground bg-muted px-3 py-1 rounded sm:text-lg md:text-[13px]">
                 /{displayWord.IPA}/
               </span>
             )}
