@@ -132,7 +132,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
                   🐢
                 </button>
               </div>
-              <h2 className="text-5xl font-bold capitalize">{displayWord.word}</h2>
+              <h2 className="text-3xl font-bold capitalize lg:text-5xl">{displayWord.word}</h2>
 
             </div>
 

@@ -95,9 +95,8 @@ export function AnkiFilter({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" disabled={disabled}>
-          <SlidersHorizontal className="h-4 w-4 mr-2" />
-          Filtros
+        <Button variant="outline" size="icon" disabled={disabled} title="Filtros">
+          <SlidersHorizontal className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
