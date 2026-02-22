@@ -68,7 +68,7 @@ export default function AnkiGamePage() {
   const currentCard = cards[currentIndex];
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col flex-1 min-h-0 space-y-4">
       <PageHeader
         title="Juego Anki"
         description="Practica con tarjetas Anki"
@@ -83,7 +83,7 @@ export default function AnkiGamePage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center min-h-[50dvh]">
+        <div className="flex items-center justify-center min-h-[50vh]">
           <Card className="w-full max-w-2xl">
             <CardContent className="p-8">
               <Skeleton className="h-64 w-full mb-4" />
@@ -107,9 +107,9 @@ export default function AnkiGamePage() {
 
       {/* Cards Display */}
       {!loading && cards.length > 0 && currentCard && (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 flex-1 min-h-0">
           {/* Card Container */}
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-4xl flex-1 min-h-[50vh] flex flex-col">
             <AnkiCard
               word={currentCard}
               isFlipped={isFlipped}
