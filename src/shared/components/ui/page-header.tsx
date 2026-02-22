@@ -16,7 +16,7 @@ export function PageHeader({ title, description, actions, filters }: PageHeaderP
         <div className="flex-1 min-w-0">
           <h1 className="text-lg sm:text-xl md:text-3xl font-bold pt-4">{title}</h1>
           {description && (
-            <p className="text-muted-foreground mt-1 text-xl sm:text-base md:text-xl">{description}</p>
+            <p className="text-muted-foreground mt-1 text-xs sm:text-base md:text-xs">{description}</p>
           )}
         </div>
         {actions && <div className="flex gap-2 pt-4">{actions}</div>}
