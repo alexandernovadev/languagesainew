@@ -97,11 +97,11 @@ export function WordDetailTabs({
 
       <TabsContent 
         value="info" 
-        className="flex-1 overflow-y-auto mt-0 min-h-0 data-[state=inactive]:hidden"
+        className="flex-1 overflow-y-auto mt-0 min-h-0 flex flex-col data-[state=inactive]:hidden"
       >
         <div 
           ref={infoTabRef}
-          className="flex-1 overflow-y-auto min-h-0 h-full"
+          className="flex-1 overflow-y-auto min-h-0 flex flex-col"
         >
           <WordInfoTab
             word={word}

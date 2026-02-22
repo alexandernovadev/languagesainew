@@ -16,13 +16,13 @@ export function WordDefinitionSection({ word }: WordDefinitionSectionProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-2">
-        <div className="p-3 bg-muted/50 rounded-lg border-l-4 border-primary">
-          <p className="text-sm text-foreground leading-relaxed">
+        <div className="p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
+          <p className="text-base text-foreground leading-relaxed">
             {word.definition}
           </p>
         </div>
         {word.spanish?.definition && (
-          <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border-l-4 border-amber-500">
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border-l-4 border-amber-500">
             <div className="flex items-center gap-2 mb-1">
               <Languages className="h-3 w-3 text-amber-700 dark:text-amber-400" />
               <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase">

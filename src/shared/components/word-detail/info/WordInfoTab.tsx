@@ -41,7 +41,7 @@ export function WordInfoTab({
   onUpdateDifficulty,
 }: WordInfoTabProps) {
   return (
-    <div className="px-6 py-4 h-full space-y-3">
+    <div className="px-6 py-4 flex-1 min-h-0 space-y-3">
       <WordImageSection
         word={word}
         onRefresh={onRefreshImage}

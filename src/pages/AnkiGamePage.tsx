@@ -107,9 +107,9 @@ export default function AnkiGamePage() {
 
       {/* Cards Display */}
       {!loading && cards.length > 0 && currentCard && (
-        <div className="flex flex-col items-center gap-4 flex-1 min-h-0">
-          {/* Card Container */}
-          <div className="w-full max-w-4xl flex-1 min-h-[50vh] flex flex-col">
+        <div className="flex flex-col items-center justify-start gap-4 flex-1 min-h-0 overflow-auto">
+          {/* Card Container - ocupa el espacio disponible, tarjeta arriba */}
+          <div className="w-full max-w-4xl flex-1 min-h-[70vh] flex flex-col self-stretch">
             <AnkiCard
               word={currentCard}
               isFlipped={isFlipped}
