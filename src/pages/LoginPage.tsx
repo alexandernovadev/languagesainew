@@ -20,7 +20,11 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ username, password });
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+    setUsername(trimmedUsername);
+    setPassword(trimmedPassword);
+    await login({ username: trimmedUsername, password: trimmedPassword });
   };
 
   return (

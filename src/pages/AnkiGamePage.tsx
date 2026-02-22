@@ -83,7 +83,7 @@ export default function AnkiGamePage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="flex flex-1 min-h-0 items-center justify-center">
           <Card className="w-full max-w-2xl">
             <CardContent className="p-8">
               <Skeleton className="h-64 w-full mb-4" />
@@ -95,21 +95,23 @@ export default function AnkiGamePage() {
 
       {/* Empty State */}
       {!loading && cards.length === 0 && (
-        <Card className="w-full max-w-2xl mx-auto">
+        <div className="flex flex-1 min-h-0 items-center justify-center">
+          <Card className="w-full max-w-2xl mx-auto">
           <CardContent className="p-8 text-center">
             <p className="text-muted-foreground">No hay tarjetas disponibles</p>
             <Button onClick={loadCards} className="mt-4">
               Recargar
             </Button>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       )}
 
       {/* Cards Display */}
       {!loading && cards.length > 0 && currentCard && (
         <div className="flex flex-col items-center justify-start gap-4 flex-1 min-h-0 overflow-auto">
           {/* Card Container - ocupa el espacio disponible, tarjeta arriba */}
-          <div className="w-full max-w-4xl flex-1 min-h-[70dvh] flex flex-col self-stretch">
+          <div className="w-full max-w-4xl flex-1 min-h-0 flex flex-col self-stretch">
             <AnkiCard
               word={currentCard}
               isFlipped={isFlipped}
