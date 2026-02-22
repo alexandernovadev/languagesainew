@@ -53,7 +53,7 @@ export default function GrammarPage() {
 
       <div className="flex flex-1 min-h-0 gap-4">
         {/* Sidebar - categorías y temas, fijo en height, scroll propio */}
-        <Card className="w-64 shrink-0 flex flex-col overflow-hidden h-[calc(100vh-12rem)] min-h-[280px] sticky top-20 self-start">
+        <Card className="w-64 shrink-0 flex flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
           <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
             <div className="py-3 px-4 shrink-0 border-b">
               <h3 className="text-sm font-medium flex items-center gap-2 text-foreground">

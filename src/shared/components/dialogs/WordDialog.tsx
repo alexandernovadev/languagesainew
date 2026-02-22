@@ -227,7 +227,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
           : "Fill in the information to create a new word"
       }
       size="4xl"
-      height="h-[90vh]"
+      height="h-[90dvh]"
       footer={
         <>
           <Button

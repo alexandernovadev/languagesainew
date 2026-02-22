@@ -75,7 +75,7 @@ export function ExpressionFiltersModal({
       }
       description="Refina tu búsqueda de expresiones"
       size="2xl"
-      height="h-[80vh]"
+      height="h-[80dvh]"
       footer={
         <div className="flex gap-2 justify-between w-full">
           <Button

@@ -110,7 +110,7 @@ export function LectureFiltersModal({
       }
       description="Refina tu búsqueda de lecturas con múltiples filtros"
       size="3xl"
-      height="h-[80vh]"
+      height="h-[80dvh]"
       footer={
         <div className="flex gap-2 justify-between w-full">
           <Button

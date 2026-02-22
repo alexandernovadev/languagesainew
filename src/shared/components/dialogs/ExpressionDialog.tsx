@@ -145,7 +145,7 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
           : "Fill in the information to create a new expression."
       }
       size="3xl"
-      height="h-[90vh]"
+      height="h-[90dvh]"
       footer={
         <div className="flex gap-2">
           <Button

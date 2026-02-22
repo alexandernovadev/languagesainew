@@ -216,7 +216,7 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
           : "Completa la información para crear una nueva lectura"
       }
       size="4xl"
-      height="h-[90vh]"
+      height="h-[90dvh]"
       footer={
         <>
           <Button

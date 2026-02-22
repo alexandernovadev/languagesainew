@@ -71,7 +71,7 @@ export default function PronunciationGuidePage() {
 
       <div className="flex flex-1 min-h-0 gap-4">
         {/* Sidebar - navegación fija, scroll propio */}
-        <Card className="w-56 shrink-0 flex flex-col overflow-hidden h-[calc(100vh-12rem)] min-h-[280px] sticky top-20 self-start">
+        <Card className="w-56 shrink-0 flex flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
           <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
             <div className="py-3 px-4 shrink-0 border-b">
               <h3 className="text-sm font-medium flex items-center gap-2 text-foreground">
@@ -98,7 +98,7 @@ export default function PronunciationGuidePage() {
 
         {/* Contenido principal */}
         <Card className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <ScrollArea className="flex-1 h-[calc(100vh-12rem)] min-h-[400px]">
+          <ScrollArea className="flex-1 h-[calc(100dvh-12rem)] min-h-[400px]">
             <div className="p-6 space-y-6 sm:space-y-8">
               {/* CHULETA RÁPIDA */}
               <section
