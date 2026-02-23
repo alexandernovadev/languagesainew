@@ -227,11 +227,11 @@ export default function ExamAttemptPage() {
     const resultExam = typeof submittedAttempt.examId === "object" ? submittedAttempt.examId : exam;
     const meta = resultExam
       ? {
-          language: resultExam.language,
-          difficulty: resultExam.difficulty,
-          grammarTopics: resultExam.grammarTopics,
-          topic: resultExam.topic,
-        }
+        language: resultExam.language,
+        difficulty: resultExam.difficulty,
+        grammarTopics: resultExam.grammarTopics,
+        topic: resultExam.topic,
+      }
       : null;
 
     return (
@@ -318,24 +318,26 @@ export default function ExamAttemptPage() {
 
   return (
     <div className="flex flex-col min-h-[calc(100dvh-120px)] p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 shrink-0">
-        <PageHeader
-          title={exam.title}
-          description={`Pregunta ${currentQuestionIndex + 1} de ${questionCount}`}
-        />
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          <span
-            className={`text-lg font-mono font-medium tabular-nums ${
-              remainingMs != null && remainingMs < 60000 ? "text-destructive" : ""
-            }`}
+      <PageHeader
+        title={exam.title}
+      />
+      <div className="flex items-center justify-between">
+      <h6 className="text-sm text-muted-foreground">
+        {`Pregunta ${currentQuestionIndex + 1} de ${questionCount}`}
+      </h6>
+
+      <div className="flex items-center justify-between gap-2">
+
+        <span
+          className={`text-lg font-mono font-medium tabular-nums ${remainingMs != null && remainingMs < 60000 ? "text-destructive" : ""
+          }`}
           >
-            {remainingMs != null ? formatCountdown(remainingMs) : formatElapsed(elapsedMs)}
-          </span>
-          <Button variant="outline" size="sm" onClick={() => navigate("/exams")}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Salir
-          </Button>
-        </div>
+          {remainingMs != null ? formatCountdown(remainingMs) : formatElapsed(elapsedMs)}
+        </span>
+        <Button variant="outline" size="sm" onClick={() => navigate("/exams")}>
+          <ArrowLeft className="h-2 w-2" />
+        </Button>
+          </div>
       </div>
 
       <div className="flex-1 flex flex-col py-4">
