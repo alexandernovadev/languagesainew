@@ -78,19 +78,19 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
       size="2xl"
       height="h-[90dvh]"
     >
-      <div className="px-2 sm:px-4 py-4 space-y-6 max-w-4xl mx-auto">
+      <div className="px-2 sm:px-4 py-4 h-full flex flex-col min-h-0 max-w-4xl mx-auto">
         {loading ? (
-          <div className="space-y-3">
+          <div className="space-y-3 flex-shrink-0">
             <Skeleton className="h-12 w-full" />
             <Skeleton className="h-32 w-full" />
           </div>
         ) : attempts.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">
+          <p className="text-center text-muted-foreground py-8 flex-shrink-0">
             No hay intentos para este examen
           </p>
         ) : selectedAttempt ? (
           <>
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 flex-shrink-0">
               <div
                 className={cn(
                   "flex items-center gap-2 rounded-lg border px-3 py-1.5",
@@ -102,10 +102,9 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
                 )}
               >
                 <span className="text-xl font-bold tabular-nums">{selectedAttempt.score}%</span>
-                <span className="text-xs text-muted-foreground">Puntuación</span>
               </div>
               <span className="text-muted-foreground text-sm">
-                Intento #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
+                #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
               </span>
               <div className="flex items-center gap-1 ml-auto sm:ml-0">
                 <Button
@@ -138,15 +137,17 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
             </div>
 
             {meta && (
-              <ExamDetailBar
-                meta={meta}
-                questionCount={selectedAttempt.attemptQuestions.length}
-              />
+              <div className="flex-shrink-0">
+                <ExamDetailBar
+                  meta={meta}
+                  questionCount={selectedAttempt.attemptQuestions.length}
+                />
+              </div>
             )}
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Resultados por pregunta</h3>
-              <ScrollArea className="h-[45dvh] pr-4">
+            <div className="flex flex-col flex-1 min-h-0 space-y-4">
+              <h3 className="text-lg font-semibold flex-shrink-0">Resultados por pregunta</h3>
+              <ScrollArea className="flex-1 min-h-0 pr-4">
                 <div className="space-y-4 pb-8">
                   {selectedAttempt.attemptQuestions.map((aq, i) => (
                     <ExamAttemptResultCard key={i} aq={aq} index={i} />
