@@ -83,11 +83,6 @@ export function ExamDetailBar({ meta, questionCount }: ExamDetailBarProps) {
           </Tooltip>
         </TooltipProvider>
       )}
-      {meta.topic?.trim() && (
-        <span className="text-sm text-muted-foreground">
-          Tema: {meta.topic}
-        </span>
-      )}
     </div>
   );
 }
