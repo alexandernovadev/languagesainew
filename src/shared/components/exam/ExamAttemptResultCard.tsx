@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import type { IAttemptQuestion } from "@/types/models";
@@ -41,14 +40,13 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
   const isPartial = aq.isPartial === true;
 
   return (
-    <Card className="overflow-hidden border-white">
-      <CardHeader className="pb-3 pt-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1 min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <CardTitle className="text-base font-semibold leading-tight">
-                Pregunta {index + 1}
-              </CardTitle>
+    <div className="space-y-4 border-t border-gray-200 dark:border-gray-800 pt-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1 min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-base font-semibold leading-tight">
+              Pregunta {index + 1}
+            </h3>
               <span className="text-muted-foreground">|</span>
               <Badge variant="outline" className="text-xs">
                 {QUESTION_TYPE_LABELS[aq.questionType] ?? aq.questionType}
@@ -81,9 +79,8 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
               </>
             )}
           </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4 pt-0">
+      </div>
+      <div className="space-y-4">
         {hasOptions ? (
           <div className="space-y-1.5">
             <p className="text-xs font-medium text-muted-foreground mb-2">
@@ -170,7 +167,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
             />
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -38,7 +38,7 @@ export function TopicGeneratorSection({
     : "Generar Tema Aleatorio";
 
   return (
-    <div className="relative space-y-4 p-4 border rounded-lg bg-card">
+    <div className="relative space-y-4 p-4 border-t border-gray-200 dark:border-gray-800">
       {/* Botón flotante de configuración */}
       <Button
         variant="outline"

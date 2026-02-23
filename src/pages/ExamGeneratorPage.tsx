@@ -1,5 +1,4 @@
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { useExamGenerator } from "@/shared/hooks/useExamGenerator";
 import { ExamParamsTab } from "@/shared/components/exam/ExamParamsTab";
 import { ExamLoadingTab } from "@/shared/components/exam/ExamLoadingTab";
@@ -88,8 +87,7 @@ export default function ExamGeneratorPage() {
         </div>
       </div>
 
-      <Card>
-        <CardContent className="pt-6">
+      <div className="space-y-6 border-t border-gray-200 dark:border-gray-800 pt-6">
           {step === 1 && (
             <ExamParamsTab
               params={params}
@@ -113,8 +111,7 @@ export default function ExamGeneratorPage() {
               isSaving={isSaving}
             />
           )}
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

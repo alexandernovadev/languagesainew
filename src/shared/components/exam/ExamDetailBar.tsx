@@ -84,9 +84,9 @@ export function ExamDetailBar({ meta, questionCount }: ExamDetailBarProps) {
         </TooltipProvider>
       )}
       {meta.topic?.trim() && (
-        <Badge variant="outline" className="font-normal">
+        <span className="text-sm text-muted-foreground">
           Tema: {meta.topic}
-        </Badge>
+        </span>
       )}
     </div>
   );
