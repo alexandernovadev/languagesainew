@@ -183,6 +183,14 @@ export const grammarGuideContent: Record<string, GrammarGuideEntry> = {
       "We should leave early.",
     ],
   },
+  "past-modals": {
+    structure: `<p class="mb-2"><code class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded text-xs">could have</code>, <code class="bg-blue-500/15 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs">would have</code>, <code class="bg-amber-500/15 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded text-xs">should have</code>, <code class="bg-rose-500/15 text-rose-700 dark:text-rose-300 px-1.5 py-0.5 rounded text-xs">must have</code>, <code class="bg-violet-500/15 text-violet-700 dark:text-violet-300 px-1.5 py-0.5 rounded text-xs">might have</code> + past participle</p><ul class="list-disc ml-4 space-y-1 text-sm"><li>Express possibility, obligation, or advice about the past</li></ul>`,
+    examples: [
+      "She could have been at home.",
+      "You should have told me earlier.",
+      "He must have left already.",
+    ],
+  },
   "auxiliary-verbs": {
     structure: `<p class="mb-2"><code class="bg-emerald-500/15 px-1.5 py-0.5 rounded text-xs">do/does/did</code>: questions, negation, emphasis</p><p class="mb-2"><code class="bg-blue-500/15 px-1.5 py-0.5 rounded text-xs">be</code>: passive, continuous</p><p><code class="bg-amber-500/15 px-1.5 py-0.5 rounded text-xs">have</code>: perfect tenses</p>`,
     examples: [
@@ -261,6 +269,14 @@ export const grammarGuideContent: Record<string, GrammarGuideEntry> = {
       "The keys are on the table.",
       "I'll see you at 3pm.",
       "She's interested in music.",
+    ],
+  },
+  "prepositions-of-time": {
+    structure: `<p class="mb-2"><code class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded text-xs">at</code>: clock times, points (at 5pm, at noon)</p><p class="mb-2"><code class="bg-blue-500/15 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs">on</code>: days, dates (on Monday, on 15th)</p><p><code class="bg-amber-500/15 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded text-xs">in</code>: months, years, seasons (in June, in 2024)</p>`,
+    examples: [
+      "I wake up at 7am every day.",
+      "The meeting is on Tuesday.",
+      "We met in the summer of 2023.",
     ],
   },
   "gerunds-infinitives": {
