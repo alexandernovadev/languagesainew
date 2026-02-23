@@ -90,60 +90,50 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
           </p>
         ) : selectedAttempt ? (
           <>
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">
-                  Intento #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
-                </p>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <div
+                className={cn(
+                  "flex items-center gap-2 rounded-lg border px-3 py-1.5",
+                  selectedAttempt.score >= 70
+                    ? "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30"
+                    : selectedAttempt.score >= 50
+                      ? "text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/30"
+                      : "text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/30"
+                )}
+              >
+                <span className="text-xl font-bold tabular-nums">{selectedAttempt.score}%</span>
+                <span className="text-xs text-muted-foreground">Puntuación</span>
               </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <div className="flex flex-col items-center justify-center rounded-xl border bg-card px-6 py-4 min-w-[100px]">
-                  <span
-                    className={cn(
-                      "text-3xl font-bold tabular-nums",
-                      selectedAttempt.score >= 70
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : selectedAttempt.score >= 50
-                          ? "text-amber-600 dark:text-amber-400"
-                          : "text-rose-600 dark:text-rose-400"
-                    )}
-                  >
-                    {selectedAttempt.score}%
-                  </span>
-                  <span className="text-xs font-medium text-muted-foreground mt-0.5">
-                    Puntuación
-                  </span>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex gap-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
-                      disabled={selectedIndex === 0}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
-                      }
-                      disabled={selectedIndex === attempts.length - 1}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDeleteClick}
-                    className="text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+              <span className="text-muted-foreground text-sm">
+                Intento #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
+              </span>
+              <div className="flex items-center gap-1 ml-auto sm:ml-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
+                  disabled={selectedIndex === 0}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
+                  }
+                  disabled={selectedIndex === attempts.length - 1}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDeleteClick}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 
