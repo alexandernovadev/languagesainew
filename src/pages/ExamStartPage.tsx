@@ -86,7 +86,7 @@ export default function ExamStartPage() {
       />
       <ExamDetailBar meta={meta} questionCount={exam.questions.length} />
 
-      <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
+      <div className="space-y-4">
         <h3 className="font-medium text-sm">Opciones</h3>
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="space-y-2">
