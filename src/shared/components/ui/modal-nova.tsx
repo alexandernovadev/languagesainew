@@ -92,7 +92,7 @@ export function ModalNova({
           "relative z-50 w-full mx-4 flex flex-col mb-4",
           sizeClasses[size],
           height,
-          "bg-background rounded-xl shadow-2xl border border-border",
+          "bg-red-500 rounded-xl shadow-2xl border border-border",
           "animate-in fade-in-0 zoom-in-95 duration-200"
         )}
         role="dialog"
