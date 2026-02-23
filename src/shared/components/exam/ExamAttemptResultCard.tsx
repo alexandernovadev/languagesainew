@@ -137,7 +137,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                 {userAnswerDisplay}
               </p>
             </div>
-            {!aq.isCorrect && (
+            {(aq.questionType === "translateText" || !aq.isCorrect) && (
               <div className="rounded-md border border-border bg-muted/30 p-3">
                 <p className="text-xs font-medium text-muted-foreground mb-1.5">
                   Respuesta correcta
