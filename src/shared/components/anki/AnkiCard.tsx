@@ -132,17 +132,17 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
                   🐢
                 </button>
               </div>
-              <h2 className="text-3xl font-bold capitalize lg:text-5xl">{displayWord.word}</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold capitalize">{displayWord.word}</h2>
 
             </div>
 
             {displayWord.IPA && (
-              <span className="text-[13px] font-mono text-muted-foreground bg-muted px-3 py-1 rounded sm:text-lg md:text-[13px]">
+              <span className="text-[13px] md:text-base font-mono text-muted-foreground bg-muted px-3 py-1 rounded">
                 /{displayWord.IPA}/
               </span>
             )}
 
-            <p className="text-sm text-muted-foreground mt-6">
+            <p className="text-sm md:text-base text-muted-foreground mt-6">
               Click para voltear
             </p>
           </CardContent>

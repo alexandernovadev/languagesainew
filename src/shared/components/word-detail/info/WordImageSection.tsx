@@ -33,7 +33,7 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
           ) : (
             <div className="flex flex-col items-center justify-center text-muted-foreground">
               <ImageIcon className="h-16 w-16 mb-2 opacity-50" />
-              <p className="text-sm">Sin imagen</p>
+              <p className="text-sm md:text-base">Sin imagen</p>
             </div>
           )}
 

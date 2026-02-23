@@ -15,7 +15,7 @@ export function WordCodeSwitchingSection({ word, onRefresh, loading }: WordCodeS
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
             <Languages className="h-4 w-4 text-primary" />
             Code-Switching
           </CardTitle>
@@ -39,17 +39,17 @@ export function WordCodeSwitchingSection({ word, onRefresh, loading }: WordCodeS
                 key={index}
                 className="flex items-start gap-2 p-2 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-lg border border-purple-200/50 dark:border-purple-800/50 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"
               >
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-semibold mt-0.5">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs md:text-sm font-semibold mt-0.5">
                   {index + 1}
                 </span>
-                <p className="text-sm text-foreground flex-1 leading-relaxed">{example}</p>
+                <p className="text-sm md:text-base text-foreground flex-1 leading-relaxed">{example}</p>
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center py-4 text-muted-foreground">
             <Languages className="h-8 w-8 mx-auto mb-1 opacity-50" />
-            <p className="text-xs">No hay ejemplos de code-switching disponibles</p>
+            <p className="text-xs md:text-sm">No hay ejemplos de code-switching disponibles</p>
           </div>
         )}
       </CardContent>

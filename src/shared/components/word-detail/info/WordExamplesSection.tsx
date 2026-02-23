@@ -24,7 +24,7 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
             <FileText className="h-4 w-4 text-primary" />
             Ejemplos
           </CardTitle>
@@ -48,10 +48,10 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
                 key={index}
                 className="flex items-start gap-2 p-2 bg-muted/50 rounded-lg border border-border/50 hover:border-border transition-colors"
               >
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold mt-0.5">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs md:text-sm font-semibold mt-0.5">
                   {index + 1}
                 </span>
-                <p className="text-sm text-foreground flex-1 leading-relaxed">{example}</p>
+                <p className="text-sm md:text-base text-foreground flex-1 leading-relaxed">{example}</p>
                 <button
                   type="button"
                   onClick={() => speak(example)}
@@ -66,7 +66,7 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
         ) : (
           <div className="text-center py-4 text-muted-foreground">
             <FileText className="h-8 w-8 mx-auto mb-1 opacity-50" />
-            <p className="text-xs">No hay ejemplos disponibles</p>
+            <p className="text-xs md:text-sm">No hay ejemplos disponibles</p>
           </div>
         )}
       </CardContent>

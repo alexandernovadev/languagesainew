@@ -25,7 +25,7 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
             <Hash className="h-4 w-4 text-primary" />
             Sinónimos
           </CardTitle>
@@ -48,7 +48,7 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
               <Badge
                 key={index}
                 variant="secondary"
-                className="text-xs px-2.5 py-1 hover:bg-secondary/80 transition-colors cursor-default flex items-center gap-1 pr-1"
+                className="text-xs md:text-sm px-2.5 py-1 hover:bg-secondary/80 transition-colors cursor-default flex items-center gap-1 pr-1"
               >
                 <span>{synonym}</span>
                 <button
@@ -65,7 +65,7 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
         ) : (
           <div className="text-center py-4 text-muted-foreground">
             <Hash className="h-8 w-8 mx-auto mb-1 opacity-50" />
-            <p className="text-xs">No hay sinónimos disponibles</p>
+            <p className="text-xs md:text-sm">No hay sinónimos disponibles</p>
           </div>
         )}
       </CardContent>

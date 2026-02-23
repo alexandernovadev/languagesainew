@@ -16,7 +16,7 @@ export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionP
     <Card>
       <CardHeader className="pb-2 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
             <Tag className="h-4 w-4 text-primary" />
             Tipos Gramaticales
           </CardTitle>
@@ -48,7 +48,7 @@ export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionP
         ) : (
           <div className="text-center py-4 text-muted-foreground">
             <Tag className="h-8 w-8 mx-auto mb-1 opacity-50" />
-            <p className="text-xs">No hay tipos disponibles</p>
+            <p className="text-xs md:text-sm">No hay tipos disponibles</p>
           </div>
         )}
       </CardContent>
