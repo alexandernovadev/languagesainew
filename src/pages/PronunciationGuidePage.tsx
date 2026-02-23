@@ -1,9 +1,11 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import { Target, Volume2, Languages, FileText, BookOpen, GraduationCap } from "lucide-react";
+import { Button } from "@/shared/components/ui/button";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { Target, Volume2, Languages, FileText, BookOpen, GraduationCap, Menu } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/utils/common/classnames";
@@ -57,9 +59,11 @@ const getIPABadgeColor = (ipa: string) => {
 
 export default function PronunciationGuidePage() {
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [sectionsModalOpen, setSectionsModalOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
     sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setSectionsModalOpen(false);
   };
 
   return (
@@ -70,8 +74,8 @@ export default function PronunciationGuidePage() {
       />
 
       <div className="flex flex-1 min-h-0 gap-4">
-        {/* Sidebar - navegación fija, scroll propio */}
-        <Card className="w-56 shrink-0 flex flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
+        {/* Sidebar - navegación fija, solo en desktop (lg+) */}
+        <Card className="hidden lg:flex w-56 shrink-0 flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
           <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
             <div className="py-3 px-4 shrink-0 border-b">
               <h3 className="text-sm font-medium flex items-center gap-2 text-foreground">
@@ -986,6 +990,40 @@ export default function PronunciationGuidePage() {
           </ScrollArea>
         </Card>
       </div>
+
+      {/* Botón flotante para secciones - solo en mobile/tablet */}
+      <Button
+        variant="default"
+        size="icon"
+        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full shadow-lg lg:hidden"
+        onClick={() => setSectionsModalOpen(true)}
+        aria-label="Abrir secciones"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+
+      {/* Modal de secciones - mobile/tablet */}
+      <ModalNova
+        open={sectionsModalOpen}
+        onOpenChange={setSectionsModalOpen}
+        title="Secciones"
+        description="Elige una sección para navegar"
+        size="sm"
+        height="h-auto max-h-[70dvh]"
+      >
+        <nav className="p-4 space-y-0.5">
+          {PRONUNCIATION_SECTIONS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className="flex w-full items-center gap-2 px-3 py-2.5 text-sm font-medium hover:bg-muted rounded-md transition-colors text-left"
+            >
+              <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+      </ModalNova>
     </div>
   );
 }

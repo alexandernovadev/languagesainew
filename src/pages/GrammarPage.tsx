@@ -8,11 +8,13 @@ function escapeHtml(s: string) {
     .replace(/"/g, "&quot;");
 }
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { Button } from "@/shared/components/ui/button";
+import { ModalNova } from "@/shared/components/ui/modal-nova";
 import { grammarTopicsJson } from "@/data/bussiness/en";
 import { grammarGuideContent } from "@/data/bussiness/en/grammarGuideContent";
-import { BookText, ChevronDown, ChevronRight } from "lucide-react";
+import { BookText, ChevronDown, ChevronRight, Menu } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 
 export default function GrammarPage() {
@@ -22,6 +24,12 @@ export default function GrammarPage() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(
     grammarTopicsJson[0]?.children?.[0]?.value ?? null
   );
+  const [topicsModalOpen, setTopicsModalOpen] = useState(false);
+
+  const selectTopicAndClose = (value: string) => {
+    setSelectedTopic(value);
+    setTopicsModalOpen(false);
+  };
 
   const toggleCategory = (value: string) => {
     setExpandedCategories((prev) => {
@@ -52,8 +60,8 @@ export default function GrammarPage() {
       />
 
       <div className="flex flex-1 min-h-0 gap-4">
-        {/* Sidebar - categorías y temas, fijo en height, scroll propio */}
-        <Card className="w-64 shrink-0 flex flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
+        {/* Sidebar - categorías y temas, solo en desktop (lg+) */}
+        <Card className="hidden lg:flex w-64 shrink-0 flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
           <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
             <div className="py-3 px-4 shrink-0 border-b">
               <h3 className="text-sm font-medium flex items-center gap-2 text-foreground">
@@ -166,6 +174,63 @@ export default function GrammarPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Botón flotante para temas - solo en mobile/tablet */}
+      <Button
+        variant="default"
+        size="icon"
+        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full shadow-lg lg:hidden"
+        onClick={() => setTopicsModalOpen(true)}
+        aria-label="Abrir temas"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+
+      {/* Modal de temas - mobile/tablet */}
+      <ModalNova
+        open={topicsModalOpen}
+        onOpenChange={setTopicsModalOpen}
+        title="Temas"
+        description="Elige un tema de gramática"
+        size="sm"
+        height="h-auto max-h-[70dvh]"
+      >
+        <div className="p-4 space-y-0.5 overflow-y-auto">
+          {grammarTopicsJson.map((category) => (
+            <div key={category.value}>
+              <button
+                onClick={() => toggleCategory(category.value)}
+                className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-muted rounded-md transition-colors"
+              >
+                {expandedCategories.has(category.value) ? (
+                  <ChevronDown className="h-4 w-4 shrink-0" />
+                ) : (
+                  <ChevronRight className="h-4 w-4 shrink-0" />
+                )}
+                <span className="truncate">{category.label}</span>
+              </button>
+              {expandedCategories.has(category.value) && (
+                <div className="ml-4 pl-2 border-l border-border space-y-0.5">
+                  {category.children.map((topic) => (
+                    <button
+                      key={topic.value}
+                      onClick={() => selectTopicAndClose(topic.value)}
+                      className={cn(
+                        "w-full text-left px-3 py-2 text-sm rounded-md transition-colors",
+                        selectedTopic === topic.value
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {topic.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </ModalNova>
     </div>
   );
 }
