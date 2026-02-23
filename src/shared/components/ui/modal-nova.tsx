@@ -89,7 +89,7 @@ export function ModalNova({
       <div
         ref={modalRef}
         className={cn(
-          "relative z-50 w-full mx-4 flex flex-col mb-4",
+          "relative z-50 mx-4 h-[90dvh] flex-col mb-4",
           sizeClasses[size],
           "bg-red-500 rounded-xl shadow-2xl border border-border",
           "animate-in fade-in-0 zoom-in-95 duration-200"
