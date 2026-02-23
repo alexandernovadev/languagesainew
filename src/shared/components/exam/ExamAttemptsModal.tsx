@@ -78,7 +78,7 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
       size="2xl"
       height="h-[90dvh]"
     >
-      <div className="px-2 sm:px-4 py-4 h-full flex flex-col min-h-0 max-w-4xl mx-auto">
+      <div className="px-2 sm:px-4 pt-4 h-full flex flex-col min-h-0 max-w-4xl mx-auto">
         {loading ? (
           <div className="space-y-3 flex-shrink-0">
             <Skeleton className="h-12 w-full" />
