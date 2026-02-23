@@ -120,7 +120,7 @@ export default function SystemInfoPage() {
                 <InfoBlock label="Estado" value={<Badge variant="default">En línea</Badge>} />
                 <InfoBlock label="Ambiente" value={<Badge variant={getEnvironmentVariant(systemInfo.environment)}>{getEnvironmentLabel(systemInfo.environment)}</Badge>} />
                 <InfoBlock label="Versión" value={<span className="font-mono text-sm">{systemInfo.version}</span>} />
-                <InfoBlock label="Fecha" value={formatDateTimeSpanish(systemInfo.date)} />
+                <InfoBlock label="Último deploy" value={formatDateTimeSpanish(systemInfo.date)} />
               </div>
             </CardContent>
           </Card>

@@ -176,7 +176,7 @@ export const grammarGuideContent: Record<string, GrammarGuideEntry> = {
     ],
   },
   "modal-verbs": {
-    structure: `<p class="mb-2"><code class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded text-xs">can, could, may, might, must, shall, should, will, would</code> + base verb</p><ul class="list-disc ml-4 space-y-1 text-sm"><li>No <code class="bg-rose-500/15 px-1 rounded text-xs">-s</code> for 3rd person, no infinitive</li></ul>`,
+    structure: `<p class="mb-2"><code class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded text-xs">can, could, may, might, shall, should, will, would, must</code> + base verb</p><ul class="list-disc ml-4 space-y-1 text-sm"><li>No <code class="bg-rose-500/15 px-1 rounded text-xs">-s</code> for 3rd person, no infinitive</li></ul>`,
     examples: [
       "You must wear a seatbelt.",
       "She can speak three languages.",
