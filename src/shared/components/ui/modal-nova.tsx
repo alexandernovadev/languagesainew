@@ -10,8 +10,8 @@ interface ModalNovaProps {
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   height?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
 }
 
 export function ModalNova({
@@ -78,10 +78,10 @@ export function ModalNova({
 
   // Portal directo y correcto usando el contenedor específico
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Overlay con backdrop */}
       <div 
-        className="fixed inset-0 bg-green-400 animate-in fade-in-0 duration-200 h-full"
+        className="fixed inset-0 bg-black/80 animate-in fade-in-0 duration-200"
         onClick={handleOverlayClick}
       />
       
@@ -89,9 +89,10 @@ export function ModalNova({
       <div
         ref={modalRef}
         className={cn(
-          "relative z-50 mx-4 h-[90dvh] flex-col mb-4",
+          "relative z-50 w-full mx-4 flex flex-col mb-4",
           sizeClasses[size],
-          "bg-red-500 rounded-xl shadow-2xl border border-border",
+          height,
+          "bg-background rounded-xl shadow-2xl border border-border",
           "animate-in fade-in-0 zoom-in-95 duration-200"
         )}
         role="dialog"
@@ -129,7 +130,7 @@ export function ModalNova({
         )}
 
         {/* Contenido Scrollable */}
-        <div className="flex-1 overflow-y-auto min-h-0 mb-4">{children}</div>
+        <div className="h-[calc(100%-100px)] overflow-y-auto min-h-0 mb-4">{children}</div>
 
         {/* Footer Fijo */}
         {footer && (
