@@ -10,8 +10,8 @@ interface ModalNovaProps {
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  height?: string;
   size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  height?: string;
 }
 
 export function ModalNova({
@@ -130,7 +130,7 @@ export function ModalNova({
         )}
 
         {/* Contenido Scrollable */}
-        <div className="h-[90dvh] overflow-y-auto mb-4">{children}</div>
+        <div className="flex-1 overflow-y-auto min-h-0 mb-4">{children}</div>
 
         {/* Footer Fijo */}
         {footer && (
