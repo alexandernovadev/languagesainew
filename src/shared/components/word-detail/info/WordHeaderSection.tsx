@@ -71,12 +71,12 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
               )}
             </div>
             
-            {/* Botones de dificultad */}
+            {/* Botones de dificultad - usamos variantes compatibles con Button (easy=default, medium=yellow, hard=destructive) */}
             {onUpdateDifficulty && (
               <div className="flex gap-2 mt-3">
                 <Button
                   size="sm"
-                  variant={getDifficultyVariant('easy')}
+                  variant="default"
                   disabled={word.difficulty === 'easy'}
                   onClick={() => onUpdateDifficulty('easy')}
                   className="text-xs md:text-sm"
@@ -85,7 +85,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
                 </Button>
                 <Button
                   size="sm"
-                  variant={getDifficultyVariant('medium')}
+                  variant="yellow"
                   disabled={word.difficulty === 'medium'}
                   onClick={() => onUpdateDifficulty('medium')}
                   className="text-xs md:text-sm"
@@ -94,7 +94,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
                 </Button>
                 <Button
                   size="sm"
-                  variant={getDifficultyVariant('hard')}
+                  variant="destructive"
                   disabled={word.difficulty === 'hard'}
                   onClick={() => onUpdateDifficulty('hard')}
                   className="text-xs md:text-sm"
