@@ -43,11 +43,11 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
     <div className="space-y-4 border-t border-gray-200 dark:border-gray-800 pt-4 px-2">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
-          <h3 className="text-base font-semibold leading-tight">
+          <h3 className="text-sm font-semibold leading-tight">
             Pregunta {index + 1}
           </h3>
           <span className="text-muted-foreground">|</span>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-[10px]">
             {QUESTION_TYPE_LABELS[aq.questionType] ?? aq.questionType}
           </Badge>
         </div>
@@ -55,7 +55,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
             variant={
               aq.isCorrect ? "emerald" : isPartial ? "secondary" : "destructive"
             }
-            className="shrink-0"
+            className="shrink-0 text-[10px]"
           >
             {aq.isCorrect ? (
               <>
@@ -92,7 +92,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                   <li
                     key={i}
                     className={cn(
-                      "flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm border",
+                      "flex items-center justify-between gap-2 rounded-md px-1 py-2 text-sm border",
                       isSelected && isCorrect && "bg-emerald-500/10 border-emerald-500/30",
                       isSelected && !isCorrect && "bg-red-500/10 border-red-500/30",
                       !isSelected && isCorrect && "bg-emerald-500/5 border-emerald-500/20",
@@ -104,7 +104,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
                     </span>
                     <span className="flex gap-1.5 shrink-0">
                       {isSelected && (
-                        <Badge variant="blue">seleccionada</Badge>
+                        <Badge variant="blue">Tu</Badge>
                       )}
                       {isCorrect && (
                         <Badge variant="emerald">✓</Badge>
@@ -151,9 +151,9 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
         )}
 
         {aq.aiFeedback && (
-          <div className="rounded-lg border border-border bg-muted/30 p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <MessageSquare className="h-4 w-4 text-primary" />
+          <div className="border-t border-gray-200 dark:border-gray-800 pt-2">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <MessageSquare className="h-3.5 w-3.5 text-primary" />
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                 Feedback IA
               </p>
@@ -161,7 +161,7 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
             <MarkdownRenderer
               content={aq.aiFeedback}
               variant="chat"
-              className="text-sm [&_ul]:mt-2 [&_ol]:mt-2 [&_blockquote]:mt-2"
+              className="text-[10px] [&_*]:!text-[10px] [&_p]:mb-1 [&_ul]:mt-1 [&_ol]:mt-1 [&_blockquote]:mt-1"
             />
           </div>
         )}

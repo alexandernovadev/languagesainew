@@ -90,49 +90,53 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
           </p>
         ) : selectedAttempt ? (
           <>
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 flex-shrink-0">
-              <div
-                className={cn(
-                  "flex items-center gap-2 rounded-lg border px-3 py-1.5",
-                  selectedAttempt.score >= 70
-                    ? "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30"
-                    : selectedAttempt.score >= 50
-                      ? "text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/30"
-                      : "text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/30"
-                )}
-              >
-                <span className="text-xl font-bold tabular-nums">{selectedAttempt.score}%</span>
-              </div>
-              <span className="text-muted-foreground text-sm">
+            <div className="flex flex-col gap-1.5 flex-shrink-0">
+              <span className="text-xs font-medium">
                 #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
               </span>
-              <div className="flex items-center gap-1 ml-auto sm:ml-0">
+              <div className="flex items-center justify-between w-full">
+                <div
+                  className={cn(
+                    "inline-flex items-center rounded-md border px-2 py-1 text-sm w-fit",
+                    selectedAttempt.score >= 70
+                      ? "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30"
+                      : selectedAttempt.score >= 50
+                        ? "text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/30"
+                        : "text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/30"
+                  )}
+                >
+                  <span className="font-bold tabular-nums">{selectedAttempt.score}%</span>
+                </div>
+                <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="icon"
+                  className="h-7 w-7"
                   onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
                   disabled={selectedIndex === 0}
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="icon"
+                  className="h-7 w-7"
                   onClick={() =>
                     setSelectedIndex((i) => Math.min(attempts.length - 1, i + 1))
                   }
                   disabled={selectedIndex === attempts.length - 1}
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="icon"
+                  className="h-7 w-7 text-destructive hover:text-destructive"
                   onClick={handleDeleteClick}
-                  className="text-destructive hover:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
+                </div>
               </div>
             </div>
 

@@ -53,22 +53,22 @@ export function ExamDetailBar({ meta, questionCount }: ExamDetailBarProps) {
   const grammarTopicLabels = meta.grammarTopics.map((v) => getTopicLabel(grammarTopicsData, v));
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-4 py-3">
-      <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
-      <Badge variant="secondary" className="font-normal">
+    <div className="flex flex-wrap items-center mt-2 gap-1.5 border-t border-gray-200 dark:border-gray-800 pt-3 pb-1">
+      <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+      <Badge variant="secondary" className="font-normal text-[10px]">
         Nivel: {diffLabel}
       </Badge>
-      <Badge variant="secondary" className="font-normal">
+      <Badge variant="secondary" className="font-normal text-[10px]">
         {questionCount} preguntas
       </Badge>
-      <Badge variant="secondary" className="font-normal">
+      <Badge variant="secondary" className="font-normal text-[10px]">
         Idioma: {langLabel}
       </Badge>
       {meta.grammarTopics.length > 0 && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Badge variant="outline" className="font-normal cursor-help">
+              <Badge variant="outline" className="font-normal cursor-help text-[10px]">
                 {meta.grammarTopics.length} tema{meta.grammarTopics.length > 1 ? "s" : ""} gramática
               </Badge>
             </TooltipTrigger>
