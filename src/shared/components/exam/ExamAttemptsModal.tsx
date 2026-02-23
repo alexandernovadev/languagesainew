@@ -92,9 +92,6 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
           <>
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
               <div className="space-y-1">
-                <h2 className="text-xl font-bold tracking-tight">
-                  {resultExam?.title ?? exam?.title ?? "Intentos"}
-                </h2>
                 <p className="text-muted-foreground text-sm">
                   Intento #{selectedIndex + 1} · {formatDate(selectedAttempt.completedAt)}
                 </p>
