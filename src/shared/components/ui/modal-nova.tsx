@@ -130,7 +130,7 @@ export function ModalNova({
         )}
 
         {/* Contenido Scrollable */}
-        <div className="h-[calc(100%-100px)] overflow-y-auto min-h-0 mb-4">{children}</div>
+        <div className="h-[90dvh] overflow-y-auto mb-4">{children}</div>
 
         {/* Footer Fijo */}
         {footer && (
