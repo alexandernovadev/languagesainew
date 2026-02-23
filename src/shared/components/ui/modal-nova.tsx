@@ -81,7 +81,7 @@ export function ModalNova({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Overlay con backdrop */}
       <div 
-        className="fixed inset-0 bg-black/80 animate-in fade-in-0 duration-200"
+        className="fixed inset-0 bg-blue-100 animate-in fade-in-0 duration-200"
         onClick={handleOverlayClick}
       />
       

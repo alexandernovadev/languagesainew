@@ -145,8 +145,7 @@ export function ExamAttemptsModal({ open, onOpenChange, exam }: ExamAttemptsModa
               </div>
             )}
 
-            <div className="flex flex-col flex-1 min-h-0 space-y-4">
-              <h3 className="text-lg font-semibold flex-shrink-0">Resultados por pregunta</h3>
+            <div className="flex flex-col flex-1 min-h-0">
               <ScrollArea className="flex-1 min-h-0 pr-4">
                 <div className="space-y-4 pb-8">
                   {selectedAttempt.attemptQuestions.map((aq, i) => (
