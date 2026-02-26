@@ -29,6 +29,8 @@ export interface IExam {
   updatedAt?: Date;
   /** Number of user's attempts (from API list when authenticated) */
   attemptCount?: number;
+  /** Best score among user's attempts (from API list when authenticated) */
+  bestScore?: number;
 }
 
 export interface IAttemptQuestion {
