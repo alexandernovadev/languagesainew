@@ -17,6 +17,7 @@ import {
   ClipboardList,
   FileEdit,
   BookText,
+  MessageCircle,
 } from "lucide-react";
 
 export const menuItems = [
@@ -34,6 +35,11 @@ export const menuItems = [
     title: "Exámenes",
     url: "/exams",
     icon: ClipboardList,
+  },
+  {
+    title: "Chats",
+    url: "/chats",
+    icon: MessageCircle,
   },
   {
     title: "Mis Palabras",

@@ -24,3 +24,6 @@ export const ExamsPage = lazy(() => import("../pages/ExamsPage"));
 export const ExamGeneratorPage = lazy(() => import("../pages/ExamGeneratorPage"));
 export const ExamStartPage = lazy(() => import("../pages/ExamStartPage"));
 export const ExamAttemptPage = lazy(() => import("../pages/ExamAttemptPage"));
+export const ChatsPage = lazy(() => import("../pages/ChatsPage"));
+export const NewChatPage = lazy(() => import("../pages/NewChatPage"));
+export const ChatDetailPage = lazy(() => import("../pages/ChatDetailPage"));

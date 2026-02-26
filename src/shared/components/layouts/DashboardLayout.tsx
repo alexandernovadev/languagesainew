@@ -75,6 +75,8 @@ function MenuItems({ items }: { items: typeof menuItems }) {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { isAuthenticated, user } = useAuth();
   const { isDevelopment } = useEnvironment();
+  const location = useLocation();
+  const isChatDetail = /^\/chats\/[^/]+$/.test(location.pathname);
 
   return (
     <SidebarProvider>
@@ -177,7 +179,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div
+          className={isChatDetail ? "flex flex-1 flex-col min-h-0" : "flex flex-1 flex-col gap-4 p-4 pb-0"}
+        >
           {children}
         </div>
       </SidebarInset>

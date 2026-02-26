@@ -1,6 +1,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { cn } from "@/utils/common/classnames";
 
 interface MarkdownRendererProps {
@@ -8,11 +9,13 @@ interface MarkdownRendererProps {
   variant?: "chat" | "reading";
   className?: string;
   onWordClick?: (word: string) => void;
+  clickableWords?: string[];
 }
 
 function processChildrenWithWordClick(
   children: React.ReactNode,
-  onWordClick: (word: string) => void
+  onWordClick: (word: string) => void,
+  clickableWordsSet?: Set<string>
 ): React.ReactNode {
   return React.Children.map(children, (child, idx) => {
     if (typeof child === "string") {
@@ -21,7 +24,11 @@ function processChildrenWithWordClick(
         <React.Fragment key={idx}>
           {parts.map((part, i) => {
             const cleanWord = part.replace(/^\W+|\W+$/g, "");
-            if (cleanWord.length >= 1 && /^[a-zA-Z'-]+$/.test(cleanWord)) {
+            const isClickable =
+              cleanWord.length >= 1 &&
+              /^[a-zA-Z'-]+$/.test(cleanWord) &&
+              (!clickableWordsSet || clickableWordsSet.has(cleanWord.toLowerCase()));
+            if (isClickable) {
               return (
                 <span
                   key={i}
@@ -42,24 +49,35 @@ function processChildrenWithWordClick(
     }
     if (React.isValidElement(child) && child.props.children != null) {
       return React.cloneElement(child as React.ReactElement<any>, {
-        children: processChildrenWithWordClick(child.props.children, onWordClick),
+        children: processChildrenWithWordClick(
+          child.props.children,
+          onWordClick,
+          clickableWordsSet
+        ),
       });
     }
     return child;
   });
 }
 
-export function MarkdownRenderer({ 
-  content, 
+export function MarkdownRenderer({
+  content,
   variant = "reading",
   className,
   onWordClick,
+  clickableWords,
 }: MarkdownRendererProps) {
   const isReading = variant === "reading";
   const isChat = variant === "chat";
 
+  const clickableWordsSet = clickableWords?.length
+    ? new Set(clickableWords.map((w) => w.toLowerCase()))
+    : undefined;
+
   const wrapIfClickable = (children: React.ReactNode) =>
-    onWordClick ? processChildrenWithWordClick(children, onWordClick) : children;
+    onWordClick
+      ? processChildrenWithWordClick(children, onWordClick, clickableWordsSet)
+      : children;
 
   // Chat variant components (compact, primary colors)
   const chatComponents = {
@@ -201,6 +219,7 @@ export function MarkdownRenderer({
     )}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={components}
       >
         {content}
