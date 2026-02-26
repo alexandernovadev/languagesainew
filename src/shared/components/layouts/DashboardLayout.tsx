@@ -178,9 +178,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <SidebarRail />
       </Sidebar>
-      <SidebarInset>
+      <SidebarInset className="min-w-0 overflow-hidden">
         <div
-          className={isChatDetail ? "flex flex-1 flex-col min-h-0" : "flex flex-1 flex-col gap-4 p-4 pb-0"}
+          className={
+            isChatDetail
+              ? "flex flex-1 flex-col min-h-0 min-w-0"
+              : "flex flex-1 flex-col gap-4 p-4 pb-0 min-w-0 overflow-hidden"
+          }
         >
           {children}
         </div>

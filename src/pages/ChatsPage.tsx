@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PageHeader } from "@/shared/components/ui/page-header";
 import { useChats } from "@/shared/hooks/useChats";
 import type { IWordChat } from "@/types/models/Chat";
 import { MessageCircle, Plus, Trash2 } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Button } from "@/shared/components/ui/button";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
+import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { cn } from "@/utils/common/classnames";
 
 function formatDate(dateStr: string) {
@@ -43,81 +43,80 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-theme(spacing.4))] sm:h-[calc(100vh-theme(spacing.4))] max-h-[calc(100dvh-8rem)] sm:max-h-[calc(100vh-8rem)]">
-      <PageHeader
-        title="Chats"
-        description="Practica vocabulario con conversaciones guiadas"
-        actions={
-          <Button
-            size="sm"
-            onClick={() => navigate("/chats/new")}
-            className="gap-2 rounded-xl"
-          >
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nuevo chat</span>
-          </Button>
-        }
-      />
+    <div className="flex flex-col h-full min-h-0 w-full min-w-0 overflow-hidden">
+      <div className="shrink-0 flex items-center gap-3 px-4 py-3 border-b border-border bg-background">
+        <SidebarTrigger className="h-8 w-8 shrink-0" />
+        <div className="min-w-0">
+          <h1 className="text-lg font-semibold leading-tight">Chats</h1>
+          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+            Practica con conversaciones guiadas
+          </p>
+        </div>
+      </div>
 
-      <div className="flex-1 overflow-y-auto -mx-4 px-4">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {loading ? (
-          <div className="space-y-2 py-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-20 w-full rounded-xl" />
+          <div className="divide-y divide-border">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-3 px-4 py-3">
+                <Skeleton className="h-11 w-11 rounded-full shrink-0" />
+                <div className="flex-1 min-w-0 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
             ))}
           </div>
         ) : chats.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <MessageCircle className="h-8 w-8 text-primary" />
+          <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+              <MessageCircle className="h-7 w-7 text-primary" />
             </div>
-            <h3 className="font-semibold text-lg mb-1">Sin chats aún</h3>
-            <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-              Crea un chat para practicar vocabulario con la IA
+            <h3 className="font-semibold text-base mb-1">Sin chats aún</h3>
+            <p className="text-sm text-muted-foreground max-w-[220px]">
+              Toca el botón + para crear tu primer chat
             </p>
-            <Button onClick={() => navigate("/chats/new")} className="rounded-xl gap-2">
-              <Plus className="h-4 w-4" />
-              Nuevo chat
-            </Button>
           </div>
         ) : (
-          <div className="space-y-2 py-4">
+          <div className="divide-y divide-border">
             {chats.map((chat) => (
               <div
                 key={chat._id}
                 onClick={() => navigate(`/chats/${chat._id}`)}
                 className={cn(
-                  "flex items-center gap-3 p-4 rounded-xl border border-border bg-card",
-                  "hover:bg-muted/50 active:bg-muted/70 transition-colors cursor-pointer",
+                  "flex items-center gap-3 px-4 py-3",
+                  "active:bg-muted/60 transition-colors cursor-pointer",
                   "touch-manipulation"
                 )}
               >
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MessageCircle className="h-6 w-6 text-primary" />
+                <div className="shrink-0 w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MessageCircle className="h-5 w-5 text-primary" />
                 </div>
+
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-medium truncate">{chat.title}</h3>
-                    <span className="text-xs text-muted-foreground shrink-0">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h3 className="text-sm font-medium truncate">{chat.title}</h3>
+                    <span className="text-[11px] text-muted-foreground shrink-0 tabular-nums">
                       {formatDate(chat.updatedAt)}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground truncate mt-0.5">
-                    {getPreview(chat.messages)}
-                  </p>
+                  <div className="flex items-center justify-between gap-2 mt-0.5">
+                    <p className="text-xs text-muted-foreground truncate">
+                      {getPreview(chat.messages)}
+                    </p>
+                    <button
+                      type="button"
+                      className="shrink-0 p-1.5 -m-1.5 rounded-full text-muted-foreground/60 hover:text-destructive active:text-destructive transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteChatId(chat._id);
+                      }}
+                      aria-label="Eliminar"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteChatId(chat._id);
-                  }}
-                  title="Eliminar"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
               </div>
             ))}
           </div>
@@ -135,6 +134,15 @@ export default function ChatsPage() {
         loading={deleteLoading}
         confirmVariant="destructive"
       />
+
+      {/* Floating Action Button */}
+      <Button
+        size="icon"
+        onClick={() => navigate("/chats/new")}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow z-50"
+      >
+        <Plus className="h-6 w-6" />
+      </Button>
     </div>
   );
 }
