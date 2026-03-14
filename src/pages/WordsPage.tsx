@@ -9,8 +9,10 @@ import { WordFiltersModal } from "@/shared/components/filters/WordFiltersModal";
 import { useWords } from "@/shared/hooks/useWords";
 import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { IWord } from "@/types/models/Word";
-import { Plus, Search, Filter, X } from "lucide-react";
+import { Plus, Search, Filter, X, Sparkles } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
+import { AddWordQuickDialog } from "@/shared/components/dialogs/AddWordQuickDialog";
+import { useUserStore } from "@/lib/store/user-store";
 import { wordService } from "@/services/wordService";
 import { toast } from "sonner";
 import {
@@ -54,6 +56,8 @@ export default function WordsPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const { user } = useUserStore();
 
   // Handle create
   const handleCreate = () => {
@@ -129,7 +133,7 @@ export default function WordsPage() {
   const handleGenerateWithAI = async (word: string) => {
     setIsGenerating(true);
     try {
-      const response = await wordService.generateWord(word, "en", "openai");
+      const response = await wordService.generateWord(word, user?.language || "en", "openai");
 
       // La respuesta tiene estructura: { success: true, message: "...", data: savedWord }
       if (response.success && response.data) {
@@ -144,6 +148,11 @@ export default function WordsPage() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // Handle quick add (from dialog)
+  const handleQuickAdd = async (word: string) => {
+    await handleGenerateWithAI(word);
   };
 
   // Generate page numbers
@@ -233,7 +242,15 @@ export default function WordsPage() {
               )}
             </Button>
 
-
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setQuickAddOpen(true)}
+              title="Agregar palabra rápida (IA)"
+            >
+              <Sparkles className="h-4 w-4" />
+            </Button>
 
             <Button
               type="button"
@@ -246,6 +263,13 @@ export default function WordsPage() {
             </Button>
           </div>
         }
+      />
+
+      <AddWordQuickDialog
+        open={quickAddOpen}
+        onOpenChange={setQuickAddOpen}
+        onAdd={handleQuickAdd}
+        language={user?.language || "en"}
       />
 
       {/* Words Table */}

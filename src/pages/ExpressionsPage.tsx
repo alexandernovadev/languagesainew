@@ -7,9 +7,11 @@ import { ExpressionDialog } from "@/shared/components/dialogs/ExpressionDialog";
 import { ExpressionFiltersModal } from "@/shared/components/filters/ExpressionFiltersModal";
 import { useExpressions } from "@/shared/hooks/useExpressions";
 import { IExpression } from "@/types/models/Expression";
-import { Plus, Search, Filter, X } from "lucide-react";
+import { Plus, Search, Filter, X, Sparkles } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { expressionService } from "@/services/expressionService";
+import { AddExpressionQuickDialog } from "@/shared/components/dialogs/AddExpressionQuickDialog";
+import { useUserStore } from "@/lib/store/user-store";
 import { toast } from "sonner";
 import {
   Pagination,
@@ -47,6 +49,8 @@ export default function ExpressionsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const { user } = useUserStore();
 
   // Handle create
   const handleCreate = () => {
@@ -110,8 +114,8 @@ export default function ExpressionsPage() {
   const handleGenerateWithAI = async (expressionPrompt: string) => {
     setIsGenerating(true);
     try {
-      // Generar la expresión con AI
-      const response = await expressionService.generateExpression(expressionPrompt, undefined, { provider: "openai" });
+      const language = user?.language || "en";
+      const response = await expressionService.generateExpression(expressionPrompt, language, { provider: "openai" });
       
       // La respuesta tiene estructura: { success: true, message: "...", data: expressionData }
       if (response.data.success && response.data.data) {
@@ -132,7 +136,7 @@ export default function ExpressionsPage() {
 
         if (success) {
           toast.success(`Expresión "${expressionPrompt}" generada exitosamente`);
-          // La expresión aparecerá automáticamente porque el filtro search sigue activo
+          await refreshExpressions();
         }
       }
     } catch (err: any) {
@@ -141,6 +145,10 @@ export default function ExpressionsPage() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleQuickAdd = async (expression: string) => {
+    await handleGenerateWithAI(expression);
   };
 
   // Generate page numbers
@@ -231,6 +239,16 @@ export default function ExpressionsPage() {
 
             <Button
               type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setQuickAddOpen(true)}
+              title="Agregar expresión rápida (IA)"
+            >
+              <Sparkles className="h-4 w-4" />
+            </Button>
+
+            <Button
+              type="button"
               variant="default"
               onClick={handleCreate}
               size="icon"
@@ -240,6 +258,13 @@ export default function ExpressionsPage() {
             </Button>
           </div>
         }
+      />
+
+      <AddExpressionQuickDialog
+        open={quickAddOpen}
+        onOpenChange={setQuickAddOpen}
+        onAdd={handleQuickAdd}
+        language={user?.language || "en"}
       />
 
       {/* Expressions Table */}
