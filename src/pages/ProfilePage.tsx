@@ -16,8 +16,9 @@ import {
 } from "@/shared/components/ui/select";
 import { languages } from "@/utils/common/language";
 
-// Idiomas para filtrar contenidos (palabras, lecturas, etc.)
+// Idiomas para filtrar contenidos y explicaciones
 const APP_LANGUAGES = [
+  { value: "es", ...languages["es"] },
   { value: "en", ...languages["en"] },
   { value: "pt", ...languages["pt"] },
   { value: "fr", ...languages["fr"] },
@@ -251,6 +252,32 @@ export default function ProfilePage() {
               </Select>
               <p className="text-xs text-muted-foreground">
                 Filtra palabras, lecturas, expresiones y más por este idioma
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="explainsLanguage">Idioma de explicaciones</Label>
+              <Select
+                value={formData.explainsLanguage}
+                onValueChange={(value) => handleInputChange("explainsLanguage", value)}
+                disabled={!isEditing}
+              >
+                <SelectTrigger id="explainsLanguage">
+                  <SelectValue placeholder="Seleccionar idioma" />
+                </SelectTrigger>
+                <SelectContent>
+                  {APP_LANGUAGES.map((lang) => (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      <span className="flex items-center gap-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Idioma en el que se mostrarán las explicaciones, correcciones y feedback
               </p>
             </div>
 

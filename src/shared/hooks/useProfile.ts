@@ -13,6 +13,7 @@ export function useProfile() {
     phone: "",
     address: "",
     language: "en" as any,
+    explainsLanguage: "es" as any,
   });
 
   // Initialize form data when user changes
@@ -24,6 +25,7 @@ export function useProfile() {
         phone: user.phone || "",
         address: user.address || "",
         language: user.language || "en",
+        explainsLanguage: user.explainsLanguage || "es",
       });
     }
   }, [user]);
@@ -64,6 +66,7 @@ export function useProfile() {
         phone: user.phone || "",
         address: user.address || "",
         language: user.language || "en",
+        explainsLanguage: user.explainsLanguage || "es",
       });
     }
     setIsEditing(false);

@@ -10,6 +10,7 @@ export interface User {
   lastName?: string;
   image?: string;
   language?: string;
+  explainsLanguage?: string;
   isActive: boolean;
   address?: string;
   phone?: string;

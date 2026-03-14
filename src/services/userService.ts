@@ -12,6 +12,7 @@ export interface User {
   lastName?: string;
   image?: string;
   language: AllowedLanguageCode;
+  explainsLanguage?: AllowedLanguageCode;
   isActive: boolean;
   address?: string;
   phone?: string;
@@ -43,6 +44,7 @@ export interface UserUpdate {
   lastName?: string;
   image?: string;
   language?: AllowedLanguageCode;
+  explainsLanguage?: AllowedLanguageCode;
   isActive?: boolean;
   address?: string;
   phone?: string;
