@@ -4,7 +4,7 @@ import { userService, type UserUpdate } from "@/services/userService";
 import { toast } from "sonner";
 
 export function useProfile() {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshAccessToken } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -42,12 +42,10 @@ export function useProfile() {
       setIsSaving(true);
       await userService.updateUser(user._id, formData);
       
-      // Refresh user data
-      if (refreshUser) {
-        await refreshUser();
-      }
+      // Refrescar token para que req.user en backend tenga el idioma actualizado
+      await refreshAccessToken();
       
-      toast.success("Profile updated successfully");
+      toast.success("Perfil actualizado correctamente");
       setIsEditing(false);
     } catch (error: any) {
       console.error("Error updating profile:", error);

@@ -14,6 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
+import { languages } from "@/utils/common/language";
+
+// Idiomas para filtrar contenidos (palabras, lecturas, etc.)
+const APP_LANGUAGES = [
+  { value: "en", ...languages["en"] },
+  { value: "pt", ...languages["pt"] },
+  { value: "fr", ...languages["fr"] },
+] as const;
 
 export default function ProfilePage() {
   const {
@@ -51,9 +59,9 @@ export default function ProfilePage() {
     }
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "Never";
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateInput?: string | Date) => {
+    if (!dateInput) return "Never";
+    return new Date(dateInput).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -221,22 +229,29 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="language">Language</Label>
+              <Label htmlFor="language">Idioma para filtrar contenidos</Label>
               <Select
                 value={formData.language}
                 onValueChange={(value) => handleInputChange("language", value)}
                 disabled={!isEditing}
               >
                 <SelectTrigger id="language">
-                  <SelectValue />
+                  <SelectValue placeholder="Seleccionar idioma" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="fr">Français</SelectItem>
-                  <SelectItem value="de">Deutsch</SelectItem>
+                  {APP_LANGUAGES.map((lang) => (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      <span className="flex items-center gap-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                Filtra palabras, lecturas, expresiones y más por este idioma
+              </p>
             </div>
 
             <div className="space-y-2">
