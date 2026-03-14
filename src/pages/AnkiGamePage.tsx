@@ -120,7 +120,7 @@ export default function AnkiGamePage() {
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 py-4">
             <Button
               onClick={handlePrevious}
               disabled={currentIndex === 0}
