@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { chatService } from "@/services/chatService";
+import { useUserStore } from "@/lib/store/user-store";
 import type { WordSelectionType } from "@/types/models/Chat";
 import { ArrowLeft, Clock, Flame, Target, Zap } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
@@ -36,6 +37,7 @@ const OPTIONS: { type: WordSelectionType; label: string; desc: string; icon: typ
 
 export default function NewChatPage() {
   const navigate = useNavigate();
+  const { user } = useUserStore();
   const [selected, setSelected] = useState<WordSelectionType | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -43,10 +45,12 @@ export default function NewChatPage() {
     if (!selected) return;
     setLoading(true);
     try {
-      const chat = await chatService.create(selected);
+      const language = user?.language || "en";
+      const chat = await chatService.create(selected, language);
       navigate(`/chats/${chat._id}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || err.response?.data?.message || "Error al crear chat");
+      const msg = err.response?.data?.error || err.response?.data?.message || "Error al crear chat";
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

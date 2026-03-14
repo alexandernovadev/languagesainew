@@ -11,8 +11,8 @@ export const chatService = {
     return data as { data: IWordChat[]; total: number; page: number; pages: number };
   },
 
-  async create(wordSelectionType: WordSelectionType) {
-    const res = await api.post("/api/chats", { wordSelectionType });
+  async create(wordSelectionType: WordSelectionType, language?: string) {
+    const res = await api.post("/api/chats", { wordSelectionType, language });
     return res.data?.data ?? res.data as IWordChat;
   },
 
