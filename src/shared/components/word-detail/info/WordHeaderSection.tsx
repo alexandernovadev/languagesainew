@@ -64,11 +64,6 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
                 <TrendingUp className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                 Visto: {word.seen || 0}
               </Badge>
-              {word.language && (
-                <Badge variant="outline" className="text-sm md:text-base px-3 py-1">
-                  {word.language.toUpperCase()}
-                </Badge>
-              )}
             </div>
             
             {/* Botones de dificultad - usamos variantes compatibles con Button (easy=default, medium=yellow, hard=destructive) */}

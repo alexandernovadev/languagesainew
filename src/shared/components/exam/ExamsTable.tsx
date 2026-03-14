@@ -5,9 +5,25 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { useExamAttempts } from "@/shared/hooks/useExamAttempts";
-import type { IExam } from "@/types/models";
+import type { IExam, IExamQuestion } from "@/types/models";
 import { Eye, Play, History, Trash2 } from "lucide-react";
-import { languagesJson, certificationLevelsJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson } from "@/data/bussiness/shared";
+import { formatDateToSpanish } from "@/utils/common/time/formatDate";
+
+const QUESTION_TYPE_LABELS: Record<string, string> = {
+  multiple: "Opción múltiple",
+  unique: "Respuesta única",
+  fillInBlank: "Completar huecos",
+  translateText: "Traducir texto",
+};
+
+function getQuestionTypesSummary(questions: IExamQuestion[]) {
+  const counts: Record<string, number> = {};
+  for (const q of questions) {
+    counts[q.type] = (counts[q.type] ?? 0) + 1;
+  }
+  return counts;
+}
 
 interface ExamsTableProps {
   exams: IExam[];
@@ -54,7 +70,7 @@ export function ExamsTable({
   onDelete,
 }: ExamsTableProps) {
   const [openAttemptsExamId, setOpenAttemptsExamId] = useState<string | null>(null);
-  const getLangLabel = (v: string) => languagesJson.find((l) => l.value === v)?.label ?? v;
+  const [openQuestionsExamId, setOpenQuestionsExamId] = useState<string | null>(null);
   const getDiffLabel = (v: string) => certificationLevelsJson.find((l) => l.value === v)?.label ?? v;
 
   if (loading) {
@@ -121,12 +137,32 @@ export function ExamsTable({
               <Badge variant="secondary" className="text-xs">
                 {getDiffLabel(exam.difficulty)}
               </Badge>
-              <Badge variant="outline" className="text-xs">
-                {exam.questions.length} preguntas
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {getLangLabel(exam.language)}
-              </Badge>
+              <Popover
+                open={openQuestionsExamId === exam._id}
+                onOpenChange={(open) => setOpenQuestionsExamId(open ? exam._id : null)}
+              >
+                <PopoverTrigger asChild>
+                  <Badge
+                    variant="outline"
+                    className="text-xs cursor-pointer hover:bg-muted/50 transition-colors"
+                  >
+                    {exam.questions.length} preguntas
+                  </Badge>
+                </PopoverTrigger>
+                <PopoverContent align="start" className="w-auto">
+                  <div className="space-y-2 min-w-[160px]">
+                    <p className="text-xs font-semibold text-muted-foreground">Tipos de preguntas</p>
+                    <ul className="text-sm space-y-1">
+                      {Object.entries(getQuestionTypesSummary(exam.questions)).map(([type, count]) => (
+                        <li key={type} className="flex justify-between gap-4">
+                          <span>{QUESTION_TYPE_LABELS[type] ?? type}</span>
+                          <span className="tabular-nums text-muted-foreground">{count}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </PopoverContent>
+              </Popover>
               {typeof exam.attemptCount === "number" && exam.attemptCount > 0 && (
                 <Popover
                   open={openAttemptsExamId === exam._id}
@@ -152,6 +188,9 @@ export function ExamsTable({
                   </PopoverContent>
                 </Popover>
               )}
+              <Badge variant="outline" className="text-[10px]">
+                {formatDateToSpanish(exam.createdAt ?? new Date(), "EEEE d 'de' MMMM 'del' yyyy")}
+              </Badge>
             </div>
           </CardContent>
         </Card>
