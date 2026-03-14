@@ -3,6 +3,7 @@ import { Volume2 } from 'lucide-react';
 import { IWord } from '@/types/models/Word';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { cn } from '@/utils/common/classnames';
+import { getSpeechLocale } from '@/utils/common/speech';
 import { WordDetailTabs } from '../word-detail/WordDetailTabs';
 import { useWordDetail } from '@/shared/hooks/useWordDetail';
 import { Skeleton } from '@/shared/components/ui/skeleton';
@@ -74,7 +75,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
 
   const handleAudioClick = (e: React.MouseEvent, rate: number = 1) => {
     e.stopPropagation();
-    speak(displayWord.word, 'en-US', rate);
+    speak(displayWord.word, getSpeechLocale(displayWord?.language), rate);
   };
 
   return (

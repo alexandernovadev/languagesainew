@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, MessageSquare, Sparkles } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getDifficultyVariant } from "@/utils/common";
+import { getSpeechLocale } from "@/utils/common/speech";
 
 interface ExpressionsTableProps {
   expressions: IExpression[];
@@ -109,14 +110,14 @@ export function ExpressionsTable({
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-2xl capitalize">{expression.expression}</h3>
                       <button
-                        onClick={() => speak(expression.expression, 'en-US', 1)}
+                        onClick={() => speak(expression.expression, getSpeechLocale(expression.language), 1)}
                         className="p-1 border rounded hover:bg-muted transition-colors"
                         title="Play normal speed"
                       >
                         <Volume2 className="h-5 w-5" />
                       </button>
                       <button
-                        onClick={() => speak(expression.expression, 'en-US', 0.1)}
+                        onClick={() => speak(expression.expression, getSpeechLocale(expression.language), 0.1)}
                         className="p-1 border rounded hover:bg-muted transition-colors text-xl leading-none"
                         title="Play very slow speed"
                       >

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, Sparkles, Eye } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getDifficultyVariant } from "@/utils/common";
+import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -142,14 +143,14 @@ export function WordsTable({
                         {word.word}
                       </h3>
                       <button
-                        onClick={() => speak(word.word, 'en-US', 1)}
+                        onClick={() => speak(word.word, getSpeechLocale(word.language), 1)}
                         className="p-1 border rounded hover:bg-muted transition-colors flex-shrink-0"
                         title="Play normal speed"
                       >
                         <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5" />
                       </button>
                       <button
-                        onClick={() => speak(word.word, 'en-US', 0.1)}
+                        onClick={() => speak(word.word, getSpeechLocale(word.language), 0.1)}
                         className="p-1 sm:p-1 border rounded hover:bg-muted transition-colors text-xl sm:text-xl leading-none flex-shrink-0"
                         title="Play very slow speed"
                       >

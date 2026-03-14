@@ -13,6 +13,7 @@ import { IWord } from "@/types/models/Word";
 import { ArrowLeft, Clock, BookOpen, Volume2, Loader2, Plus } from "lucide-react";
 import { getDifficultyVariant } from "@/utils/common";
 import { getMarkdownTitle, removeFirstH1 } from "@/utils/common/string/markdown";
+import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
 import { WordDetailModal } from "@/shared/components/dialogs/WordDetailModal";
 
@@ -88,7 +89,7 @@ export default function LectureDetailPage() {
   const speakWord = useCallback(
     (word: string, rate: number = 1) => {
       if (!word || !("speechSynthesis" in window)) return;
-      const lang = lecture?.language === "es" ? "es-ES" : "en-US";
+      const lang = getSpeechLocale(lecture?.language);
       const utterance = new SpeechSynthesisUtterance(word);
       utterance.lang = lang;
       utterance.rate = rate;

@@ -11,6 +11,7 @@ import {
   wrapVocabularyInHtml,
   renderPlainTextWithHighlights,
 } from "@/shared/components/chat/HighlightVocabulary";
+import { getSpeechLocale } from "@/utils/common/speech";
 import type { IChatMessage } from "@/types/models/Chat";
 
 export function stripMarkdownForSpeech(md: string): string {
@@ -27,19 +28,12 @@ export function stripMarkdownForSpeech(md: string): string {
     .trim();
 }
 
-const LANG_TO_LOCALE: Record<string, string> = {
-  en: "en-US",
-  es: "es-ES",
-  pt: "pt-BR",
-  fr: "fr-FR",
-};
-
 export function speakMessageContent(content: string, isFromUser: boolean, language = "en") {
   if (!("speechSynthesis" in window)) return;
   const text = isFromUser ? content : stripMarkdownForSpeech(content);
   if (!text.trim()) return;
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = LANG_TO_LOCALE[language] || LANG_TO_LOCALE.en;
+  utterance.lang = getSpeechLocale(language);
   utterance.rate = 1.1;
   window.speechSynthesis.speak(utterance);
 }

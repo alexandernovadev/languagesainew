@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { Image as ImageIcon, Sparkles, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
+import { getSpeechLocale } from "@/utils/common/speech";
 
 interface WordImageSectionProps {
   word: IWord;
@@ -40,14 +41,14 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
           {/* Audio buttons - bottom left */}
           <div className="absolute bottom-3 left-3 flex items-center gap-2 z-10">
             <button
-              onClick={() => speak(word.word, "en-US", 1)}
+              onClick={() => speak(word.word, getSpeechLocale(word.language), 1)}
               className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 shadow-lg backdrop-blur-sm bg-background/80"
               title="Reproducir velocidad normal"
             >
               <Volume2 className="h-4 w-4" />
             </button>
             <button
-              onClick={() => speak(word.word, "en-US", 0.01)}
+              onClick={() => speak(word.word, getSpeechLocale(word.language), 0.01)}
               className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 shadow-lg backdrop-blur-sm bg-background/80 text-base leading-none"
               title="Reproducir velocidad lenta"
             >

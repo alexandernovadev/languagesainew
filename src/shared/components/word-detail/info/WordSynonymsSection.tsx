@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Sparkles, Hash, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
+import { getSpeechLocale } from "@/utils/common/speech";
 
 interface WordSynonymsSectionProps {
   word: IWord;
@@ -53,7 +54,7 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
                 <span>{synonym}</span>
                 <button
                   type="button"
-                  onClick={() => speak(synonym)}
+                  onClick={() => speak(synonym, getSpeechLocale(word.language))}
                   className="p-0.5 border rounded-md hover:bg-muted transition-colors hover:scale-110"
                   title="Escuchar sinónimo"
                 >

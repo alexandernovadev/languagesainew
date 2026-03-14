@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Sparkles, FileText, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
+import { getSpeechLocale } from "@/utils/common/speech";
 
 interface WordExamplesSectionProps {
   word: IWord;
@@ -54,7 +55,7 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
                 <p className="text-sm md:text-base text-foreground flex-1 leading-relaxed">{example}</p>
                 <button
                   type="button"
-                  onClick={() => speak(example)}
+                  onClick={() => speak(example, getSpeechLocale(word.language))}
                   className="p-1.5 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
                   title="Escuchar ejemplo"
                 >
