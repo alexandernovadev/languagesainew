@@ -205,11 +205,6 @@ export default function LectureDetailPage() {
             <Badge variant={getDifficultyVariant(lecture.difficulty)}>
               {lecture.difficulty || "N/A"}
             </Badge>
-            {lecture.language && (
-              <Badge variant="outline">
-                {lecture.language.toUpperCase()}
-              </Badge>
-            )}
             {lecture.time && (
               <Badge variant="secondary" className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />

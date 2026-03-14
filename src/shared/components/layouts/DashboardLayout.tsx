@@ -27,6 +27,7 @@ import {
 } from "../sidebar-menus";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { useEnvironment } from "@/shared/hooks/useEnvironment";
+import { languages as languagesInfo } from "@/utils/common/language";
 import { UserMenu } from "../UserMenu";
 import { LoginButton } from "../LoginButton";
 import packageJson from "../../../../package.json";
@@ -83,12 +84,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-2">
-            <div className="flex h-8 w-8 items-center justify-center">
+            <div className="relative flex h-8 w-8 items-center justify-center shrink-0">
               <img 
                 src={isDevelopment ? "/logodev.png" : "/loogo.png"} 
                 alt="LanguagesAI Logo" 
-                className="h-8 w-8 object-cover"
+                className="h-8 w-8 object-cover rounded"
               />
+              {isAuthenticated && user?.language && languagesInfo[user.language] && (
+                <span 
+                  className="absolute -bottom-0.5 -right-0.5 text-sm leading-none bg-background rounded-full p-0.5 shadow-sm ring-1 ring-sidebar-border"
+                  title={languagesInfo[user.language].name}
+                >
+                  {languagesInfo[user.language].flag}
+                </span>
+              )}
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="text-sm font-semibold">LanguagesAI</span>

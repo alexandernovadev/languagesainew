@@ -3,9 +3,11 @@ import { Expression } from "../models/Expression";
 import { useUserStore } from "@/lib/store/user-store";
 
 export const expressionService = {
-  // Get expressions with filters
-  getExpressions: (filters?: any) =>
-    api.get("/api/expressions", { params: filters }),
+  // Get expressions with filters (language comes from user profile)
+  getExpressions: (filters?: any) => {
+    const { language, ...params } = filters || {};
+    return api.get("/api/expressions", { params });
+  },
 
   // Get expression by ID
   getExpressionById: (id: string) => api.get(`/api/expressions/${id}`),
@@ -27,9 +29,11 @@ export const expressionService = {
       params: { limit, search },
     }),
 
-  // Get expressions only (for performance)
-  getExpressionsOnly: (filters?: any) =>
-    api.get("/api/expressions/expressions-only", { params: filters }),
+  // Get expressions only (for performance) - language comes from user profile
+  getExpressionsOnly: (filters?: any) => {
+    const { language, ...params } = filters || {};
+    return api.get("/api/expressions/expressions-only", { params });
+  },
 
   // Export expressions
   exportExpressions: () => api.get("/api/expressions/export-file"),

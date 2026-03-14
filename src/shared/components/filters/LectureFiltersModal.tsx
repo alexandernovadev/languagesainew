@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Checkbox } from "../ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { DatePicker } from "../ui/date-picker";
-import { certificationLevelsJson, languagesJson, readingTypesJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson, readingTypesJson } from "@/data/bussiness/shared";
 import { LectureFilters } from "@/shared/hooks/useLectures";
 import { Filter, Eraser, SlidersHorizontal, Image, Calendar } from "lucide-react";
 
@@ -53,8 +53,8 @@ export function LectureFiltersModal({
     }));
   };
 
-  // Handle multiple selection for level, language, typeWrite
-  const toggleMultiSelect = (key: "level" | "language" | "typeWrite", value: string) => {
+  // Handle multiple selection for level, typeWrite
+  const toggleMultiSelect = (key: "level" | "typeWrite", value: string) => {
     setLocalFilters((prev) => {
       const current = prev[key];
       const currentArray = Array.isArray(current) ? current : current ? [current] : [];
@@ -77,7 +77,7 @@ export function LectureFiltersModal({
   };
 
   // Check if a value is selected in multi-select
-  const isSelected = (key: "level" | "language" | "typeWrite", value: string): boolean => {
+  const isSelected = (key: "level" | "typeWrite", value: string): boolean => {
     const current = localFilters[key];
     if (!current) return false;
     const currentArray = Array.isArray(current) ? current : [current];
@@ -183,27 +183,6 @@ export function LectureFiltersModal({
                         className="text-sm font-normal cursor-pointer"
                       >
                         {level.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Idioma</Label>
-                <div className="border rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
-                  {languagesJson.map((lang) => (
-                    <div key={lang.value} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`language-${lang.value}`}
-                        checked={isSelected("language", lang.value)}
-                        onCheckedChange={() => toggleMultiSelect("language", lang.value)}
-                      />
-                      <Label
-                        htmlFor={`language-${lang.value}`}
-                        className="text-sm font-normal cursor-pointer"
-                      >
-                        {lang.label}
                       </Label>
                     </div>
                   ))}

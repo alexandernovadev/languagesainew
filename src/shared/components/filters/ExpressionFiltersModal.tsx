@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
-import { difficultyJson, languagesJson, expressionTypesJson } from "@/data/bussiness/shared";
+import { difficultyJson, expressionTypesJson } from "@/data/bussiness/shared";
 import { ExpressionFilters } from "@/shared/hooks/useExpressions";
 import { Filter, Eraser } from "lucide-react";
 
@@ -138,26 +138,6 @@ export function ExpressionFiltersModal({
                     {difficultyJson.map((diff) => (
                       <SelectItem key={diff.value} value={diff.value}>
                         {diff.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="language">Idioma</Label>
-                <Select
-                  value={localFilters.language || "all"}
-                  onValueChange={(value) => updateFilter("language", value)}
-                >
-                  <SelectTrigger id="language">
-                    <SelectValue placeholder="Todos los idiomas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    {languagesJson.map((lang) => (
-                      <SelectItem key={lang.value} value={lang.value}>
-                        {lang.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -8,10 +8,9 @@ export const lectureService = {
     params.append("limit", String(limit));
     if (search.trim()) params.append("search", search.trim());
     Object.entries(filters).forEach(([key, value]) => {
+      if (key === "language") return; // Backend uses req.user.language
       if (value !== undefined && value !== "" && value !== null) {
-        // Handle arrays for level, language, typeWrite
         if (Array.isArray(value) && value.length > 0) {
-          // Backend expects comma-separated string or array
           params.append(key, value.join(","));
         } else if (!Array.isArray(value)) {
           params.append(key, String(value));

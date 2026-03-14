@@ -116,11 +116,6 @@ export function LecturesTable({
                       <Badge variant={getDifficultyVariant(lecture.difficulty)} className="text-xs">
                         {lecture.difficulty || "N/A"}
                       </Badge>
-                      {lecture.language && (
-                        <Badge variant="outline" className="text-xs">
-                          {lecture.language.toUpperCase()}
-                        </Badge>
-                      )}
                       {lecture.time && (
                         <Badge variant="secondary" className="text-xs flex items-center gap-1">
                           <Clock className="h-3 w-3" />

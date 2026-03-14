@@ -11,7 +11,6 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     
     // Word filters
     const difficulty = urlParams.get('difficulty');
-    const language = urlParams.get('language');
     const type = urlParams.get('type');
     const wordUser = urlParams.get('wordUser');
     
@@ -30,7 +29,6 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     // Lecture filters
     const search = urlParams.get('search');
     const level = urlParams.get('level');
-    const languageLecture = urlParams.get('language');
     const typeWrite = urlParams.get('typeWrite');
     const timeMin = urlParams.get('timeMin');
     const timeMax = urlParams.get('timeMax');
@@ -52,7 +50,6 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     // Solo agregar filtros que existan
     // Word filters
     if (difficulty) filters.difficulty = difficulty;
-    if (language) filters.language = language;
     if (type) filters.type = type;
     if (wordUser) filters.wordUser = wordUser;
     if (spanishWord) filters.spanishWord = spanishWord;
@@ -70,11 +67,6 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
       // Split comma-separated values into array
       const levelArray = level.split(',').map(v => v.trim()).filter(v => v);
       filters.level = levelArray.length > 1 ? levelArray : levelArray[0];
-    }
-    if (languageLecture) {
-      // Split comma-separated values into array
-      const langArray = languageLecture.split(',').map(v => v.trim()).filter(v => v);
-      filters.language = langArray.length > 1 ? langArray : langArray[0];
     }
     if (typeWrite) {
       // Split comma-separated values into array
@@ -107,7 +99,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     // Limpiar parámetros existentes
     const filterKeys = [
       // Word filters
-      'difficulty', 'language', 'type', 'wordUser',
+      'difficulty', 'type', 'wordUser',
       'spanishWord', 'spanishDefinition',
       'definition', 'IPA', 'hasExamples', 'hasSynonyms', 'hasCodeSwitching', 'hasImage',
       // Lecture filters
@@ -143,7 +135,7 @@ export const useFilterUrlSync = (currentFilters: any, setFilters: (filters: any)
     // Limpiar todos los parámetros de filtros
     const filterKeys = [
       // Word filters
-      'difficulty', 'language', 'type', 'wordUser',
+      'difficulty', 'type', 'wordUser',
       'spanishWord', 'spanishDefinition',
       'definition', 'IPA', 'hasExamples', 'hasSynonyms', 'hasCodeSwitching', 'hasImage',
       // Lecture filters
