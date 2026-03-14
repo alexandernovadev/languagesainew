@@ -15,7 +15,6 @@ export const wordService = {
     // Agregar filtros si existen
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (key === "language") return; // Backend uses req.user.language
         if (value !== undefined && value !== null && value !== "") {
           params.append(key, value.toString());
         }

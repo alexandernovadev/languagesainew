@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { chatService } from "@/services/chatService";
+import { wordService } from "@/services/wordService";
 import { useUserStore } from "@/lib/store/user-store";
 import type { WordSelectionType } from "@/types/models/Chat";
 import { ArrowLeft, Clock, Flame, Target, Zap } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { toast } from "sonner";
+
+const MIN_WORDS_FOR_CHAT = 10;
 
 const OPTIONS: { type: WordSelectionType; label: string; desc: string; icon: typeof Clock }[] = [
   {
@@ -40,6 +43,23 @@ export default function NewChatPage() {
   const { user } = useUserStore();
   const [selected, setSelected] = useState<WordSelectionType | null>(null);
   const [loading, setLoading] = useState(false);
+  const [canCreate, setCanCreate] = useState<boolean | null>(null);
+
+  const language = user?.language || "en";
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await wordService.getWords(1, 1, { language });
+        const total = res?.data?.total ?? 0;
+        if (!cancelled) setCanCreate(total >= MIN_WORDS_FOR_CHAT);
+      } catch {
+        if (!cancelled) setCanCreate(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [language]);
 
   const handleCreate = async () => {
     if (!selected) return;
@@ -55,6 +75,68 @@ export default function NewChatPage() {
       setLoading(false);
     }
   };
+
+  if (canCreate === null) {
+    return (
+      <div className="space-y-6 p-4 sm:p-6 max-w-2xl mx-auto">
+        <PageHeader
+          title="Nuevo chat"
+          description="Elige qué palabras practicar"
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/chats")}
+              className="gap-2 rounded-xl"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Volver
+            </Button>
+          }
+        />
+        <div className="flex justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      </div>
+    );
+  }
+
+  if (canCreate === false) {
+    return (
+      <div className="space-y-6 p-4 sm:p-6 max-w-2xl mx-auto">
+        <PageHeader
+          title="Nuevo chat"
+          description="Elige qué palabras practicar"
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/chats")}
+              className="gap-2 rounded-xl"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Volver
+            </Button>
+          }
+        />
+        <div className="rounded-xl border-2 border-amber-500/30 bg-amber-500/5 p-6 text-center">
+          <p className="text-amber-700 dark:text-amber-400 font-medium">
+            Debes agregar más de 10 palabras al diccionario
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            No hay suficientes palabras en tu idioma ({language}) para crear un chat.
+          </p>
+          <Button
+            variant="outline"
+            className="mt-4 rounded-xl"
+            onClick={() => navigate("/words")}
+          >
+            Ir al diccionario
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-4 sm:p-6 max-w-2xl mx-auto">
