@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Button } from "@/shared/components/ui/button";
-import { X, Search, BookOpen } from "lucide-react";
+import { X, Search, BookOpen, Filter } from "lucide-react";
 import { wordService } from "@/services/wordService";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { WordFiltersModal } from "@/shared/components/filters/WordFiltersModal";
+import type { WordFilters } from "@/shared/hooks/useWords";
 
 interface WordSelectorProps {
   selected: string[];
@@ -31,7 +33,9 @@ export function WordSelector({
   const [searchResults, setSearchResults] = useState<IWord[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
-  
+  const [filters, setFilters] = useState<WordFilters>({});
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+
   // Estados para las listas por dificultad
   const [easyWords, setEasyWords] = useState<WordGroup>({ words: [], loading: true });
   const [mediumWords, setMediumWords] = useState<WordGroup>({ words: [], loading: true });
@@ -40,16 +44,17 @@ export function WordSelector({
   const inputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
-  // Cargar palabras por dificultad al montar o cuando cambia el idioma
+  const baseFilters = { sortBy: "createdAt", sortOrder: "desc" as const };
+
+  // Cargar palabras por dificultad al montar o cuando cambian idioma/filtros
   useEffect(() => {
     const loadWordsByDifficulty = async () => {
       const loadWords = async (difficulty: "easy" | "medium" | "hard") => {
         try {
           const response = await wordService.getWords(1, 11, {
+            ...baseFilters,
+            ...filters,
             difficulty,
-            language: language,
-            sortBy: "createdAt",
-            sortOrder: "desc",
           });
 
           const words = response.data?.data || [];
@@ -77,7 +82,7 @@ export function WordSelector({
     };
 
     loadWordsByDifficulty();
-  }, [language]);
+  }, [language, filters]);
 
   // Buscar palabras cuando el usuario escribe
   useEffect(() => {
@@ -91,8 +96,9 @@ export function WordSelector({
       setSearchLoading(true);
       try {
         const response = await wordService.getWords(1, 10, {
+          ...baseFilters,
+          ...filters,
           wordUser: searchQuery.trim(),
-          language: language,
         });
 
         const words = response.data?.data || [];
@@ -109,7 +115,7 @@ export function WordSelector({
 
     const timeoutId = setTimeout(searchWords, 300); // Debounce
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, language]);
+  }, [searchQuery, language, filters]);
 
   // Cerrar resultados de búsqueda al hacer click fuera
   useEffect(() => {
@@ -222,14 +228,44 @@ export function WordSelector({
     );
   };
 
+  const activeFiltersCount = Object.entries(filters).filter(
+    ([key, value]) => key !== "page" && key !== "limit" && value !== undefined && value !== ""
+  ).length;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label>Palabras Seleccionadas</Label>
-        <span className="text-xs text-muted-foreground">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Label>Palabras Seleccionadas</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setFiltersModalOpen(true)}
+            className="h-8"
+            title="Filtros avanzados"
+          >
+            <Filter className="h-4 w-4 mr-1" />
+            Filtros
+            {activeFiltersCount > 0 && (
+              <span className="ml-1.5 text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full">
+                {activeFiltersCount}
+              </span>
+            )}
+          </Button>
+        </div>
+        <span className="text-xs text-muted-foreground shrink-0">
           {selected.length}/{maxSelections}
         </span>
       </div>
+
+      <WordFiltersModal
+        open={filtersModalOpen}
+        onOpenChange={setFiltersModalOpen}
+        filters={filters}
+        onApplyFilters={(newFilters) => setFilters(newFilters)}
+        onClearFilters={() => setFilters({})}
+      />
 
       {/* Chips de palabras seleccionadas */}
       {selected.length > 0 && (

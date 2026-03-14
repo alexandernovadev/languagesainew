@@ -1,14 +1,13 @@
 import { Badge } from "@/shared/components/ui/badge";
-import { Language, CertificationLevel, ReadingType } from "@/types/business";
+import { CertificationLevel, ReadingType } from "@/types/business";
 import {
-  languagesJson,
   certificationLevelsJson,
   readingTypesJson,
 } from "@/data/bussiness/shared";
 import { cn } from "@/utils/common/classnames";
 
 interface LectureParams {
-  language: Language;
+  language?: string;
   level: CertificationLevel;
   typeWrite: ReadingType;
   rangeMin: number;
@@ -29,10 +28,6 @@ export function ParamsSummary({
   onBadgeClick,
   className,
 }: ParamsSummaryProps) {
-  const getLanguageLabel = (value: Language) => {
-    return languagesJson.find((l) => l.value === value)?.label || value;
-  };
-
   const getLevelLabel = (value: CertificationLevel) => {
     return certificationLevelsJson.find((l) => l.value === value)?.label || value;
   };
@@ -48,17 +43,6 @@ export function ParamsSummary({
 
   return (
     <div className={cn("flex flex-wrap gap-2 items-center", className)}>
-      <Badge
-        variant="outline"
-        className={cn(
-          "cursor-pointer hover:bg-primary/10 transition-colors",
-          onBadgeClick && "cursor-pointer"
-        )}
-        onClick={() => onBadgeClick?.("language")}
-      >
-        Idioma: {getLanguageLabel(params.language)}
-      </Badge>
-
       <Badge
         variant="outline"
         className={cn(

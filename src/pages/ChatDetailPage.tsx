@@ -72,7 +72,7 @@ export default function ChatDetailPage() {
     if (wasSending && !sending && chat?.messages?.length) {
       const lastMsg = chat.messages[chat.messages.length - 1];
       if (lastMsg.role === "assistant" && lastMsg.content.trim()) {
-        speakMessageContent(lastMsg.content, false);
+        speakMessageContent(lastMsg.content, false, chat.language);
       }
     }
   }, [sending, chat?.messages]);
@@ -146,6 +146,7 @@ export default function ChatDetailPage() {
               (chat.status !== "completed" || !!chat.corrections?.[String(i)])
             }
             vocabularyWords={chat.wordTexts}
+            language={chat.language}
             onWordClick={handleWordClick}
             onRequestCorrection={correctMessage}
           />

@@ -14,13 +14,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Settings, SlidersHorizontal, BookOpen } from "lucide-react";
 import {
-  languagesJson,
   certificationLevelsJson,
   readingTypesJson,
 } from "@/data/bussiness/shared";
 import { GrammarTopicsSelector } from "./GrammarTopicsSelector";
 import { WordSelector } from "./WordSelector";
-import { Language, CertificationLevel, ReadingType } from "@/types/business";
+import { CertificationLevel, ReadingType } from "@/types/business";
+import { useAuth } from "@/shared/hooks/useAuth";
 import { GrammarTopicOption } from "@/types/business";
 
 // Importar grammar topics según idioma
@@ -29,7 +29,7 @@ import { grammarTopicsJson as esGrammarTopics } from "@/data/bussiness/es";
 import { grammarTopicsJson as ptGrammarTopics } from "@/data/bussiness/pt";
 
 interface LectureParams {
-  language: Language;
+  language?: string;
   level: CertificationLevel;
   typeWrite: ReadingType;
   rangeMin: number;
@@ -46,7 +46,7 @@ interface LectureParamsModalProps {
   onApply: (params: LectureParams) => void;
 }
 
-const getGrammarTopicsByLanguage = (language: Language): GrammarTopicOption[] => {
+const getGrammarTopicsByLanguage = (language: string): GrammarTopicOption[] => {
   switch (language) {
     case "es":
       return esGrammarTopics;
@@ -64,6 +64,8 @@ export function LectureParamsModal({
   params,
   onApply,
 }: LectureParamsModalProps) {
+  const { user } = useAuth();
+  const language = user?.language || "en";
   const [localParams, setLocalParams] = useState<LectureParams>(params);
   const [activeTab, setActiveTab] = useState<"basic" | "advanced" | "words">("basic");
 
@@ -101,7 +103,7 @@ export function LectureParamsModal({
     onOpenChange(false);
   };
 
-  const grammarTopics = getGrammarTopicsByLanguage(localParams.language);
+  const grammarTopics = getGrammarTopicsByLanguage(language);
 
   return (
     <ModalNova
@@ -137,26 +139,6 @@ export function LectureParamsModal({
           </TabsList>
 
           <TabsContent value="basic" className="space-y-4 mt-4">
-          {/* Idioma */}
-          <div className="space-y-2">
-            <Label>Idioma</Label>
-            <Select
-              value={localParams.language}
-              onValueChange={(value) => updateParam("language", value as Language)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {languagesJson.map((lang) => (
-                  <SelectItem key={lang.value} value={lang.value}>
-                    {lang.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Nivel */}
           <div className="space-y-2">
             <Label>Nivel de Certificación</Label>
@@ -261,7 +243,7 @@ export function LectureParamsModal({
           <WordSelector
             selected={localParams.selectedWords}
             onChange={(selected) => updateParam("selectedWords", selected)}
-            language={localParams.language}
+            language={language}
             maxSelections={10}
           />
         </TabsContent>

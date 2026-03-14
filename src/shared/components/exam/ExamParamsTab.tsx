@@ -9,13 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { languagesJson, certificationLevelsJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson } from "@/data/bussiness/shared";
 import { GrammarTopicsSelector } from "@/shared/components/lecture-generator/GrammarTopicsSelector";
 import { QuestionTypesSelector } from "./QuestionTypesSelector";
 import { grammarTopicsJson as enGrammarTopics } from "@/data/bussiness/en";
 import { grammarTopicsJson as esGrammarTopics } from "@/data/bussiness/es";
 import { grammarTopicsJson as ptGrammarTopics } from "@/data/bussiness/pt";
 import type { ExamQuestionType } from "@/types/models";
+import { useAuth } from "@/shared/hooks/useAuth";
 import { Rocket } from "lucide-react";
 
 const getGrammarTopicsByLanguage = (language: string) => {
@@ -31,7 +32,6 @@ const getGrammarTopicsByLanguage = (language: string) => {
 };
 
 interface ExamGeneratorParams {
-  language: string;
   difficulty: string;
   grammarTopics: string[];
   questionTypes: ExamQuestionType[];
@@ -55,7 +55,9 @@ export function ExamParamsTab({
   onGenerate,
   isGenerating,
 }: ExamParamsTabProps) {
-  const grammarTopics = getGrammarTopicsByLanguage(params.language);
+  const { user } = useAuth();
+  const language = user?.language || "en";
+  const grammarTopics = getGrammarTopicsByLanguage(language);
   const [countInput, setCountInput] = useState(String(params.questionCount));
 
   useEffect(() => {
@@ -71,28 +73,9 @@ export function ExamParamsTab({
 
   return (
     <div className="space-y-6">
-      {/* Idioma y dificultad */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Idioma</Label>
-          <Select
-            value={params.language}
-            onValueChange={(v) => onParamChange("language", v)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {languagesJson.map((lang) => (
-                <SelectItem key={lang.value} value={lang.value}>
-                  {lang.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label>Dificultad</Label>
+      {/* Dificultad */}
+      <div className="space-y-2 max-w-[200px]">
+        <Label>Dificultad</Label>
           <Select
             value={params.difficulty}
             onValueChange={(v) => onParamChange("difficulty", v)}
@@ -108,7 +91,6 @@ export function ExamParamsTab({
               ))}
             </SelectContent>
           </Select>
-        </div>
       </div>
 
       {/* Temas de gramática */}

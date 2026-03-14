@@ -27,12 +27,19 @@ export function stripMarkdownForSpeech(md: string): string {
     .trim();
 }
 
-export function speakMessageContent(content: string, isFromUser: boolean) {
+const LANG_TO_LOCALE: Record<string, string> = {
+  en: "en-US",
+  es: "es-ES",
+  pt: "pt-BR",
+  fr: "fr-FR",
+};
+
+export function speakMessageContent(content: string, isFromUser: boolean, language = "en") {
   if (!("speechSynthesis" in window)) return;
   const text = isFromUser ? content : stripMarkdownForSpeech(content);
   if (!text.trim()) return;
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
+  utterance.lang = LANG_TO_LOCALE[language] || LANG_TO_LOCALE.en;
   utterance.rate = 1.1;
   window.speechSynthesis.speak(utterance);
 }
@@ -43,6 +50,7 @@ interface ChatMessageBubbleProps {
   correction?: string;
   showCorrection?: boolean;
   vocabularyWords?: string[];
+  language?: string;
   onWordClick?: (word: string) => void;
   onRequestCorrection?: (messageIndex: number) => Promise<void>;
 }
@@ -53,6 +61,7 @@ export function ChatMessageBubble({
   correction,
   showCorrection = true,
   vocabularyWords,
+  language = "en",
   onWordClick,
   onRequestCorrection,
 }: ChatMessageBubbleProps) {
@@ -60,7 +69,7 @@ export function ChatMessageBubble({
   const [loadingCorrection, setLoadingCorrection] = useState(false);
   const isUser = message.role === "user";
 
-  const speakMessage = () => speakMessageContent(message.content, isUser);
+  const speakMessage = () => speakMessageContent(message.content, isUser, language);
 
   const handleCorrectionClick = async () => {
     if (correction) {
@@ -128,7 +137,7 @@ export function ChatMessageBubble({
             type="button"
             onClick={speakMessage}
             className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-            title="Escuchar en inglés"
+            title="Escuchar"
           >
             <Volume2 className="h-3.5 w-3.5" />
             <span>Escuchar</span>

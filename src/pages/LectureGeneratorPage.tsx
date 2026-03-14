@@ -39,6 +39,7 @@ export default function LectureGeneratorPage() {
 
   const handleApplyParams = (newParams: typeof params) => {
     Object.entries(newParams).forEach(([key, value]) => {
+      if (key === "language") return; // Backend uses req.user.language
       updateParam(key as keyof typeof params, value);
     });
   };

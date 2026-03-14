@@ -43,7 +43,7 @@ export default function NewChatPage() {
     if (!selected) return;
     setLoading(true);
     try {
-      const chat = await chatService.create(selected, "en");
+      const chat = await chatService.create(selected);
       navigate(`/chats/${chat._id}`);
     } catch (err: any) {
       toast.error(err.response?.data?.error || err.response?.data?.message || "Error al crear chat");

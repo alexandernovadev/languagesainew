@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
-import { Language, CertificationLevel, ReadingType } from "@/types/business";
+import { CertificationLevel, ReadingType } from "@/types/business";
+import { useAuth } from "@/shared/hooks/useAuth";
 import { ILecture } from "@/types/models/Lecture";
 import { lectureService } from "@/services/lectureService";
 
@@ -22,7 +23,6 @@ const getAuthHeaders = () => {
 };
 
 interface LectureParams {
-  language: Language;
   level: CertificationLevel;
   typeWrite: ReadingType;
   rangeMin: number;
@@ -62,7 +62,6 @@ interface UseLectureGeneratorReturn {
 }
 
 const DEFAULT_PARAMS: LectureParams = {
-  language: "en",
   level: "B1",
   typeWrite: "narrative",
   rangeMin: 200,
@@ -73,6 +72,8 @@ const DEFAULT_PARAMS: LectureParams = {
 };
 
 export function useLectureGenerator(): UseLectureGeneratorReturn {
+  const { user } = useAuth();
+  const effectiveLanguage = user?.language || "en";
   const [keywords, setKeywords] = useState("");
   const [generatedTopic, setGeneratedTopic] = useState("");
   const [isGeneratingTopic, setIsGeneratingTopic] = useState(false);
@@ -152,7 +153,6 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
             prompt,
             level: params.level,
             typeWrite: params.typeWrite,
-            language: params.language,
             rangeMin: params.rangeMin,
             rangeMax: params.rangeMax,
             addEasyWords: params.addEasyWords,
@@ -220,7 +220,7 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
     try {
       const lectureData: ILecture = {
         content: generatedText,
-        language: params.language,
+        language: effectiveLanguage,
         difficulty: params.level,
         typeWrite: params.typeWrite,
         time: additionalData?.time || 5, // Default 5 minutos
@@ -233,7 +233,7 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
       toast.error(error.message || "Error al guardar la lectura");
       throw error;
     }
-  }, [generatedText, params]);
+  }, [generatedText, params, effectiveLanguage]);
 
   // Regenerar
   const regenerate = useCallback(async () => {
@@ -259,7 +259,7 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
     isGeneratingTopic,
     generatedText,
     isGenerating,
-    params,
+    params: { ...params, language: effectiveLanguage },
     paramsModalOpen,
     setParamsModalOpen,
     

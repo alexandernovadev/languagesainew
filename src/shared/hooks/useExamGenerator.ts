@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { examService } from "@/services/examService";
+import { useAuth } from "@/shared/hooks/useAuth";
 import type {
   ExamQuestionType,
   GenerateExamParams,
@@ -12,7 +13,7 @@ import type {
 export type ExamGeneratorStep = 1 | 2 | 3;
 
 interface ExamGeneratorParams {
-  language: string;
+  language?: string; // Derived from user profile, not user-selectable
   difficulty: string;
   grammarTopics: string[];
   questionTypes: ExamQuestionType[];
@@ -21,7 +22,6 @@ interface ExamGeneratorParams {
 }
 
 const DEFAULT_PARAMS: ExamGeneratorParams = {
-  language: "en",
   difficulty: "B1",
   grammarTopics: [],
   questionTypes: ["multiple"],
@@ -31,6 +31,8 @@ const DEFAULT_PARAMS: ExamGeneratorParams = {
 
 export function useExamGenerator() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const effectiveLanguage = user?.language || "en";
   const [step, setStep] = useState<ExamGeneratorStep>(1);
   const [params, setParams] = useState<ExamGeneratorParams>(DEFAULT_PARAMS);
   const [generatedExam, setGeneratedExam] = useState<GeneratedExam | null>(null);
@@ -68,7 +70,6 @@ export function useExamGenerator() {
 
     try {
       const apiParams: GenerateExamParams = {
-        language: params.language,
         grammarTopics: params.grammarTopics,
         difficulty: params.difficulty,
         questionCount: params.questionCount,
@@ -126,7 +127,7 @@ export function useExamGenerator() {
     try {
       const exam = await examService.create({
         title: generatedExam.title,
-        language: params.language as any,
+        language: effectiveLanguage as any,
         difficulty: params.difficulty as any,
         grammarTopics: params.grammarTopics,
         topic: params.topic.trim() || undefined,
@@ -139,7 +140,7 @@ export function useExamGenerator() {
     } finally {
       setIsSaving(false);
     }
-  }, [generatedExam, params, navigate]);
+  }, [generatedExam, params, navigate, effectiveLanguage]);
 
   const resetToParams = useCallback(() => {
     setStep(1);
@@ -149,7 +150,7 @@ export function useExamGenerator() {
 
   return {
     step,
-    params,
+    params: { ...params, language: effectiveLanguage },
     updateParam,
     generatedExam,
     validationResult,
