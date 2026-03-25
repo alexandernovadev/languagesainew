@@ -11,7 +11,7 @@ import {
 } from "@/shared/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Badge } from "@/shared/components/ui/badge";
-import { Loader2, Sparkles, MessageSquare, BookOpen, RotateCcw, Save, GraduationCap } from "lucide-react";
+import { Loader2, Sparkles, MessageSquare, BookOpen, Save, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
@@ -98,7 +98,7 @@ const PROVIDER_CONFIG: Record<
 };
 
 export default function AIConfigPage() {
-  const { configs, defaults, loading, loadConfigs, getConfig, updateConfig, resetConfig } =
+  const { defaults, loading, loadConfigs, getConfig, updateConfig } =
     useAIConfigStore();
   const [activeFeature, setActiveFeature] = useState<AIFeature>("word");
   const [pendingChanges, setPendingChanges] = useState<
@@ -127,16 +127,6 @@ export default function AIConfigPage() {
     if (!change) return;
 
     await updateConfig(change.feature, change.operation, change.provider);
-    setPendingChanges((prev) => {
-      const newChanges = { ...prev };
-      delete newChanges[key];
-      return newChanges;
-    });
-  };
-
-  const handleReset = async (feature: AIFeature, operation: AIOperation) => {
-    await resetConfig(feature, operation);
-    const key = `${feature}-${operation}`;
     setPendingChanges((prev) => {
       const newChanges = { ...prev };
       delete newChanges[key];
@@ -273,20 +263,6 @@ export default function AIConfigPage() {
                             >
                               <Save className="h-4 w-4 mr-2" />
                               Guardar
-                            </Button>
-                          )}
-
-                          {currentProvider !== defaultProvider && !hasChange && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleReset(featureKey as AIFeature, op.operation)
-                              }
-                              className="hover:bg-transparent"
-                            >
-                              <RotateCcw className="h-4 w-4 mr-2" />
-                              Restaurar
                             </Button>
                           )}
                         </div>
