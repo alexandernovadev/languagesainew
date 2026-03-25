@@ -90,10 +90,11 @@ export default function LecturesPage() {
     }
   };
 
-  // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    updateFilters({ search: searchTerm });
+    const q = searchTerm.trim();
+    setSearchTerm(q);
+    updateFilters({ search: q || undefined });
   };
 
   // Handle apply filters from modal

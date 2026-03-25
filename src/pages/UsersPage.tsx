@@ -83,10 +83,11 @@ export default function UsersPage() {
     }
   };
 
-  // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    updateFilters({ username: searchTerm });
+    const q = searchTerm.trim();
+    setSearchTerm(q);
+    updateFilters({ username: q || undefined });
   };
 
   // Clear search

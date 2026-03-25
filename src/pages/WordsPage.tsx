@@ -112,10 +112,11 @@ export default function WordsPage() {
     }
   };
 
-  // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    updateFilters({ wordUser: searchTerm });
+    const q = searchTerm.trim();
+    setSearchTerm(q);
+    updateFilters({ wordUser: q || undefined });
   };
 
   // Handle apply filters from modal
