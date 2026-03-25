@@ -51,10 +51,6 @@ export function useProfile() {
   const handleSave = async () => {
     if (!user) return;
 
-    const languageFieldsChanged =
-      formData.language !== (user.language || "es") ||
-      formData.explainsLanguage !== (user.explainsLanguage || "es");
-
     try {
       setIsSaving(true);
       await userService.updateUser(user._id, formData);
@@ -63,11 +59,9 @@ export function useProfile() {
       await refreshAccessToken();
       
       toast.success("Perfil actualizado correctamente", { duration: 1500 });
-      if (languageFieldsChanged) {
-        window.setTimeout(() => {
-          window.location.reload();
-        }, 400);
-      }
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 400);
     } catch (error: any) {
       console.error("Error updating profile:", error);
       toast.error(error.response?.data?.message || "Failed to update profile");
