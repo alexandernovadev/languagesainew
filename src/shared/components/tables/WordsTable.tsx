@@ -54,8 +54,7 @@ export function WordsTable({
     word type is '${types}'. If the word is homonyms or multiple meanings, 
     include 2-3 distinct visual representations in the same image, if not, include only one. 
  
-Focus on extreme simplicity and tiny file size.
-    `.replace(/\s+/g, ' ');
+Focus on extreme simplicity and tiny file size. BUT NOT bits images. `.replace(/\s+/g, ' ');
     
     navigator.clipboard.writeText(prompt).then(() => {
       toast.success(`Texto copiado de "${word.word}"`, {
