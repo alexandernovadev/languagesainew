@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Languages, TrendingUp, Sparkles } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { Badge } from "@/shared/components/ui/badge";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { getDifficultyVariant } from "@/utils/common";
@@ -19,7 +18,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
   const [refreshConfirmOpen, setRefreshConfirmOpen] = useState(false);
 
   return (
-    <Card className="relative overflow-hidden">
+    <section className="relative">
       {onRefreshAll && (
         <>
           <Button
@@ -53,7 +52,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
           />
         </>
       )}
-      <CardContent className="p-4">
+      <div className={cn(onRefreshAll && "pr-12 sm:pr-14")}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -123,7 +122,7 @@ export function WordHeaderSection({ word, onRefreshAll, loadingAll = false, onUp
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

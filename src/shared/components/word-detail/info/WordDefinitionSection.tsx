@@ -1,6 +1,5 @@
 import { BookOpen, Languages } from "lucide-react";
 import { IWord } from "@/types/models/Word";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 interface WordDefinitionSectionProps {
   word: IWord;
@@ -8,14 +7,12 @@ interface WordDefinitionSectionProps {
 
 export function WordDefinitionSection({ word }: WordDefinitionSectionProps) {
   return (
-    <Card>
-      <CardHeader className="pb-2 px-4 pt-4">
-        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-          <BookOpen className="h-4 w-4 text-primary" />
-          Definición
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-4 pb-4 space-y-2">
+    <section className="space-y-3">
+      <h3 className="flex items-center gap-2 text-base md:text-lg font-semibold">
+        <BookOpen className="h-4 w-4 text-primary shrink-0" />
+        Definición
+      </h3>
+      <div className="space-y-2">
         <div className="p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
           <p className="text-base md:text-lg text-foreground leading-relaxed">
             {word.definition}
@@ -34,7 +31,7 @@ export function WordDefinitionSection({ word }: WordDefinitionSectionProps) {
             </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

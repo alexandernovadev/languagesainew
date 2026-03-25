@@ -1,5 +1,4 @@
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { Image as ImageIcon, Sparkles, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
@@ -22,8 +21,7 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
   };
 
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-0">
+    <section className="overflow-hidden rounded-lg bg-muted/30">
         <div className="relative w-full h-96 flex items-center justify-center group">
           {word.img ? (
             <img
@@ -70,7 +68,6 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
             <Sparkles className={cn("h-4 w-4", loading && "animate-spin")} />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+    </section>
   );
 }

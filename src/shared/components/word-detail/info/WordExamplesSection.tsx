@@ -1,5 +1,4 @@
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Sparkles, FileText, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
@@ -22,26 +21,24 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-2 px-4 pt-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-            <FileText className="h-4 w-4 text-primary" />
-            Ejemplos
-          </CardTitle>
-          <Button
-            onClick={onRefresh}
-            disabled={loading}
-            variant="outline"
-            size="icon"
-            title="Generar ejemplos con AI"
-            className="h-7 w-7"
-          >
-            <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="px-4 pb-4">
+    <section className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-base md:text-lg font-semibold min-w-0">
+          <FileText className="h-4 w-4 text-primary shrink-0" />
+          Ejemplos
+        </h3>
+        <Button
+          onClick={onRefresh}
+          disabled={loading}
+          variant="outline"
+          size="icon"
+          title="Generar ejemplos con AI"
+          className="h-7 w-7 shrink-0"
+        >
+          <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+        </Button>
+      </div>
+      <div>
         {word.examples && word.examples.length > 0 ? (
           <div className="space-y-2">
             {word.examples.map((example, index) => (
@@ -70,7 +67,7 @@ export function WordExamplesSection({ word, onRefresh, loading }: WordExamplesSe
             <p className="text-xs md:text-sm">No hay ejemplos disponibles</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

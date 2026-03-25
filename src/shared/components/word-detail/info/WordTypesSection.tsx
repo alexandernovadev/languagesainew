@@ -1,6 +1,5 @@
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Sparkles, Tag } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
@@ -13,26 +12,24 @@ interface WordTypesSectionProps {
 
 export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionProps) {
   return (
-    <Card>
-      <CardHeader className="pb-2 px-4 pt-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-            <Tag className="h-4 w-4 text-primary" />
-            Tipos Gramaticales
-          </CardTitle>
-          <Button
-            onClick={onRefresh}
-            disabled={loading}
-            variant="outline"
-            size="icon"
-            title="Generar tipos con AI"
-            className="h-7 w-7"
-          >
-            <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="px-4 pb-4">
+    <section className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-base md:text-lg font-semibold min-w-0">
+          <Tag className="h-4 w-4 text-primary shrink-0" />
+          Tipos Gramaticales
+        </h3>
+        <Button
+          onClick={onRefresh}
+          disabled={loading}
+          variant="outline"
+          size="icon"
+          title="Generar tipos con AI"
+          className="h-7 w-7 shrink-0"
+        >
+          <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+        </Button>
+      </div>
+      <div>
         {word.type && word.type.length > 0 ? (
           <div className="flex flex-wrap gap-1.5">
             {word.type.map((type, index) => (
@@ -51,7 +48,7 @@ export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionP
             <p className="text-xs md:text-sm">No hay tipos disponibles</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }
