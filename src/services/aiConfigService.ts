@@ -1,9 +1,21 @@
 import { api } from "./api";
 
-export type AIFeature = 'word' | 'expression' | 'lecture';
-export type AIOperation = 
-  | 'generate' | 'examples' | 'codeSwitching' | 'types' | 'synonyms' | 'chat' | 'image'
-  | 'text' | 'topic';
+export type AIFeature = "word" | "expression" | "lecture" | "exam";
+export type AIOperation =
+  | "generate"
+  | "examples"
+  | "codeSwitching"
+  | "types"
+  | "synonyms"
+  | "chat"
+  | "image"
+  | "text"
+  | "topic"
+  | "validate"
+  | "correct"
+  | "questionChat"
+  | "questionFeedback"
+  | "evaluateTranslation";
 export type AIProvider = 'openai' | 'deepseek';
 
 export interface AIConfig {

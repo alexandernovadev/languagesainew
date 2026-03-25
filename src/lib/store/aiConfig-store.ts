@@ -37,6 +37,14 @@ export const useAIConfigStore = create<AIConfigState>()(
           topic: 'deepseek',
           image: 'openai',
         },
+        exam: {
+          generate: 'openai',
+          validate: 'deepseek',
+          correct: 'deepseek',
+          questionChat: 'openai',
+          questionFeedback: 'openai',
+          evaluateTranslation: 'openai',
+        },
       },
       loading: false,
 

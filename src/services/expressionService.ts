@@ -99,9 +99,11 @@ export const expressionService = {
     language?: string,
     options?: any
   ) => {
-    const body: any = { prompt };
+    const body: Record<string, unknown> = { prompt };
     if (language) body.language = language;
-    body.options = options || { provider: "openai" };
+    if (options && Object.keys(options).length > 0) {
+      body.options = options;
+    }
     return api.post("/api/expressions/generate", body);
   },
 

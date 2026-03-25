@@ -116,7 +116,7 @@ export default function ExpressionsPage() {
     setIsGenerating(true);
     try {
       const language = user?.language || "en";
-      const response = await expressionService.generateExpression(expressionPrompt, language, { provider: "openai" });
+      const response = await expressionService.generateExpression(expressionPrompt, language);
       
       // La respuesta tiene estructura: { success: true, message: "...", data: expressionData }
       if (response.data.success && response.data.data) {

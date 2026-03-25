@@ -105,25 +105,59 @@ export const wordService = {
     return res.data;
   },
 
-  // --- AI Generation methods (updated) ---
-  async generateWord(word: string, language = "en", provider = "openai") {
-    const res = await api.post(`/api/words/generate`, { word, language, provider });
+  // --- AI Generation methods (provider omitido → backend usa AI config del usuario) ---
+  async generateWord(word: string, language = "en", provider?: string) {
+    const body: Record<string, unknown> = { word, language };
+    if (provider) body.provider = provider;
+    const res = await api.post(`/api/words/generate`, body);
     return res.data;
   },
-  async generateWordExamples(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
-    const res = await api.post(`/api/words/${wordId}/generate-examples`, { word, language, oldExamples, provider });
+  async generateWordExamples(
+    wordId: string,
+    word: string,
+    language: string,
+    oldExamples: string[] = [],
+    provider?: string
+  ) {
+    const body: Record<string, unknown> = { word, language, oldExamples };
+    if (provider) body.provider = provider;
+    const res = await api.post(`/api/words/${wordId}/generate-examples`, body);
     return res.data;
   },
-  async generateWordCodeSwitching(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
-    const res = await api.post(`/api/words/${wordId}/generate-code-switching`, { word, language, oldExamples, provider });
+  async generateWordCodeSwitching(
+    wordId: string,
+    word: string,
+    language: string,
+    oldExamples: string[] = [],
+    provider?: string
+  ) {
+    const body: Record<string, unknown> = { word, language, oldExamples };
+    if (provider) body.provider = provider;
+    const res = await api.post(`/api/words/${wordId}/generate-code-switching`, body);
     return res.data;
   },
-  async generateWordSynonyms(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
-    const res = await api.post(`/api/words/${wordId}/generate-synonyms`, { word, language, oldExamples, provider });
+  async generateWordSynonyms(
+    wordId: string,
+    word: string,
+    language: string,
+    oldExamples: string[] = [],
+    provider?: string
+  ) {
+    const body: Record<string, unknown> = { word, language, oldExamples };
+    if (provider) body.provider = provider;
+    const res = await api.post(`/api/words/${wordId}/generate-synonyms`, body);
     return res.data;
   },
-  async generateWordTypes(wordId: string, word: string, language: string, oldExamples: string[] = [], provider = "openai") {
-    const res = await api.post(`/api/words/${wordId}/generate-types`, { word, language, oldExamples, provider });
+  async generateWordTypes(
+    wordId: string,
+    word: string,
+    language: string,
+    oldExamples: string[] = [],
+    provider?: string
+  ) {
+    const body: Record<string, unknown> = { word, language, oldExamples };
+    if (provider) body.provider = provider;
+    const res = await api.post(`/api/words/${wordId}/generate-types`, body);
     return res.data;
   },
   async generateWordImage(wordId: string, word: string, imgOld: string = "") {

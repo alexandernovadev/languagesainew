@@ -11,7 +11,7 @@ import {
 } from "@/shared/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Badge } from "@/shared/components/ui/badge";
-import { Loader2, Sparkles, MessageSquare, BookOpen, RotateCcw, Save } from "lucide-react";
+import { Loader2, Sparkles, MessageSquare, BookOpen, RotateCcw, Save, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
@@ -60,6 +60,19 @@ const FEATURE_CONFIG: Record<
       { operation: "text", label: "Texto", description: "Generar texto de lectura" },
       { operation: "topic", label: "Tema", description: "Generar tema de lectura" },
       { operation: "image", label: "Imagen", description: "Generar imagen" },
+    ],
+  },
+  exam: {
+    label: "Exámenes",
+    icon: <GraduationCap className="h-5 w-5" />,
+    color: "text-amber-600",
+    operations: [
+      { operation: "generate", label: "Generar examen", description: "Creación del examen en JSON" },
+      { operation: "validate", label: "Validar examen", description: "Revisión tipo profesor" },
+      { operation: "correct", label: "Corregir examen", description: "Aplicar correcciones según validación" },
+      { operation: "questionChat", label: "Chat en pregunta", description: "Ayuda cuando fallas una pregunta" },
+      { operation: "questionFeedback", label: "Feedback por pregunta", description: "Retroalimentación breve" },
+      { operation: "evaluateTranslation", label: "Evaluar traducción", description: "Puntuación respuestas tipo traducción" },
     ],
   },
 };
@@ -162,7 +175,7 @@ export default function AIConfigPage() {
       />
 
       <Tabs value={activeFeature} onValueChange={(v) => setActiveFeature(v as AIFeature)}>
-        <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-6 bg-transparent">
           {Object.entries(FEATURE_CONFIG).map(([key, config]) => (
             <TabsTrigger
               key={key}

@@ -116,8 +116,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         currentWord._id,
         currentWord.word,
         currentWord.language,
-        currentWord.examples || [],
-        "openai"
+        currentWord.examples || []
       );
       const updatedData = response.data || response;
       // Actualizar solo el campo sinonyms, manteniendo todo lo demás
@@ -145,8 +144,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         currentWord._id,
         currentWord.word,
         currentWord.language,
-        currentWord.examples || [],
-        "openai"
+        currentWord.examples || []
       );
       const updatedData = response.data || response;
       // Actualizar solo el campo examples, manteniendo todo lo demás
@@ -174,8 +172,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         currentWord._id,
         currentWord.word,
         currentWord.language,
-        currentWord.examples || [],
-        "openai"
+        currentWord.examples || []
       );
       const updatedData = response.data || response;
       // Actualizar solo el campo type, manteniendo todo lo demás
@@ -203,8 +200,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         currentWord._id,
         currentWord.word,
         currentWord.language,
-        currentWord.examples || [],
-        "openai"
+        currentWord.examples || []
       );
       const updatedData = response.data || response;
       // Actualizar solo el campo codeSwitching, manteniendo todo lo demás
@@ -231,10 +227,10 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
       // Refresh all sections in parallel
       const responses = await Promise.all([
         wordService.generateWordImage(currentWord._id, currentWord.word, currentWord.img || ""),
-        wordService.generateWordSynonyms(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || [], "openai"),
-        wordService.generateWordExamples(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || [], "openai"),
-        wordService.generateWordTypes(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || [], "openai"),
-        wordService.generateWordCodeSwitching(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || [], "openai"),
+        wordService.generateWordSynonyms(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || []),
+        wordService.generateWordExamples(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || []),
+        wordService.generateWordTypes(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || []),
+        wordService.generateWordCodeSwitching(currentWord._id, currentWord.word, currentWord.language, currentWord.examples || []),
       ]);
       
       // Actualizar todos los campos en paralelo, manteniendo todo lo demás
