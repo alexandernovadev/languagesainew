@@ -111,7 +111,7 @@ export default function LectureDetailPage() {
     if (!selectedWord || !lecture) return;
     setAddingWord(true);
     try {
-      const response = await wordService.generateWord(selectedWord, lecture.language || "es");
+      const response = await wordService.generateWord(selectedWord, lecture.language || "en");
       const wordData = response?.data ?? response;
       setWordLookup({ exists: true, word: wordData });
       setDetailModalWordId(wordData._id);

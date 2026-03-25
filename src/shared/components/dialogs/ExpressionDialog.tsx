@@ -26,7 +26,7 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
   const [formData, setFormData] = useState({
     expression: "",
     definition: "",
-    language: "es",
+    language: "en",
     difficulty: "",
     type: [] as ExpressionType[],
     context: "",
@@ -51,7 +51,7 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
       setFormData({
         expression: expression.expression || "",
         definition: expression.definition || "",
-        language: expression.language || "es",
+        language: expression.language || "en",
         difficulty: expression.difficulty || "",
         type: (expression.type as ExpressionType[]) || [],
         context: expression.context || "",
@@ -67,7 +67,7 @@ export function ExpressionDialog({ open, onOpenChange, expression, onSave }: Exp
       setFormData({
         expression: "",
         definition: "",
-        language: "es",
+        language: "en",
         difficulty: "",
         type: [],
         context: "",

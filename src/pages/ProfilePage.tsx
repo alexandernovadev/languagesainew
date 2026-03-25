@@ -17,8 +17,9 @@ import {
 import { languages } from "@/utils/common/language";
 
 const APP_LANGUAGES = [
+  { value: "en", ...languages["en"] },
   { value: "es", ...languages["es"] },
-    { value: "pt", ...languages["pt"] },
+  { value: "pt", ...languages["pt"] },
   { value: "it", ...languages["it"] },
   { value: "fr", ...languages["fr"] },
 ] as const;

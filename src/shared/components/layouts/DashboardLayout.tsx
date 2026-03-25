@@ -43,8 +43,9 @@ import { toast } from "sonner";
 import packageJson from "../../../../package.json";
 
 const CONTENT_LANGUAGE_OPTIONS = [
+  { value: "en", ...languagesInfo.en },
   { value: "es", ...languagesInfo.es },
-    { value: "pt", ...languagesInfo.pt },
+  { value: "pt", ...languagesInfo.pt },
   { value: "it", ...languagesInfo.it },
   { value: "fr", ...languagesInfo.fr },
 ] as const;
@@ -139,7 +140,7 @@ function SidebarFooterNav() {
           Idioma del contenido
         </Label>
         <Select
-          value={user?.language ?? "es"}
+          value={user?.language ?? "en"}
           onValueChange={(v) => void handleContentLanguageChange(v)}
           disabled={languageSaving || !user?._id}
         >

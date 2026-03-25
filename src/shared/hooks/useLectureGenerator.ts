@@ -73,7 +73,7 @@ const DEFAULT_PARAMS: LectureParams = {
 
 export function useLectureGenerator(): UseLectureGeneratorReturn {
   const { user } = useAuth();
-  const effectiveLanguage = user?.language || "es";
+  const effectiveLanguage = user?.language || "en";
   const [keywords, setKeywords] = useState("");
   const [generatedTopic, setGeneratedTopic] = useState("");
   const [isGeneratingTopic, setIsGeneratingTopic] = useState(false);
