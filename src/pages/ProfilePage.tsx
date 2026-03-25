@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avat
 import { Badge } from "@/shared/components/ui/badge";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Separator } from "@/shared/components/ui/separator";
-import { Save, X, Loader2, Globe, BookOpen, User, Shield, Clock } from "lucide-react";
+import { Save, X, Loader2, Globe, User, Shield, Clock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { languages } from "@/utils/common/language";
-import { cn } from "@/utils/common/classnames";
 
 const APP_LANGUAGES = [
   { value: "es", ...languages["es"] },
@@ -83,51 +82,44 @@ export default function ProfilePage() {
     <div className="space-y-5 pb-8">
       <PageHeader
         title="Perfil"
-        description="Edita directamente los campos; los cambios se guardan cuando pulses Guardar."
-      />
-
-      {isDirty && (
-        <div
-          className={cn(
-            "flex flex-col gap-3 rounded-2xl border border-primary/25 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent",
-            "p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
-          )}
-        >
-          <p className="text-sm text-foreground/90">
-            <span className="font-medium">Cambios sin guardar.</span>{" "}
-            <span className="text-muted-foreground">
-              Puedes descartarlos o guardar en el servidor.
-            </span>
-          </p>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCancel}
-              disabled={isSaving}
-              className="gap-1.5"
-            >
-              <X className="h-4 w-4" />
-              Descartar
-            </Button>
+        description="Aquí puedes actualizar tus datos y los idiomas de la app. Los cambios se aplican al pulsar Guardar."
+        actions={
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {isDirty && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCancel}
+                disabled={isSaving}
+                className="gap-1.5"
+              >
+                <X className="h-4 w-4" />
+                Descartar
+              </Button>
+            )}
             <Button
               type="button"
               size="sm"
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={!isDirty || isSaving}
               className="gap-1.5"
+              title={
+                isDirty
+                  ? "Guardar cambios en el servidor"
+                  : "No hay cambios pendientes"
+              }
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <Save className="h-4 w-4" />
               )}
-              {isSaving ? "Guardando…" : "Guardar cambios"}
+              {isSaving ? "Guardando…" : "Guardar"}
             </Button>
           </div>
-        </div>
-      )}
+        }
+      />
 
       <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
         <div className="relative border-b bg-gradient-to-br from-primary/[0.08] via-transparent to-transparent px-5 py-8 sm:px-8">
@@ -335,11 +327,6 @@ export default function ProfilePage() {
           </section>
         </div>
       </div>
-
-      <p className="flex items-start gap-2 text-xs text-muted-foreground">
-        <BookOpen className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        Los campos editables están siempre activos: escribe o elige opciones y guarda cuando quieras.
-      </p>
     </div>
   );
 }

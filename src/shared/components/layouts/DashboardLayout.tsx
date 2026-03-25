@@ -105,7 +105,10 @@ function SidebarFooterNav() {
       setLanguageSaving(true);
       await userService.updateUser(user._id, { language: value as typeof user.language });
       await refreshAccessToken();
-      toast.success("Idioma de contenido actualizado");
+      toast.success("Idioma de contenido actualizado", { duration: 1500 });
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 400);
     } catch (err: unknown) {
       const message =
         err && typeof err === "object" && "response" in err
@@ -136,7 +139,7 @@ function SidebarFooterNav() {
           Idioma del contenido
         </Label>
         <Select
-          value={user?.language ?? "en"}
+          value={user?.language ?? "es"}
           onValueChange={(v) => void handleContentLanguageChange(v)}
           disabled={languageSaving || !user?._id}
         >
