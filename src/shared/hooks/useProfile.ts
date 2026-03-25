@@ -11,7 +11,7 @@ export function useProfile() {
     lastName: "",
     phone: "",
     address: "",
-    language: "en" as any,
+    language: "es" as any,
     explainsLanguage: "es" as any,
   });
 
@@ -23,7 +23,7 @@ export function useProfile() {
         lastName: user.lastName || "",
         phone: user.phone || "",
         address: user.address || "",
-        language: user.language || "en",
+        language: user.language || "es",
         explainsLanguage: user.explainsLanguage || "es",
       });
     }
@@ -36,7 +36,7 @@ export function useProfile() {
       formData.lastName !== (user.lastName || "") ||
       formData.phone !== (user.phone || "") ||
       formData.address !== (user.address || "") ||
-      formData.language !== (user.language || "en") ||
+      formData.language !== (user.language || "es") ||
       formData.explainsLanguage !== (user.explainsLanguage || "es")
     );
   }, [user, formData]);
@@ -75,7 +75,7 @@ export function useProfile() {
         lastName: user.lastName || "",
         phone: user.phone || "",
         address: user.address || "",
-        language: user.language || "en",
+        language: user.language || "es",
         explainsLanguage: user.explainsLanguage || "es",
       });
     }

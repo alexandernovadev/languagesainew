@@ -45,7 +45,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   const [formData, setFormData] = useState({
     word: "",
     definition: "",
-    language: "en" as Language,
+    language: "es" as Language,
     difficulty: "medium" as Difficulty,
     IPA: "",
     img: "",
@@ -112,7 +112,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       setFormData({
         word: "",
         definition: "",
-        language: "en",
+        language: "es",
         difficulty: "medium",
         IPA: "",
         img: "",
@@ -136,7 +136,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       setFormData({
         word: fullWord.word || "",
         definition: fullWord.definition || "",
-        language: (fullWord.language as Language) || "en",
+        language: (fullWord.language as Language) || "es",
         difficulty: (fullWord.difficulty as Difficulty) || "medium",
         IPA: fullWord.IPA || "",
         img: fullWord.img || "",
@@ -152,7 +152,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       setFormData({
         word: "",
         definition: "",
-        language: "en",
+        language: "es",
         difficulty: "medium",
         IPA: "",
         img: "",

@@ -133,7 +133,7 @@ export default function WordsPage() {
   const handleGenerateWithAI = async (word: string) => {
     setIsGenerating(true);
     try {
-      const response = await wordService.generateWord(word, user?.language || "en", "openai");
+      const response = await wordService.generateWord(word, user?.language || "es", "openai");
 
       // La respuesta tiene estructura: { success: true, message: "...", data: savedWord }
       if (response.success && response.data) {
@@ -269,7 +269,7 @@ export default function WordsPage() {
         open={quickAddOpen}
         onOpenChange={setQuickAddOpen}
         onAdd={handleQuickAdd}
-        language={user?.language || "en"}
+        language={user?.language || "es"}
       />
 
       {/* Words Table */}

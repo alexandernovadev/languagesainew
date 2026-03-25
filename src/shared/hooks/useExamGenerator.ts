@@ -32,7 +32,7 @@ const DEFAULT_PARAMS: ExamGeneratorParams = {
 export function useExamGenerator() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const effectiveLanguage = user?.language || "en";
+  const effectiveLanguage = user?.language || "es";
   const [step, setStep] = useState<ExamGeneratorStep>(1);
   const [params, setParams] = useState<ExamGeneratorParams>(DEFAULT_PARAMS);
   const [generatedExam, setGeneratedExam] = useState<GeneratedExam | null>(null);

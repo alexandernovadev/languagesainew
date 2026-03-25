@@ -7,8 +7,9 @@ interface LanguageOption {
 
 const languagesJson: LanguageOption[] = [
   { value: "es", label: "Español" },
-  { value: "en", label: "Inglés" },
-  { value: "pt", label: "Portugués" },
+    { value: "pt", label: "Portugués" },
+  { value: "it", label: "Italiano" },
+  { value: "fr", label: "Francés" },
 ];
 
 const languagesList: Language[] = languagesJson.map((language) => language.value);

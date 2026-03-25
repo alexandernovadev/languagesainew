@@ -98,7 +98,7 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
   const [formData, setFormData] = useState({
     content: "",
     difficulty: "" as CertificationLevel | "",
-    language: "en" as Language,
+    language: "es" as Language,
     typeWrite: "" as ReadingType | "",
     time: 0,
     img: "",
@@ -137,7 +137,7 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
       setFormData({
         content: "",
         difficulty: "",
-        language: "en",
+        language: "es",
         typeWrite: "",
         time: 0,
         img: "",
@@ -158,7 +158,7 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
       const newFormData = {
         content: contentHtml,
         difficulty: (lectureToUse.difficulty as CertificationLevel) || "",
-        language: (lectureToUse.language as Language) || "en",
+        language: (lectureToUse.language as Language) || "es",
         typeWrite: (lectureToUse.typeWrite as ReadingType) || "",
         time: lectureToUse.time || 0,
         img: lectureToUse.img || "",
@@ -170,7 +170,7 @@ export function LectureDialog({ open, onOpenChange, lecture, onSave }: LectureDi
       setFormData({
         content: "",
         difficulty: "",
-        language: "en",
+        language: "es",
         typeWrite: "",
         time: 0,
         img: "",

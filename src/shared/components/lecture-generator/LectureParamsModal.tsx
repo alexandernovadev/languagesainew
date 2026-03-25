@@ -65,7 +65,7 @@ export function LectureParamsModal({
   onApply,
 }: LectureParamsModalProps) {
   const { user } = useAuth();
-  const language = user?.language || "en";
+  const language = user?.language || "es";
   const [localParams, setLocalParams] = useState<LectureParams>(params);
   const [activeTab, setActiveTab] = useState<"basic" | "advanced" | "words">("basic");
 

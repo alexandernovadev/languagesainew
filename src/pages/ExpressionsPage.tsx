@@ -115,7 +115,7 @@ export default function ExpressionsPage() {
   const handleGenerateWithAI = async (expressionPrompt: string) => {
     setIsGenerating(true);
     try {
-      const language = user?.language || "en";
+      const language = user?.language || "es";
       const response = await expressionService.generateExpression(expressionPrompt, language, { provider: "openai" });
       
       // La respuesta tiene estructura: { success: true, message: "...", data: expressionData }
@@ -126,7 +126,7 @@ export default function ExpressionsPage() {
         const success = await createExpression({
           expression: generatedData.expression || expressionPrompt,
           definition: generatedData.definition || "",
-          language: generatedData.language || "en",
+          language: generatedData.language || "es",
           difficulty: generatedData.difficulty,
           type: generatedData.type || [],
           context: generatedData.context,
@@ -265,7 +265,7 @@ export default function ExpressionsPage() {
         open={quickAddOpen}
         onOpenChange={setQuickAddOpen}
         onAdd={handleQuickAdd}
-        language={user?.language || "en"}
+        language={user?.language || "es"}
       />
 
       {/* Expressions Table */}

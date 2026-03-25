@@ -124,7 +124,7 @@ export const getAllLanguages = (): LanguageInfo[] => {
 };
 
 // Allowed languages aligned with backend enum (User model)
-export const allowedLanguageCodes = ["es", "en", "fr", "de", "it", "pt"] as const;
+export const allowedLanguageCodes = ["es", "pt", "it", "fr"] as const;
 export type AllowedLanguageCode = typeof allowedLanguageCodes[number];
 
 export const getAllowedLanguages = (): LanguageInfo[] => {

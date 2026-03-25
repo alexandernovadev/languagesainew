@@ -56,7 +56,7 @@ export function ExamParamsTab({
   isGenerating,
 }: ExamParamsTabProps) {
   const { user } = useAuth();
-  const language = user?.language || "en";
+  const language = user?.language || "es";
   const grammarTopics = getGrammarTopicsByLanguage(language);
   const [countInput, setCountInput] = useState(String(params.questionCount));
 

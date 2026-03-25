@@ -44,8 +44,8 @@ import packageJson from "../../../../package.json";
 
 const CONTENT_LANGUAGE_OPTIONS = [
   { value: "es", ...languagesInfo.es },
-  { value: "en", ...languagesInfo.en },
-  { value: "pt", ...languagesInfo.pt },
+    { value: "pt", ...languagesInfo.pt },
+  { value: "it", ...languagesInfo.it },
   { value: "fr", ...languagesInfo.fr },
 ] as const;
 

@@ -45,7 +45,7 @@ export default function NewChatPage() {
   const [loading, setLoading] = useState(false);
   const [canCreate, setCanCreate] = useState<boolean | null>(null);
 
-  const language = user?.language || "en";
+  const language = user?.language || "es";
 
   useEffect(() => {
     let cancelled = false;
@@ -65,7 +65,7 @@ export default function NewChatPage() {
     if (!selected) return;
     setLoading(true);
     try {
-      const language = user?.language || "en";
+      const language = user?.language || "es";
       const chat = await chatService.create(selected, language);
       navigate(`/chats/${chat._id}`);
     } catch (err: any) {
