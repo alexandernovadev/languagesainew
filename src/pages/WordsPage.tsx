@@ -24,7 +24,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/components/ui/pagination";
-import { Badge } from "@/shared/components/ui/badge";
 
 export default function WordsPage() {
   const {
@@ -381,7 +380,6 @@ export default function WordsPage() {
         confirmText="Eliminar"
         cancelText="Cancelar"
         loading={deleteLoading}
-        confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
       />
 
       {/* Filters Modal */}
