@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -28,8 +29,25 @@ import { useAuth } from "@/shared/hooks/useAuth";
 import { useEnvironment } from "@/shared/hooks/useEnvironment";
 import { languages as languagesInfo } from "@/utils/common/language";
 import { LoginButton } from "../LoginButton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
+import { Label } from "@/shared/components/ui/label";
+import { userService } from "@/services/userService";
 import { User, LogOut } from "lucide-react";
+import { toast } from "sonner";
 import packageJson from "../../../../package.json";
+
+const CONTENT_LANGUAGE_OPTIONS = [
+  { value: "es", ...languagesInfo.es },
+  { value: "en", ...languagesInfo.en },
+  { value: "pt", ...languagesInfo.pt },
+  { value: "fr", ...languagesInfo.fr },
+] as const;
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -73,11 +91,31 @@ function MenuItems({ items }: { items: typeof menuItems }) {
 }
 
 function SidebarFooterNav() {
-  const { logout } = useAuth();
+  const { user, logout, refreshAccessToken } = useAuth();
   const { isMobile, setOpenMobile } = useSidebar();
+  const [languageSaving, setLanguageSaving] = useState(false);
 
   const closeMobile = () => {
     if (isMobile) setOpenMobile(false);
+  };
+
+  const handleContentLanguageChange = async (value: string) => {
+    if (!user?._id || value === user.language) return;
+    try {
+      setLanguageSaving(true);
+      await userService.updateUser(user._id, { language: value as typeof user.language });
+      await refreshAccessToken();
+      toast.success("Idioma de contenido actualizado");
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === "object" && "response" in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data
+              ?.message
+          : undefined;
+      toast.error(message || "No se pudo cambiar el idioma");
+    } finally {
+      setLanguageSaving(false);
+    }
   };
 
   return (
@@ -91,6 +129,38 @@ function SidebarFooterNav() {
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
+      </SidebarMenu>
+
+      <div className="group-data-[collapsible=icon]:hidden space-y-1.5 px-0.5">
+        <Label htmlFor="sidebar-content-lang" className="text-xs text-muted-foreground">
+          Idioma del contenido
+        </Label>
+        <Select
+          value={user?.language ?? "en"}
+          onValueChange={(v) => void handleContentLanguageChange(v)}
+          disabled={languageSaving || !user?._id}
+        >
+          <SelectTrigger
+            id="sidebar-content-lang"
+            className="h-9 w-full text-xs"
+            aria-label="Idioma del contenido"
+          >
+            <SelectValue placeholder="Idioma" />
+          </SelectTrigger>
+          <SelectContent position="popper" side="top" align="start" className="w-[var(--radix-select-trigger-width)]">
+            {CONTENT_LANGUAGE_OPTIONS.map((lang) => (
+              <SelectItem key={lang.value} value={lang.value} className="text-xs">
+                <span className="flex items-center gap-2">
+                  <span>{lang.flag}</span>
+                  <span>{lang.name}</span>
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton
             tooltip="Cerrar sesión"
