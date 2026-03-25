@@ -20,6 +20,7 @@ import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-r
 import { Badge } from "../ui/badge";
 import { ImageUploaderCard } from "../ui/ImageUploaderCard";
 import { wordService } from "@/services/wordService";
+import { capitalizeWords } from "@/utils/common/string";
 
 interface WordDialogProps {
   open: boolean;
@@ -220,12 +221,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
     <ModalNova
       open={open}
       onOpenChange={onOpenChange}
-      title={isEditMode ? "Edit Word" : "Create New Word"}
-      description={
-        isEditMode
-          ? "Update word information"
-          : "Fill in the information to create a new word"
-      }
+      title={isEditMode ? `Edit - ${capitalizeWords(word?.word || "")}` : "Create New Word"}
       size="4xl"
       height="h-[90dvh]"
       footer={

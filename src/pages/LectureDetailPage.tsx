@@ -12,6 +12,8 @@ import { ILecture } from "@/types/models/Lecture";
 import { IWord } from "@/types/models/Word";
 import { ArrowLeft, Clock, BookOpen, Volume2, Loader2, Plus } from "lucide-react";
 import { getDifficultyVariant } from "@/utils/common";
+import { cn } from "@/utils/common/classnames";
+import { useSidebar } from "@/shared/components/ui/sidebar";
 import { getMarkdownTitle, removeFirstH1 } from "@/utils/common/string/markdown";
 import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
@@ -20,6 +22,7 @@ import { WordDetailModal } from "@/shared/components/dialogs/WordDetailModal";
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { state, isMobile } = useSidebar();
   const [lecture, setLecture] = useState<ILecture | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -164,9 +167,11 @@ export default function LectureDetailPage() {
   }
 
   const lectureTitle = getMarkdownTitle(lecture.content) || lecture.typeWrite || "Lectura";
+  const wordPanelOpen =
+    !!(selectedWord || wordLookupLoading || wordLookup);
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4 relative", wordPanelOpen && "pb-28")}>
       <PageHeader 
         title={lectureTitle} 
         description="Lee y disfruta del contenido"
@@ -252,9 +257,18 @@ export default function LectureDetailPage() {
       </Card>
 
       {/* Word lookup panel */}
-      {(selectedWord || wordLookupLoading || wordLookup) && (
-        <Card className="sticky bottom-0 z-10 shadow-lg">
-          <CardContent className="p-4">
+      {wordPanelOpen && (
+        <Card
+          className={cn(
+            "fixed z-30 border shadow-lg bg-card/95 backdrop-blur-md supports-[backdrop-filter]:bg-card/90",
+            isMobile
+              ? "inset-x-0 bottom-0 rounded-t-xl border-x-0 border-b-0"
+              : state === "collapsed"
+                ? "left-[calc(var(--sidebar-width-icon)+theme(spacing.4)+theme(spacing.2))] right-2 bottom-2 rounded-xl"
+                : "left-[calc(var(--sidebar-width)+theme(spacing.2))] right-2 bottom-2 rounded-xl"
+          )}
+        >
+          <CardContent className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground mb-1">
