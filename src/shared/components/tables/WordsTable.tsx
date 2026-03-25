@@ -9,12 +9,6 @@ import { useAuth } from "@/shared/hooks/useAuth";
 import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/components/ui/tooltip";
 
 interface WordsTableProps {
   words: IWord[];
@@ -121,7 +115,6 @@ Focus on extreme simplicity and tiny file size.
   }
 
   return (
-    <TooltipProvider>
       <div className="space-y-4 overflow-x-hidden max-w-full lg:max-w-none">
         {words.map((word) => (
         <Card key={word._id} className="hover:shadow-md transition-shadow overflow-hidden max-w-full lg:max-w-none">
@@ -193,19 +186,14 @@ Focus on extreme simplicity and tiny file size.
                 
                 {/* Spanish Definition */}
                 {word.spanish?.definition && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <p 
-                        className="text-sm sm:text-sm font-bold text-amber-700 dark:text-amber-400 mb-2 break-words overflow-wrap-anywhere max-w-full cursor-pointer transition-all"
-                        onDoubleClick={() => handleCopyImagePrompt(word)}
-                      >
-                        {word.spanish.definition}
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Doble clic para copiar prompt de imagen</p>
-                    </TooltipContent>
-                  </Tooltip>
+                  <p
+                    title="Doble clic para copiar prompt de imagen"
+                    className="text-sm sm:text-sm font-bold text-amber-700 dark:text-amber-400 mb-2 break-words overflow-wrap-anywhere max-w-full cursor-default select-none transition-all"
+                    style={{ cursor: "default" }}
+                    onDoubleClick={() => handleCopyImagePrompt(word)}
+                  >
+                    {word.spanish.definition}
+                  </p>
                 )}
 
                 {/* Type tags */}
@@ -257,6 +245,5 @@ Focus on extreme simplicity and tiny file size.
         </Card>
       ))}
       </div>
-    </TooltipProvider>
   );
 }
