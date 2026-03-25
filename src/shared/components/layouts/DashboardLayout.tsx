@@ -15,7 +15,6 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
 } from "@/shared/components/ui/sidebar";
 import {
@@ -28,8 +27,8 @@ import {
 import { useAuth } from "@/shared/hooks/useAuth";
 import { useEnvironment } from "@/shared/hooks/useEnvironment";
 import { languages as languagesInfo } from "@/utils/common/language";
-import { UserMenu } from "../UserMenu";
 import { LoginButton } from "../LoginButton";
+import { User, LogOut } from "lucide-react";
 import packageJson from "../../../../package.json";
 
 interface DashboardLayoutProps {
@@ -73,11 +72,52 @@ function MenuItems({ items }: { items: typeof menuItems }) {
   );
 }
 
+function SidebarFooterNav() {
+  const { logout } = useAuth();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const closeMobile = () => {
+    if (isMobile) setOpenMobile(false);
+  };
+
+  return (
+    <div className="flex flex-col gap-2 px-2 py-2">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip="Perfil">
+            <Link to="/profile" onClick={closeMobile}>
+              <User />
+              <span>Perfil</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            tooltip="Cerrar sesión"
+            onClick={() => {
+              closeMobile();
+              logout();
+            }}
+          >
+            <LogOut />
+            <span>Cerrar sesión</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </div>
+  );
+}
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { isAuthenticated, user } = useAuth();
   const { isDevelopment } = useEnvironment();
   const location = useLocation();
   const isChatDetail = /^\/chats\/[^/]+$/.test(location.pathname);
+
+  const userDisplayName =
+    user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.username ?? "";
 
   return (
     <SidebarProvider>
@@ -99,9 +139,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </span>
               )}
             </div>
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-              <span className="text-sm font-semibold">LanguagesAI</span>
-              <span className="text-xs text-muted-foreground">v{packageJson.version}</span>
+            <div className="flex min-w-0 flex-1 flex-col group-data-[collapsible=icon]:hidden">
+              <span className="truncate text-sm font-semibold">
+                {isAuthenticated && userDisplayName
+                  ? userDisplayName
+                  : "LanguagesAI"}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                v{packageJson.version}
+              </span>
             </div>
           </div>
         </SidebarHeader>
@@ -156,28 +202,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <SidebarFooter>
           {isAuthenticated && user ? (
-            <div className="flex flex-col gap-2 px-2 py-2">
-              {/* User Info with Name */}
-              <div className="flex items-center gap-2">
-                <UserMenu />
-                <div className="flex-1 group-data-[collapsible=icon]:hidden">
-                  <p className="text-sm font-medium">
-                    {user.firstName && user.lastName
-                      ? `${user.firstName} ${user.lastName}`
-                      : user.username}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{user.email}</p>
-                </div>
-              </div>
-              
-              {/* Collapse Button */}
-              <div className="flex items-center">
-                <SidebarTrigger className="h-8 w-8 border-none" />
-                <span className="text-sm group-data-[collapsible=icon]:hidden">
-                  Cerrar
-                </span>
-              </div>
-            </div>
+            <SidebarFooterNav />
           ) : (
             <div className="px-2 py-2">
               <LoginButton />

@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "./useAuth";
-import { userService, type UserUpdate } from "@/services/userService";
+import { userService } from "@/services/userService";
 import { toast } from "sonner";
 
 export function useProfile() {
   const { user, refreshAccessToken } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,6 +29,18 @@ export function useProfile() {
     }
   }, [user]);
 
+  const isDirty = useMemo(() => {
+    if (!user) return false;
+    return (
+      formData.firstName !== (user.firstName || "") ||
+      formData.lastName !== (user.lastName || "") ||
+      formData.phone !== (user.phone || "") ||
+      formData.address !== (user.address || "") ||
+      formData.language !== (user.language || "en") ||
+      formData.explainsLanguage !== (user.explainsLanguage || "es")
+    );
+  }, [user, formData]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -48,7 +59,6 @@ export function useProfile() {
       await refreshAccessToken();
       
       toast.success("Perfil actualizado correctamente");
-      setIsEditing(false);
     } catch (error: any) {
       console.error("Error updating profile:", error);
       toast.error(error.response?.data?.message || "Failed to update profile");
@@ -69,21 +79,15 @@ export function useProfile() {
         explainsLanguage: user.explainsLanguage || "es",
       });
     }
-    setIsEditing(false);
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
   };
 
   return {
     user,
     formData,
-    isEditing,
+    isDirty,
     isSaving,
     handleInputChange,
     handleSave,
     handleCancel,
-    handleEdit,
   };
 }

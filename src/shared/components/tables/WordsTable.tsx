@@ -59,7 +59,9 @@ export function WordsTable({
     whose definition is '${word.spanish?.definition || word.definition}', and whose 
     word type is '${types}'. If the word is homonyms or multiple meanings, 
     include 2-3 distinct visual representations in the same image, if not, include only one. 
-    Make sure not to include any text in the image.`.trim();
+    Make sure not to include any text in the image.
+    Without spaces in white, on image, and small images not bigger than 4kbs.
+    `.replace(/\s+/g, ' ');
     
     navigator.clipboard.writeText(prompt).then(() => {
       toast.success(`Texto copiado de "${word.word}"`, {

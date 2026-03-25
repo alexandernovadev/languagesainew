@@ -1,12 +1,12 @@
 import { useProfile } from "@/shared/hooks/useProfile";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { Edit, Save, X, User as UserIcon } from "lucide-react";
+import { Separator } from "@/shared/components/ui/separator";
+import { Save, X, Loader2, Globe, BookOpen, User, Shield, Clock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,8 +15,8 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { languages } from "@/utils/common/language";
+import { cn } from "@/utils/common/classnames";
 
-// Idiomas para filtrar contenidos y explicaciones
 const APP_LANGUAGES = [
   { value: "es", ...languages["es"] },
   { value: "en", ...languages["en"] },
@@ -28,18 +28,20 @@ export default function ProfilePage() {
   const {
     user,
     formData,
-    isEditing,
+    isDirty,
     isSaving,
     handleInputChange,
     handleSave,
     handleCancel,
-    handleEdit,
   } = useProfile();
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-muted-foreground">Loading...</p>
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span>Cargando perfil…</span>
+        </div>
       </div>
     );
   }
@@ -48,6 +50,11 @@ export default function ProfilePage() {
     user.firstName && user.lastName
       ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
       : user.username.substring(0, 2).toUpperCase();
+
+  const displayName =
+    user.firstName && user.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user.username;
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role.toLowerCase()) {
@@ -61,272 +68,278 @@ export default function ProfilePage() {
   };
 
   const formatDate = (dateInput?: string | Date) => {
-    if (!dateInput) return "Never";
-    return new Date(dateInput).toLocaleDateString("en-US", {
+    if (!dateInput) return "—";
+    return new Date(dateInput).toLocaleDateString("es", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
   };
 
+  const fieldClass =
+    "transition-[box-shadow,border-color] focus-within:ring-2 focus-within:ring-primary/25 focus-within:border-primary/40";
+
   return (
-    <div className="space-y-6">
-      {/* Page Title */}
+    <div className="space-y-5 pb-8">
       <PageHeader
-        title="Profile"
-        description="Manage your account settings and preferences"
+        title="Perfil"
+        description="Edita directamente los campos; los cambios se guardan cuando pulses Guardar."
       />
 
-      {/* Header Card - Avatar and Basic Info */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            {/* Avatar */}
-            <div className="relative">
-              <Avatar className="h-32 w-32">
-                <AvatarImage src={user.image} alt={user.username} />
-                <AvatarFallback className="text-3xl">{initials}</AvatarFallback>
-              </Avatar>
-            </div>
+      {isDirty && (
+        <div
+          className={cn(
+            "flex flex-col gap-3 rounded-2xl border border-primary/25 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent",
+            "p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+          )}
+        >
+          <p className="text-sm text-foreground/90">
+            <span className="font-medium">Cambios sin guardar.</span>{" "}
+            <span className="text-muted-foreground">
+              Puedes descartarlos o guardar en el servidor.
+            </span>
+          </p>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCancel}
+              disabled={isSaving}
+              className="gap-1.5"
+            >
+              <X className="h-4 w-4" />
+              Descartar
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleSave}
+              disabled={isSaving}
+              className="gap-1.5"
+            >
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {isSaving ? "Guardando…" : "Guardar cambios"}
+            </Button>
+          </div>
+        </div>
+      )}
 
-            {/* User Info */}
-            <div className="flex-1 space-y-2">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                <div>
-                  <h2 className="text-2xl font-bold">
-                    {user.firstName && user.lastName
-                      ? `${user.firstName} ${user.lastName}`
-                      : user.username}
-                  </h2>
-                  <p className="text-muted-foreground">{user.email}</p>
-                </div>
-                <div className="flex gap-2">
-                  {!isEditing ? (
-                    <Button onClick={handleEdit} variant="outline">
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit Profile
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        onClick={handleSave}
-                        disabled={isSaving}
-                        variant="default"
-                      >
-                        <Save className="h-4 w-4 mr-2" />
-                        {isSaving ? "Saving..." : "Save Changes"}
-                      </Button>
-                      <Button
-                        onClick={handleCancel}
-                        disabled={isSaving}
-                        variant="outline"
-                      >
-                        <X className="h-4 w-4 mr-2" />
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Badge variant={getRoleBadgeVariant(user.role)}>
+      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+        <div className="relative border-b bg-gradient-to-br from-primary/[0.08] via-transparent to-transparent px-5 py-8 sm:px-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+            <Avatar className="h-28 w-28 shrink-0 ring-4 ring-background shadow-xl sm:h-32 sm:w-32">
+              <AvatarImage src={user.image} alt={user.username} />
+              <AvatarFallback className="bg-primary/15 text-2xl font-semibold text-primary sm:text-3xl">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1 space-y-2">
+              <h2 className="truncate text-2xl font-bold tracking-tight sm:text-3xl">
+                {displayName}
+              </h2>
+              <p className="truncate text-sm text-muted-foreground sm:text-base">
+                {user.email}
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Badge variant={getRoleBadgeVariant(user.role)} className="font-normal">
                   {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                 </Badge>
-                <Badge variant={user.isActive ? "default" : "outline"}>
-                  {user.isActive ? "Active" : "Inactive"}
+                <Badge
+                  variant={user.isActive ? "default" : "outline"}
+                  className="font-normal"
+                >
+                  {user.isActive ? "Activa" : "Inactiva"}
                 </Badge>
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Form Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Personal Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => handleInputChange("firstName", e.target.value)}
-                disabled={!isEditing}
-                placeholder="Enter first name"
-              />
+        <div className="space-y-0 px-5 py-6 sm:px-8">
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <User className="h-4 w-4" />
+              Datos personales
             </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">Nombre</Label>
+                <Input
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange("firstName", e.target.value)}
+                  placeholder="Tu nombre"
+                  className={fieldClass}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Apellidos</Label>
+                <Input
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange("lastName", e.target.value)}
+                  placeholder="Tus apellidos"
+                  className={fieldClass}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Teléfono</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  placeholder="+34 …"
+                  className={fieldClass}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="address">Dirección</Label>
+                <Input
+                  id="address"
+                  value={formData.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
+                  placeholder="Opcional"
+                  className={fieldClass}
+                />
+              </div>
+            </div>
+          </section>
 
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange("lastName", e.target.value)}
-                disabled={!isEditing}
-                placeholder="Enter last name"
-              />
-            </div>
+          <Separator className="my-8" />
 
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                disabled={!isEditing}
-                placeholder="+1 (555) 000-0000"
-              />
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <Globe className="h-4 w-4" />
+              Idiomas en la app
             </div>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="language">Contenido (palabras, lecturas…)</Label>
+                <Select
+                  value={formData.language}
+                  onValueChange={(value) => handleInputChange("language", value)}
+                >
+                  <SelectTrigger id="language" className={fieldClass}>
+                    <SelectValue placeholder="Elige idioma" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {APP_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang.value} value={lang.value}>
+                        <span className="flex items-center gap-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Filtra el material que ves según el idioma que estudias.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="explainsLanguage">Explicaciones y correcciones</Label>
+                <Select
+                  value={formData.explainsLanguage}
+                  onValueChange={(value) =>
+                    handleInputChange("explainsLanguage", value)
+                  }
+                >
+                  <SelectTrigger id="explainsLanguage" className={fieldClass}>
+                    <SelectValue placeholder="Elige idioma" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {APP_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang.value} value={lang.value}>
+                        <span className="flex items-center gap-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Idioma de ayudas, feedback y explicaciones de la IA.
+                </p>
+              </div>
+            </div>
+          </section>
 
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-                disabled={!isEditing}
-                placeholder="Enter address"
-              />
-            </div>
-          </CardContent>
-        </Card>
+          <Separator className="my-8" />
 
-        {/* Account Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Settings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                value={user.username}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Username cannot be changed
-              </p>
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <Shield className="h-4 w-4" />
+              Cuenta (solo lectura)
             </div>
+            <div className="rounded-xl border border-dashed bg-muted/40 p-4 sm:p-5">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Usuario</Label>
+                  <p className="font-medium">{user.username}</p>
+                  <p className="text-xs text-muted-foreground">No se puede cambiar</p>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Email</Label>
+                  <p className="truncate font-medium">{user.email}</p>
+                  <p className="text-xs text-muted-foreground">No se puede cambiar</p>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Rol</Label>
+                  <p className="font-medium capitalize">{user.role}</p>
+                  <p className="text-xs text-muted-foreground">Contacta con un admin</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={user.email}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Email cannot be changed
-              </p>
-            </div>
+          <Separator className="my-8" />
 
-            <div className="space-y-2">
-              <Label htmlFor="language">Idioma para filtrar contenidos</Label>
-              <Select
-                value={formData.language}
-                onValueChange={(value) => handleInputChange("language", value)}
-                disabled={!isEditing}
-              >
-                <SelectTrigger id="language">
-                  <SelectValue placeholder="Seleccionar idioma" />
-                </SelectTrigger>
-                <SelectContent>
-                  {APP_LANGUAGES.map((lang) => (
-                    <SelectItem key={lang.value} value={lang.value}>
-                      <span className="flex items-center gap-2">
-                        <span>{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Filtra palabras, lecturas, expresiones y más por este idioma
-              </p>
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              Actividad
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="explainsLanguage">Idioma de explicaciones</Label>
-              <Select
-                value={formData.explainsLanguage}
-                onValueChange={(value) => handleInputChange("explainsLanguage", value)}
-                disabled={!isEditing}
-              >
-                <SelectTrigger id="explainsLanguage">
-                  <SelectValue placeholder="Seleccionar idioma" />
-                </SelectTrigger>
-                <SelectContent>
-                  {APP_LANGUAGES.map((lang) => (
-                    <SelectItem key={lang.value} value={lang.value}>
-                      <span className="flex items-center gap-2">
-                        <span>{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Idioma en el que se mostrarán las explicaciones, correcciones y feedback
-              </p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  label: "Último acceso",
+                  value: user.lastLogin
+                    ? new Date(user.lastLogin).toLocaleString("es", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
+                    : "—",
+                },
+                { label: "Alta", value: formatDate(user.createdAt) },
+                { label: "Última actualización", value: formatDate(user.updatedAt) },
+              ].map((row) => (
+                <div
+                  key={row.label}
+                  className="rounded-xl border bg-muted/20 px-4 py-3"
+                >
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {row.label}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold">{row.value}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Input
-                id="role"
-                value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Contact admin to change role
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          </section>
+        </div>
       </div>
 
-      {/* Activity Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Activity Information</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Last Login</p>
-              <p className="text-lg font-semibold">
-                {user.lastLogin
-                  ? new Date(user.lastLogin).toLocaleString()
-                  : "Never"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                Account Created
-              </p>
-              <p className="text-lg font-semibold">{formatDate(user.createdAt)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                Last Updated
-              </p>
-              <p className="text-lg font-semibold">{formatDate(user.updatedAt)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <p className="flex items-start gap-2 text-xs text-muted-foreground">
+        <BookOpen className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        Los campos editables están siempre activos: escribe o elige opciones y guarda cuando quieras.
+      </p>
     </div>
   );
 }
