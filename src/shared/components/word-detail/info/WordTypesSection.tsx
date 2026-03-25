@@ -3,6 +3,8 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Sparkles, Tag } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
+import { useAuth } from "@/shared/hooks/useAuth";
+import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 
 interface WordTypesSectionProps {
   word: IWord;
@@ -11,6 +13,9 @@ interface WordTypesSectionProps {
 }
 
 export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionProps) {
+  const { user } = useAuth();
+  const typeLabelLocale = user?.language;
+
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2">
@@ -38,7 +43,7 @@ export function WordTypesSection({ word, onRefresh, loading }: WordTypesSectionP
                 variant="outline"
                 className="text-xs px-2.5 py-1 border-primary/30 hover:border-primary/50 transition-colors"
               >
-                {type}
+                {getWordTypeLabel(type, typeLabelLocale)}
               </Badge>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -10,8 +10,10 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { wordTypesJson } from "@/data/bussiness/shared";
+import { wordTypesJson, getWordTypesForLanguage } from "@/data/bussiness/shared";
 import type { WordType } from "@/types/business";
+import { useAuth } from "@/shared/hooks/useAuth";
+import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 
 export type DifficultyOption = "easy" | "medium" | "hard";
 
@@ -47,6 +49,12 @@ export function AnkiFilter({
   onApply,
   disabled = false,
 }: AnkiFilterProps) {
+  const { user } = useAuth();
+  const typeLabelLocale = user?.language;
+  const ankiWordTypeOptions = useMemo(() => {
+    const allowed = new Set(getWordTypesForLanguage(user?.language ?? "en"));
+    return wordTypesJson.filter((wt) => allowed.has(wt.value));
+  }, [user?.language]);
   const [open, setOpen] = useState(false);
   const [localValues, setLocalValues] = useState<AnkiFilterValues>(values);
   const [limitInput, setLimitInput] = useState(values.limit.toString());
@@ -91,12 +99,14 @@ export function AnkiFilter({
     const limit = !isNaN(parsed) && limitInput.trim() !== ""
       ? Math.min(100, Math.max(1, parsed))
       : 30;
+    const allowedTypes = new Set(getWordTypesForLanguage(user?.language ?? "en"));
     const toApply: AnkiFilterValues = {
       ...localValues,
       limit,
       difficulty: localValues.difficulty.length > 0
         ? localValues.difficulty
         : DEFAULT_FILTERS.difficulty,
+      types: localValues.types.filter((t) => allowedTypes.has(t)),
     };
     onChange(toApply);
     onApply?.(toApply);
@@ -170,7 +180,7 @@ export function AnkiFilter({
               Tipos gramaticales (vacío = todos)
             </p>
             <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
-              {wordTypesJson.map(({ value, label }) => (
+              {ankiWordTypeOptions.map(({ value }) => (
                 <div key={value} className="flex items-center space-x-2">
                   <Checkbox
                     id={`anki-type-${value}`}
@@ -181,7 +191,7 @@ export function AnkiFilter({
                     htmlFor={`anki-type-${value}`}
                     className="cursor-pointer text-sm font-normal leading-tight"
                   >
-                    {label}
+                    {getWordTypeLabel(value, typeLabelLocale)}
                   </Label>
                 </div>
               ))}

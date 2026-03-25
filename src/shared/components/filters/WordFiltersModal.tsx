@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ModalNova } from "../ui/modal-nova";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -7,8 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
-import { difficultyJson, wordTypesJson } from "@/data/bussiness/shared";
+import { difficultyJson, wordTypesJson, getWordTypesForLanguage } from "@/data/bussiness/shared";
+import { useAuth } from "@/shared/hooks/useAuth";
 import { WordFilters } from "@/shared/hooks/useWords";
+import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { Filter, Eraser, BookOpen, Languages, FileText, Settings2 } from "lucide-react";
 
 interface WordFiltersModalProps {
@@ -26,6 +28,12 @@ export function WordFiltersModal({
   onApplyFilters,
   onClearFilters,
 }: WordFiltersModalProps) {
+  const { user } = useAuth();
+  const typeLabelLocale = user?.language;
+  const wordFilterTypeOptions = useMemo(() => {
+    const allowed = new Set(getWordTypesForLanguage(user?.language ?? "en"));
+    return wordTypesJson.filter((wt) => allowed.has(wt.value));
+  }, [user?.language]);
   const [localFilters, setLocalFilters] = useState<WordFilters>(filters);
 
   // Sync local filters with props when modal opens
@@ -178,9 +186,9 @@ export function WordFiltersModal({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos</SelectItem>
-                    {wordTypesJson.map((type) => (
+                    {wordFilterTypeOptions.map((type) => (
                       <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                        {getWordTypeLabel(type.value, typeLabelLocale)}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -1,8 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { IWord } from "@/types/models/Word";
 import { WordCreate, WordUpdate } from "@/shared/hooks/useWords";
 import { Difficulty, Language, WordType } from "@/types/business";
-import { difficultyJson, languagesJson, wordTypesJson } from "@/data/bussiness/shared";
+import {
+  difficultyJson,
+  languagesJson,
+  wordTypesJson,
+  getWordTypesForLanguage,
+} from "@/data/bussiness/shared";
+import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -20,6 +26,7 @@ import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-r
 import { Badge } from "../ui/badge";
 import { ImageUploaderCard } from "../ui/ImageUploaderCard";
 import { wordService } from "@/services/wordService";
+import { useAuth } from "@/shared/hooks/useAuth";
 import { capitalizeWords } from "@/utils/common/string";
 
 interface WordDialogProps {
@@ -30,6 +37,8 @@ interface WordDialogProps {
 }
 
 export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps) {
+  const { user } = useAuth();
+  const typeLabelLocale = user?.language;
   const [loading, setLoading] = useState(false);
   const [loadingWord, setLoadingWord] = useState(false);
   const [fullWord, setFullWord] = useState<IWord | null>(null);
@@ -54,6 +63,11 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   const [exampleInput, setExampleInput] = useState("");
   const [synonymInput, setSynonymInput] = useState("");
   const [codeSwitchingInput, setCodeSwitchingInput] = useState("");
+
+  const wordTypeOptions = useMemo(() => {
+    const allowed = new Set(getWordTypesForLanguage(formData.language));
+    return wordTypesJson.filter((wt) => allowed.has(wt.value));
+  }, [formData.language]);
 
   // Función para cargar/refrescar la palabra completa
   const loadFullWord = useCallback(async () => {
@@ -317,7 +331,16 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               <Label htmlFor="language">Language *</Label>
               <Select
                 value={formData.language}
-                onValueChange={(value: Language) => setFormData({ ...formData, language: value })}
+                onValueChange={(value: Language) =>
+                  setFormData((prev) => {
+                    const allowed = new Set(getWordTypesForLanguage(value));
+                    return {
+                      ...prev,
+                      language: value,
+                      type: prev.type.filter((t) => allowed.has(t)),
+                    };
+                  })
+                }
                 disabled={loading || loadingWord}
               >
                 <SelectTrigger>
@@ -403,9 +426,9 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                   <SelectValue placeholder="Select word type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {wordTypesJson.map((wt) => (
+                  {wordTypeOptions.map((wt) => (
                     <SelectItem key={wt.value} value={wt.value}>
-                      {wt.label}
+                      {getWordTypeLabel(wt.value, typeLabelLocale)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -422,7 +445,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
             {formData.type.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.type.map((t, idx) => {
-                  const typeLabel = wordTypesJson.find(wt => wt.value === t)?.label || t;
+                  const typeLabel = getWordTypeLabel(t, typeLabelLocale);
                   return (
                     <Badge key={idx} variant="secondary">
                       {typeLabel}

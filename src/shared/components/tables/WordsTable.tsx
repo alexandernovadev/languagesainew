@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, Sparkles, Eye } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getDifficultyVariant } from "@/utils/common";
+import { useAuth } from "@/shared/hooks/useAuth";
+import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
 import {
@@ -35,6 +37,9 @@ export function WordsTable({
   onGenerateWithAI,
   isGenerating = false
 }: WordsTableProps) {
+  const { user } = useAuth();
+  const typeLabelLocale = user?.language;
+
   const speak = (text: string, lang: string = 'en-US', rate: number = 1) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -206,7 +211,7 @@ export function WordsTable({
                   <div className="flex flex-wrap gap-1 mb-2">
                     {word.type.map((t, idx) => (
                       <Badge key={idx} variant="secondary" className="text-sm sm:text-xs">
-                        {t}
+                        {getWordTypeLabel(t, typeLabelLocale)}
                       </Badge>
                     ))}
                   </div>

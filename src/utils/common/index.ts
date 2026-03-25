@@ -4,6 +4,7 @@ export * from "./time";
 export * from "./shuffle";
 export * from "./language";
 export * from "./badgeVariants";
+export * from "./wordTypeLabels";
 
 /**
  * Downloads data as a JSON file to the user's device
