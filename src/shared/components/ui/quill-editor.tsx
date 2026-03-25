@@ -1,6 +1,8 @@
 import { useMemo, useEffect, useRef } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+/* Después de snow: tema con variables (picker/toolbar deben ganar a #fff de Quill) */
+import "@/styles/_react-quill.css";
 import { quillModules } from "@/shared/components/quillModules";
 import { cn } from "@/utils/common/classnames";
 
