@@ -30,6 +30,7 @@ export default function AnkiGamePage() {
         mode: "random",
         limit: filters.limit,
         difficulty,
+        type: filters.types.length > 0 ? filters.types : undefined,
       });
       
       if (response.success && response.data) {

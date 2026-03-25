@@ -9,12 +9,17 @@ import {
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { wordTypesJson } from "@/data/bussiness/shared";
+import type { WordType } from "@/types/business";
 
 export type DifficultyOption = "easy" | "medium" | "hard";
 
 export interface AnkiFilterValues {
   difficulty: DifficultyOption[];
   limit: number;
+  /** Vacío = sin filtrar por tipo (todas) */
+  types: WordType[];
 }
 
 const DIFFICULTY_LABELS: Record<DifficultyOption, string> = {
@@ -26,6 +31,7 @@ const DIFFICULTY_LABELS: Record<DifficultyOption, string> = {
 export const DEFAULT_FILTERS: AnkiFilterValues = {
   difficulty: ["hard", "medium"],
   limit: 30,
+  types: [],
 };
 
 interface AnkiFilterProps {
@@ -56,13 +62,18 @@ export function AnkiFilter({
     const newDifficulty = localValues.difficulty.includes(d)
       ? localValues.difficulty.filter((x) => x !== d)
       : [...localValues.difficulty, d];
-    const newValues = { ...localValues, difficulty: newDifficulty };
-    setLocalValues(newValues);
+    setLocalValues({ ...localValues, difficulty: newDifficulty });
+  };
+
+  const handleTypeToggle = (t: WordType) => {
+    const next = localValues.types.includes(t)
+      ? localValues.types.filter((x) => x !== t)
+      : [...localValues.types, t];
+    setLocalValues({ ...localValues, types: next });
   };
 
   const handleApplyNormal = () => {
-    const newValues = { ...localValues, difficulty: ["hard", "medium"] };
-    setLocalValues(newValues);
+    setLocalValues({ ...localValues, difficulty: ["hard", "medium"] });
   };
 
   const handleLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,58 +110,88 @@ export function AnkiFilter({
           <SlidersHorizontal className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80" align="end">
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-2">Dificultad</h4>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleApplyNormal}
-              >
-                Normal (Medio + Difícil)
-              </Button>
+      <PopoverContent className="w-80 p-3" align="end">
+        <Tabs defaultValue="general" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="tipo">Tipo</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="general" className="space-y-4 mt-3">
+            <div>
+              <h4 className="font-medium mb-2">Dificultad</h4>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleApplyNormal}
+                >
+                  Normal (Medio + Difícil)
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {(["easy", "medium", "hard"] as DifficultyOption[]).map((d) => (
+                  <div key={d} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`difficulty-${d}`}
+                      checked={localValues.difficulty.includes(d)}
+                      onCheckedChange={() => handleDifficultyToggle(d)}
+                    />
+                    <Label
+                      htmlFor={`difficulty-${d}`}
+                      className="cursor-pointer text-sm font-normal"
+                    >
+                      {DIFFICULTY_LABELS[d]}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="space-y-2">
-              {(["easy", "medium", "hard"] as DifficultyOption[]).map((d) => (
-                <div key={d} className="flex items-center space-x-2">
+
+            <div>
+              <Label htmlFor="anki-limit" className="font-medium">
+                Número de tarjetas
+              </Label>
+              <Input
+                id="anki-limit"
+                type="number"
+                min={1}
+                max={100}
+                value={limitInput}
+                onChange={handleLimitChange}
+                className="mt-2"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tipo" className="mt-3">
+            <p className="text-xs text-muted-foreground mb-2">
+              Tipos gramaticales (vacío = todos)
+            </p>
+            <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
+              {wordTypesJson.map(({ value, label }) => (
+                <div key={value} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`difficulty-${d}`}
-                    checked={localValues.difficulty.includes(d)}
-                    onCheckedChange={() => handleDifficultyToggle(d)}
+                    id={`anki-type-${value}`}
+                    checked={localValues.types.includes(value)}
+                    onCheckedChange={() => handleTypeToggle(value)}
                   />
                   <Label
-                    htmlFor={`difficulty-${d}`}
-                    className="cursor-pointer text-sm font-normal"
+                    htmlFor={`anki-type-${value}`}
+                    className="cursor-pointer text-sm font-normal leading-tight"
                   >
-                    {DIFFICULTY_LABELS[d]}
+                    {label}
                   </Label>
                 </div>
               ))}
             </div>
-          </div>
+          </TabsContent>
+        </Tabs>
 
-          <div>
-            <Label htmlFor="anki-limit" className="font-medium">
-              Número de tarjetas
-            </Label>
-            <Input
-              id="anki-limit"
-              type="number"
-              min={1}
-              max={100}
-              value={limitInput}
-              onChange={handleLimitChange}
-              className="mt-2"
-            />
-          </div>
-
-          <Button onClick={handleApply} className="w-full">
-            Aplicar y cargar
-          </Button>
-        </div>
+        <Button onClick={handleApply} className="w-full mt-4">
+          Aplicar y cargar
+        </Button>
       </PopoverContent>
     </Popover>
   );

@@ -69,6 +69,7 @@ export const wordService = {
     mode?: 'random' | 'review';
     limit?: number;
     difficulty?: string[];
+    type?: string[];
   } = {}) {
     const params = new URLSearchParams();
     
@@ -76,6 +77,9 @@ export const wordService = {
     params.append('limit', (options.limit && options.limit > 0 ? options.limit : 30).toString());
     const difficulty = options.difficulty?.length ? options.difficulty : ['hard', 'medium'];
     params.append('difficulty', difficulty.join(','));
+    if (options.type?.length) {
+      params.append('type', options.type.join(','));
+    }
 
     const url = `/api/words/anki-cards${params.toString() ? `?${params.toString()}` : ''}`;
     const res = await api.get(url);
