@@ -64,11 +64,13 @@ export function WordDetailModal({
       onOpenChange={onOpenChange}
       size="3xl"
       height="h-[95dvh]"
+      title="Explora la información de la palabra"
     >
       <div className="flex flex-col h-full pb-4">
         <div className="flex-1 min-h-0">
           <WordDetailTabs
             word={word}
+            cardId={wordId || ""}
             loadingImage={loadingImage}
             loadingSynonyms={loadingSynonyms}
             loadingExamples={loadingExamples}
