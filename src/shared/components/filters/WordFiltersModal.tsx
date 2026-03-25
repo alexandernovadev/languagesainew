@@ -9,7 +9,7 @@ import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
 import { difficultyJson, wordTypesJson } from "@/data/bussiness/shared";
 import { WordFilters } from "@/shared/hooks/useWords";
-import { Filter, X, Eraser } from "lucide-react";
+import { Filter, Eraser, BookOpen, Languages, FileText, Settings2 } from "lucide-react";
 
 interface WordFiltersModalProps {
   open: boolean;
@@ -106,10 +106,22 @@ export function WordFiltersModal({
       <div className="px-6 py-4">
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="spanish">Español</TabsTrigger>
-            <TabsTrigger value="content">Características</TabsTrigger>
-            <TabsTrigger value="advanced">Avanzado</TabsTrigger>
+            <TabsTrigger value="general" className="flex items-center justify-center gap-2" title="General">
+              <BookOpen className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">General</span>
+            </TabsTrigger>
+            <TabsTrigger value="spanish" className="flex items-center justify-center gap-2" title="Español">
+              <Languages className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Español</span>
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center justify-center gap-2" title="Características">
+              <FileText className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Características</span>
+            </TabsTrigger>
+            <TabsTrigger value="advanced" className="flex items-center justify-center gap-2" title="Avanzado">
+              <Settings2 className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Avanzado</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* General Tab */}

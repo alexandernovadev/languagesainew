@@ -9,7 +9,7 @@ import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
 import { difficultyJson, expressionTypesJson } from "@/data/bussiness/shared";
 import { ExpressionFilters } from "@/shared/hooks/useExpressions";
-import { Filter, Eraser } from "lucide-react";
+import { Filter, Eraser, SlidersHorizontal, FileText, Settings2 } from "lucide-react";
 
 interface ExpressionFiltersModalProps {
   open: boolean;
@@ -106,9 +106,18 @@ export function ExpressionFiltersModal({
       <div className="px-6 py-4">
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="content">Características</TabsTrigger>
-            <TabsTrigger value="advanced">Avanzado</TabsTrigger>
+            <TabsTrigger value="general" className="flex items-center justify-center gap-2" title="General">
+              <SlidersHorizontal className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">General</span>
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center justify-center gap-2" title="Características">
+              <FileText className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Características</span>
+            </TabsTrigger>
+            <TabsTrigger value="advanced" className="flex items-center justify-center gap-2" title="Avanzado">
+              <Settings2 className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Avanzado</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* General Tab */}

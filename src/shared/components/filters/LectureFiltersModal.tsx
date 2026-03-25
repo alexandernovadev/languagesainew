@@ -141,17 +141,17 @@ export function LectureFiltersModal({
       <div className="px-6 py-4">
         <Tabs defaultValue="general" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="general" className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4" />
-              General
+            <TabsTrigger value="general" className="flex items-center justify-center gap-2" title="General">
+              <SlidersHorizontal className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">General</span>
             </TabsTrigger>
-            <TabsTrigger value="features" className="flex items-center gap-2">
-              <Image className="h-4 w-4" />
-              Características
+            <TabsTrigger value="features" className="flex items-center justify-center gap-2" title="Características">
+              <Image className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Características</span>
             </TabsTrigger>
-            <TabsTrigger value="advanced" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Avanzado
+            <TabsTrigger value="advanced" className="flex items-center justify-center gap-2" title="Avanzado">
+              <Calendar className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Avanzado</span>
             </TabsTrigger>
           </TabsList>
 
