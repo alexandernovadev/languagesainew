@@ -51,8 +51,8 @@ export function WordsTable({
     const prompt = `Make an animated image related to '${word.word}',
     without text,letters,numbers,labels,watermarks,logos,etc. 
     whose definition is '${word.spanish?.definition || word.definition}', and whose 
-    word type is '${types}'. If the word is homonyms or multiple meanings, 
-    include 2-3 distinct visual representations in the same image, if not, include only one. 
+    word type is '${types}'. JUST If the word is homonyms or multiple meanings, 
+    include 2-3 distinct visual representations in the same image, IF NOT, include only one. 
  
 Focus on extreme simplicity and tiny file size. BUT NOT bits images. `.replace(/\s+/g, ' ');
     
