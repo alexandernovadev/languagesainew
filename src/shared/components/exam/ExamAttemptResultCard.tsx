@@ -1,7 +1,12 @@
 import { Badge } from "@/shared/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/shared/components/ui/collapsible";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import type { IAttemptQuestion } from "@/types/models";
-import { CheckCircle2, XCircle, MessageSquare, MinusCircle } from "lucide-react";
+import { CheckCircle2, XCircle, MessageSquare, MinusCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 
 const QUESTION_TYPE_LABELS: Record<string, string> = {
@@ -151,19 +156,35 @@ export function ExamAttemptResultCard({ aq, index }: ExamAttemptResultCardProps)
         )}
 
         {aq.aiFeedback && (
-          <div className="border-t border-gray-200 dark:border-gray-800 pt-2">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <MessageSquare className="h-3.5 w-3.5 text-primary" />
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Feedback IA
-              </p>
-            </div>
-            <MarkdownRenderer
-              content={aq.aiFeedback}
-              variant="chat"
-              className="text-[10px] [&_*]:!text-[10px] [&_p]:mb-1 [&_ul]:mt-1 [&_ol]:mt-1 [&_blockquote]:mt-1"
-            />
-          </div>
+          <Collapsible defaultOpen={false} className="border-t border-gray-200 dark:border-gray-800 pt-2">
+            <CollapsibleTrigger
+              className={cn(
+                "flex w-full items-center justify-between gap-2 rounded-md py-2 px-1 -mx-1 text-left",
+                "outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                "[&[data-state=open]>svg:last-child]:rotate-180"
+              )}
+            >
+              <div className="flex min-w-0 items-center gap-1.5">
+                <MessageSquare className="h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  Feedback IA
+                </span>
+                <span className="truncate text-xs font-normal normal-case text-muted-foreground">
+                  Ver retroalimentación
+                </span>
+              </div>
+              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+              <div className="pb-1 pt-2">
+                <MarkdownRenderer
+                  content={aq.aiFeedback}
+                  variant="chat"
+                  className="leading-relaxed"
+                />
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         )}
       </div>
     </div>
