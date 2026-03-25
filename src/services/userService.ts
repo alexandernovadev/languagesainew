@@ -1,7 +1,9 @@
 import { api } from "./api";
-import type { AllowedLanguageCode, UserRole, ALLOWED_USER_ROLES } from "@/constants/identity";
-
-// Roles come from central identity constants
+import type { UserRole } from "@/types/business";
+import type {
+  AllowedLanguageCode,
+  ContentLanguageCode,
+} from "@/utils/common/language";
 
 export interface User {
   _id: string;
@@ -11,7 +13,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   image?: string;
-  language: AllowedLanguageCode;
+  language: ContentLanguageCode;
   explainsLanguage?: AllowedLanguageCode;
   isActive: boolean;
   address?: string;
@@ -29,7 +31,7 @@ export interface UserCreate {
   firstName?: string;
   lastName?: string;
   image?: string;
-  language: AllowedLanguageCode;
+  language: ContentLanguageCode;
   isActive?: boolean;
   address?: string;
   phone?: string;

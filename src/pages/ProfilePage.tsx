@@ -14,9 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { languages } from "@/utils/common/language";
+import { contentLanguageCodes, languages } from "@/utils/common/language";
 
-const APP_LANGUAGES = [
+const CONTENT_LANGUAGES = contentLanguageCodes.map((code) => ({
+  value: code,
+  ...languages[code],
+})) as const;
+
+const EXPLAINS_LANGUAGES = [
   { value: "en", ...languages["en"] },
   { value: "es", ...languages["es"] },
   { value: "pt", ...languages["pt"] },
@@ -222,7 +227,7 @@ export default function ProfilePage() {
                     <SelectValue placeholder="Elige idioma" />
                   </SelectTrigger>
                   <SelectContent>
-                    {APP_LANGUAGES.map((lang) => (
+                    {CONTENT_LANGUAGES.map((lang) => (
                       <SelectItem key={lang.value} value={lang.value}>
                         <span className="flex items-center gap-2">
                           <span>{lang.flag}</span>
@@ -248,7 +253,7 @@ export default function ProfilePage() {
                     <SelectValue placeholder="Elige idioma" />
                   </SelectTrigger>
                   <SelectContent>
-                    {APP_LANGUAGES.map((lang) => (
+                    {EXPLAINS_LANGUAGES.map((lang) => (
                       <SelectItem key={lang.value} value={lang.value}>
                         <span className="flex items-center gap-2">
                           <span>{lang.flag}</span>

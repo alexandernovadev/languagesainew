@@ -15,4 +15,9 @@ const languagesJson: LanguageOption[] = [
 
 const languagesList: Language[] = languagesJson.map((language) => language.value);
 
-export { languagesJson, languagesList };
+/** Idioma de estudio (User.language): sin español */
+const contentLanguagesJson: LanguageOption[] = languagesJson.filter(
+  (l) => l.value !== "es"
+);
+
+export { languagesJson, languagesList, contentLanguagesJson };

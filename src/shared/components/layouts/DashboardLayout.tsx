@@ -27,7 +27,11 @@ import {
 } from "../sidebar-menus";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { useEnvironment } from "@/shared/hooks/useEnvironment";
-import { languages as languagesInfo } from "@/utils/common/language";
+import {
+  contentLanguageCodes,
+  languages as languagesInfo,
+  type ContentLanguageCode,
+} from "@/utils/common/language";
 import { LoginButton } from "../LoginButton";
 import {
   Select,
@@ -42,13 +46,10 @@ import { User, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import packageJson from "../../../../package.json";
 
-const CONTENT_LANGUAGE_OPTIONS = [
-  { value: "en", ...languagesInfo.en },
-  { value: "es", ...languagesInfo.es },
-  { value: "pt", ...languagesInfo.pt },
-  { value: "it", ...languagesInfo.it },
-  { value: "fr", ...languagesInfo.fr },
-] as const;
+const CONTENT_LANGUAGE_OPTIONS = contentLanguageCodes.map((code) => ({
+  value: code,
+  ...languagesInfo[code],
+}));
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -104,7 +105,9 @@ function SidebarFooterNav() {
     if (!user?._id || value === user.language) return;
     try {
       setLanguageSaving(true);
-      await userService.updateUser(user._id, { language: value as typeof user.language });
+      await userService.updateUser(user._id, {
+        language: value as ContentLanguageCode,
+      });
       await refreshAccessToken();
       toast.success("Idioma de contenido actualizado", { duration: 1500 });
       window.setTimeout(() => {
@@ -140,7 +143,9 @@ function SidebarFooterNav() {
           Idioma del contenido
         </Label>
         <Select
-          value={user?.language ?? "en"}
+          value={
+            user?.language === "es" ? "en" : (user?.language ?? "en")
+          }
           onValueChange={(v) => void handleContentLanguageChange(v)}
           disabled={languageSaving || !user?._id}
         >
@@ -153,7 +158,11 @@ function SidebarFooterNav() {
           </SelectTrigger>
           <SelectContent position="popper" side="top" align="start" className="w-[var(--radix-select-trigger-width)]">
             {CONTENT_LANGUAGE_OPTIONS.map((lang) => (
-              <SelectItem key={lang.value} value={lang.value} className="text-xs">
+              <SelectItem
+                key={lang.value}
+                value={lang.value}
+                className="text-xs"
+              >
                 <span className="flex items-center gap-2">
                   <span>{lang.flag}</span>
                   <span>{lang.name}</span>

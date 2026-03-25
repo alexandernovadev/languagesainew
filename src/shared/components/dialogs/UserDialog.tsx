@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, UserCreate, UserUpdate } from "@/services/userService";
-import { systemRolesJson, languagesJson } from "@/data/bussiness/shared";
+import { systemRolesJson, contentLanguagesJson } from "@/data/bussiness/shared";
 import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -51,7 +51,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
         role: user.role as any,
         firstName: user.firstName || "",
         lastName: user.lastName || "",
-        language: user.language || "en",
+        language: user.language === "es" ? "en" : user.language || "en",
         isActive: user.isActive ?? true,
         phone: user.phone || "",
         address: user.address || "",
@@ -283,7 +283,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {languagesJson.map((lang) => (
+                  {contentLanguagesJson.map((lang) => (
                     <SelectItem key={lang.value} value={lang.value}>
                       {lang.label}
                     </SelectItem>

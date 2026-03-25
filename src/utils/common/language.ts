@@ -123,9 +123,13 @@ export const getAllLanguages = (): LanguageInfo[] => {
   return Object.values(languages);
 };
 
-// Allowed languages aligned with backend enum (User model)
+// Full set (explainsLanguage, words, etc.) — aligned with backend User.explainsLanguage / words
 export const allowedLanguageCodes = ["en", "es", "pt", "it", "fr"] as const;
-export type AllowedLanguageCode = typeof allowedLanguageCodes[number];
+export type AllowedLanguageCode = (typeof allowedLanguageCodes)[number];
+
+/** User.language (idioma que estudias): sin español */
+export const contentLanguageCodes = ["en", "pt", "it", "fr"] as const;
+export type ContentLanguageCode = (typeof contentLanguageCodes)[number];
 
 export const getAllowedLanguages = (): LanguageInfo[] => {
   return allowedLanguageCodes.map(code => languages[code]).filter(Boolean);
