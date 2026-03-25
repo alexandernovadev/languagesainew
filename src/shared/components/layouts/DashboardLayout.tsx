@@ -181,8 +181,6 @@ function SidebarFooterNav() {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { isAuthenticated, user } = useAuth();
   const { isDevelopment } = useEnvironment();
-  const location = useLocation();
-  const isChatDetail = /^\/chats\/[^/]+$/.test(location.pathname);
 
   const userDisplayName =
     user?.firstName && user?.lastName
@@ -283,13 +281,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset className="min-w-0 overflow-hidden">
-        <div
-          className={
-            isChatDetail
-              ? "flex flex-1 flex-col min-h-0 min-w-0"
-              : "flex flex-1 flex-col gap-4 p-4 pb-0 min-w-0 overflow-hidden"
-          }
-        >
+        <div className="flex flex-1 flex-col gap-4 p-4 pb-0 min-w-0 overflow-hidden">
           {children}
         </div>
       </SidebarInset>

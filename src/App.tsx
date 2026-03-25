@@ -32,9 +32,6 @@ import {
   ExamGeneratorPage,
   ExamStartPage,
   ExamAttemptPage,
-  ChatsPage,
-  NewChatPage,
-  ChatDetailPage,
 } from "./routes";
 
 // Componente para manejar rutas desconocidas
@@ -134,30 +131,6 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <ExamAttemptPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/chats"
-                    element={
-                      <ProtectedRoute>
-                        <ChatsPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/chats/new"
-                    element={
-                      <ProtectedRoute>
-                        <NewChatPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/chats/:id"
-                    element={
-                      <ProtectedRoute>
-                        <ChatDetailPage />
                       </ProtectedRoute>
                     }
                   />
