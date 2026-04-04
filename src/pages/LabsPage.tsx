@@ -5,13 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { toast } from "sonner";
 import { labsService } from "@/services/labsService";
-import { UserPlus, Mail, Loader2, AlertTriangle, Trash2 } from "lucide-react";
+import { UserPlus, Mail, Loader2, AlertTriangle, Trash2, RefreshCw } from "lucide-react";
 
 type DangerousOperation = "words" | "expressions" | "lectures" | null;
 
 export default function LabsPage() {
   const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
   const [isSendingBackup, setIsSendingBackup] = useState(false);
+  const [isMigratingSynonyms, setIsMigratingSynonyms] = useState(false);
   
   // Dangerous operations states
   const [isDeletingWords, setIsDeletingWords] = useState(false);
@@ -61,6 +62,22 @@ export default function LabsPage() {
       toast.error(error.response?.data?.message || "Error sending backup");
     } finally {
       setIsSendingBackup(false);
+    }
+  };
+
+  const handleMigrateSynonyms = async () => {
+    setIsMigratingSynonyms(true);
+    try {
+      const response = await labsService.migrateSinonymsToSynonyms();
+      if (response.success) {
+        toast.success(`Migration complete — ${response.data?.modifiedCount ?? 0} documents updated`);
+      } else {
+        toast.error(response.message || "Migration failed");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Error running migration");
+    } finally {
+      setIsMigratingSynonyms(false);
     }
   };
 
@@ -231,6 +248,48 @@ export default function LabsPage() {
             <li>Backup emails include all words, lectures, and expressions</li>
             <li>These operations may take a few moments to complete</li>
           </ul>
+        </CardContent>
+      </Card>
+
+      {/* Migrations Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <RefreshCw className="h-5 w-5" />
+            Migrations
+          </CardTitle>
+          <CardDescription>
+            One-time database migrations. Safe to run multiple times.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-lg">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-base sm:text-lg">Rename sinonyms → synonyms</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 break-words">
+                Renombra el campo <code>sinonyms</code> a <code>synonyms</code> en todos los documentos de Words. Idempotente.
+              </p>
+            </div>
+            <Button
+              onClick={handleMigrateSynonyms}
+              disabled={isMigratingSynonyms}
+              variant="secondary"
+              className="w-full sm:w-auto flex-shrink-0"
+              size="sm"
+            >
+              {isMigratingSynonyms ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Running...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Run Migration
+                </>
+              )}
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

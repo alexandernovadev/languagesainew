@@ -1,6 +1,6 @@
 import { Badge } from "@/shared/components/ui/badge";
 import { Loader2 } from "lucide-react";
-import { languagesJson, certificationLevelsJson } from "@/data/bussiness/shared";
+import { languagesJson, certificationLevelsJson } from "@/data/business/shared";
 import type { ExamQuestionType } from "@/types/models";
 
 const QUESTION_TYPE_LABELS: Record<ExamQuestionType, string> = {

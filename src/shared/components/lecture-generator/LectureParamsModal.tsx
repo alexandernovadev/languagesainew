@@ -16,7 +16,7 @@ import { Settings, SlidersHorizontal, BookOpen } from "lucide-react";
 import {
   certificationLevelsJson,
   readingTypesJson,
-} from "@/data/bussiness/shared";
+} from "@/data/business/shared";
 import { GrammarTopicsSelector } from "./GrammarTopicsSelector";
 import { WordSelector } from "./WordSelector";
 import { CertificationLevel, ReadingType } from "@/types/business";
@@ -24,9 +24,9 @@ import { useAuth } from "@/shared/hooks/useAuth";
 import { GrammarTopicOption } from "@/types/business";
 
 // Importar grammar topics según idioma
-import { grammarTopicsJson as enGrammarTopics } from "@/data/bussiness/en";
-import { grammarTopicsJson as esGrammarTopics } from "@/data/bussiness/es";
-import { grammarTopicsJson as ptGrammarTopics } from "@/data/bussiness/pt";
+import { grammarTopicsJson as enGrammarTopics } from "@/data/business/en";
+import { grammarTopicsJson as esGrammarTopics } from "@/data/business/es";
+import { grammarTopicsJson as ptGrammarTopics } from "@/data/business/pt";
 
 interface LectureParams {
   language?: string;

@@ -10,7 +10,7 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { wordTypesJson, getWordTypesForLanguage } from "@/data/bussiness/shared";
+import { wordTypesJson, getWordTypesForLanguage } from "@/data/business/shared";
 import type { WordType } from "@/types/business";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";

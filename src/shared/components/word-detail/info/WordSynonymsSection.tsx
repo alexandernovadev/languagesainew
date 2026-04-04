@@ -40,9 +40,9 @@ export function WordSynonymsSection({ word, onRefresh, loading }: WordSynonymsSe
         </Button>
       </div>
       <div>
-        {word.sinonyms && word.sinonyms.length > 0 ? (
+        {word.synonyms && word.synonyms.length > 0 ? (
           <div className="flex flex-wrap gap-1.5">
-            {word.sinonyms.map((synonym, index) => (
+            {word.synonyms.map((synonym, index) => (
               <Badge
                 key={index}
                 variant="secondary"

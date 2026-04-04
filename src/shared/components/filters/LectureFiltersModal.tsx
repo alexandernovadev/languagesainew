@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Checkbox } from "../ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { DatePicker } from "../ui/date-picker";
-import { certificationLevelsJson, readingTypesJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson, readingTypesJson } from "@/data/business/shared";
 import { LectureFilters } from "@/shared/hooks/useLectures";
 import { Filter, Eraser, SlidersHorizontal, Image, Calendar } from "lucide-react";
 

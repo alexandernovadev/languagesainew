@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
-import { difficultyJson, wordTypesJson, getWordTypesForLanguage } from "@/data/bussiness/shared";
+import { difficultyJson, wordTypesJson, getWordTypesForLanguage } from "@/data/business/shared";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { WordFilters } from "@/shared/hooks/useWords";
 import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";

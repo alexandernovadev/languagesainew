@@ -47,7 +47,7 @@ export interface WordCreate {
   type?: string[];
   IPA?: string;
   examples?: string[];
-  sinonyms?: string[];
+  synonyms?: string[];
   codeSwitching?: string[];
   img?: string;
   spanish?: {

@@ -3,7 +3,7 @@ import { CertificationLevel, ReadingType } from "@/types/business";
 import {
   certificationLevelsJson,
   readingTypesJson,
-} from "@/data/bussiness/shared";
+} from "@/data/business/shared";
 import { cn } from "@/utils/common/classnames";
 
 interface LectureParams {

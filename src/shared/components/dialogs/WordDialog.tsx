@@ -7,7 +7,7 @@ import {
   languagesJson,
   wordTypesJson,
   getWordTypesForLanguage,
-} from "@/data/bussiness/shared";
+} from "@/data/business/shared";
 import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
@@ -54,7 +54,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
     // Arrays
     type: [] as WordType[],
     examples: [] as string[],
-    sinonyms: [] as string[],
+    synonyms: [] as string[],
     codeSwitching: [] as string[],
   });
 
@@ -120,7 +120,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
         spanishDefinition: "",
         type: [],
         examples: [],
-        sinonyms: [],
+        synonyms: [],
         codeSwitching: [],
       });
       return;
@@ -130,7 +130,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       // Asegurar que los arrays sean arrays, no undefined
       const wordType = Array.isArray(fullWord.type) ? fullWord.type : [];
       const wordExamples = Array.isArray(fullWord.examples) ? fullWord.examples : [];
-      const wordSinonyms = Array.isArray(fullWord.sinonyms) ? fullWord.sinonyms : [];
+      const wordSinonyms = Array.isArray(fullWord.synonyms) ? fullWord.synonyms : [];
       const wordCodeSwitching = Array.isArray(fullWord.codeSwitching) ? fullWord.codeSwitching : [];
       
       setFormData({
@@ -144,7 +144,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
         spanishDefinition: fullWord.spanish?.definition || "",
         type: wordType as WordType[],
         examples: wordExamples,
-        sinonyms: wordSinonyms,
+        synonyms: wordSinonyms,
         codeSwitching: wordCodeSwitching,
       });
     } else if (!word) {
@@ -160,7 +160,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
         spanishDefinition: "",
         type: [],
         examples: [],
-        sinonyms: [],
+        synonyms: [],
         codeSwitching: [],
       });
     }
@@ -185,7 +185,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
         img: formData.img || undefined,
         type: formData.type.length > 0 ? formData.type : undefined,
         examples: formData.examples.length > 0 ? formData.examples : undefined,
-        sinonyms: formData.sinonyms.length > 0 ? formData.sinonyms : undefined,
+        synonyms: formData.synonyms.length > 0 ? formData.synonyms : undefined,
         codeSwitching: formData.codeSwitching.length > 0 ? formData.codeSwitching : undefined,
       };
 
@@ -207,7 +207,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
   };
 
   // Array management functions
-  const addToArray = (field: 'type' | 'examples' | 'sinonyms' | 'codeSwitching', value: string | WordType) => {
+  const addToArray = (field: 'type' | 'examples' | 'synonyms' | 'codeSwitching', value: string | WordType) => {
     if (value && (typeof value === 'string' ? value.trim() : true)) {
       const valueToAdd = typeof value === 'string' ? value.trim() : value;
       setFormData(prev => ({
@@ -217,12 +217,12 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
       // Clear input
       if (field === 'type') setTypeSelect("");
       if (field === 'examples') setExampleInput("");
-      if (field === 'sinonyms') setSynonymInput("");
+      if (field === 'synonyms') setSynonymInput("");
       if (field === 'codeSwitching') setCodeSwitchingInput("");
     }
   };
 
-  const removeFromArray = (field: 'type' | 'examples' | 'sinonyms' | 'codeSwitching', index: number) => {
+  const removeFromArray = (field: 'type' | 'examples' | 'synonyms' | 'codeSwitching', index: number) => {
     setFormData(prev => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
@@ -517,7 +517,7 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
-                    addToArray('sinonyms', synonymInput);
+                    addToArray('synonyms', synonymInput);
                   }
                 }}
                 disabled={loading || loadingWord}
@@ -527,20 +527,20 @@ export function WordDialog({ open, onOpenChange, word, onSave }: WordDialogProps
               <Button
                 type="button"
                 size="icon"
-                onClick={() => addToArray('sinonyms', synonymInput)}
+                onClick={() => addToArray('synonyms', synonymInput)}
                 disabled={loading || loadingWord}
               >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            {formData.sinonyms.length > 0 && (
+            {formData.synonyms.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.sinonyms.map((s, idx) => (
+                {formData.synonyms.map((s, idx) => (
                   <Badge key={idx} variant="outline">
                     {s}
                     <button
                       type="button"
-                      onClick={() => removeFromArray('sinonyms', idx)}
+                      onClick={() => removeFromArray('synonyms', idx)}
                       className="ml-1 hover:text-destructive"
                     >
                       <X className="h-3 w-3" />

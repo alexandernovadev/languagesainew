@@ -9,12 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { certificationLevelsJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson } from "@/data/business/shared";
 import { GrammarTopicsSelector } from "@/shared/components/lecture-generator/GrammarTopicsSelector";
 import { QuestionTypesSelector } from "./QuestionTypesSelector";
-import { grammarTopicsJson as enGrammarTopics } from "@/data/bussiness/en";
-import { grammarTopicsJson as esGrammarTopics } from "@/data/bussiness/es";
-import { grammarTopicsJson as ptGrammarTopics } from "@/data/bussiness/pt";
+import { grammarTopicsJson as enGrammarTopics } from "@/data/business/en";
+import { grammarTopicsJson as esGrammarTopics } from "@/data/business/es";
+import { grammarTopicsJson as ptGrammarTopics } from "@/data/business/pt";
 import type { ExamQuestionType } from "@/types/models";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { Rocket } from "lucide-react";

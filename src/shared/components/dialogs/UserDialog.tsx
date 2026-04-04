@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, UserCreate, UserUpdate } from "@/services/userService";
-import { systemRolesJson, contentLanguagesJson } from "@/data/bussiness/shared";
+import { systemRolesJson, contentLanguagesJson } from "@/data/business/shared";
 import { ModalNova } from "../ui/modal-nova";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";

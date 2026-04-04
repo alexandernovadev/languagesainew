@@ -119,10 +119,10 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         currentWord.examples || []
       );
       const updatedData = response.data || response;
-      // Actualizar solo el campo sinonyms, manteniendo todo lo demás
-      setWord(prev => prev ? { ...prev, sinonyms: updatedData.sinonyms || updatedData.data?.sinonyms } : null);
+      // Actualizar solo el campo synonyms, manteniendo todo lo demás
+      setWord(prev => prev ? { ...prev, synonyms: updatedData.synonyms || updatedData.data?.synonyms } : null);
       if (onWordUpdateRef.current && word) {
-        onWordUpdateRef.current({ ...word, sinonyms: updatedData.sinonyms || updatedData.data?.sinonyms });
+        onWordUpdateRef.current({ ...word, synonyms: updatedData.synonyms || updatedData.data?.synonyms });
       }
       toast.success('Sinónimos generados exitosamente');
     } catch (err: any) {
@@ -244,7 +244,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
       setWord(prev => prev ? {
         ...prev,
         img: imgData.img || imgData.data?.img || prev.img,
-        sinonyms: synonymsData.sinonyms || synonymsData.data?.sinonyms || prev.sinonyms,
+        synonyms: synonymsData.synonyms || synonymsData.data?.synonyms || prev.synonyms,
         examples: examplesData.examples || examplesData.data?.examples || prev.examples,
         type: typesData.type || typesData.data?.type || prev.type,
         codeSwitching: codeSwitchingData.codeSwitching || codeSwitchingData.data?.codeSwitching || prev.codeSwitching,
@@ -254,7 +254,7 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
         onWordUpdateRef.current({
           ...word,
           img: imgData.img || imgData.data?.img || word.img,
-          sinonyms: synonymsData.sinonyms || synonymsData.data?.sinonyms || word.sinonyms,
+          synonyms: synonymsData.synonyms || synonymsData.data?.synonyms || word.synonyms,
           examples: examplesData.examples || examplesData.data?.examples || word.examples,
           type: typesData.type || typesData.data?.type || word.type,
           codeSwitching: codeSwitchingData.codeSwitching || codeSwitchingData.data?.codeSwitching || word.codeSwitching,

@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Switch } from "../ui/switch";
 import { DatePicker } from "../ui/date-picker";
-import { difficultyJson, expressionTypesJson } from "@/data/bussiness/shared";
+import { difficultyJson, expressionTypesJson } from "@/data/business/shared";
 import { ExpressionFilters } from "@/shared/hooks/useExpressions";
 import { Filter, Eraser, SlidersHorizontal, FileText, Settings2 } from "lucide-react";
 

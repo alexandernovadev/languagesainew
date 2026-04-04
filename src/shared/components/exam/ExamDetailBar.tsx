@@ -1,15 +1,15 @@
 import { Badge } from "@/shared/components/ui/badge";
 import { FileText } from "lucide-react";
-import { languagesJson, certificationLevelsJson } from "@/data/bussiness/shared";
+import { languagesJson, certificationLevelsJson } from "@/data/business/shared";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
-import { grammarTopicsJson as enGrammarTopics } from "@/data/bussiness/en";
-import { grammarTopicsJson as esGrammarTopics } from "@/data/bussiness/es";
-import { grammarTopicsJson as ptGrammarTopics } from "@/data/bussiness/pt";
+import { grammarTopicsJson as enGrammarTopics } from "@/data/business/en";
+import { grammarTopicsJson as esGrammarTopics } from "@/data/business/es";
+import { grammarTopicsJson as ptGrammarTopics } from "@/data/business/pt";
 
 const getGrammarTopicsByLanguage = (language: string) => {
   switch (language) {

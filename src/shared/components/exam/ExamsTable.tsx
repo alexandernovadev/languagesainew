@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import { useExamAttempts } from "@/shared/hooks/useExamAttempts";
 import type { IExam, IExamQuestion } from "@/types/models";
 import { Eye, Play, History, Trash2 } from "lucide-react";
-import { certificationLevelsJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson } from "@/data/business/shared";
 import { formatDateToSpanish } from "@/utils/common/time/formatDate";
 
 const QUESTION_TYPE_LABELS: Record<string, string> = {

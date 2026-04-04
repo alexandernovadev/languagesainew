@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Loader2, BookOpen, FileText, Image, Clock, Volume2 } from "lucide-react";
 import { ILecture } from "@/types/models/Lecture";
 import { CertificationLevel, Language, ReadingType } from "@/types/business";
-import { certificationLevelsJson, languagesJson, readingTypesJson } from "@/data/bussiness/shared";
+import { certificationLevelsJson, languagesJson, readingTypesJson } from "@/data/business/shared";
 import { lectureService } from "@/services/lectureService";
 import { QuillEditor } from "../ui/quill-editor";
 import { ImageUploaderCard } from "../ui/ImageUploaderCard";

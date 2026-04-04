@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Loader2, Plus, X, BookOpen, Languages, FileText, Image } from "lucide-react";
 import { IExpression } from "@/types/models/Expression";
 import { ExpressionType } from "@/types/business";
-import { difficultyJson, languagesJson, expressionTypesJson } from "@/data/bussiness/shared";
+import { difficultyJson, languagesJson, expressionTypesJson } from "@/data/business/shared";
 import { ImageUploaderCard } from "../ui/ImageUploaderCard";
 
 interface ExpressionDialogProps {

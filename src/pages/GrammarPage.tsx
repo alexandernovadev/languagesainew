@@ -12,8 +12,8 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Button } from "@/shared/components/ui/button";
 import { ModalNova } from "@/shared/components/ui/modal-nova";
-import { grammarTopicsJson } from "@/data/bussiness/en";
-import { grammarGuideContent } from "@/data/bussiness/en/grammarGuideContent";
+import { grammarTopicsJson } from "@/data/business/en";
+import { grammarGuideContent } from "@/data/business/en/grammarGuideContent";
 import { BookText, ChevronDown, ChevronRight, Menu } from "lucide-react";
 import { cn } from "@/utils/common/classnames";
 
