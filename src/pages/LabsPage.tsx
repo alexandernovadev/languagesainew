@@ -24,6 +24,8 @@ export default function LabsPage() {
     handleFirstConfirm,
     handleSecondConfirm,
     handleCancel,
+    handleFirstOpenChange,
+    handleSecondOpenChange,
   } = useDangerousOperation({
     words: async () => {
       const response = await labsService.deleteAllWords();
@@ -215,7 +217,7 @@ export default function LabsPage() {
 
       <AlertDialogNova
         open={showFirstConfirm}
-        onOpenChange={setShowFirstConfirm}
+        onOpenChange={handleFirstOpenChange}
         title="⚠️ ¿Estás ABSOLUTAMENTE SEGURO?"
         description={
           <>
@@ -233,7 +235,7 @@ export default function LabsPage() {
 
       <AlertDialogNova
         open={showSecondConfirm}
-        onOpenChange={setShowSecondConfirm}
+        onOpenChange={handleSecondOpenChange}
         title="⚠️ ÚLTIMA ADVERTENCIA"
         description={
           <>

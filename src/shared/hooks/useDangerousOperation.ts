@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 type OperationKey = 'words' | 'expressions' | 'lectures';
 
@@ -12,6 +12,9 @@ interface DangerousOperationState {
   handleFirstConfirm: () => void;
   handleSecondConfirm: () => Promise<void>;
   handleCancel: () => void;
+  /** Para AlertDialog `onOpenChange` — no llama handleCancel al pasar al segundo paso */
+  handleFirstOpenChange: (open: boolean) => void;
+  handleSecondOpenChange: (open: boolean) => void;
 }
 
 const LABELS: Record<OperationKey, string> = {
@@ -27,6 +30,8 @@ export function useDangerousOperation(
   const [showFirstConfirm, setShowFirstConfirm] = useState(false);
   const [showSecondConfirm, setShowSecondConfirm] = useState(false);
   const [operationLoading, setOperationLoading] = useState(false);
+  /** Evita handleCancel cuando el 1er diálogo se cierra al avanzar al 2º */
+  const advancingToSecondRef = useRef(false);
 
   const trigger = (operation: OperationKey) => {
     setPendingOperation(operation);
@@ -34,6 +39,7 @@ export function useDangerousOperation(
   };
 
   const handleFirstConfirm = () => {
+    advancingToSecondRef.current = true;
     setShowFirstConfirm(false);
     setShowSecondConfirm(true);
   };
@@ -54,6 +60,27 @@ export function useDangerousOperation(
     setShowFirstConfirm(false);
     setShowSecondConfirm(false);
     setPendingOperation(null);
+    setOperationLoading(false);
+  };
+
+  const handleFirstOpenChange = (open: boolean) => {
+    setShowFirstConfirm(open);
+    if (!open) {
+      if (advancingToSecondRef.current) {
+        setTimeout(() => {
+          advancingToSecondRef.current = false;
+        }, 0);
+      } else {
+        handleCancel();
+      }
+    }
+  };
+
+  const handleSecondOpenChange = (open: boolean) => {
+    setShowSecondConfirm(open);
+    if (!open) {
+      handleCancel();
+    }
   };
 
   return {
@@ -66,5 +93,7 @@ export function useDangerousOperation(
     handleFirstConfirm,
     handleSecondConfirm,
     handleCancel,
+    handleFirstOpenChange,
+    handleSecondOpenChange,
   };
 }
