@@ -1,9 +1,9 @@
 /**
  * API Responses - Central export
  */
-export * from './responses/auth';
-export * from './responses/user';
-export * from './responses/aiConfig';
-export * from './responses/upload';
-export * from './responses/labs';
-export * from './responses/system';
+export * from './auth';
+export * from './user';
+export * from './aiConfig';
+export * from './upload';
+export * from './labs';
+export * from './system';
