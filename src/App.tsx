@@ -3,6 +3,7 @@ import { Suspense, useEffect } from "react";
 import React from "react";
 import DashboardLayout from "./shared/components/layouts/DashboardLayout";
 import LoadingSpinner from "./shared/components/LoadingSpinner";
+import { ErrorBoundary } from "./shared/components/ErrorBoundary";
 import { toast } from "sonner";
 import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 import { Toaster } from "./shared/components/ui/sonner";
@@ -50,6 +51,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Toaster />
+      <ErrorBoundary>
       <Suspense fallback={<LoadingSpinner size="lg" />}>
         <Routes>
           {/* Ruta pública de login (sin DashboardLayout) */}
@@ -225,6 +227,7 @@ export default function App() {
           />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

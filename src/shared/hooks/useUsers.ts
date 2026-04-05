@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { userService, User, UserCreate, UserUpdate, UserFilters } from '@/services/userService';
+import { isAbortError } from '@/utils/common/isAbortError';
 import { toast } from 'sonner';
 
 export function useUsers() {
@@ -20,7 +21,7 @@ export function useUsers() {
   });
 
   // Fetch users
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
@@ -28,18 +29,20 @@ export function useUsers() {
         ...filters,
         page: currentPage,
         limit,
-      });
-      
+      }, signal);
+
+      if (signal?.aborted) return;
       // userService already returns { data: [], total, pages }
       setUsers(response.data || []);
       setTotal(response.total || 0);
       setTotalPages(response.pages || 1);
     } catch (err: any) {
+      if (isAbortError(err)) return;
       const errorMsg = err.response?.data?.message || 'Error loading users';
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [filters, currentPage, limit]);
 
@@ -104,7 +107,9 @@ export function useUsers() {
 
   // Load users on mount and when dependencies change
   useEffect(() => {
-    fetchUsers();
+    const controller = new AbortController();
+    fetchUsers(controller.signal);
+    return () => controller.abort();
   }, [fetchUsers]);
 
   return {

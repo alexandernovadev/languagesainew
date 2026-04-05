@@ -14,6 +14,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Loader2, Sparkles, MessageSquare, BookOpen, Save, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 
 const FEATURE_CONFIG: Record<
   AIFeature,
@@ -149,20 +150,13 @@ export default function AIConfigPage() {
 
   const currentFeature = FEATURE_CONFIG[activeFeature];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-dvh">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6 p-6">
       <PageHeader
         title="Configuración de AI"
         description="Personaliza qué modelos de AI usar para cada funcionalidad"
       />
+      <PageLoader loading={loading}>
 
       <Tabs value={activeFeature} onValueChange={(v) => setActiveFeature(v as AIFeature)}>
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-6 bg-transparent">
@@ -275,6 +269,7 @@ export default function AIConfigPage() {
           </TabsContent>
         ))}
       </Tabs>
+      </PageLoader>
     </div>
   );
 }

@@ -1,10 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useRef, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { ExpressionsTable } from "@/shared/components/tables/ExpressionsTable";
-import { ExpressionDialog } from "@/shared/components/dialogs/ExpressionDialog";
 import { ExpressionFiltersModal } from "@/shared/components/filters/ExpressionFiltersModal";
+
+const ExpressionDialog = lazy(() =>
+  import("@/shared/components/dialogs/ExpressionDialog").then((m) => ({ default: m.ExpressionDialog }))
+);
 import { useExpressions } from "@/shared/hooks/useExpressions";
 import { IExpression } from "@/types/models/Expression";
 import { Plus, Search, Filter, X, Sparkles } from "lucide-react";
@@ -17,6 +20,7 @@ import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
 
 export default function ExpressionsPage() {
+  const dialogMounted = useRef(false);
   const {
     expressions,
     loading,
@@ -215,12 +219,16 @@ export default function ExpressionsPage() {
         onPageChange={goToPage}
       />
 
-      <ExpressionDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        expression={selectedExpression}
-        onSave={handleSave}
-      />
+      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+        <Suspense fallback={null}>
+          <ExpressionDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            expression={selectedExpression}
+            onSave={handleSave}
+          />
+        </Suspense>
+      )}
 
       <AlertDialogNova
         open={deleteDialogOpen}

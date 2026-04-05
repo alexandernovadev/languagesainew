@@ -1,10 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useRef, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { UsersTable } from "@/shared/components/tables/UsersTable";
-import { UserDialog } from "@/shared/components/dialogs/UserDialog";
 import { TablePagination } from "@/shared/components/ui/table-pagination";
+
+const UserDialog = lazy(() =>
+  import("@/shared/components/dialogs/UserDialog").then((m) => ({ default: m.UserDialog }))
+);
 import { useUsers } from "@/shared/hooks/useUsers";
 import { useUsersUIStore } from "@/lib/store/users-store";
 import type { User } from "@/services/userService";
@@ -12,6 +15,7 @@ import { Plus, Search, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 
 export default function UsersPage() {
+  const dialogMounted = useRef(false);
   const {
     users,
     loading,
@@ -127,12 +131,16 @@ export default function UsersPage() {
         onPageChange={goToPage}
       />
 
-      <UserDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        user={selectedUser}
-        onSave={handleSave}
-      />
+      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+        <Suspense fallback={null}>
+          <UserDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            user={selectedUser}
+            onSave={handleSave}
+          />
+        </Suspense>
+      )}
 
       <AlertDialogNova
         open={deleteDialogOpen}

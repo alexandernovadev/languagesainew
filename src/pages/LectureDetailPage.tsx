@@ -4,13 +4,13 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { lectureService } from "@/services/lectureService";
 import { wordService } from "@/services/wordService";
 import { ILecture } from "@/types/models/Lecture";
 import { IWord } from "@/types/models/Word";
-import { ArrowLeft, Clock, BookOpen, Volume2, Loader2, Plus } from "lucide-react";
+import { ArrowLeft, Clock, BookOpen, Volume2 } from "lucide-react";
 import { deliveryImageUrl, getDifficultyVariant } from "@/utils/common";
 import { cn } from "@/utils/common/classnames";
 import { useSidebar } from "@/shared/components/ui/sidebar";
@@ -18,6 +18,7 @@ import { getMarkdownTitle, removeFirstH1 } from "@/utils/common/string/markdown"
 import { getSpeechLocale } from "@/utils/common/speech";
 import { toast } from "sonner";
 import { WordDetailModal } from "@/shared/components/dialogs/WordDetailModal";
+import { WordLookupPanel } from "@/shared/components/lecture/WordLookupPanel";
 
 export default function LectureDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -124,76 +125,38 @@ export default function LectureDetailPage() {
     }
   }, [selectedWord, lecture]);
 
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <PageHeader 
-          title="Cargando..." 
-          description="Cargando la lectura"
-        />
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <Skeleton className="h-64 w-full" />
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (error || !lecture) {
-    return (
-      <div className="space-y-4">
-        <PageHeader 
-          title="Error" 
-          description="No se pudo cargar la lectura"
-        />
-        <Card>
-          <CardContent className="p-6 text-center">
-            <p className="text-destructive mb-4">{error || "Lectura no encontrada"}</p>
-            <Button onClick={() => navigate("/lectures")} variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Volver a Lecturas
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const lectureTitle = getMarkdownTitle(lecture.content) || lecture.typeWrite || "Lectura";
-  const wordPanelOpen =
-    !!(selectedWord || wordLookupLoading || wordLookup);
+  const lectureTitle = loading
+    ? "Cargando..."
+    : getMarkdownTitle(lecture?.content) || lecture?.typeWrite || "Lectura";
+  const wordPanelOpen = !!(selectedWord || wordLookupLoading || wordLookup);
 
   return (
     <div className={cn("space-y-4 relative", wordPanelOpen && "pb-28")}>
-      <PageHeader 
-        title={lectureTitle} 
+      <PageHeader
+        title={lectureTitle}
         description="Lee y disfruta del contenido"
         actions={
-          <Button
-            variant="outline"
-            onClick={() => navigate("/lectures")}
-            size="sm"
-          >
+          <Button variant="outline" onClick={() => navigate("/lectures")} size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
         }
       />
 
+      <PageLoader
+        loading={loading}
+        error={error ?? (!lecture ? "Lectura no encontrada" : null)}
+        onRetry={loadLecture}
+        skeletonRows={5}
+      >
+
       {/* Image */}
       <Card>
         <CardContent className="p-0">
-          {lecture.img ? (
+          {lecture!.img ? (
             <img
-              src={deliveryImageUrl(lecture.img)}
-              alt={lecture.typeWrite || "Lecture"}
+              src={deliveryImageUrl(lecture!.img)}
+              alt={lecture!.typeWrite || "Lecture"}
               className="w-full h-auto max-h-96 object-cover rounded-t-lg"
             />
           ) : (
@@ -208,19 +171,19 @@ export default function LectureDetailPage() {
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-wrap gap-2 items-center">
-            <Badge variant={getDifficultyVariant(lecture.difficulty)}>
-              {lecture.difficulty || "N/A"}
+            <Badge variant={getDifficultyVariant(lecture!.difficulty)}>
+              {lecture!.difficulty || "N/A"}
             </Badge>
-            {lecture.time && (
+            {lecture!.time && (
               <Badge variant="secondary" className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {lecture.time} min
+                {lecture!.time} min
               </Badge>
             )}
-            {lecture.typeWrite && (
+            {lecture!.typeWrite && (
               <Badge variant="outline" className="flex items-center gap-1">
                 <BookOpen className="h-3 w-3" />
-                {lecture.typeWrite}
+                {lecture!.typeWrite}
               </Badge>
             )}
           </div>
@@ -228,7 +191,7 @@ export default function LectureDetailPage() {
       </Card>
 
       {/* Audio Player */}
-      {lecture.urlAudio && (
+      {lecture!.urlAudio && (
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -248,7 +211,7 @@ export default function LectureDetailPage() {
         <CardContent className="p-4 sm:p-6 md:p-8">
           <div className="select-text" title="Clic en una palabra para verla en el diccionario">
             <MarkdownRenderer
-              content={removeFirstH1(lecture.content)}
+              content={removeFirstH1(lecture!.content)}
               variant="reading"
               onWordClick={handleWordClick}
             />
@@ -256,97 +219,23 @@ export default function LectureDetailPage() {
         </CardContent>
       </Card>
 
-      {/* Word lookup panel */}
       {wordPanelOpen && (
-        <Card
-          className={cn(
-            "fixed z-30 border shadow-lg bg-card/95 backdrop-blur-md supports-[backdrop-filter]:bg-card/90",
-            isMobile
-              ? "inset-x-0 bottom-0 rounded-t-xl border-x-0 border-b-0"
-              : state === "collapsed"
-                ? "left-[calc(var(--sidebar-width-icon)+theme(spacing.4)+theme(spacing.2))] right-2 bottom-2 rounded-xl"
-                : "left-[calc(var(--sidebar-width)+theme(spacing.2))] right-2 bottom-2 rounded-xl"
-          )}
-        >
-          <CardContent className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="flex-1">
-                <p className="text-sm text-muted-foreground mb-1">
-                  Palabra seleccionada
-                </p>
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold text-lg capitalize">
-                    {selectedWord ||
-                      (wordLookup?.exists ? wordLookup.word.word : null) ||
-                      "—"}
-                  </p>
-                  {(selectedWord || (wordLookup?.exists && wordLookup.word.word)) && (
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          speakWord(
-                            selectedWord || (wordLookup?.exists ? wordLookup.word.word : "") || "",
-                            1
-                          );
-                        }}
-                        className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110"
-                        title="Reproducir velocidad normal"
-                      >
-                        <Volume2 className="h-4 w-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          speakWord(
-                            selectedWord || (wordLookup?.exists ? wordLookup.word.word : "") || "",
-                            0.01
-                          );
-                        }}
-                        className="p-2 border rounded-lg hover:bg-muted transition-colors hover:scale-110 text-base leading-none"
-                        title="Reproducir velocidad lenta"
-                      >
-                        🐢
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {wordLookupLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                ) : wordLookup?.exists ? (
-                  <Button onClick={handleOpenDetail}>
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    Ver detalle
-                  </Button>
-                ) : wordLookup && !wordLookup.exists ? (
-                  <>
-                    <p className="text-sm text-muted-foreground mr-2">
-                      No tienes en tu diccionario
-                    </p>
-                    <Button
-                      onClick={handleAddWord}
-                      disabled={addingWord}
-                    >
-                      {addingWord ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        <Plus className="h-4 w-4 mr-2" />
-                      )}
-                      Añadir
-                    </Button>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <WordLookupPanel
+          selectedWord={selectedWord}
+          wordLookup={wordLookup}
+          wordLookupLoading={wordLookupLoading}
+          addingWord={addingWord}
+          isMobile={isMobile}
+          sidebarState={state}
+          onSpeak={speakWord}
+          onOpenDetail={handleOpenDetail}
+          onAddWord={handleAddWord}
+        />
       )}
 
-      {/* Word detail modal */}
+      </PageLoader>
+
+      {/* Word detail modal — outside PageLoader so it works even on error */}
       <WordDetailModal
         open={detailModalOpen}
         onOpenChange={setDetailModalOpen}

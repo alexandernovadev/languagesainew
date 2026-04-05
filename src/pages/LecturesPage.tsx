@@ -1,10 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useRef, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { LecturesTable } from "@/shared/components/tables/LecturesTable";
-import { LectureDialog } from "@/shared/components/dialogs/LectureDialog";
 import { LectureFiltersModal } from "@/shared/components/filters/LectureFiltersModal";
+
+const LectureDialog = lazy(() =>
+  import("@/shared/components/dialogs/LectureDialog").then((m) => ({ default: m.LectureDialog }))
+);
 import { useLectures } from "@/shared/hooks/useLectures";
 import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { ILecture } from "@/types/models/Lecture";
@@ -14,6 +17,7 @@ import { useLecturesUIStore } from "@/lib/store/lectures-store";
 import { TablePagination } from "@/shared/components/ui/table-pagination";
 
 export default function LecturesPage() {
+  const dialogMounted = useRef(false);
   const {
     lectures,
     loading,
@@ -159,15 +163,19 @@ export default function LecturesPage() {
         onPageChange={goToPage}
       />
 
-      <LectureDialog
-        open={dialogOpen}
-        onOpenChange={(open) => {
-          setDialogOpen(open);
-          if (!open) setSelectedLecture(null);
-        }}
-        lecture={selectedLecture}
-        onSave={handleSave}
-      />
+      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+        <Suspense fallback={null}>
+          <LectureDialog
+            open={dialogOpen}
+            onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) setSelectedLecture(null);
+            }}
+            lecture={selectedLecture}
+            onSave={handleSave}
+          />
+        </Suspense>
+      )}
 
       <AlertDialogNova
         open={deleteDialogOpen}

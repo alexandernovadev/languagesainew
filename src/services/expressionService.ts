@@ -4,9 +4,9 @@ import { useUserStore } from "@/lib/store/user-store";
 
 export const expressionService = {
   // Get expressions with filters (language comes from user profile)
-  getExpressions: (filters?: any) => {
+  getExpressions: (filters?: any, signal?: AbortSignal) => {
     const { language, ...params } = filters || {};
-    return api.get("/api/expressions", { params });
+    return api.get("/api/expressions", { params, signal });
   },
 
   // Get expression by ID

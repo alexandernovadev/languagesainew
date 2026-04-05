@@ -2,7 +2,7 @@ import { api } from "./api";
 import { Lecture } from "../models/Lecture";
 
 export const lectureService = {
-  async getLectures(page = 1, limit = 10, search = "", filters: Record<string, any> = {}) {
+  async getLectures(page = 1, limit = 10, search = "", filters: Record<string, any> = {}, signal?: AbortSignal) {
     const params = new URLSearchParams();
     params.append("page", String(page));
     params.append("limit", String(limit));
@@ -17,7 +17,7 @@ export const lectureService = {
         }
       }
     });
-    const res = await api.get(`/api/lectures?${params.toString()}`);
+    const res = await api.get(`/api/lectures?${params.toString()}`, { signal });
     return res.data;
   },
 

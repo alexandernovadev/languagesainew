@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { expressionService } from '@/services/expressionService';
 import { IExpression } from '@/types/models/Expression';
+import { isAbortError } from '@/utils/common/isAbortError';
 import { toast } from 'sonner';
 
 export interface ExpressionFilters {
@@ -58,7 +59,7 @@ export function useExpressions() {
   });
 
   // Fetch expressions
-  const fetchExpressions = useCallback(async () => {
+  const fetchExpressions = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
@@ -66,19 +67,21 @@ export function useExpressions() {
         ...filters,
         page: currentPage,
         limit,
-      });
-      
+      }, signal);
+
+      if (signal?.aborted) return;
       // Backend returns { success, message, data: { data, total, page, pages } }
       const responseData = response.data.data;
       setExpressions(responseData.data || []);
       setTotal(responseData.total || 0);
       setTotalPages(responseData.pages || 1);
     } catch (err: any) {
+      if (isAbortError(err)) return;
       const errorMsg = err.response?.data?.message || 'Error loading expressions';
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [filters, currentPage, limit]);
 
@@ -143,7 +146,9 @@ export function useExpressions() {
 
   // Load expressions on mount and when dependencies change
   useEffect(() => {
-    fetchExpressions();
+    const controller = new AbortController();
+    fetchExpressions(controller.signal);
+    return () => controller.abort();
   }, [fetchExpressions]);
 
   return {

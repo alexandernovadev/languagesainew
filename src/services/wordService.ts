@@ -20,7 +20,8 @@ class WordService extends HttpClient {
   async getWords(
     page: number,
     limit: number,
-    filters?: Partial<WordFilters>
+    filters?: Partial<WordFilters>,
+    signal?: AbortSignal
   ): Promise<any> {
     const params = new URLSearchParams();
     params.append("page", page.toString());
@@ -35,7 +36,7 @@ class WordService extends HttpClient {
     }
 
     const url = `/api/words?${params.toString()}`;
-    return this.get(url);
+    return this.get(url, { signal });
   }
 
   /**

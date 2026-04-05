@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { lectureService } from '@/services/lectureService';
 import { ILecture } from '@/types/models/Lecture';
+import { isAbortError } from '@/utils/common/isAbortError';
 import { toast } from 'sonner';
 
 export interface LectureFilters {
@@ -63,23 +64,25 @@ export function useLectures() {
   });
 
   // Fetch lectures
-  const fetchLectures = useCallback(async () => {
+  const fetchLectures = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await lectureService.getLectures(currentPage, limit, filters.search || "", filters);
-      
+      const response = await lectureService.getLectures(currentPage, limit, filters.search || "", filters, signal);
+
+      if (signal?.aborted) return;
       // Backend returns { success, message, data: { data: [], total, pages, page } }
       const responseData = response.data;
       setLectures(responseData.data || []);
       setTotal(responseData.total || 0);
       setTotalPages(responseData.pages || 1);
     } catch (err: any) {
+      if (isAbortError(err)) return;
       const errorMsg = err.response?.data?.message || 'Error loading lectures';
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [filters, currentPage, limit]);
 
@@ -144,7 +147,9 @@ export function useLectures() {
 
   // Load lectures on mount and when dependencies change
   useEffect(() => {
-    fetchLectures();
+    const controller = new AbortController();
+    fetchLectures(controller.signal);
+    return () => controller.abort();
   }, [fetchLectures]);
 
   return {

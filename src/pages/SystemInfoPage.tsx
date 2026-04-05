@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 import { systemService, SystemInfo } from "@/services/systemService";
 import { formatDateTimeSpanish } from "@/utils/common/time/formatDate";
 import { Server, Monitor } from "lucide-react";
@@ -74,40 +74,12 @@ export default function SystemInfoPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader 
-        title="Información del Sistema" 
+      <PageHeader
+        title="Información del Sistema"
         description="Estado y detalles del servidor"
       />
 
-      {loading && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {error && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-center">
-              <p className="text-destructive mb-4">{error}</p>
-              <button
-                onClick={loadSystemInfo}
-                className="text-sm text-primary hover:underline"
-              >
-                Reintentar
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {!loading && !error && systemInfo && (
+      <PageLoader loading={loading} error={error} onRetry={loadSystemInfo} skeletonRows={3}>
         <div className="space-y-6 w-full">
           {/* Backend */}
           <Card className="w-full">
@@ -152,7 +124,7 @@ export default function SystemInfoPage() {
             </CardContent>
           </Card>
         </div>
-      )}
+      </PageLoader>
     </div>
   );
 }

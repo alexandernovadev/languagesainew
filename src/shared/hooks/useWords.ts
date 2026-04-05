@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { wordService } from '@/services/wordService';
 import { IWord } from '@/types/models/Word';
+import { isAbortError } from '@/utils/common/isAbortError';
 import { toast } from 'sonner';
 
 export interface WordFilters {
@@ -81,22 +82,24 @@ export function useWords() {
   const initialFiltersSet = useRef(false);
 
   // Fetch words
-  const fetchWords = useCallback(async () => {
+  const fetchWords = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await wordService.getWords(currentPage, limit, filters);
-      
+      const response = await wordService.getWords(currentPage, limit, filters, signal);
+
+      if (signal?.aborted) return;
       // Backend returns { data: { data: [], total, pages } }
       setWords(response.data.data || []);
       setTotal(response.data.total || 0);
       setTotalPages(response.data.pages || 1);
     } catch (err: any) {
+      if (isAbortError(err)) return;
       const errorMsg = err.response?.data?.message || 'Error loading words';
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [filters, currentPage, limit]);
 
@@ -168,25 +171,29 @@ export function useWords() {
 
   // Load words on mount and when dependencies change
   useEffect(() => {
+    const controller = new AbortController();
+
     // Solo hacer la primera llamada después de que los filtros hayan sido establecidos
     // Esto evita hacer una llamada sin filtros y luego otra con filtros
     if (!hasInitialLoad.current) {
-      // Si los filtros ya fueron establecidos (desde la URL), hacer la llamada inmediatamente
       if (initialFiltersSet.current) {
         hasInitialLoad.current = true;
-        fetchWords();
+        fetchWords(controller.signal);
       } else {
-        // Si aún no se han establecido los filtros, esperar un pequeño delay
-        // para dar tiempo a que useFilterUrlSync cargue los filtros de la URL
         const timeoutId = setTimeout(() => {
           hasInitialLoad.current = true;
-          fetchWords();
-        }, 50); // Delay suficiente para que useFilterUrlSync se ejecute
-        return () => clearTimeout(timeoutId);
+          fetchWords(controller.signal);
+        }, 50);
+        return () => {
+          clearTimeout(timeoutId);
+          controller.abort();
+        };
       }
     } else {
-      fetchWords();
+      fetchWords(controller.signal);
     }
+
+    return () => controller.abort();
   }, [fetchWords]);
 
   return {

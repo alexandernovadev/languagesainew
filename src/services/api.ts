@@ -1,5 +1,6 @@
 import { useUserStore } from "@/lib/store/user-store";
 import axios from "axios";
+import { isAbortError } from "@/utils/common/isAbortError";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACK_URL,
@@ -101,6 +102,9 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // Silently pass through cancelled requests — not an error
+    if (isAbortError(error)) return Promise.reject(error);
+
     // Log detallado del error
     console.error("💥 [RESPONSE ERROR]", {
       url: error.config?.url,

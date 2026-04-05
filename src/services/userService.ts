@@ -79,7 +79,7 @@ export interface UsersResponse {
 
 class UserService {
   // Obtener usuarios con filtros y paginación
-  async getUsers(filters: UserFilters = {}): Promise<UsersResponse> {
+  async getUsers(filters: UserFilters = {}, signal?: AbortSignal): Promise<UsersResponse> {
     const params = new URLSearchParams();
 
     Object.entries(filters).forEach(([key, value]) => {
@@ -92,7 +92,7 @@ class UserService {
       }
     });
 
-    const response = await api.get(`/api/users?${params.toString()}`);
+    const response = await api.get(`/api/users?${params.toString()}`, { signal });
     return response.data.data;
   }
 

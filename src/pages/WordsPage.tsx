@@ -1,11 +1,16 @@
-import { useCallback } from "react";
+import { useCallback, useRef, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { WordsTable } from "@/shared/components/tables/WordsTable";
-import { WordDialog } from "@/shared/components/dialogs/WordDialog";
-import { WordDetailModal } from "@/shared/components/dialogs/WordDetailModal";
 import { WordFiltersModal } from "@/shared/components/filters/WordFiltersModal";
+
+const WordDialog = lazy(() =>
+  import("@/shared/components/dialogs/WordDialog").then((m) => ({ default: m.WordDialog }))
+);
+const WordDetailModal = lazy(() =>
+  import("@/shared/components/dialogs/WordDetailModal").then((m) => ({ default: m.WordDetailModal }))
+);
 import { useWords } from "@/shared/hooks/useWords";
 import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { IWord } from "@/types/models/Word";
@@ -19,6 +24,8 @@ import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
 
 export default function WordsPage() {
+  const dialogMounted = useRef(false);
+  const detailMounted = useRef(false);
   const {
     words,
     loading,
@@ -270,12 +277,16 @@ export default function WordsPage() {
       />
 
       {/* Create/Edit Dialog */}
-      <WordDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        word={selectedWord}
-        onSave={handleSave}
-      />
+      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+        <Suspense fallback={null}>
+          <WordDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            word={selectedWord}
+            onSave={handleSave}
+          />
+        </Suspense>
+      )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialogNova
@@ -304,12 +315,16 @@ export default function WordsPage() {
       />
 
       {/* Word Detail Modal */}
-      <WordDetailModal
-        open={detailModalOpen}
-        onOpenChange={setDetailModalOpen}
-        wordId={selectedWordId}
-        onWordUpdate={handleWordUpdate}
-      />
+      {(detailMounted.current || (detailMounted.current = detailModalOpen, detailModalOpen)) && (
+        <Suspense fallback={null}>
+          <WordDetailModal
+            open={detailModalOpen}
+            onOpenChange={setDetailModalOpen}
+            wordId={selectedWordId}
+            onWordUpdate={handleWordUpdate}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
