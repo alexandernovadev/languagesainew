@@ -1,18 +1,31 @@
+import { HttpClient } from "./api/HttpClient";
 import { Word } from "../models/Word";
-import { api } from "./api";
 import { WordFilters } from "@/shared/components/forms/word-filters/types";
 import { useUserStore } from "@/lib/store/user-store";
 
-export const wordService = {
-  async getWords(page: number, limit: number, filters?: Partial<WordFilters>) {
-    // Construir query params
-    const params = new URLSearchParams();
+/**
+ * Word Service - Extends HttpClient for centralized error handling & logging
+ * Provides all word-related API operations
+ */
+class WordService extends HttpClient {
+  constructor() {
+    super();
+  }
 
-    // Parámetros básicos
+  // ========== CRUD Operations ==========
+
+  /**
+   * Get paginated list of words with filters
+   */
+  async getWords(
+    page: number,
+    limit: number,
+    filters?: Partial<WordFilters>
+  ): Promise<any> {
+    const params = new URLSearchParams();
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
-    // Agregar filtros si existen
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== "") {
@@ -22,96 +35,121 @@ export const wordService = {
     }
 
     const url = `/api/words?${params.toString()}`;
-    const res = await api.get(url);
-    return res.data;
-  },
+    return this.get(url);
+  }
 
-  async getWordById(id: string) {
-    const res = await api.get(`/api/words/${id}`);
-    return res.data;
-  },
+  /**
+   * Get word by ID
+   */
+  async getWordById(id: string): Promise<Word> {
+    return this.get(`/api/words/${id}`);
+  }
 
-  async getWordByName(word: string) {
+  /**
+   * Get word by name (for lookup)
+   */
+  async getWordByName(word: string): Promise<any> {
     const encoded = encodeURIComponent(word);
-    const res = await api.get(`/api/words/${encoded}/word`);
-    const body = res.data;
-    return body?.data ?? body;
-  },
+    return this.get(`/api/words/${encoded}/word`);
+  }
 
-  async createWord(wordData: Omit<Word, "_id">) {
-    const res = await api.post(`/api/words`, wordData);
-    return res.data;
-  },
+  /**
+   * Create new word
+   */
+  async createWord(wordData: Omit<Word, "_id">): Promise<Word> {
+    return this.post("/api/words", wordData);
+  }
 
-  async updateWord(id: string, wordData: Partial<Word>) {
-    const res = await api.put(`/api/words/${id}`, wordData);
-    return res.data;
-  },
+  /**
+   * Update word
+   */
+  async updateWord(id: string, wordData: Partial<Word>): Promise<Word> {
+    return this.put(`/api/words/${id}`, wordData);
+  }
 
-  // Renamed and updated
-  async updateWordDifficulty(id: string, difficulty: string) {
-    const res = await api.put(`/api/words/${id}/difficulty`, { difficulty });
-    return res.data;
-  },
+  /**
+   * Update word difficulty level
+   */
+  async updateWordDifficulty(id: string, difficulty: string): Promise<any> {
+    return this.put(`/api/words/${id}/difficulty`, { difficulty });
+  }
 
-  async incrementWordSeen(id: string) {
-    const res = await api.put(`/api/words/${id}/increment-seen`, {});
-    return res.data;
-  },
+  /**
+   * Increment word view count
+   */
+  async incrementWordSeen(id: string): Promise<any> {
+    return this.put(`/api/words/${id}/increment-seen`, {});
+  }
 
-  async deleteWord(id: string) {
-    const res = await api.delete(`/api/words/${id}`);
-    return res.data;
-  },
+  /**
+   * Delete word
+   */
+  async deleteWord(id: string): Promise<any> {
+    return this.delete(`/api/words/${id}`);
+  }
 
-  // Método unificado para obtener tarjetas Anki
+  // ========== Study Methods ==========
+
+  /**
+   * Get Anki cards for study
+   */
   async getAnkiCards(options: {
-    mode?: 'random' | 'review';
+    mode?: "random" | "review";
     limit?: number;
     difficulty?: string[];
     type?: string[];
-  } = {}) {
+  } = {}): Promise<any> {
     const params = new URLSearchParams();
-    
-    if (options.mode) params.append('mode', options.mode);
-    params.append('limit', (options.limit && options.limit > 0 ? options.limit : 30).toString());
-    const difficulty = options.difficulty?.length ? options.difficulty : ['hard', 'medium'];
-    params.append('difficulty', difficulty.join(','));
+
+    if (options.mode) params.append("mode", options.mode);
+    params.append(
+      "limit",
+      (options.limit && options.limit > 0 ? options.limit : 30).toString()
+    );
+
+    const difficulty = options.difficulty?.length
+      ? options.difficulty
+      : ["hard", "medium"];
+    params.append("difficulty", difficulty.join(","));
+
     if (options.type?.length) {
-      params.append('type', options.type.join(','));
+      params.append("type", options.type.join(","));
     }
 
-    const url = `/api/words/anki-cards${params.toString() ? `?${params.toString()}` : ''}`;
-    const res = await api.get(url);
-    return res.data;
-  },
+    const url = `/api/words/anki-cards${
+      params.toString() ? `?${params.toString()}` : ""
+    }`;
+    return this.get(url);
+  }
 
-  // Obtener palabras por tipo (optimizado)
+  /**
+   * Get words by type (optimized)
+   */
   async getWordsByTypeOptimized(options: {
     type: string;
     limit?: number;
     wordUser?: string;
     fields?: string;
-  }) {
+  }): Promise<any> {
     const params = new URLSearchParams();
-    
-    params.append('type', options.type);
-    if (options.limit) params.append('limit', options.limit.toString());
-    if (options.wordUser) params.append('wordUser', options.wordUser);
-    if (options.fields) params.append('fields', options.fields);
+
+    params.append("type", options.type);
+    if (options.limit) params.append("limit", options.limit.toString());
+    if (options.wordUser) params.append("wordUser", options.wordUser);
+    if (options.fields) params.append("fields", options.fields);
 
     const url = `/api/words/by-type-optimized?${params.toString()}`;
-    const res = await api.get(url);
-    return res.data;
-  },
+    return this.get(url);
+  }
 
-  // --- AI Generation methods (provider omitido → backend usa AI config del usuario) ---
+  // ========== AI Generation Methods ==========
+
   async generateWord(word: string, language = "en", provider?: string) {
     const body: Record<string, unknown> = { word, language };
     if (provider) body.provider = provider;
-    const res = await api.post(`/api/words/generate`, body);
-    return res.data;
-  },
+    return this.post(`/api/words/generate`, body);
+  }
+
   async generateWordExamples(
     wordId: string,
     word: string,
@@ -121,9 +159,9 @@ export const wordService = {
   ) {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
-    const res = await api.post(`/api/words/${wordId}/generate-examples`, body);
-    return res.data;
-  },
+    return this.post(`/api/words/${wordId}/generate-examples`, body);
+  }
+
   async generateWordCodeSwitching(
     wordId: string,
     word: string,
@@ -133,9 +171,9 @@ export const wordService = {
   ) {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
-    const res = await api.post(`/api/words/${wordId}/generate-code-switching`, body);
-    return res.data;
-  },
+    return this.post(`/api/words/${wordId}/generate-code-switching`, body);
+  }
+
   async generateWordSynonyms(
     wordId: string,
     word: string,
@@ -145,9 +183,9 @@ export const wordService = {
   ) {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
-    const res = await api.post(`/api/words/${wordId}/generate-synonyms`, body);
-    return res.data;
-  },
+    return this.post(`/api/words/${wordId}/generate-synonyms`, body);
+  }
+
   async generateWordTypes(
     wordId: string,
     word: string,
@@ -157,43 +195,43 @@ export const wordService = {
   ) {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
-    const res = await api.post(`/api/words/${wordId}/generate-types`, body);
-    return res.data;
-  },
+    return this.post(`/api/words/${wordId}/generate-types`, body);
+  }
+
   async generateWordImage(wordId: string, word: string, imgOld: string = "") {
-    const res = await api.post(`/api/words/${wordId}/generate-image`, { word, imgOld });
-    return res.data;
-  },
-  // --- END AI Generation ---
+    return this.post(`/api/words/${wordId}/generate-image`, { word, imgOld });
+  }
+
+  // ========== Import/Export Methods ==========
 
   async exportWords() {
-    const res = await api.get(`/api/words/export-file`);
-    return res.data;
-  },
+    return this.get(`/api/words/export-file`);
+  }
 
   async importWords(file: File) {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await api.post(`/api/words/import-file`, formData, {
+    return this.post(`/api/words/import-file`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    return res.data;
-  },
+  }
 
-  // Chat methods
-  addChatMessage: (wordId: string, message: string) =>
-    api.post(`/api/words/${wordId}/chat`, { message }),
+  // ========== Chat Methods ==========
 
-  streamChatMessage: async (wordId: string, message: string) => {
+  async addChatMessage(wordId: string, message: string) {
+    return this.post(`/api/words/${wordId}/chat`, { message });
+  }
+
+  /**
+   * Stream chat message (uses native Fetch API for streaming)
+   */
+  async streamChatMessage(wordId: string, message: string): Promise<ReadableStream<Uint8Array> | null> {
     const baseURL = import.meta.env.VITE_BACK_URL;
     const url = `${baseURL}/api/words/${wordId}/chat/stream`;
 
-    console.log("🔄 Streaming to:", url);
-
-    // Get auth headers without Content-Type for streaming
     const authToken = useUserStore.getState().token;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -209,20 +247,26 @@ export const wordService = {
       body: JSON.stringify({ message }),
     });
 
-    console.log("📡 Response status:", response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ Stream error:", response.status, errorText);
       throw new Error(
         `Failed to stream chat message: ${response.status} ${errorText}`
       );
     }
 
     return response.body;
-  },
+  }
 
-  getChatHistory: (wordId: string) => api.get(`/api/words/${wordId}/chat`),
+  async getChatHistory(wordId: string) {
+    return this.get(`/api/words/${wordId}/chat`);
+  }
 
-  clearChatHistory: (wordId: string) => api.delete(`/api/words/${wordId}/chat`),
-};
+  async clearChatHistory(wordId: string) {
+    return this.delete(`/api/words/${wordId}/chat`);
+  }
+}
+
+/**
+ * Singleton instance - use this everywhere
+ */
+export const wordService = new WordService();

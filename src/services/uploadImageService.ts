@@ -1,70 +1,81 @@
-import { api } from './api';
-
-export interface UploadImageResponse {
-  success: boolean;
-  data: {
-    img: string;
-    entityId: string;
-    entityType: string;
-  };
-  message: string;
-}
-
-export type EntityType = 'word' | 'lecture' | 'expression';
+import { HttpClient } from "./api/HttpClient";
+import { EntityType, UploadImageResponse } from "@/types/api";
 
 /**
- * Uploads an image for any entity type
- * @param imageFile - Image file to upload
- * @param entityType - Entity type (word, lecture, expression)
- * @param entityId - Entity ID
- * @returns Promise with server response
+ * Upload Image Service
+ * Handles image uploads for words, lectures, and expressions
  */
-export const uploadImage = async (
+class UploadImageService extends HttpClient {
+  constructor() {
+    super();
+  }
+
+  /**
+   * Upload image for any entity type
+   */
+  async uploadImage(
+    imageFile: File,
+    entityType: EntityType,
+    entityId: string
+  ): Promise<any> {
+    const formData = new FormData();
+    formData.append("imageFile", imageFile);
+
+    const endpoint = `/api/upload-image/${entityType}/${entityId}`;
+
+    return this.post(endpoint, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  /**
+   * Upload image for a word
+   */
+  async uploadWordImage(imageFile: File, wordId: string): Promise<any> {
+    return this.uploadImage(imageFile, "word", wordId);
+  }
+
+  /**
+   * Upload image for a lecture
+   */
+  async uploadLectureImage(imageFile: File, lectureId: string): Promise<any> {
+    return this.uploadImage(imageFile, "lecture", lectureId);
+  }
+
+  /**
+   * Upload image for an expression
+   */
+  async uploadExpressionImage(
+    imageFile: File,
+    expressionId: string
+  ): Promise<any> {
+    return this.uploadImage(imageFile, "expression", expressionId);
+  }
+}
+
+/**
+ * Singleton instance
+ */
+const uploadImageServiceInstance = new UploadImageService();
+
+// Export singleton and also convenience functions for backward compatibility
+export const uploadImage = (
   imageFile: File,
   entityType: EntityType,
   entityId: string
-): Promise<UploadImageResponse> => {
-  try {
-    const formData = new FormData();
-    formData.append('imageFile', imageFile);
+) => uploadImageServiceInstance.uploadImage(imageFile, entityType, entityId);
 
-    const endpoint = `/api/upload-image/${entityType}/${entityId}`;
-    
-    const response = await api.post<UploadImageResponse>(endpoint, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+export const uploadWordImage = (imageFile: File, wordId: string) =>
+  uploadImageServiceInstance.uploadWordImage(imageFile, wordId);
 
-    return response.data;
-  } catch (error: any) {
-    throw new Error(`Error uploading image: ${error.message}`);
-  }
-};
+export const uploadLectureImage = (imageFile: File, lectureId: string) =>
+  uploadImageServiceInstance.uploadLectureImage(imageFile, lectureId);
 
-/**
- * Uploads image for a specific word
- * @param imageFile - Image file
- * @param wordId - Word ID
- */
-export const uploadWordImage = async (imageFile: File, wordId: string): Promise<UploadImageResponse> => {
-  return uploadImage(imageFile, 'word', wordId);
-};
+export const uploadExpressionImage = (imageFile: File, expressionId: string) =>
+  uploadImageServiceInstance.uploadExpressionImage(imageFile, expressionId);
 
-/**
- * Uploads image for a specific lecture
- * @param imageFile - Image file
- * @param lectureId - Lecture ID
- */
-export const uploadLectureImage = async (imageFile: File, lectureId: string): Promise<UploadImageResponse> => {
-  return uploadImage(imageFile, 'lecture', lectureId);
-};
+// Re-export types
+export { EntityType, UploadImageResponse };
 
-/**
- * Uploads image for a specific expression
- * @param imageFile - Image file
- * @param expressionId - Expression ID
- */
-export const uploadExpressionImage = async (imageFile: File, expressionId: string): Promise<UploadImageResponse> => {
-  return uploadImage(imageFile, 'expression', expressionId);
-};

@@ -1,55 +1,40 @@
-import { api } from "./api";
+import { HttpClient } from "./api/HttpClient";
+import {
+  LoginCredentials,
+  LoginResponse,
+  RefreshTokenResponse,
+  RefreshTokenRequest,
+} from "@/types/api";
 
-export interface LoginCredentials {
-  username: string;
-  password: string;
-}
+/**
+ * Authentication Service
+ * Handles login, logout, and token refresh
+ */
+class AuthService extends HttpClient {
+  constructor() {
+    super();
+  }
 
-export interface LoginResponse {
-  token: string;
-  refreshToken: string;
-  user: {
-    _id: string;
-    username: string;
-    email: string;
-    role: string;
-    firstName?: string;
-    lastName?: string;
-    image?: string;
-    language?: string;
-    isActive: boolean;
-    address?: string;
-    phone?: string;
-    lastLogin?: Date;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-}
-
-export interface RefreshTokenResponse {
-  token: string;
-  refreshToken?: string;
-  user: LoginResponse["user"];
-}
-
-class AuthService {
   /**
    * Login with username and password
    */
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
-    const response = await api.post("/api/auth/login", credentials);
-    return response.data.data;
+    const response = await this.post<any>("/api/auth/login", credentials);
+    return response.data || response;
   }
 
   /**
    * Refresh access token using refresh token
    */
-  async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    const response = await api.post("/api/auth/refresh", { refreshToken });
-    const data = response.data?.data || response.data;
-    // Backend devuelve accessToken; mapear a token para consistencia
+  async refreshToken(
+    refreshToken: string
+  ): Promise<RefreshTokenResponse> {
+    const response = await this.post<any>("/api/auth/refresh", { refreshToken });
+    const data = response.data || response;
+    
+    // Backend devuelve accessToken; mapear para consistencia
     return {
-      token: data?.accessToken || data?.token,
+      accessToken: data?.accessToken || data?.token,
       refreshToken: data?.refreshToken,
       user: data?.user,
     };
@@ -60,6 +45,7 @@ class AuthService {
    */
   logout(): void {
     localStorage.removeItem("user-storage");
+    localStorage.removeItem("refreshToken");
   }
 }
 

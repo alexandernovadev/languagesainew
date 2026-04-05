@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -13,6 +13,7 @@ import { Plus, Search, Filter, X, Sparkles } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { AddWordQuickDialog } from "@/shared/components/dialogs/AddWordQuickDialog";
 import { useUserStore } from "@/lib/store/user-store";
+import { useWordsUIStore } from "@/lib/store/words-store";
 import { wordService } from "@/services/wordService";
 import { toast } from "sonner";
 import {
@@ -45,17 +46,32 @@ export default function WordsPage() {
   // Sync filters with URL
   const { isReady: filtersReady } = useFilterUrlSync(filters, updateFilters);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
-  const [selectedWord, setSelectedWord] = useState<IWord | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [wordToDelete, setWordToDelete] = useState<IWord | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
-  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  // ✅ NEW: Use Words UI Store instead of useState
+  const {
+    dialogOpen,
+    setDialogOpen,
+    filtersModalOpen,
+    setFiltersModalOpen,
+    selectedWord,
+    setSelectedWord,
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+    wordToDelete,
+    setWordToDelete,
+    searchTerm,
+    setSearchTerm,
+    deleteLoading,
+    setDeleteLoading,
+    isGenerating,
+    setIsGenerating,
+    detailModalOpen,
+    setDetailModalOpen,
+    selectedWordId,
+    setSelectedWordId,
+    quickAddOpen,
+    setQuickAddOpen,
+  } = useWordsUIStore();
+
   const { user } = useUserStore();
 
   // Handle create

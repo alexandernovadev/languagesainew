@@ -1,31 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface User {
-  _id: string;
-  username: string;
-  email: string;
-  role: string;
-  firstName?: string;
-  lastName?: string;
-  image?: string;
-  language?: string;
-  explainsLanguage?: string;
-  isActive: boolean;
-  address?: string;
-  phone?: string;
-  lastLogin?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { UserResponse } from '@/types/api';
 
 interface UserState {
-  user: User | null;
+  user: UserResponse | null;
   token: string | null;
   isAuthenticated: boolean;
   
   // Actions
-  setUser: (user: User | null) => void;
+  setUser: (user: UserResponse | null) => void;
   setToken: (token: string | null) => void;
   clearSession: () => void;
 }

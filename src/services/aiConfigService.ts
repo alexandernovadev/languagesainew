@@ -1,97 +1,74 @@
-import { api } from "./api";
+import { HttpClient } from "./api/HttpClient";
+import {
+  AIFeature,
+  AIOperation,
+  AIProvider,
+  AIConfig,
+  AIConfigResponse,
+  AIConfigSingleResponse,
+} from "@/types/api";
 
-export type AIFeature = "word" | "expression" | "lecture" | "exam";
-export type AIOperation =
-  | "generate"
-  | "examples"
-  | "codeSwitching"
-  | "types"
-  | "synonyms"
-  | "chat"
-  | "image"
-  | "text"
-  | "topic"
-  | "validate"
-  | "correct"
-  | "questionChat"
-  | "questionFeedback"
-  | "evaluateTranslation";
-export type AIProvider = 'openai' | 'deepseek';
+/**
+ * AI Configuration Service
+ * Manages AI provider configurations for different features and operations
+ */
+class AIConfigService extends HttpClient {
+  constructor() {
+    super();
+  }
 
-export interface AIConfig {
-  _id?: string;
-  userId?: string | null;
-  feature: AIFeature;
-  operation: AIOperation;
-  provider: AIProvider;
-  model?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+  /**
+   * Get all user configurations
+   */
+  async getConfigs(): Promise<any> {
+    return this.get("/api/ai-config");
+  }
 
-export interface AIConfigResponse {
-  success: boolean;
-  message: string;
-  data: {
-    configs: AIConfig[];
-    defaults: Record<AIFeature, Record<string, AIProvider>>;
-  };
-}
+  /**
+   * Get specific configuration for feature + operation
+   */
+  async getConfig(
+    feature: AIFeature,
+    operation: AIOperation
+  ): Promise<any> {
+    return this.get(`/api/ai-config/${feature}/${operation}`);
+  }
 
-export interface AIConfigSingleResponse {
-  success: boolean;
-  message: string;
-  data: {
-    feature: AIFeature;
-    operation: AIOperation;
-    provider: AIProvider;
-    default: AIProvider;
-  };
-}
-
-export const aiConfigService = {
-  // Obtener todas las configuraciones del usuario
-  async getConfigs(): Promise<AIConfigResponse> {
-    const res = await api.get("/api/ai-config");
-    return res.data;
-  },
-
-  // Obtener una configuración específica
-  async getConfig(feature: AIFeature, operation: AIOperation): Promise<AIConfigSingleResponse> {
-    const res = await api.get(`/api/ai-config/${feature}/${operation}`);
-    return res.data;
-  },
-
-  // Guardar/actualizar configuración
+  /**
+   * Save/update configuration
+   */
   async saveConfig(
     feature: AIFeature,
     operation: AIOperation,
     provider: AIProvider
-  ): Promise<{ success: boolean; message: string; data: AIConfig }> {
-    const res = await api.post("/api/ai-config", {
+  ): Promise<any> {
+    return this.post("/api/ai-config", {
       feature,
       operation,
       provider,
     });
-    return res.data;
-  },
+  }
 
-  // Eliminar configuración (restaurar default)
+  /**
+   * Delete configuration (restore default)
+   */
   async deleteConfig(
     feature: AIFeature,
     operation: AIOperation
-  ): Promise<{ success: boolean; message: string; data: AIConfig }> {
-    const res = await api.delete(`/api/ai-config/${feature}/${operation}`);
-    return res.data;
-  },
+  ): Promise<any> {
+    return this.delete(`/api/ai-config/${feature}/${operation}`);
+  }
 
-  // Obtener defaults del sistema
-  async getDefaults(): Promise<{
-    success: boolean;
-    message: string;
-    data: Record<AIFeature, Record<string, AIProvider>>;
-  }> {
-    const res = await api.get("/api/ai-config/defaults");
-    return res.data;
-  },
-};
+  /**
+   * Get system defaults
+   */
+  async getDefaults(): Promise<any> {
+    return this.get("/api/ai-config/defaults");
+  }
+}
+
+export const aiConfigService = new AIConfigService();
+
+// Re-export types for backward compatibility
+export { AIFeature, AIOperation, AIProvider, AIConfig };
+
