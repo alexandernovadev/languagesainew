@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { axiosClient as api } from "./api/HttpClient";
 import type { UserRole } from "@/types/business";
 import type {
   AllowedLanguageCode,

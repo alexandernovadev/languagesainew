@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { axiosClient as api } from "./api/HttpClient";
 import { Expression } from "../models/Expression";
 import { useUserStore } from "@/lib/store/user-store";
 

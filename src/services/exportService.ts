@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { axiosClient as api } from "./api/HttpClient";
 import { wordService } from "./wordService";
 import { expressionService } from "./expressionService";
 import { lectureService } from "./lectureService";

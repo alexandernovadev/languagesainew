@@ -5,67 +5,123 @@ import axios, {
   AxiosResponse,
 } from "axios";
 import { useUserStore } from "@/lib/store/user-store";
+import { isAbortError } from "@/utils/common/isAbortError";
 
-/**
- * Custom error class for better error handling
- */
+// ─────────────────────────────────────────────
+// Error class
+// ─────────────────────────────────────────────
+
 export class HttpError extends Error {
+  /** HTTP status code (0 = network error) */
+  public status: number;
+  /** Preserved for backwards-compat with err.response?.data?.message checks */
+  public response?: AxiosResponse;
+
   constructor(
     public statusCode: number,
     public message: string,
-    public data?: any
+    public data?: any,
+    response?: AxiosResponse
   ) {
     super(message);
     this.name = "HttpError";
+    this.status = statusCode;
+    this.response = response;
   }
 }
 
-/**
- * Base HTTP client with:
- * - Centralized error handling
- * - Token refresh logic
- * - Request/response logging
- * - Retry logic (optional)
- * - Request cancellation support
- */
+// ─────────────────────────────────────────────
+// Module-level refresh state
+// Shared across ALL HttpClient instances so concurrent
+// requests from different services don't double-refresh.
+// ─────────────────────────────────────────────
+
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function tryRefreshToken(baseURL: string): Promise<string | null> {
+  const refreshToken = localStorage.getItem("refreshToken");
+  if (!refreshToken) return null;
+
+  try {
+    const response = await axios.post(
+      `${baseURL}/api/auth/refresh`,
+      { refreshToken },
+      { withCredentials: true }
+    );
+    const data = response.data?.data || response.data;
+    const newToken = data?.accessToken || data?.token;
+    const newRefreshToken = data?.refreshToken;
+    const user = data?.user;
+
+    if (!newToken) return null;
+
+    const store = useUserStore.getState();
+    store.setToken(newToken);
+    if (user) store.setUser(user);
+    if (newRefreshToken) localStorage.setItem("refreshToken", newRefreshToken);
+
+    return newToken;
+  } catch {
+    return null;
+  }
+}
+
+function handleTokenRefresh(baseURL: string): Promise<string | null> {
+  if (isRefreshing && refreshPromise) return refreshPromise;
+
+  isRefreshing = true;
+  refreshPromise = tryRefreshToken(baseURL).finally(() => {
+    isRefreshing = false;
+    refreshPromise = null;
+  });
+  return refreshPromise;
+}
+
+function clearSession(): void {
+  const store = useUserStore.getState();
+  store.clearSession();
+  localStorage.removeItem("refreshToken");
+  if (!window.location.pathname.includes("/login")) {
+    window.location.href = "/login";
+  }
+}
+
+function buildError(status: number, data: any, response: AxiosResponse): HttpError {
+  const message =
+    data?.error ||
+    data?.message ||
+    `Error ${status}: ${response.statusText}`;
+  return new HttpError(status, message, data, response);
+}
+
+// ─────────────────────────────────────────────
+// Base HTTP client
+// ─────────────────────────────────────────────
+
 export abstract class HttpClient {
   protected client: AxiosInstance;
   protected baseURL: string;
 
-  // Token refresh state
-  private isRefreshing = false;
-  private refreshPromise: Promise<string | null> | null = null;
-
   constructor(baseURL: string = import.meta.env.VITE_BACK_URL || "http://localhost:3000") {
     this.baseURL = baseURL;
-    this.client = axios.create({
-      baseURL,
-      withCredentials: true,
-    });
-
+    this.client = axios.create({ baseURL, withCredentials: true });
     this.setupInterceptors();
   }
 
-  /**
-   * Setup request/response interceptors
-   */
   private setupInterceptors(): void {
-    // Request interceptor - add auth token
+    // ── Request ──────────────────────────────
     this.client.interceptors.request.use(
       (config) => {
-        // Log requests in development
         if (import.meta.env.DEV) {
-          console.log(
-            `🌐 [${config.method?.toUpperCase()}] ${config.url}`,
-            {
-              params: config.params,
-              data: config.data,
-            }
-          );
+          console.log(`🌐 [${config.method?.toUpperCase()}] ${config.url}`, {
+            params: config.params,
+            data: config.data,
+          });
         }
 
-        // Add authorization header
-        const token = this.getStoredToken();
+        // Token from Zustand store — never from raw localStorage
+        const token = useUserStore.getState().token;
         if (token && !config.headers.Authorization) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -78,199 +134,120 @@ export abstract class HttpClient {
       }
     );
 
-    // Response interceptor - handle token refresh and errors
+    // ── Response ─────────────────────────────
     this.client.interceptors.response.use(
       (response) => {
-        // Log successful responses in development
         if (import.meta.env.DEV) {
-          console.log(
-            `✅ [${response.status}] ${response.config.url}`,
-            response.data
-          );
+          console.log(`✅ [${response.status}] ${response.config.url}`, {
+            data: response.data,
+          });
         }
         return response;
       },
       async (error: AxiosError) => {
+        // Silently pass through cancelled requests
+        if (isAbortError(error)) return Promise.reject(error);
+
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-        // Handle 401 Unauthorized - try to refresh token
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          const newToken = await this.handleTokenRefresh();
-          
-          if (newToken && originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            return this.client(originalRequest);
-          }
-        }
-
-        // Log error in development
         if (import.meta.env.DEV) {
-          console.error(
-            `❌ [${error.response?.status || "ERROR"}] ${originalRequest.url}`,
-            error.response?.data || error.message
-          );
+          console.error(`💥 [${error.response?.status ?? "ERROR"}] ${originalRequest?.url}`, {
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message,
+          });
         }
 
-        return Promise.reject(this.transformError(error));
+        // ── Server responded (4xx, 5xx) ──────
+        if (error.response) {
+          const { status, data } = error.response;
+          const isRefreshRequest = originalRequest?.url?.includes("auth/refresh");
+
+          // 401 / 403 — attempt token refresh (once)
+          if ((status === 401 || status === 403) && !originalRequest._retry && !isRefreshRequest) {
+            originalRequest._retry = true;
+            const newToken = await handleTokenRefresh(this.baseURL);
+
+            if (newToken && originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              return this.client(originalRequest);
+            }
+
+            clearSession();
+            return Promise.reject(buildError(status, data, error.response));
+          }
+
+          // Refresh request itself failed — end session
+          if ((status === 401 || status === 403) && isRefreshRequest) {
+            clearSession();
+          }
+
+          return Promise.reject(buildError(status, data, error.response));
+        }
+
+        // ── No response — network error ───────
+        if (error.request) {
+          console.error("🌐 [NETWORK ERROR] No se pudo conectar al servidor");
+          const networkError = new HttpError(
+            0,
+            "Error de conexión: No se pudo conectar al servidor"
+          );
+          (networkError as any).isNetworkError = true;
+          return Promise.reject(networkError);
+        }
+
+        // ── Request config error ──────────────
+        console.error("⚙️ [CONFIG ERROR]", error.message);
+        return Promise.reject(error);
       }
     );
   }
 
-  /**
-   * Retrieve token from Zustand store
-   */
-  private getStoredToken(): string | null {
-    const store = useUserStore.getState();
-    return store.token || null;
-  }
+  // ── CRUD methods ─────────────────────────────
+  // These unwrap response.data for class-extending services.
+  // Services using api = httpClient.getClient() receive
+  // the full AxiosResponse (axios default behaviour).
 
-  /**
-   * Token refresh with deduplication to prevent multiple concurrent requests
-   */
-  private async handleTokenRefresh(): Promise<string | null> {
-    if (this.isRefreshing && this.refreshPromise) {
-      return this.refreshPromise;
-    }
-
-    this.isRefreshing = true;
-    this.refreshPromise = this.tryRefreshToken()
-      .finally(() => {
-        this.isRefreshing = false;
-        this.refreshPromise = null;
-      });
-
-    return this.refreshPromise;
-  }
-
-  /**
-   * Attempt to refresh access token
-   */
-  private async tryRefreshToken(): Promise<string | null> {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) {
-      this.clearSession();
-      return null;
-    }
-
-    try {
-      const response = await axios.post(
-        `${this.baseURL}/api/auth/refresh`,
-        { refreshToken },
-        { withCredentials: true }
-      );
-
-      const data = response.data?.data || response.data;
-      const newToken = data?.accessToken || data?.token;
-      const newRefreshToken = data?.refreshToken;
-      const user = data?.user;
-
-      if (!newToken) {
-        this.clearSession();
-        return null;
-      }
-
-      // Update store with new tokens
-      const store = useUserStore.getState();
-      store.setToken(newToken);
-      if (user) store.setUser(user);
-      if (newRefreshToken) {
-        localStorage.setItem("refreshToken", newRefreshToken);
-      }
-
-      return newToken;
-    } catch (error) {
-      console.error("❌ Token refresh failed", error);
-      this.clearSession();
-      return null;
-    }
-  }
-
-  /**
-   * Clear session on auth failure
-   */
-  private clearSession(): void {
-    const store = useUserStore.getState();
-    store.clearSession();
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/login";
-  }
-
-  /**
-   * Transform Axios error to custom HttpError
-   */
-  private transformError(error: AxiosError): HttpError {
-    const statusCode = error.response?.status || 500;
-    const message =
-      (error.response?.data as any)?.message ||
-      error.message ||
-      "Unknown error";
-    const data = error.response?.data;
-
-    return new HttpError(statusCode, message, data);
-  }
-
-  /**
-   * GET request
-   */
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.get<T>(url, config);
     return response.data;
   }
 
-  /**
-   * POST request
-   */
-  async post<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
+  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.post<T>(url, data, config);
     return response.data;
   }
 
-  /**
-   * PUT request
-   */
-  async put<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
+  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.put<T>(url, data, config);
     return response.data;
   }
 
-  /**
-   * PATCH request
-   */
-  async patch<T>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
+  async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.patch<T>(url, data, config);
     return response.data;
   }
 
-  /**
-   * DELETE request
-   */
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.delete<T>(url, config);
     return response.data;
   }
 
-  /**
-   * Support for AbortController for request cancellation
-   */
+  /** Expose the raw axios instance for services that need AxiosResponse directly */
   getClient(): AxiosInstance {
     return this.client;
   }
 }
 
-/**
- * Default HTTP client instance (for direct use if needed)
- */
+// ─────────────────────────────────────────────
+// Singleton — used by api.ts re-export
+// ─────────────────────────────────────────────
+
 export const httpClient = new (class extends HttpClient {})();
+
+/**
+ * Raw axios instance backed by the unified HttpClient interceptors.
+ * Use this in services that need the full AxiosResponse (headers, status, etc.).
+ * Prefer extending HttpClient directly for new services.
+ */
+export const axiosClient = httpClient.getClient();

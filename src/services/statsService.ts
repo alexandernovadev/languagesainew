@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { axiosClient as api } from "./api/HttpClient";
 import { DashboardStats } from "@/types/stats";
 
 export const statsService = {

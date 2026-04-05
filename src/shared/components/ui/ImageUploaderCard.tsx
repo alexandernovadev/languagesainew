@@ -11,7 +11,7 @@ import {
 } from "@/shared/components/ui/card";
 import { Loader2, Wand2, Upload, X, Image } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "@/services/api";
+import { axiosClient as api } from "@/services/api/HttpClient";
 import { useResultHandler } from "@/shared/hooks/useResultHandler";
 import useImageUpload from "@/shared/hooks/useImageUpload";
 import { deliveryImageUrl } from "@/utils/common";

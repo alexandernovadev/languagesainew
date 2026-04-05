@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import { api } from "@/services/api";
+import { axiosClient as api } from "@/services/api/HttpClient";
 
 export type ImportType = "words" | "expressions" | "lectures";
 export type DuplicateStrategy = "skip" | "overwrite" | "merge" | "error";
