@@ -292,7 +292,7 @@ export const useWordsDialogs = () =>
 
 **Severity:** 🟢 LOW  
 **File:** `vite.config.ts`  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 No `manualChunks` configuration. Vite splits by dynamic import (pages), but heavy vendor libs like Radix UI, recharts, react-hook-form end up scattered across chunks.
