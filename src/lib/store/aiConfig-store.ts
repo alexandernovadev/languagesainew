@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { aiConfigService, AIConfig, AIFeature, AIOperation, AIProvider } from '@/services/aiConfigService';
+import { aiConfigService, type AIConfig, type AIFeature, type AIOperation, type AIProvider } from '@/services/aiConfigService';
 import { toast } from 'sonner';
 
 interface AIConfigState {

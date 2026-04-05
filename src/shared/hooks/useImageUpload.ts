@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { uploadImage, EntityType } from '@/services/uploadImageService';
+import { uploadImage, type EntityType } from '@/services/uploadImageService';
 import { useResultHandler } from './useResultHandler';
 
 interface UseImageUploadProps {

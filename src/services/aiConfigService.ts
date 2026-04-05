@@ -1,5 +1,5 @@
 import { HttpClient } from "./api/HttpClient";
-import {
+import type {
   AIFeature,
   AIOperation,
   AIProvider,
@@ -70,5 +70,5 @@ class AIConfigService extends HttpClient {
 export const aiConfigService = new AIConfigService();
 
 // Re-export types for backward compatibility
-export { AIFeature, AIOperation, AIProvider, AIConfig };
+export type { AIFeature, AIOperation, AIProvider, AIConfig };
 

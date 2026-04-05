@@ -1,5 +1,5 @@
 import { HttpClient } from "./api/HttpClient";
-import { EntityType, UploadImageResponse } from "@/types/api";
+import type { EntityType, UploadImageResponse } from "@/types/api";
 
 /**
  * Upload Image Service
@@ -77,5 +77,5 @@ export const uploadExpressionImage = (imageFile: File, expressionId: string) =>
   uploadImageServiceInstance.uploadExpressionImage(imageFile, expressionId);
 
 // Re-export types
-export { EntityType, UploadImageResponse };
+export type { EntityType, UploadImageResponse };
 
