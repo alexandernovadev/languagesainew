@@ -99,28 +99,34 @@ export function useExpressions() {
     }
   };
 
-  // Update expression
+  // Update expression (optimistic)
   const updateExpression = async (id: string, expressionData: ExpressionUpdate): Promise<boolean> => {
+    const prev = expressions;
+    setExpressions(curr => curr.map(e => e._id === id ? { ...e, ...expressionData } : e));
     try {
       await expressionService.updateExpression(id, expressionData as any);
       toast.success('Expression updated successfully');
-      await fetchExpressions();
       return true;
     } catch (err: any) {
+      setExpressions(prev);
       const errorMsg = err.response?.data?.message || 'Error updating expression';
       toast.error(errorMsg);
       return false;
     }
   };
 
-  // Delete expression
+  // Delete expression (optimistic)
   const deleteExpression = async (id: string): Promise<boolean> => {
+    const prev = expressions;
+    setExpressions(curr => curr.filter(e => e._id !== id));
+    setTotal(t => t - 1);
     try {
       await expressionService.deleteExpression(id);
       toast.success('Expression deleted successfully');
-      await fetchExpressions();
       return true;
     } catch (err: any) {
+      setExpressions(prev);
+      setTotal(t => t + 1);
       const errorMsg = err.response?.data?.message || 'Error deleting expression';
       toast.error(errorMsg);
       return false;

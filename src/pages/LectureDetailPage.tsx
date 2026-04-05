@@ -127,7 +127,7 @@ export default function LectureDetailPage() {
 
   const lectureTitle = loading
     ? "Cargando..."
-    : getMarkdownTitle(lecture?.content) || lecture?.typeWrite || "Lectura";
+    : getMarkdownTitle(lecture?.content!) || lecture?.typeWrite || "Lectura";
   const wordPanelOpen = !!(selectedWord || wordLookupLoading || wordLookup);
 
   return (
@@ -199,7 +199,7 @@ export default function LectureDetailPage() {
               <span className="text-sm font-medium">Audio</span>
             </div>
             <audio controls className="w-full">
-              <source src={lecture.urlAudio} type="audio/mpeg" />
+              <source src={lecture?.urlAudio} type="audio/mpeg" />
               Tu navegador no soporta el elemento de audio.
             </audio>
           </CardContent>

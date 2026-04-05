@@ -117,28 +117,34 @@ export function useWords() {
     }
   };
 
-  // Update word
+  // Update word (optimistic)
   const updateWord = async (id: string, wordData: WordUpdate): Promise<boolean> => {
+    const prev = words;
+    setWords(curr => curr.map(w => w._id === id ? { ...w, ...wordData } : w));
     try {
       await wordService.updateWord(id, wordData as any);
       toast.success('Word updated successfully');
-      await fetchWords();
       return true;
     } catch (err: any) {
+      setWords(prev);
       const errorMsg = err.response?.data?.message || 'Error updating word';
       toast.error(errorMsg);
       return false;
     }
   };
 
-  // Delete word
+  // Delete word (optimistic)
   const deleteWord = async (id: string): Promise<boolean> => {
+    const prev = words;
+    setWords(curr => curr.filter(w => w._id !== id));
+    setTotal(t => t - 1);
     try {
       await wordService.deleteWord(id);
       toast.success('Word deleted successfully');
-      await fetchWords();
       return true;
     } catch (err: any) {
+      setWords(prev);
+      setTotal(t => t + 1);
       const errorMsg = err.response?.data?.message || 'Error deleting word';
       toast.error(errorMsg);
       return false;

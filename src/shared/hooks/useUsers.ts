@@ -60,28 +60,34 @@ export function useUsers() {
     }
   };
 
-  // Update user
+  // Update user (optimistic)
   const updateUser = async (id: string, userData: UserUpdate): Promise<boolean> => {
+    const prev = users;
+    setUsers(curr => curr.map(u => u._id === id ? { ...u, ...userData } : u));
     try {
       await userService.updateUser(id, userData);
       toast.success('User updated successfully');
-      await fetchUsers();
       return true;
     } catch (err: any) {
+      setUsers(prev);
       const errorMsg = err.response?.data?.message || 'Error updating user';
       toast.error(errorMsg);
       return false;
     }
   };
 
-  // Delete user
+  // Delete user (optimistic)
   const deleteUser = async (id: string): Promise<boolean> => {
+    const prev = users;
+    setUsers(curr => curr.filter(u => u._id !== id));
+    setTotal(t => t - 1);
     try {
       await userService.deleteUser(id);
       toast.success('User deleted successfully');
-      await fetchUsers();
       return true;
     } catch (err: any) {
+      setUsers(prev);
+      setTotal(t => t + 1);
       const errorMsg = err.response?.data?.message || 'Error deleting user';
       toast.error(errorMsg);
       return false;

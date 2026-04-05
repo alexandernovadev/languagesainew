@@ -13,10 +13,10 @@
 |----------|-------|----------|
 | 🔴 CRITICAL | 0 | Architecture |
 | 🟠 SERIOUS | 0 | Component Size |
-| 🟡 MODERATE | 1 | UX |
+| 🟡 MODERATE | 0 | — |
 | 🟢 LOW | 2 | Documentation, Config |
 
-**Total Issues: 3 remaining**
+**Total Issues: 2 remaining**
 
 ---
 
@@ -214,12 +214,12 @@ useEffect(() => {
 
 ---
 
-### ISSUE #12: Missing Optimistic Updates [MODERATE]
+### ISSUE #12: Missing Optimistic Updates [MODERATE] ✅
 
 **Severity:** 🟡 **MODERATE**  
 **Component:** UX  
 **Files:** Pages with forms  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem Description
 Operations show loading states instead of updating UI immediately, making the app feel slow on any network delay.
@@ -228,8 +228,8 @@ Operations show loading states instead of updating UI immediately, making the ap
 Update UI optimistically before the request resolves, rollback on error.
 
 #### Acceptance Criteria
-- [ ] Optimistic updates for CRUD operations
-- [ ] Rollback on error works smoothly
+- [x] Optimistic updates for CRUD operations
+- [x] Rollback on error works smoothly
 
 ---
 
@@ -268,7 +268,7 @@ Update UI optimistically before the request resolves, rollback on error.
 - [x] Code splitting for large components (ISSUE #6)
 - [x] Consistent loading states (ISSUE #10)
 - [x] Request cancellation (ISSUE #11)
-- [ ] Optimistic updates (ISSUE #12)
+- [x] Optimistic updates (ISSUE #12)
 
 ### Phase 3 - OPTIONAL
 - [ ] Development guide (ISSUE #13)
@@ -279,6 +279,7 @@ Update UI optimistically before the request resolves, rollback on error.
 ## ✅ COMPLETED
 
 - **ISSUE #1** — Domain Zustand stores created (expressions, words, aiConfig, user)
+- **ISSUE #12** — `delete` and `update` are now optimistic in all 4 hooks (words, expressions, lectures, users): snapshot → mutate → API call → rollback on error. `create` keeps refetch (needs server `_id`).
 - **ISSUE #11** — `isAbortError` utility created; `api.ts` interceptor skips cancelled requests; `signal?` added to `getWords/getExpressions/getLectures/getUsers`; `useWords/useExpressions/useLectures/useUsers` hooks use `AbortController` in `useEffect` cleanup
 - **ISSUE #10** — `PageLoader` component created (`src/shared/components/ui/page-loader.tsx`); applied to SystemInfoPage, AIConfigPage, LectureDetailPage — unifies loading skeleton + error card + retry button
 - **ISSUE #6** — 4 heavy dialogs (WordDialog 629L, ExpressionDialog 431L, LectureDialog 400L, UserDialog 312L) lazy-loaded with mount-once-on-open pattern (`useRef` + `Suspense fallback={null}`)
