@@ -12,7 +12,6 @@ const WordDetailModal = lazy(() =>
   import("@/shared/components/dialogs/WordDetailModal").then((m) => ({ default: m.WordDetailModal }))
 );
 import { useWords } from "@/shared/hooks/useWords";
-import { useFilterUrlSync } from "@/shared/hooks/useFilterUrlSync";
 import { IWord } from "@/types/models/Word";
 import { Plus, Search, Filter, X, Sparkles } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
@@ -39,9 +38,6 @@ export default function WordsPage() {
     filters,
     refreshWords,
   } = useWords();
-
-  // Sync filters with URL
-  const { isReady: filtersReady } = useFilterUrlSync(filters, updateFilters);
 
   // ✅ NEW: Use Words UI Store instead of useState
   const {

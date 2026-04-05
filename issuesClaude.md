@@ -326,7 +326,7 @@ build: {
 
 **Severity:** 🟢 LOW  
 **File:** `src/shared/hooks/useWords.ts` lines 79–81, 170–194  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 Two refs (`hasInitialLoad`, `initialFiltersSet`) plus a 50ms `setTimeout` to coordinate between `useFilterUrlSync` and `fetchWords`. This is fragile — the timing assumption can break.

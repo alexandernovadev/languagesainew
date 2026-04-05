@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { wordService } from '@/services/wordService';
 import { IWord } from '@/types/models/Word';
 import { isAbortError } from '@/utils/common/isAbortError';
+import { useFilterUrlSync } from './useFilterUrlSync';
 import { toast } from 'sonner';
 
 export interface WordFilters {
@@ -10,11 +11,11 @@ export interface WordFilters {
   difficulty?: string;
   language?: string;
   type?: string;
-  
+
   // Spanish filters
   spanishWord?: string;
   spanishDefinition?: string;
-  
+
   // Content filters
   definition?: string;
   IPA?: string;
@@ -22,7 +23,7 @@ export interface WordFilters {
   hasSynonyms?: boolean;
   hasCodeSwitching?: boolean;
   hasImage?: string;
-  
+
   // Advanced filters
   seenMin?: number;
   seenMax?: number;
@@ -30,11 +31,11 @@ export interface WordFilters {
   createdBefore?: string;
   updatedAfter?: string;
   updatedBefore?: string;
-  
+
   // Sorting
   sortBy?: string;
   sortOrder?: string;
-  
+
   // Pagination
   page?: number;
   limit?: number;
@@ -63,23 +64,27 @@ export function useWords() {
   const [words, setWords] = useState<IWord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [limit] = useState(10);
-  
+
   // Filters
   const [filters, setFilters] = useState<WordFilters>({
     page: 1,
     limit: 10,
   });
 
-  // Flag para saber si ya se hizo la primera carga
-  const hasInitialLoad = useRef(false);
-  // Ref para rastrear si los filtros han cambiado desde el estado inicial
-  const initialFiltersSet = useRef(false);
+  // Update filters
+  const updateFilters = (newFilters: Partial<WordFilters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+    setCurrentPage(1);
+  };
+
+  // URL sync — sets isReady=true once URL params have been applied on mount
+  const { isReady } = useFilterUrlSync(filters, updateFilters);
 
   // Fetch words
   const fetchWords = useCallback(async (signal?: AbortSignal) => {
@@ -89,7 +94,6 @@ export function useWords() {
       const response = await wordService.getWords(currentPage, limit, filters, signal);
 
       if (signal?.aborted) return;
-      // Backend returns { data: { data: [], total, pages } }
       setWords(response.data.data || []);
       setTotal(response.data.total || 0);
       setTotalPages(response.data.pages || 1);
@@ -151,19 +155,6 @@ export function useWords() {
     }
   };
 
-  // Update filters
-  const updateFilters = (newFilters: Partial<WordFilters>) => {
-    setFilters(prev => {
-      const updated = { ...prev, ...newFilters };
-      // Marcar que los filtros han sido establecidos (probablemente desde la URL)
-      if (!initialFiltersSet.current) {
-        initialFiltersSet.current = true;
-      }
-      return updated;
-    });
-    setCurrentPage(1); // Reset to first page when filters change
-  };
-
   // Clear filters
   const clearFilters = () => {
     setFilters({ page: 1, limit: 10 });
@@ -175,49 +166,23 @@ export function useWords() {
     setCurrentPage(page);
   };
 
-  // Load words on mount and when dependencies change
+  // Fetch on mount (after URL sync) and whenever filters/page change
   useEffect(() => {
+    if (!isReady) return;
     const controller = new AbortController();
-
-    // Solo hacer la primera llamada después de que los filtros hayan sido establecidos
-    // Esto evita hacer una llamada sin filtros y luego otra con filtros
-    if (!hasInitialLoad.current) {
-      if (initialFiltersSet.current) {
-        hasInitialLoad.current = true;
-        fetchWords(controller.signal);
-      } else {
-        const timeoutId = setTimeout(() => {
-          hasInitialLoad.current = true;
-          fetchWords(controller.signal);
-        }, 50);
-        return () => {
-          clearTimeout(timeoutId);
-          controller.abort();
-        };
-      }
-    } else {
-      fetchWords(controller.signal);
-    }
-
+    fetchWords(controller.signal);
     return () => controller.abort();
-  }, [fetchWords]);
+  }, [fetchWords, isReady]);
 
   return {
-    // State
     words,
     loading,
     error,
-    
-    // Pagination
     currentPage,
     totalPages,
     total,
     limit,
-    
-    // Filters
     filters,
-    
-    // Actions
     createWord,
     updateWord,
     deleteWord,
