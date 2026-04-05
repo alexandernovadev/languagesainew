@@ -39,9 +39,9 @@ export default function ExpressionsPage() {
   const {
     dialogOpen, setDialogOpen,
     filtersModalOpen, setFiltersModalOpen,
-    selectedExpression, setSelectedExpression,
+    selectedItem: selectedExpression, setSelectedItem: setSelectedExpression,
     deleteDialogOpen, setDeleteDialogOpen,
-    expressionToDelete, setExpressionToDelete,
+    itemToDelete: expressionToDelete, setItemToDelete: setExpressionToDelete,
     searchTerm, setSearchTerm,
     deleteLoading, setDeleteLoading,
     isGenerating, setIsGenerating,

@@ -147,7 +147,7 @@ Migrate all services to extend `HttpClient`. Remove reliance on the legacy `api.
 
 **Severity:** 🟡 MODERATE  
 **Files:** `src/lib/store/words-store.ts`, `expressions-store.ts`, `lectures-store.ts`, `users-store.ts`, `exams-store.ts`  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 Every CRUD UI store has the same shape: `dialogOpen`, `selectedItem`, `deleteDialogOpen`, `itemToDelete`, `searchTerm`, `deleteLoading`. The only difference is the type of item.

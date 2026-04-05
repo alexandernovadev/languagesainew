@@ -32,9 +32,9 @@ export default function UsersPage() {
 
   const {
     dialogOpen, setDialogOpen,
-    selectedUser, setSelectedUser,
+    selectedItem: selectedUser, setSelectedItem: setSelectedUser,
     deleteDialogOpen, setDeleteDialogOpen,
-    userToDelete, setUserToDelete,
+    itemToDelete: userToDelete, setItemToDelete: setUserToDelete,
     searchTerm, setSearchTerm,
     deleteLoading, setDeleteLoading,
   } = useUsersUIStore();

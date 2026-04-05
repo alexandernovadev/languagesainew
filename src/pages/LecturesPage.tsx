@@ -37,9 +37,9 @@ export default function LecturesPage() {
   const {
     dialogOpen, setDialogOpen,
     filtersModalOpen, setFiltersModalOpen,
-    selectedLecture, setSelectedLecture,
+    selectedItem: selectedLecture, setSelectedItem: setSelectedLecture,
     deleteDialogOpen, setDeleteDialogOpen,
-    lectureToDelete, setLectureToDelete,
+    itemToDelete: lectureToDelete, setItemToDelete: setLectureToDelete,
     searchTerm, setSearchTerm,
     deleteLoading, setDeleteLoading,
   } = useLecturesUIStore();
