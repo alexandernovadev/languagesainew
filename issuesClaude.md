@@ -178,7 +178,7 @@ export function createCRUDUIStore<T>() {
 
 **Severity:** 🟡 MODERATE  
 **Files:** `src/shared/hooks/useWords.ts`, `useExams.ts`, `useLectures.ts`, `useExpressions.ts`  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 

@@ -29,11 +29,16 @@ export const examService = {
     return res.data.data as IExam;
   },
 
-  async list(page = 1, limit = 20) {
+  async list(page = 1, limit = 20, filters: Record<string, any> = {}, signal?: AbortSignal) {
     const params = new URLSearchParams();
     params.append("page", String(page));
     params.append("limit", String(limit));
-    const res = await api.get(`/api/exams?${params.toString()}`);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        params.append(key, String(value));
+      }
+    });
+    const res = await api.get(`/api/exams?${params.toString()}`, { signal });
     return res.data.data as { data: IExam[]; total: number };
   },
 
