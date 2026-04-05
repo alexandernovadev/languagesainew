@@ -88,7 +88,7 @@ const token = useUserStore.getState().token;
 
 **Severity:** 🟠 SERIOUS  
 **File:** `src/pages/PronunciationGuidePage.tsx` (~67,000 bytes)  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed — replaced with Coming Soon (will be rebuilt with DB per language)
 
 #### Problem
 The largest file in the project by far. Contains inline section data, helper functions (`getIPABadgeColor`, etc.), and all JSX in a single component. Impossible to maintain or test independently.
