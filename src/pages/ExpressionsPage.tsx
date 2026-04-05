@@ -1,4 +1,4 @@
-import { useCallback, useRef, lazy, Suspense } from "react";
+import { useCallback, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -20,7 +20,6 @@ import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
 
 export default function ExpressionsPage() {
-  const dialogMounted = useRef(false);
   const {
     expressions,
     loading,
@@ -219,7 +218,7 @@ export default function ExpressionsPage() {
         onPageChange={goToPage}
       />
 
-      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+      {dialogOpen && (
         <Suspense fallback={null}>
           <ExpressionDialog
             open={dialogOpen}

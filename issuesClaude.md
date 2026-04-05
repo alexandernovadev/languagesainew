@@ -203,7 +203,7 @@ export function createCRUDUIStore<T>() {
 
 **Severity:** 🟡 MODERATE  
 **Files:** `src/pages/WordsPage.tsx`, `ExpressionsPage.tsx`, `LecturesPage.tsx`, `UsersPage.tsx`  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 ```tsx
@@ -225,9 +225,9 @@ This mutates a ref as a side effect of evaluating a JSX expression — undefined
 ```
 
 #### Acceptance Criteria
-- [ ] `dialogMounted` refs removed from all 4 pages
-- [ ] Dialogs render conditionally on `open` state
-- [ ] Lazy loading still works correctly
+- [x] `dialogMounted` refs removed from all 4 pages
+- [x] Dialogs render conditionally on `open` state
+- [x] Lazy loading still works correctly
 
 ---
 
@@ -254,7 +254,7 @@ Decode the JWT expiry on mount, trigger refresh proactively if within X seconds 
 
 **Severity:** 🟡 MODERATE  
 **Files:** `src/lib/store/words-store.ts` (and others with selector hooks)  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 ```ts
@@ -353,7 +353,7 @@ const timeoutId = setTimeout(() => {
 
 **Severity:** 🟢 LOW  
 **File:** `package.json`  
-**Status:** ⏳ Not Started
+**Status:** ✅ Completed
 
 #### Problem
 ```json

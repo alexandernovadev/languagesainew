@@ -10,6 +10,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import { Word } from '@/models/Word';
 
 interface WordFilters {
@@ -156,35 +157,35 @@ export const useWordsUIStore = create<WordsUIState>()(
 
 // Dialog states
 export const useWordsDialogs = () =>
-  useWordsUIStore((state) => ({
+  useWordsUIStore(useShallow((state) => ({
     dialogOpen: state.dialogOpen,
     detailModalOpen: state.detailModalOpen,
     filtersModalOpen: state.filtersModalOpen,
     deleteDialogOpen: state.deleteDialogOpen,
     quickAddOpen: state.quickAddOpen,
-  }));
+  })));
 
 // Selection state
 export const useWordsSelection = () =>
-  useWordsUIStore((state) => ({
+  useWordsUIStore(useShallow((state) => ({
     selectedWord: state.selectedWord,
     wordToDelete: state.wordToDelete,
     selectedWordId: state.selectedWordId,
-  }));
+  })));
 
 // Filters & search
 export const useWordsFilters = () =>
-  useWordsUIStore((state) => ({
+  useWordsUIStore(useShallow((state) => ({
     searchTerm: state.searchTerm,
     filters: state.filters,
     currentPage: state.currentPage,
     totalPages: state.totalPages,
-  }));
+  })));
 
 // Loading states
 export const useWordsLoading = () =>
-  useWordsUIStore((state) => ({
+  useWordsUIStore(useShallow((state) => ({
     isLoading: state.isLoading,
     isGenerating: state.isGenerating,
     deleteLoading: state.deleteLoading,
-  }));
+  })));

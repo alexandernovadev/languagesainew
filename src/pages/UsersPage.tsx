@@ -1,4 +1,4 @@
-import { useCallback, useRef, lazy, Suspense } from "react";
+import { useCallback, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -15,7 +15,6 @@ import { Plus, Search, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 
 export default function UsersPage() {
-  const dialogMounted = useRef(false);
   const {
     users,
     loading,
@@ -131,7 +130,7 @@ export default function UsersPage() {
         onPageChange={goToPage}
       />
 
-      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+      {dialogOpen && (
         <Suspense fallback={null}>
           <UserDialog
             open={dialogOpen}

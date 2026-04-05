@@ -1,4 +1,4 @@
-import { useCallback, useRef, lazy, Suspense } from "react";
+import { useCallback, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -24,8 +24,6 @@ import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
 
 export default function WordsPage() {
-  const dialogMounted = useRef(false);
-  const detailMounted = useRef(false);
   const {
     words,
     loading,
@@ -277,7 +275,7 @@ export default function WordsPage() {
       />
 
       {/* Create/Edit Dialog */}
-      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+      {dialogOpen && (
         <Suspense fallback={null}>
           <WordDialog
             open={dialogOpen}
@@ -315,7 +313,7 @@ export default function WordsPage() {
       />
 
       {/* Word Detail Modal */}
-      {(detailMounted.current || (detailMounted.current = detailModalOpen, detailModalOpen)) && (
+      {detailModalOpen && (
         <Suspense fallback={null}>
           <WordDetailModal
             open={detailModalOpen}

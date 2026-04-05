@@ -7,6 +7,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import { IExpression } from '@/types/models/Expression';
 
 interface ExpressionFilters {
@@ -118,30 +119,30 @@ export const useExpressionsUIStore = create<ExpressionsUIState>()(
 
 // Selector hooks for optimized re-renders
 export const useExpressionsDialogs = () =>
-  useExpressionsUIStore((state) => ({
+  useExpressionsUIStore(useShallow((state) => ({
     dialogOpen: state.dialogOpen,
     filtersModalOpen: state.filtersModalOpen,
     deleteDialogOpen: state.deleteDialogOpen,
     quickAddOpen: state.quickAddOpen,
-  }));
+  })));
 
 export const useExpressionsSelection = () =>
-  useExpressionsUIStore((state) => ({
+  useExpressionsUIStore(useShallow((state) => ({
     selectedExpression: state.selectedExpression,
     expressionToDelete: state.expressionToDelete,
-  }));
+  })));
 
 export const useExpressionsFilters = () =>
-  useExpressionsUIStore((state) => ({
+  useExpressionsUIStore(useShallow((state) => ({
     searchTerm: state.searchTerm,
     filters: state.filters,
     currentPage: state.currentPage,
     totalPages: state.totalPages,
-  }));
+  })));
 
 export const useExpressionsLoading = () =>
-  useExpressionsUIStore((state) => ({
+  useExpressionsUIStore(useShallow((state) => ({
     isLoading: state.isLoading,
     isGenerating: state.isGenerating,
     deleteLoading: state.deleteLoading,
-  }));
+  })));

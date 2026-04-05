@@ -1,4 +1,4 @@
-import { useCallback, useRef, lazy, Suspense } from "react";
+import { useCallback, lazy, Suspense } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -17,7 +17,6 @@ import { useLecturesUIStore } from "@/lib/store/lectures-store";
 import { TablePagination } from "@/shared/components/ui/table-pagination";
 
 export default function LecturesPage() {
-  const dialogMounted = useRef(false);
   const {
     lectures,
     loading,
@@ -163,7 +162,7 @@ export default function LecturesPage() {
         onPageChange={goToPage}
       />
 
-      {(dialogMounted.current || (dialogMounted.current = dialogOpen, dialogOpen)) && (
+      {dialogOpen && (
         <Suspense fallback={null}>
           <LectureDialog
             open={dialogOpen}
