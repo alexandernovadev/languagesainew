@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
 import { IWord } from '@/types/models/Word';
 import { Card, CardContent } from '@/shared/components/ui/card';
+import { deliveryImageUrl } from '@/utils/common';
 import { cn } from '@/utils/common/classnames';
 import { getSpeechLocale } from '@/utils/common/speech';
 import { WordDetailTabs } from '../word-detail/WordDetailTabs';
@@ -108,7 +109,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
           <CardContent className="flex flex-col items-center justify-center h-full w-full">
             {displayWord.img && (
               <img
-                src={displayWord.img}
+                src={deliveryImageUrl(displayWord.img)}
                 alt={displayWord.word}
                 className="w-80 h-96 object-contain rounded-xl mb-6"
               />

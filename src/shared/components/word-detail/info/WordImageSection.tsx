@@ -2,6 +2,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Image as ImageIcon, Sparkles, Volume2 } from "lucide-react";
 import { IWord } from "@/types/models/Word";
 import { cn } from "@/utils/common/classnames";
+import { deliveryImageUrl } from "@/utils/common";
 import { getSpeechLocale } from "@/utils/common/speech";
 
 interface WordImageSectionProps {
@@ -25,7 +26,7 @@ export function WordImageSection({ word, onRefresh, loading }: WordImageSectionP
         <div className="relative w-full h-96 flex items-center justify-center group">
           {word.img ? (
             <img
-              src={word.img}
+              src={deliveryImageUrl(word.img)}
               alt={word.word}
               className="w-full h-full object-contain"
             />

@@ -4,7 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, Sparkles, Eye } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { getDifficultyVariant } from "@/utils/common";
+import { deliveryImageUrl, getDifficultyVariant } from "@/utils/common";
 import { useAuth } from "@/shared/hooks/useAuth";
 import { getWordTypeLabel } from "@/utils/common/wordTypeLabels";
 import { getSpeechLocale } from "@/utils/common/speech";
@@ -123,7 +123,7 @@ Focus on extreme simplicity and tiny file size. BUT NOT bits images. `.replace(/
               <div className="flex-shrink-0 cursor-pointer w-full sm:w-auto flex justify-center sm:justify-start" onClick={() => onView?.(word)}>
                 {word.img ? (
                   <img
-                    src={word.img}
+                    src={deliveryImageUrl(word.img)}
                     alt={word.word}
                     className="h-48 w-48 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-[220px] lg:w-[220px] object-contain rounded max-w-full"
                   />

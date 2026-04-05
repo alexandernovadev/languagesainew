@@ -11,7 +11,7 @@ import { wordService } from "@/services/wordService";
 import { ILecture } from "@/types/models/Lecture";
 import { IWord } from "@/types/models/Word";
 import { ArrowLeft, Clock, BookOpen, Volume2, Loader2, Plus } from "lucide-react";
-import { getDifficultyVariant } from "@/utils/common";
+import { deliveryImageUrl, getDifficultyVariant } from "@/utils/common";
 import { cn } from "@/utils/common/classnames";
 import { useSidebar } from "@/shared/components/ui/sidebar";
 import { getMarkdownTitle, removeFirstH1 } from "@/utils/common/string/markdown";
@@ -192,7 +192,7 @@ export default function LectureDetailPage() {
         <CardContent className="p-0">
           {lecture.img ? (
             <img
-              src={lecture.img}
+              src={deliveryImageUrl(lecture.img)}
               alt={lecture.typeWrite || "Lecture"}
               className="w-full h-auto max-h-96 object-cover rounded-t-lg"
             />

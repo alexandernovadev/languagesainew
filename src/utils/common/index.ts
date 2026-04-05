@@ -1,4 +1,5 @@
 export * from "./string";
+export * from "./deliveryImageUrl";
 export * from "./classnames";
 export * from "./time";
 export * from "./shuffle";

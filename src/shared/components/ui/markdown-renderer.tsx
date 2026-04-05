@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { cn } from "@/utils/common/classnames";
+import { deliveryImageUrl } from "@/utils/common";
 
 interface MarkdownRendererProps {
   content: string;
@@ -121,6 +122,13 @@ export function MarkdownRenderer({
     tr: ({ children }: any) => <tr className="border-b border-border">{children}</tr>,
     th: ({ children }: any) => <th className="border border-border px-2 py-1 text-left text-xs font-semibold">{children}</th>,
     td: ({ children }: any) => <td className="border border-border px-2 py-1 text-xs">{children}</td>,
+    img: ({ src, alt }: any) => (
+      <img
+        src={deliveryImageUrl(src)}
+        alt={alt}
+        className="my-2 rounded max-w-full h-auto"
+      />
+    ),
   };
 
   // Reading variant components (spacious, better readability)
@@ -201,7 +209,7 @@ export function MarkdownRenderer({
     hr: () => <hr className="my-6 sm:my-8 border-border" />,
     img: ({ src, alt }: any) => (
       <img 
-        src={src} 
+        src={deliveryImageUrl(src)} 
         alt={alt} 
         className="my-4 sm:my-6 rounded-lg max-w-full h-auto"
       />

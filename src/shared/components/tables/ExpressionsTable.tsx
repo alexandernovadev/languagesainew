@@ -4,7 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, Volume2, MessageSquare, Sparkles } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { getDifficultyVariant } from "@/utils/common";
+import { deliveryImageUrl, getDifficultyVariant } from "@/utils/common";
 import { getSpeechLocale } from "@/utils/common/speech";
 
 interface ExpressionsTableProps {
@@ -91,7 +91,7 @@ export function ExpressionsTable({
               <div className="flex-shrink-0 cursor-pointer w-full sm:w-auto flex justify-center sm:justify-start" onClick={() => onView?.(expression)}>
                 {expression.img ? (
                   <img
-                    src={expression.img}
+                    src={deliveryImageUrl(expression.img)}
                     alt={expression.expression}
                     className="h-32 w-32 sm:h-24 sm:w-24 md:h-28 md:w-28 object-contain rounded max-w-full"
                   />

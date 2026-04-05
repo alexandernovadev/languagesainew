@@ -4,7 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Edit, Trash2, Image as ImageIcon, BookOpen, Clock } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { getDifficultyVariant } from "@/utils/common";
+import { deliveryImageUrl, getDifficultyVariant } from "@/utils/common";
 import { getMarkdownTitle, stripMarkdown, removeFirstH1 } from "@/utils/common/string/markdown";
 import { useNavigate } from "react-router-dom";
 
@@ -86,7 +86,7 @@ export function LecturesTable({
               <div className="flex-shrink-0 cursor-pointer w-full sm:w-auto flex justify-center sm:justify-start" onClick={() => navigate(`/lectures/${lecture._id}`)}>
                 {lecture.img ? (
                   <img
-                    src={lecture.img}
+                    src={deliveryImageUrl(lecture.img)}
                     alt="Lecture"
                     className="h-32 w-32 sm:h-20 sm:w-20 md:h-28 md:w-28 object-contain rounded max-w-full"
                   />

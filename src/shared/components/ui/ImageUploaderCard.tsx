@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { api } from "@/services/api";
 import { useResultHandler } from "@/shared/hooks/useResultHandler";
 import useImageUpload from "@/shared/hooks/useImageUpload";
+import { deliveryImageUrl } from "@/utils/common";
 import "./ImageUploaderCard.css";
 
 interface ImageUploaderCardProps {
@@ -265,7 +266,7 @@ export function ImageUploaderCard({
               ) : imageUrl ? (
                 <div className="relative w-full h-full">
                   <img
-                    src={imageUrl}
+                    src={deliveryImageUrl(imageUrl)}
                     alt={word || "Image"}
                     className="w-full h-full object-contain"
                   />
