@@ -1,23 +1,15 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { UsersTable } from "@/shared/components/tables/UsersTable";
 import { UserDialog } from "@/shared/components/dialogs/UserDialog";
+import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { useUsers } from "@/shared/hooks/useUsers";
-import { User } from "@/services/userService";
+import { useUsersUIStore } from "@/lib/store/users-store";
+import type { User } from "@/services/userService";
 import { Plus, Search, X } from "lucide-react";
 import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination";
 
 export default function UsersPage() {
   const {
@@ -35,98 +27,58 @@ export default function UsersPage() {
     filters,
   } = useUsers();
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<User | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const {
+    dialogOpen, setDialogOpen,
+    selectedUser, setSelectedUser,
+    deleteDialogOpen, setDeleteDialogOpen,
+    userToDelete, setUserToDelete,
+    searchTerm, setSearchTerm,
+    deleteLoading, setDeleteLoading,
+  } = useUsersUIStore();
 
-  // Handle create
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     setSelectedUser(null);
     setDialogOpen(true);
-  };
+  }, [setSelectedUser, setDialogOpen]);
 
-  // Handle edit
-  const handleEdit = (user: User) => {
+  const handleEdit = useCallback((user: User) => {
     setSelectedUser(user);
     setDialogOpen(true);
-  };
+  }, [setSelectedUser, setDialogOpen]);
 
-  // Handle delete click
-  const handleDeleteClick = (user: User) => {
+  const handleDeleteClick = useCallback((user: User) => {
     setUserToDelete(user);
     setDeleteDialogOpen(true);
-  };
+  }, [setUserToDelete, setDeleteDialogOpen]);
 
-  // Handle delete confirm
-  const handleDeleteConfirm = async () => {
-    if (userToDelete) {
-      setDeleteLoading(true);
-      try {
-        await deleteUser(userToDelete._id);
-        setDeleteDialogOpen(false);
-        setUserToDelete(null);
-      } finally {
-        setDeleteLoading(false);
-      }
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!userToDelete) return;
+    setDeleteLoading(true);
+    try {
+      await deleteUser(userToDelete._id);
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+    } finally {
+      setDeleteLoading(false);
     }
-  };
+  }, [userToDelete, deleteUser, setDeleteLoading, setDeleteDialogOpen, setUserToDelete]);
 
-  // Handle save (create or update)
-  const handleSave = async (userData: any) => {
+  const handleSave = useCallback(async (userData: any) => {
     if (selectedUser) {
       return await updateUser(selectedUser._id, userData);
-    } else {
-      return await createUser(userData);
     }
-  };
+    return await createUser(userData);
+  }, [selectedUser, updateUser, createUser]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    const q = searchTerm.trim();
-    setSearchTerm(q);
-    updateFilters({ username: q || undefined });
-  };
+    updateFilters({ username: searchTerm.trim() || undefined });
+  }, [searchTerm, updateFilters]);
 
-  // Clear search
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchTerm("");
     clearFilters();
-  };
-
-  // Generate page numbers
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const showPages = 5;
-
-    if (totalPages <= showPages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
+  }, [setSearchTerm, clearFilters]);
 
   return (
     <div className="space-y-4">
@@ -145,34 +97,20 @@ export default function UsersPage() {
               />
             </div>
             {(searchTerm || Object.keys(filters).length > 2) && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleClearSearch}
-                size="icon"
-                title="Limpiar búsqueda"
-              >
+              <Button type="button" variant="ghost" onClick={handleClearSearch} size="icon" title="Limpiar búsqueda">
                 <X className="h-4 w-4" />
               </Button>
             )}
             <Button type="submit" variant="secondary" size="icon" title="Buscar">
               <Search className="h-4 w-4" />
             </Button>
-
-            <Button
-              type="button"
-              variant="default"
-              onClick={handleCreate}
-              size="icon"
-              title="Crear usuario"
-            >
+            <Button type="button" variant="default" onClick={handleCreate} size="icon" title="Crear usuario">
               <Plus className="h-4 w-4" />
             </Button>
           </form>
         }
       />
 
-      {/* Users Table */}
       <UsersTable
         users={users}
         loading={loading}
@@ -180,80 +118,15 @@ export default function UsersPage() {
         onDelete={handleDeleteClick}
       />
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 py-4">
-          {/* Mobile & Tablet: Simple pagination */}
-          <div className="flex items-center justify-between lg:hidden">
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Página {currentPage} de {totalPages}
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="text-xs"
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="text-xs"
-              >
-                Siguiente
-              </Button>
-            </div>
-          </div>
+      <TablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        total={total}
+        itemsCount={users.length}
+        itemLabel="users"
+        onPageChange={goToPage}
+      />
 
-          {/* Desktop: Full pagination */}
-          <div className="hidden lg:flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Showing {users.length > 0 ? ((currentPage - 1) * 10) + 1 : 0} to {Math.min(currentPage * 10, total)} of {total} users
-            </p>
-
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-
-                {getPageNumbers().map((page, index) => (
-                  <PaginationItem key={index}>
-                    {page === '...' ? (
-                      <PaginationEllipsis />
-                    ) : (
-                      <PaginationLink
-                        onClick={() => goToPage(page as number)}
-                        isActive={currentPage === page}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    )}
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
-      )}
-
-      {/* Create/Edit Dialog */}
       <UserDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -261,7 +134,6 @@ export default function UsersPage() {
         onSave={handleSave}
       />
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialogNova
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}

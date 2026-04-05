@@ -15,16 +15,8 @@ import { AddWordQuickDialog } from "@/shared/components/dialogs/AddWordQuickDial
 import { useUserStore } from "@/lib/store/user-store";
 import { useWordsUIStore } from "@/lib/store/words-store";
 import { wordService } from "@/services/wordService";
+import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination";
 
 export default function WordsPage() {
   const {
@@ -171,38 +163,6 @@ export default function WordsPage() {
     await handleGenerateWithAI(word);
   };
 
-  // Generate page numbers
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const showPages = 5;
-
-    if (totalPages <= showPages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
-
   // Count active filters (excluding page and limit)
   const activeFiltersCount = Object.entries(filters).filter(
     ([key, value]) => key !== "page" && key !== "limit" && value !== undefined && value !== ""
@@ -300,78 +260,14 @@ export default function WordsPage() {
         isGenerating={isGenerating}
       />
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 py-4">
-          {/* Mobile & Tablet: Simple pagination */}
-          <div className="flex items-center justify-between lg:hidden">
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Página {currentPage} de {totalPages} de {total}
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="text-xs"
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="text-xs"
-              >
-                Siguiente
-              </Button>
-            </div>
-          </div>
-
-          {/* Desktop: Full pagination */}
-          <div className="hidden lg:flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Showing {words.length > 0 ? ((currentPage - 1) * 10) + 1 : 0} to {Math.min(currentPage * 10, total)} of {total} words
-            </p>
-
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-
-                {getPageNumbers().map((page, index) => (
-                  <PaginationItem key={index}>
-                    {page === '...' ? (
-                      <PaginationEllipsis />
-                    ) : (
-                      <PaginationLink
-                        onClick={() => goToPage(page as number)}
-                        isActive={currentPage === page}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    )}
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
-      )}
+      <TablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        total={total}
+        itemsCount={words.length}
+        itemLabel="words"
+        onPageChange={goToPage}
+      />
 
       {/* Create/Edit Dialog */}
       <WordDialog

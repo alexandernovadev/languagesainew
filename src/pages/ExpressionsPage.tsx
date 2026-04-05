@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -12,17 +12,9 @@ import { AlertDialogNova } from "@/shared/components/ui/alert-dialog-nova";
 import { expressionService } from "@/services/expressionService";
 import { AddExpressionQuickDialog } from "@/shared/components/dialogs/AddExpressionQuickDialog";
 import { useUserStore } from "@/lib/store/user-store";
+import { useExpressionsUIStore } from "@/lib/store/expressions-store";
+import { TablePagination } from "@/shared/components/ui/table-pagination";
 import { toast } from "sonner";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination";
-import { Badge } from "@/shared/components/ui/badge";
 
 export default function ExpressionsPage() {
   const {
@@ -41,88 +33,73 @@ export default function ExpressionsPage() {
     refreshExpressions,
   } = useExpressions();
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
-  const [selectedExpression, setSelectedExpression] = useState<IExpression | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [expressionToDelete, setExpressionToDelete] = useState<IExpression | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const {
+    dialogOpen, setDialogOpen,
+    filtersModalOpen, setFiltersModalOpen,
+    selectedExpression, setSelectedExpression,
+    deleteDialogOpen, setDeleteDialogOpen,
+    expressionToDelete, setExpressionToDelete,
+    searchTerm, setSearchTerm,
+    deleteLoading, setDeleteLoading,
+    isGenerating, setIsGenerating,
+    quickAddOpen, setQuickAddOpen,
+  } = useExpressionsUIStore();
+
   const { user } = useUserStore();
 
-  // Handle create
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     setSelectedExpression(null);
     setDialogOpen(true);
-  };
+  }, [setSelectedExpression, setDialogOpen]);
 
-  // Handle edit
-  const handleEdit = (expression: IExpression) => {
+  const handleEdit = useCallback((expression: IExpression) => {
     setSelectedExpression(expression);
     setDialogOpen(true);
-  };
+  }, [setSelectedExpression, setDialogOpen]);
 
-  // Handle delete click
-  const handleDeleteClick = (expression: IExpression) => {
+  const handleDeleteClick = useCallback((expression: IExpression) => {
     setExpressionToDelete(expression);
     setDeleteDialogOpen(true);
-  };
+  }, [setExpressionToDelete, setDeleteDialogOpen]);
 
-  // Handle delete confirm
-  const handleDeleteConfirm = async () => {
-    if (expressionToDelete) {
-      setDeleteLoading(true);
-      try {
-        await deleteExpression(expressionToDelete._id);
-        setDeleteDialogOpen(false);
-        setExpressionToDelete(null);
-      } finally {
-        setDeleteLoading(false);
-      }
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!expressionToDelete) return;
+    setDeleteLoading(true);
+    try {
+      await deleteExpression(expressionToDelete._id);
+      setDeleteDialogOpen(false);
+      setExpressionToDelete(null);
+    } finally {
+      setDeleteLoading(false);
     }
-  };
+  }, [expressionToDelete, deleteExpression, setDeleteLoading, setDeleteDialogOpen, setExpressionToDelete]);
 
-  // Handle save (create or update)
-  const handleSave = async (expressionData: any) => {
+  const handleSave = useCallback(async (expressionData: any) => {
     if (selectedExpression) {
       return await updateExpression(selectedExpression._id, expressionData);
-    } else {
-      return await createExpression(expressionData);
     }
-  };
+    return await createExpression(expressionData);
+  }, [selectedExpression, updateExpression, createExpression]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     const q = searchTerm.trim();
-    setSearchTerm(q);
     updateFilters({ search: q || undefined });
-  };
+  }, [searchTerm, updateFilters]);
 
-  // Handle apply filters from modal
-  const handleApplyFilters = (newFilters: any) => {
-    updateFilters(newFilters);
-  };
-
-  // Clear all filters
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setSearchTerm("");
     clearFilters();
-  };
+  }, [setSearchTerm, clearFilters]);
 
-  // Handle generate with AI
-  const handleGenerateWithAI = async (expressionPrompt: string) => {
+  const handleGenerateWithAI = useCallback(async (expressionPrompt: string) => {
     setIsGenerating(true);
     try {
       const language = user?.language || "en";
       const response = await expressionService.generateExpression(expressionPrompt, language);
-      
-      // La respuesta tiene estructura: { success: true, message: "...", data: expressionData }
+
       if (response.data.success && response.data.data) {
         const generatedData = response.data.data;
-        
-        // Crear la expresión con los datos generados
         const success = await createExpression({
           expression: generatedData.expression || expressionPrompt,
           definition: generatedData.definition || "",
@@ -141,50 +118,13 @@ export default function ExpressionsPage() {
         }
       }
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error generando expresión con AI';
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || "Error generando expresión con AI";
       toast.error(errorMsg);
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [user, createExpression, refreshExpressions, setIsGenerating]);
 
-  const handleQuickAdd = async (expression: string) => {
-    await handleGenerateWithAI(expression);
-  };
-
-  // Generate page numbers
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const showPages = 5;
-    
-    if (totalPages <= showPages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push('...');
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push('...');
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push('...');
-        pages.push(totalPages);
-      }
-    }
-    
-    return pages;
-  };
-
-  // Count active filters (excluding page and limit)
   const activeFiltersCount = Object.entries(filters).filter(
     ([key, value]) => key !== "page" && key !== "limit" && value !== undefined && value !== ""
   ).length;
@@ -207,21 +147,15 @@ export default function ExpressionsPage() {
                 />
               </div>
               {activeFiltersCount > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleClearFilters}
-                size="icon"
-                title="Limpiar filtros"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+                <Button type="button" variant="ghost" onClick={handleClearFilters} size="icon" title="Limpiar filtros">
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
               <Button type="submit" variant="secondary" size="icon" title="Buscar">
                 <Search className="h-4 w-4" />
               </Button>
             </form>
-            
+
             <Button
               type="button"
               variant="outline"
@@ -248,13 +182,7 @@ export default function ExpressionsPage() {
               <Sparkles className="h-4 w-4" />
             </Button>
 
-            <Button
-              type="button"
-              variant="default"
-              onClick={handleCreate}
-              size="icon"
-              title="Crear expresión"
-            >
+            <Button type="button" variant="default" onClick={handleCreate} size="icon" title="Crear expresión">
               <Plus className="h-4 w-4" />
             </Button>
           </div>
@@ -264,11 +192,10 @@ export default function ExpressionsPage() {
       <AddExpressionQuickDialog
         open={quickAddOpen}
         onOpenChange={setQuickAddOpen}
-        onAdd={handleQuickAdd}
+        onAdd={handleGenerateWithAI}
         language={user?.language || "en"}
       />
 
-      {/* Expressions Table */}
       <ExpressionsTable
         expressions={expressions}
         loading={loading}
@@ -279,80 +206,15 @@ export default function ExpressionsPage() {
         isGenerating={isGenerating}
       />
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mx-4 px-4 py-4">
-          {/* Mobile & Tablet: Simple pagination */}
-          <div className="flex items-center justify-between lg:hidden">
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Página {currentPage} de {totalPages}
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="text-xs"
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="text-xs"
-              >
-                Siguiente
-              </Button>
-            </div>
-          </div>
+      <TablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        total={total}
+        itemsCount={expressions.length}
+        itemLabel="expressions"
+        onPageChange={goToPage}
+      />
 
-          {/* Desktop: Full pagination */}
-          <div className="hidden lg:flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              Showing {expressions.length > 0 ? ((currentPage - 1) * 10) + 1 : 0} to {Math.min(currentPage * 10, total)} of {total} expressions
-            </p>
-            
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-                
-                {getPageNumbers().map((page, index) => (
-                  <PaginationItem key={index}>
-                    {page === '...' ? (
-                      <PaginationEllipsis />
-                    ) : (
-                      <PaginationLink
-                        onClick={() => goToPage(page as number)}
-                        isActive={currentPage === page}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    )}
-                  </PaginationItem>
-                ))}
-                
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() => currentPage < totalPages && goToPage(currentPage + 1)}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
-      )}
-
-      {/* Create/Edit Dialog */}
       <ExpressionDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -360,7 +222,6 @@ export default function ExpressionsPage() {
         onSave={handleSave}
       />
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialogNova
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
@@ -378,12 +239,11 @@ export default function ExpressionsPage() {
         confirmClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
       />
 
-      {/* Filters Modal */}
       <ExpressionFiltersModal
         open={filtersModalOpen}
         onOpenChange={setFiltersModalOpen}
         filters={filters}
-        onApplyFilters={handleApplyFilters}
+        onApplyFilters={updateFilters}
         onClearFilters={handleClearFilters}
       />
     </div>

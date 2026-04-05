@@ -21,3 +21,6 @@ export {
   useExpressionsFilters,
   useExpressionsLoading,
 } from './expressions-store';
+export { useLecturesUIStore } from './lectures-store';
+export { useExamsUIStore } from './exams-store';
+export { useUsersUIStore } from './users-store';

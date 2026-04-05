@@ -7,15 +7,16 @@ function escapeHtml(s: string) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Button } from "@/shared/components/ui/button";
 import { ModalNova } from "@/shared/components/ui/modal-nova";
+import { GrammarTopicList } from "@/shared/components/ui/grammar-topic-list";
 import { grammarTopicsJson } from "@/data/business/en";
 import { grammarGuideContent } from "@/data/business/en/grammarGuideContent";
-import { BookText, ChevronDown, ChevronRight, Menu } from "lucide-react";
-import { cn } from "@/utils/common/classnames";
+import { BookText, Menu } from "lucide-react";
 
 export default function GrammarPage() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
@@ -25,11 +26,6 @@ export default function GrammarPage() {
     grammarTopicsJson[0]?.children?.[0]?.value ?? null
   );
   const [topicsModalOpen, setTopicsModalOpen] = useState(false);
-
-  const selectTopicAndClose = (value: string) => {
-    setSelectedTopic(value);
-    setTopicsModalOpen(false);
-  };
 
   const toggleCategory = (value: string) => {
     setExpandedCategories((prev) => {
@@ -41,16 +37,12 @@ export default function GrammarPage() {
   };
 
   const entry = selectedTopic ? grammarGuideContent[selectedTopic] : null;
-  const selectedLabel =
-    selectedTopic &&
-    grammarTopicsJson
-      .flatMap((c) => c.children)
-      .find((t) => t.value === selectedTopic)?.label;
-  const parentCategory =
-    selectedTopic &&
-    grammarTopicsJson.find((c) =>
-      c.children.some((t) => t.value === selectedTopic)
-    )?.label;
+  const selectedLabel = selectedTopic
+    ? grammarTopicsJson.flatMap((c) => c.children).find((t) => t.value === selectedTopic)?.label
+    : null;
+  const parentCategory = selectedTopic
+    ? grammarTopicsJson.find((c) => c.children.some((t) => t.value === selectedTopic))?.label
+    : null;
 
   return (
     <div className="space-y-4 flex flex-col flex-1 min-h-0">
@@ -60,7 +52,7 @@ export default function GrammarPage() {
       />
 
       <div className="flex flex-1 min-h-0 gap-4">
-        {/* Sidebar - categorías y temas, solo en desktop (lg+) */}
+        {/* Sidebar - solo desktop */}
         <Card className="hidden lg:flex w-64 shrink-0 flex-col overflow-hidden h-[calc(100dvh-12rem)] min-h-[280px] sticky top-20 self-start">
           <CardContent className="flex-1 min-h-0 overflow-hidden p-0 flex flex-col">
             <div className="py-3 px-4 shrink-0 border-b">
@@ -70,41 +62,13 @@ export default function GrammarPage() {
               </h3>
             </div>
             <ScrollArea className="flex-1 min-h-0">
-              <div className="p-2 space-y-0.5">
-                {grammarTopicsJson.map((category) => (
-                  <div key={category.value}>
-                    <button
-                      onClick={() => toggleCategory(category.value)}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-muted rounded-md transition-colors"
-                    >
-                      {expandedCategories.has(category.value) ? (
-                        <ChevronDown className="h-4 w-4 shrink-0" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 shrink-0" />
-                      )}
-                      <span className="truncate">{category.label}</span>
-                    </button>
-                    {expandedCategories.has(category.value) && (
-                      <div className="ml-4 pl-2 border-l border-border space-y-0.5">
-                        {category.children.map((topic) => (
-                          <button
-                            key={topic.value}
-                            onClick={() => setSelectedTopic(topic.value)}
-                            className={cn(
-                              "w-full text-left px-3 py-2 text-sm rounded-md transition-colors",
-                              selectedTopic === topic.value
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                            )}
-                          >
-                            {topic.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <GrammarTopicList
+                categories={grammarTopicsJson}
+                selectedTopic={selectedTopic}
+                expandedCategories={expandedCategories}
+                onSelectTopic={setSelectedTopic}
+                onToggleCategory={toggleCategory}
+              />
             </ScrollArea>
           </CardContent>
         </Card>
@@ -117,9 +81,7 @@ export default function GrammarPage() {
                 <div>
                   <h2 className="text-xl font-semibold mb-1">{selectedLabel}</h2>
                   {parentCategory && (
-                    <p className="text-sm text-muted-foreground">
-                      {parentCategory}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{parentCategory}</p>
                   )}
                 </div>
 
@@ -136,9 +98,7 @@ export default function GrammarPage() {
                             .split("\n")
                             .map((line) => {
                               const t = line.replace(/^•\s*/, "→ ");
-                              return t.trim()
-                                ? `<p class="mb-2">${escapeHtml(t)}</p>`
-                                : "";
+                              return t.trim() ? `<p class="mb-2">${escapeHtml(t)}</p>` : "";
                             })
                             .filter(Boolean)
                             .join(""),
@@ -152,13 +112,8 @@ export default function GrammarPage() {
                   </h3>
                   <ul className="space-y-2">
                     {entry.examples.map((ex, i) => (
-                      <li
-                        key={i}
-                        className="flex gap-3 pl-4 border-l-2 border-primary/30 py-2"
-                      >
-                        <span className="text-muted-foreground text-sm shrink-0">
-                          {i + 1}.
-                        </span>
+                      <li key={i} className="flex gap-3 pl-4 border-l-2 border-primary/30 py-2">
+                        <span className="text-muted-foreground text-sm shrink-0">{i + 1}.</span>
                         <span className="text-foreground">{ex}</span>
                       </li>
                     ))}
@@ -175,7 +130,7 @@ export default function GrammarPage() {
         </Card>
       </div>
 
-      {/* Botón flotante para temas - solo en mobile/tablet */}
+      {/* Botón flotante - solo mobile/tablet */}
       <Button
         variant="default"
         size="icon"
@@ -186,7 +141,7 @@ export default function GrammarPage() {
         <Menu className="h-6 w-6" />
       </Button>
 
-      {/* Modal de temas - mobile/tablet */}
+      {/* Modal temas - mobile/tablet */}
       <ModalNova
         open={topicsModalOpen}
         onOpenChange={setTopicsModalOpen}
@@ -195,41 +150,13 @@ export default function GrammarPage() {
         size="sm"
         height="h-auto max-h-[70dvh]"
       >
-        <div className="p-4 space-y-0.5 overflow-y-auto">
-          {grammarTopicsJson.map((category) => (
-            <div key={category.value}>
-              <button
-                onClick={() => toggleCategory(category.value)}
-                className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-muted rounded-md transition-colors"
-              >
-                {expandedCategories.has(category.value) ? (
-                  <ChevronDown className="h-4 w-4 shrink-0" />
-                ) : (
-                  <ChevronRight className="h-4 w-4 shrink-0" />
-                )}
-                <span className="truncate">{category.label}</span>
-              </button>
-              {expandedCategories.has(category.value) && (
-                <div className="ml-4 pl-2 border-l border-border space-y-0.5">
-                  {category.children.map((topic) => (
-                    <button
-                      key={topic.value}
-                      onClick={() => selectTopicAndClose(topic.value)}
-                      className={cn(
-                        "w-full text-left px-3 py-2 text-sm rounded-md transition-colors",
-                        selectedTopic === topic.value
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {topic.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <GrammarTopicList
+          categories={grammarTopicsJson}
+          selectedTopic={selectedTopic}
+          expandedCategories={expandedCategories}
+          onSelectTopic={(value) => { setSelectedTopic(value); setTopicsModalOpen(false); }}
+          onToggleCategory={toggleCategory}
+        />
       </ModalNova>
     </div>
   );
