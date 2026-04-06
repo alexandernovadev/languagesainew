@@ -1,5 +1,6 @@
 import { useUserStore } from "@/lib/store/user-store";
-import { authService, LoginCredentials } from "@/services/authService";
+import { authService } from "@/services/authService";
+import type { LoginCredentials } from "@/types/api";
 import { userService } from "@/services/userService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,8 +52,8 @@ export function useAuth() {
       }
 
       const response = await authService.refreshToken(refreshToken);
-      setToken(response.token);
-      setUser(response.user);
+      setToken(response.accessToken);
+      setUser((response.user as any) ?? null);
       if (response.refreshToken) {
         localStorage.setItem("refreshToken", response.refreshToken);
       }
@@ -71,7 +72,7 @@ export function useAuth() {
     
     try {
       const updatedUser = await userService.getUserById(user._id);
-      setUser(updatedUser);
+      setUser(updatedUser as any);
     } catch (error) {
       console.error("Failed to refresh user data:", error);
     }

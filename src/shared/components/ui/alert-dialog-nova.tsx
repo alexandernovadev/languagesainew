@@ -25,6 +25,7 @@ interface AlertDialogNovaProps {
   cancelText?: string;
   loading?: boolean;
   confirmVariant?: VariantProps<typeof buttonVariants>["variant"];
+  confirmClassName?: string;
   shouldAutoCloseOnConfirm?: boolean;
 }
 
@@ -39,6 +40,7 @@ export function AlertDialogNova({
   cancelText = "Cancelar",
   loading = false,
   confirmVariant = "default",
+  confirmClassName,
   shouldAutoCloseOnConfirm = true,
 }: AlertDialogNovaProps) {
   const handleCancel = () => {
@@ -71,7 +73,7 @@ export function AlertDialogNova({
           {shouldAutoCloseOnConfirm ? (
             <AlertDialogAction
               onClick={onConfirm}
-              className={cn(buttonVariants({ variant: confirmVariant }))}
+              className={cn(buttonVariants({ variant: confirmVariant }), confirmClassName)}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -80,7 +82,7 @@ export function AlertDialogNova({
           ) : (
             <button
               onClick={onConfirm}
-              className={cn(buttonVariants({ variant: confirmVariant }))}
+              className={cn(buttonVariants({ variant: confirmVariant }), confirmClassName)}
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />}

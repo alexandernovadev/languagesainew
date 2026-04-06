@@ -48,10 +48,10 @@ function processChildrenWithWordClick(
         </React.Fragment>
       );
     }
-    if (React.isValidElement(child) && child.props.children != null) {
+    if (React.isValidElement(child) && (child as React.ReactElement<any>).props.children != null) {
       return React.cloneElement(child as React.ReactElement<any>, {
         children: processChildrenWithWordClick(
-          child.props.children,
+          (child as React.ReactElement<any>).props.children,
           onWordClick,
           clickableWordsSet
         ),

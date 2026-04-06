@@ -1,6 +1,13 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import { getAuthHeaders } from "@/utils/services";
+
+const getAuthHeaders = (): Record<string, string> => {
+  const stored = localStorage.getItem("user-storage");
+  const token = stored ? (JSON.parse(stored)?.state?.token ?? null) : null;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+};
 
 interface TopicGeneratorOptions {
   type: "lecture" | "exam";

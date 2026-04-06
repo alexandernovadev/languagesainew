@@ -90,9 +90,9 @@ export default function SystemInfoPage() {
               </h2>
               <div className="space-y-4">
                 <InfoBlock label="Estado" value={<Badge variant="default">En línea</Badge>} />
-                <InfoBlock label="Ambiente" value={<Badge variant={getEnvironmentVariant(systemInfo.environment)}>{getEnvironmentLabel(systemInfo.environment)}</Badge>} />
-                <InfoBlock label="Versión" value={<span className="font-mono text-sm">{systemInfo.version}</span>} />
-                <InfoBlock label="Último deploy" value={formatDateTimeSpanish(systemInfo.date)} />
+                <InfoBlock label="Ambiente" value={<Badge variant={getEnvironmentVariant(systemInfo!.environment)}>{getEnvironmentLabel(systemInfo!.environment)}</Badge>} />
+                <InfoBlock label="Versión" value={<span className="font-mono text-sm">{systemInfo!.version}</span>} />
+                <InfoBlock label="Último deploy" value={formatDateTimeSpanish(systemInfo!.date)} />
               </div>
             </CardContent>
           </Card>

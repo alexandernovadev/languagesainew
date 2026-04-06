@@ -30,6 +30,7 @@ interface LectureParams {
   addEasyWords: boolean;
   grammarTopics: string[];
   selectedWords: string[];
+  language?: string;
 }
 
 interface UseLectureGeneratorReturn {
@@ -83,8 +84,8 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
   const [paramsModalOpen, setParamsModalOpen] = useState(false);
   
   // Refs para callbacks de streaming
-  const topicCallbackRef = useRef<(topic: string) => void>();
-  const textCallbackRef = useRef<(text: string) => void>();
+  const topicCallbackRef = useRef<((topic: string) => void) | undefined>(undefined);
+  const textCallbackRef = useRef<((text: string) => void) | undefined>(undefined);
 
   // Generar tema
   const generateTopic = useCallback(async () => {
@@ -218,16 +219,16 @@ export function useLectureGenerator(): UseLectureGeneratorReturn {
     }
 
     try {
-      const lectureData: ILecture = {
+      const lectureData = {
         content: generatedText,
-        language: effectiveLanguage,
+        language: effectiveLanguage as ILecture["language"],
         difficulty: params.level,
         typeWrite: params.typeWrite,
         time: additionalData?.time || 5, // Default 5 minutos
         ...additionalData,
       };
 
-      await lectureService.postLecture(lectureData);
+      await lectureService.postLecture(lectureData as ILecture);
       toast.success("¡Lectura guardada exitosamente!");
     } catch (error: any) {
       toast.error(error.message || "Error al guardar la lectura");

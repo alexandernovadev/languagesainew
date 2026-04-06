@@ -19,7 +19,7 @@ import { contentLanguageCodes, languages } from "@/utils/common/language";
 const CONTENT_LANGUAGES = contentLanguageCodes.map((code) => ({
   value: code,
   ...languages[code],
-})) as const;
+}));
 
 const EXPLAINS_LANGUAGES = [
   { value: "en", ...languages["en"] },

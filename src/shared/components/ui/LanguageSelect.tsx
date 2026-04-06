@@ -1,6 +1,6 @@
 import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
-import { AllowedLanguageCode, getAllowedLanguages } from "@/constants/identity";
+import { AllowedLanguageCode, getAllowedLanguages } from "@/utils/common/language";
 
 type LanguageValue = AllowedLanguageCode | "auto";
 

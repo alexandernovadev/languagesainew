@@ -12,16 +12,18 @@ interface ExpressionsTableProps {
   loading: boolean;
   onEdit: (expression: IExpression) => void;
   onDelete: (expression: IExpression) => void;
+  onView?: (expression: IExpression) => void;
   searchTerm?: string;
   onGenerateWithAI?: (expression: string) => void;
   isGenerating?: boolean;
 }
 
-export function ExpressionsTable({ 
-  expressions, 
-  loading, 
-  onEdit, 
+export function ExpressionsTable({
+  expressions,
+  loading,
+  onEdit,
   onDelete,
+  onView,
   searchTerm,
   onGenerateWithAI,
   isGenerating = false

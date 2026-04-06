@@ -51,7 +51,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
         role: user.role as any,
         firstName: user.firstName || "",
         lastName: user.lastName || "",
-        language: user.language === "es" ? "en" : user.language || "en",
+        language: user.language || "en",
         isActive: user.isActive ?? true,
         phone: user.phone || "",
         address: user.address || "",

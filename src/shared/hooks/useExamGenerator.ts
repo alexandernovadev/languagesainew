@@ -70,6 +70,7 @@ export function useExamGenerator() {
 
     try {
       const apiParams: GenerateExamParams = {
+        language: effectiveLanguage,
         grammarTopics: params.grammarTopics,
         difficulty: params.difficulty,
         questionCount: params.questionCount,
