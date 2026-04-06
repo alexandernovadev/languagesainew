@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
-import type { Word } from '@/models/Word';
+import type { IWord as Word } from '@/types/models/Word';
 import { CRUDUIState, getCRUDInitialState, crudActions } from './createCRUDUIStore';
 
 interface WordsUIState extends CRUDUIState<Word> {
