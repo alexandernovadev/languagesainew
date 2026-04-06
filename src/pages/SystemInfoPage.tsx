@@ -80,50 +80,52 @@ export default function SystemInfoPage() {
       />
 
       <PageLoader loading={loading} error={error} onRetry={loadSystemInfo} skeletonRows={3}>
-        <div className="space-y-6 w-full">
-          {/* Backend */}
-          <Card className="w-full">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Server className="h-5 w-5" />
-                Backend
-              </h2>
-              <div className="space-y-4">
-                <InfoBlock label="Estado" value={<Badge variant="default">En línea</Badge>} />
-                <InfoBlock label="Ambiente" value={<Badge variant={getEnvironmentVariant(systemInfo!.environment)}>{getEnvironmentLabel(systemInfo!.environment)}</Badge>} />
-                <InfoBlock label="Versión" value={<span className="font-mono text-sm">{systemInfo!.version}</span>} />
-                <InfoBlock label="Último deploy" value={formatDateTimeSpanish(systemInfo!.date)} />
-              </div>
-            </CardContent>
-          </Card>
+        {systemInfo && (
+          <div className="space-y-6 w-full">
+            {/* Backend */}
+            <Card className="w-full">
+              <CardContent className="p-6">
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Server className="h-5 w-5" />
+                  Backend
+                </h2>
+                <div className="space-y-4">
+                  <InfoBlock label="Estado" value={<Badge variant="default">En línea</Badge>} />
+                  <InfoBlock label="Ambiente" value={<Badge variant={getEnvironmentVariant(systemInfo.environment)}>{getEnvironmentLabel(systemInfo.environment)}</Badge>} />
+                  <InfoBlock label="Versión" value={<span className="font-mono text-sm">{systemInfo.version}</span>} />
+                  <InfoBlock label="Último deploy" value={formatDateTimeSpanish(systemInfo.date)} />
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Frontend */}
-          <Card className="w-full">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Monitor className="h-5 w-5" />
-                Frontend
-              </h2>
-              <div className="space-y-4">
-                <InfoBlock label="Versión" value={<span className="font-mono text-sm">{packageJson.version}</span>} />
-                <InfoBlock
-                  label="Último deploy"
-                  value={(packageJson as { buildDate?: string }).buildDate
-                    ? formatDateTimeSpanish((packageJson as { buildDate?: string }).buildDate!)
-                    : "N/A (modo desarrollo)"}
-                />
-                <InfoBlock
-                  label="Ambiente"
-                  value={<Badge variant={import.meta.env.DEV ? "secondary" : "default"}>{import.meta.env.DEV ? "Development" : "Production"}</Badge>}
-                />
-                <InfoBlock
-                  label="URL Back"
-                  value={<span className="font-mono text-xs break-all">{import.meta.env.VITE_BACK_URL || "No configurado"}</span>}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            {/* Frontend */}
+            <Card className="w-full">
+              <CardContent className="p-6">
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Monitor className="h-5 w-5" />
+                  Frontend
+                </h2>
+                <div className="space-y-4">
+                  <InfoBlock label="Versión" value={<span className="font-mono text-sm">{packageJson.version}</span>} />
+                  <InfoBlock
+                    label="Último deploy"
+                    value={(packageJson as { buildDate?: string }).buildDate
+                      ? formatDateTimeSpanish((packageJson as { buildDate?: string }).buildDate!)
+                      : "N/A (modo desarrollo)"}
+                  />
+                  <InfoBlock
+                    label="Ambiente"
+                    value={<Badge variant={import.meta.env.DEV ? "secondary" : "default"}>{import.meta.env.DEV ? "Development" : "Production"}</Badge>}
+                  />
+                  <InfoBlock
+                    label="URL Back"
+                    value={<span className="font-mono text-xs break-all">{import.meta.env.VITE_BACK_URL || "No configurado"}</span>}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </PageLoader>
     </div>
   );
