@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, useEffect } from "react";
-import React from "react";
 import DashboardLayout from "./shared/components/layouts/DashboardLayout";
 import LoadingSpinner from "./shared/components/LoadingSpinner";
 import { ErrorBoundary } from "./shared/components/ErrorBoundary";
