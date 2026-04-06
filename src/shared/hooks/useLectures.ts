@@ -103,7 +103,7 @@ export function useLectures() {
   // Update lecture (optimistic)
   const updateLecture = async (id: string, lectureData: LectureUpdate): Promise<boolean> => {
     const prev = lectures;
-    setLectures(curr => curr.map(l => l._id === id ? { ...l, ...lectureData } : l));
+    setLectures(curr => curr.map(l => l._id === id ? { ...l, ...lectureData } as ILecture : l));
     try {
       await lectureService.updateLecture(id, lectureData as any);
       toast.success('Lecture updated successfully');

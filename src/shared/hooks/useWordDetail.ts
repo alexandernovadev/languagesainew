@@ -39,8 +39,8 @@ export function useWordDetail({ wordId, initialWord, onWordUpdate }: UseWordDeta
     setLoading(true);
     setError(null);
     try {
-      const response = await wordService.getWordById(wordId);
-      const wordData = response.data || response;
+      const res = await wordService.getWordById(wordId);
+      const wordData = res.data || res;
       setWord(wordData);
       if (onWordUpdateRef.current) {
         onWordUpdateRef.current(wordData);

@@ -1,7 +1,7 @@
-import { Document } from "mongoose";
 import { ContentLanguage, Language, UserRole } from "../business";
 
-export interface IUser extends Document {
+export interface IUser {
+  _id: string;
   username: string;
   email: string;
   password: string;

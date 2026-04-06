@@ -1,7 +1,7 @@
-import { Document } from "mongoose";
 import { CertificationLevel, Language } from "../business";
 
-export interface ILecture extends Document {
+export interface ILecture {
+  _id: string;
   time: number;
   difficulty: CertificationLevel;
   typeWrite: string;

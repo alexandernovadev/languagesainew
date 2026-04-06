@@ -102,7 +102,7 @@ export function useExpressions() {
   // Update expression (optimistic)
   const updateExpression = async (id: string, expressionData: ExpressionUpdate): Promise<boolean> => {
     const prev = expressions;
-    setExpressions(curr => curr.map(e => e._id === id ? { ...e, ...expressionData } : e));
+    setExpressions(curr => curr.map(e => e._id === id ? { ...e, ...expressionData } as IExpression : e));
     try {
       await expressionService.updateExpression(id, expressionData as any);
       toast.success('Expression updated successfully');

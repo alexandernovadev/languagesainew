@@ -124,7 +124,7 @@ export function useWords() {
   // Update word (optimistic)
   const updateWord = async (id: string, wordData: WordUpdate): Promise<boolean> => {
     const prev = words;
-    setWords(curr => curr.map(w => w._id === id ? { ...w, ...wordData } : w));
+    setWords(curr => curr.map(w => w._id === id ? { ...w, ...wordData } as IWord : w));
     try {
       await wordService.updateWord(id, wordData as any);
       toast.success('Word updated successfully');

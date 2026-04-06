@@ -1,6 +1,6 @@
 import { HttpClient } from "./api/HttpClient";
-import { Word } from "../models/Word";
-import { WordFilters } from "@/shared/components/forms/word-filters/types";
+import type { IWord as Word } from "@/types/models/Word";
+import type { WordFilters } from "@/shared/hooks/useWords";
 import { useUserStore } from "@/lib/store/user-store";
 
 /**
@@ -42,7 +42,7 @@ class WordService extends HttpClient {
   /**
    * Get word by ID
    */
-  async getWordById(id: string): Promise<Word> {
+  async getWordById(id: string): Promise<any> {
     return this.get(`/api/words/${id}`);
   }
 
@@ -145,7 +145,7 @@ class WordService extends HttpClient {
 
   // ========== AI Generation Methods ==========
 
-  async generateWord(word: string, language = "en", provider?: string) {
+  async generateWord(word: string, language = "en", provider?: string): Promise<any> {
     const body: Record<string, unknown> = { word, language };
     if (provider) body.provider = provider;
     return this.post(`/api/words/generate`, body);
@@ -157,7 +157,7 @@ class WordService extends HttpClient {
     language: string,
     oldExamples: string[] = [],
     provider?: string
-  ) {
+  ): Promise<any> {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
     return this.post(`/api/words/${wordId}/generate-examples`, body);
@@ -169,7 +169,7 @@ class WordService extends HttpClient {
     language: string,
     oldExamples: string[] = [],
     provider?: string
-  ) {
+  ): Promise<any> {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
     return this.post(`/api/words/${wordId}/generate-code-switching`, body);
@@ -181,7 +181,7 @@ class WordService extends HttpClient {
     language: string,
     oldExamples: string[] = [],
     provider?: string
-  ) {
+  ): Promise<any> {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
     return this.post(`/api/words/${wordId}/generate-synonyms`, body);
@@ -193,13 +193,13 @@ class WordService extends HttpClient {
     language: string,
     oldExamples: string[] = [],
     provider?: string
-  ) {
+  ): Promise<any> {
     const body: Record<string, unknown> = { word, language, oldExamples };
     if (provider) body.provider = provider;
     return this.post(`/api/words/${wordId}/generate-types`, body);
   }
 
-  async generateWordImage(wordId: string, word: string, imgOld: string = "") {
+  async generateWordImage(wordId: string, word: string, imgOld: string = ""): Promise<any> {
     return this.post(`/api/words/${wordId}/generate-image`, { word, imgOld });
   }
 

@@ -1,5 +1,5 @@
 import { axiosClient as api } from "./api/HttpClient";
-import { Expression } from "../models/Expression";
+import type { IExpression as Expression } from "@/types/models/Expression";
 import { useUserStore } from "@/lib/store/user-store";
 
 export const expressionService = {

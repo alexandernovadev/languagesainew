@@ -144,8 +144,7 @@ export default function WordsPage() {
     try {
       const response = await wordService.generateWord(word, user?.language || "en");
 
-      // La respuesta tiene estructura: { success: true, message: "...", data: savedWord }
-      if (response.success && response.data) {
+      if (response) {
         toast.success(`Palabra "${word}" generada exitosamente`);
 
         // Refrescar la lista - la palabra aparecerá automáticamente porque el filtro wordUser sigue activo

@@ -1,5 +1,5 @@
 import { axiosClient as api } from "./api/HttpClient";
-import { Lecture } from "../models/Lecture";
+import type { ILecture as Lecture } from "@/types/models/Lecture";
 
 export const lectureService = {
   async getLectures(page = 1, limit = 10, search = "", filters: Record<string, any> = {}, signal?: AbortSignal) {

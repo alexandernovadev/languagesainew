@@ -63,7 +63,7 @@ export function useUsers() {
   // Update user (optimistic)
   const updateUser = async (id: string, userData: UserUpdate): Promise<boolean> => {
     const prev = users;
-    setUsers(curr => curr.map(u => u._id === id ? { ...u, ...userData } : u));
+    setUsers(curr => curr.map(u => u._id === id ? { ...u, ...userData } as User : u));
     try {
       await userService.updateUser(id, userData);
       toast.success('User updated successfully');
