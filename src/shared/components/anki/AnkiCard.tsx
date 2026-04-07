@@ -81,7 +81,7 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
 
   return (
     <div
-      className="relative w-full flex-1 min-h-[510px] cursor-pointer"
+      className="relative w-full h-[90dvh] cursor-pointer"
       style={{ perspective: '1000px' }}
       onClick={handleFlip}
     >

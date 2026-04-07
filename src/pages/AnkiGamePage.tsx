@@ -136,7 +136,7 @@ export default function AnkiGamePage() {
 
       {/* Cards Display */}
       {!loading && cards.length > 0 && currentCard && (
-        <div className="bg-red-400 flex flex-col items-center justify-start flex-1  overflow-auto">
+        <div className="w-full">
           <AnkiCard
             word={currentCard}
             isFlipped={isFlipped}
