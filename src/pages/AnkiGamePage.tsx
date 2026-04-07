@@ -74,7 +74,7 @@ export default function AnkiGamePage() {
         title="Juego Anki"
         description="Practica con tarjetas Anki"
         actions={
-          <>
+          <div className="mt-2 flex flex-row gap-2">
             <AnkiFilter
               values={filters}
               onChange={setFilters}
@@ -104,7 +104,7 @@ export default function AnkiGamePage() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-          </>
+          </div>
         }
       />
 

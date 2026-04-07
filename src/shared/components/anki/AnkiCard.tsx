@@ -96,28 +96,31 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
       >
         {/* FRENTE */}
         <Card
-          className={cn(
-            "absolute w-full h-full",
-            "flex flex-col items-center justify-center p-8"
-          )}
+          className="absolute w-full h-full flex flex-col overflow-hidden"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(0deg)',
           }}
         >
-          <CardContent className="flex flex-col items-center justify-center h-full w-full">
-            {displayWord.img && (
-              <img
-                src={deliveryImageUrl(displayWord.img)}
-                alt={displayWord.word}
-                className="w-80 h-96 object-contain rounded-xl mb-6"
-              />
-            )}
+          <CardContent className="flex flex-col h-full w-full p-0">
+            {/* Imagen: zona principal, crece para llenar el espacio */}
+            <div className="flex-1 min-h-0 flex items-center justify-center p-4">
+              {displayWord.img ? (
+                <img
+                  src={deliveryImageUrl(displayWord.img)}
+                  alt={displayWord.word}
+                  className="w-full h-full object-contain rounded-xl"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full text-muted-foreground text-6xl">
+                  🔤
+                </div>
+              )}
+            </div>
 
-            <div className="flex flex-col items-center gap-3 mb-4">
-
-              {/* Botones de audio - FRENTE */}
+            {/* Info: zona inferior fija */}
+            <div className="flex flex-col items-center gap-2 px-6 pb-6 pt-3">
               <div className="flex items-center gap-2">
                 <button
                   onClick={(e) => handleAudioClick(e, 1)}
@@ -134,19 +137,19 @@ export function AnkiCard({ word, isFlipped, onFlip }: AnkiCardProps) {
                   🐢
                 </button>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold capitalize">{displayWord.word}</h2>
 
+              <h2 className="text-3xl md:text-4xl font-bold capitalize">{displayWord.word}</h2>
+
+              {displayWord.IPA && (
+                <span className="text-[13px] md:text-sm font-mono text-muted-foreground bg-muted px-3 py-1 rounded">
+                  /{displayWord.IPA}/
+                </span>
+              )}
+
+              <p className="text-xs text-muted-foreground mt-1">
+                Toca para voltear
+              </p>
             </div>
-
-            {displayWord.IPA && (
-              <span className="text-[13px] md:text-base font-mono text-muted-foreground bg-muted px-3 py-1 rounded">
-                /{displayWord.IPA}/
-              </span>
-            )}
-
-            <p className="text-sm md:text-base text-muted-foreground mt-6">
-              Click para voltear
-            </p>
           </CardContent>
         </Card>
 
