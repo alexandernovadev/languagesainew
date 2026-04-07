@@ -117,8 +117,8 @@ function SidebarFooterNav() {
     } catch (err: unknown) {
       const message =
         err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { message?: string } } }).response?.data
-            ?.message
+          ? (err as { response?: { data?: { message?: string } } }).response
+              ?.data?.message
           : undefined;
       toast.error(message || "No se pudo cambiar el idioma");
     } finally {
@@ -140,13 +140,14 @@ function SidebarFooterNav() {
       </SidebarMenu>
 
       <div className="group-data-[collapsible=icon]:hidden space-y-1.5 px-0.5">
-        <Label htmlFor="sidebar-content-lang" className="text-xs text-muted-foreground">
+        <Label
+          htmlFor="sidebar-content-lang"
+          className="text-xs text-muted-foreground"
+        >
           Idioma del contenido
         </Label>
         <Select
-          value={
-            user?.language === "es" ? "en" : (user?.language ?? "en")
-          }
+          value={user?.language === "es" ? "en" : (user?.language ?? "en")}
           onValueChange={(v) => void handleContentLanguageChange(v)}
           disabled={languageSaving || !user?._id}
         >
@@ -157,7 +158,12 @@ function SidebarFooterNav() {
           >
             <SelectValue placeholder="Idioma" />
           </SelectTrigger>
-          <SelectContent position="popper" side="top" align="start" className="w-[var(--radix-select-trigger-width)]">
+          <SelectContent
+            position="popper"
+            side="top"
+            align="start"
+            className="w-[var(--radix-select-trigger-width)]"
+          >
             {CONTENT_LANGUAGE_OPTIONS.map((lang) => (
               <SelectItem
                 key={lang.value}
@@ -199,28 +205,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const userDisplayName =
     user?.firstName && user?.lastName
       ? `${user.firstName} ${user.lastName}`
-      : user?.username ?? "";
+      : (user?.username ?? "");
 
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
-          <div className="flex justify-between" >
+          <div
+            className="flex justify-between"
+            onDoubleClick={() => window.location.reload()}
+          >
             <div className="relative flex h-8 w-8 items-center justify-center group-data-[collapsible=icon]:hidden">
               <img
                 src={isDevelopment ? "/logodev.png" : "/loogo.png"}
                 alt="LanguagesAI Logo"
                 className="h-8 w-8 object-cover rounded"
               />
-              {isAuthenticated && user?.language && languagesInfo[user.language] && (
-                <span
-                  className="absolute -bottom-0.5 -right-0.5 text-sm leading-none bg-background rounded-full p-0.5 shadow-sm ring-1 ring-sidebar-border"
-                  title={languagesInfo[user.language].name}
-                >
-                  {languagesInfo[user.language].flag}
-                </span>
-              )}
-            
+              {isAuthenticated &&
+                user?.language &&
+                languagesInfo[user.language] && (
+                  <span
+                    className="absolute -bottom-0.5 -right-0.5 text-sm leading-none bg-background rounded-full p-0.5 shadow-sm ring-1 ring-sidebar-border"
+                    title={languagesInfo[user.language].name}
+                  >
+                    {languagesInfo[user.language].flag}
+                  </span>
+                )}
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="truncate text-sm font-semibold">
@@ -231,7 +241,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="text-xs text-muted-foreground">
                 v{packageJson.version}
               </span>
-              </div>
+            </div>
             <div className="">
               <SidebarTrigger className="h-8 w-8 border-none" />
             </div>
@@ -299,9 +309,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset className="min-w-0 overflow-y-auto">
-        <div className="flex flex-1 flex-col px-4 py-0 min-w-0">
-          {children}
-        </div>
+        <div className="flex flex-1 flex-col px-4 py-0 min-w-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
