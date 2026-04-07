@@ -298,7 +298,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <SidebarRail />
       </Sidebar>
-      <SidebarInset className="min-w-0">
+      <SidebarInset className="min-w-0 overflow-y-auto">
         <div className="flex flex-1 flex-col px-4 py-0 min-w-0">
           {children}
         </div>
