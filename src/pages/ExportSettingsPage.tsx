@@ -77,7 +77,6 @@ export default function ExportSettingsPage() {
     <div className="">
       <PageHeader 
         title="Exportar Datos" 
-        description="Exporta los datos de la aplicación a archivos JSON para respaldo o migración"
       />
 
       <div className="grid gap-4 md:grid-cols-2">

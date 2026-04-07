@@ -134,7 +134,6 @@ export default function LectureDetailPage() {
     <div>
       <PageHeader
         title={lectureTitle}
-        description="Lee y disfruta del contenido"
         actions={
           <Button variant="outline" onClick={() => navigate("/lectures")} size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />

@@ -49,7 +49,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <PageHeader title="Dashboard" description="Panel de control gerencial" />
+        <PageHeader title="Dashboard" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
@@ -66,7 +66,7 @@ export default function DashboardPage() {
   if (!stats) {
     return (
       <div className="space-y-4">
-        <PageHeader title="Dashboard" description="Panel de control gerencial" />
+        <PageHeader title="Dashboard" />
         <Card>
           <CardContent className="p-6">
             <p className="text-center text-muted-foreground">
@@ -82,7 +82,6 @@ export default function DashboardPage() {
     <div className="">
       <PageHeader 
         title="Dashboard Gerencial"
-        description="Vista general de tu plataforma LanguagesAI"
       />
 
       {/* Main Stats Cards */}

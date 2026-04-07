@@ -172,7 +172,6 @@ export default function WordsPage() {
     <div className="">
       <PageHeader
         title="Palabras"
-        description="Gestiona tu vocabulario"
         filters={
           <div className="flex gap-2">
             <form onSubmit={handleSearch} className="flex gap-2 flex-1">

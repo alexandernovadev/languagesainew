@@ -87,7 +87,6 @@ export default function UsersPage() {
     <div className="">
       <PageHeader
         title="Usuarios"
-        description="Gestiona los usuarios del sistema"
         filters={
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="relative flex-1">

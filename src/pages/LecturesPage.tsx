@@ -99,7 +99,6 @@ export default function LecturesPage() {
     <div className="">
       <PageHeader
         title="Lecturas"
-        description="Gestiona tus lecturas y contenido educativo"
         filters={
           <div className="flex gap-2">
             <form onSubmit={handleSearch} className="flex gap-2 flex-1">

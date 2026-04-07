@@ -12,7 +12,6 @@ import {
 } from "@/shared/hooks/useExamAttemptDraft";
 import { shuffleArray } from "@/utils/common/shuffle";
 import type { IExam, IExamAttempt } from "@/types/models";
-import { cn } from "@/utils/common/classnames";
 import { Loader2, CheckCircle2, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 

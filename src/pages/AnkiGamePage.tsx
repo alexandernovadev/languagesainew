@@ -72,7 +72,6 @@ export default function AnkiGamePage() {
     <div className="">
       <PageHeader
         title="Juego Anki"
-        description="Practica con tarjetas Anki"
         actions={
           <div className="mt-2 flex flex-row gap-2">
             <AnkiFilter

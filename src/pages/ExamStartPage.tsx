@@ -82,7 +82,6 @@ export default function ExamStartPage() {
     <div className="">
       <PageHeader
         title={exam.title}
-        description="Revisa los detalles antes de comenzar"
       />
       <ExamDetailBar meta={meta} questionCount={exam.questions.length} />
 

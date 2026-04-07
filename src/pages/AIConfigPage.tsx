@@ -154,7 +154,6 @@ export default function AIConfigPage() {
     <div className="">
       <PageHeader
         title="Configuración de AI"
-        description="Personaliza qué modelos de AI usar para cada funcionalidad"
       />
       <PageLoader loading={loading}>
 

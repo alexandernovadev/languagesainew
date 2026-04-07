@@ -70,7 +70,6 @@ export default function ExamsPage() {
     <div className="">
       <PageHeader
         title="Exámenes"
-        description="Lista de exámenes de gramática disponibles"
       />
 
       <ExamsTable

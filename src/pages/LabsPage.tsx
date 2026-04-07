@@ -113,7 +113,7 @@ export default function LabsPage() {
 
   return (
     <div className="">
-      <PageHeader title="Labs" description="Funciones experimentales y herramientas de desarrollo" />
+      <PageHeader title="Labs" />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>

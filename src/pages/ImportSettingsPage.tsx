@@ -7,7 +7,6 @@ export default function ImportSettingsPage() {
     <div className="">
       <PageHeader 
         title="Importar Datos" 
-        description="Importa palabras, expresiones y lecturas desde archivos JSON"
       />
       
       <Tabs defaultValue="words" className="w-full">

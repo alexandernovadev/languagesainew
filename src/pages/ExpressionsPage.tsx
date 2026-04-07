@@ -136,7 +136,6 @@ export default function ExpressionsPage() {
     <div className="">
       <PageHeader
         title="Expresiones"
-        description="Gestiona tus expresiones idiomáticas"
         filters={
           <div className="flex gap-2">
             <form onSubmit={handleSearch} className="flex gap-2 flex-1">

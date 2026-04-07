@@ -28,7 +28,6 @@ export default function ExamGeneratorPage() {
     <div className="">
       <PageHeader
         title="Generador de Exámenes"
-        description="Genera exámenes de gramática con IA"
       />
 
       {/* Stepper visual - no navegable */}

@@ -78,7 +78,6 @@ export default function LectureGeneratorPage() {
     <div className="">
       <PageHeader
         title="Generador de Lecturas"
-        description="Genera lecturas personalizadas con IA"
       />
 
       {/* Sección 1: Generar Tema */}

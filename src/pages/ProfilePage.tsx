@@ -88,7 +88,6 @@ export default function ProfilePage() {
     <div className="">
       <PageHeader
         title="Perfil"
-        description="Aquí puedes actualizar tus datos y los idiomas de la app. Los cambios se aplican al pulsar Guardar."
         actions={
           <div className="flex flex-wrap items-center justify-end gap-2">
             {isDirty && (

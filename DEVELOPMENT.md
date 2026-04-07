@@ -178,7 +178,7 @@ export default function ThingsPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader title="Things" description="Manage things" />
+      <PageHeader title="Things" />
 
       {/* Table, filters, etc. */}
 
