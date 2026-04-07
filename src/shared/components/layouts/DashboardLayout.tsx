@@ -16,6 +16,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
+  SidebarTrigger,
   useSidebar,
 } from "@/shared/components/ui/sidebar";
 import {
@@ -117,7 +118,7 @@ function SidebarFooterNav() {
       const message =
         err && typeof err === "object" && "response" in err
           ? (err as { response?: { data?: { message?: string } } }).response?.data
-              ?.message
+            ?.message
           : undefined;
       toast.error(message || "No se pudo cambiar el idioma");
     } finally {
@@ -204,15 +205,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2 py-2">
-            <div className="relative flex h-8 w-8 items-center justify-center shrink-0">
-              <img 
-                src={isDevelopment ? "/logodev.png" : "/loogo.png"} 
-                alt="LanguagesAI Logo" 
+          <div className="flex justify-between" >
+            <div className="relative flex h-8 w-8 items-center justify-center  group-data-[collapsible=icon]:hidden">
+              <img
+                src={isDevelopment ? "/logodev.png" : "/loogo.png"}
+                alt="LanguagesAI Logo"
                 className="h-8 w-8 object-cover rounded"
               />
               {isAuthenticated && user?.language && languagesInfo[user.language] && (
-                <span 
+                <span
                   className="absolute -bottom-0.5 -right-0.5 text-sm leading-none bg-background rounded-full p-0.5 shadow-sm ring-1 ring-sidebar-border"
                   title={languagesInfo[user.language].name}
                 >
@@ -220,15 +221,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </span>
               )}
             </div>
-            <div className="flex min-w-0 flex-1 flex-col group-data-[collapsible=icon]:hidden">
-              <span className="truncate text-sm font-semibold">
-                {isAuthenticated && userDisplayName
-                  ? userDisplayName
-                  : "LanguagesAI"}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                v{packageJson.version}
-              </span>
+            <div className="">
+              <SidebarTrigger className="h-8 w-8 border-none" />
             </div>
           </div>
         </SidebarHeader>
@@ -293,8 +287,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <SidebarRail />
       </Sidebar>
-      <SidebarInset className="min-w-0 overflow-hidden">
-        <div className="flex flex-1 flex-col gap-4 p-4 pb-0 min-w-0 overflow-hidden">
+      <SidebarInset className="min-w-0">
+        <div className="flex flex-1 flex-col px-4 py-0 min-w-0">
           {children}
         </div>
       </SidebarInset>
