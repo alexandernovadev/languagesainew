@@ -206,7 +206,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
           <div className="flex justify-between" >
-            <div className="relative flex h-8 w-8 items-center justify-center  group-data-[collapsible=icon]:hidden">
+            <div className="relative flex h-8 w-8 items-center justify-center group-data-[collapsible=icon]:hidden">
               <img
                 src={isDevelopment ? "/logodev.png" : "/loogo.png"}
                 alt="LanguagesAI Logo"
@@ -220,7 +220,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   {languagesInfo[user.language].flag}
                 </span>
               )}
+            
             </div>
+            <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+              <span className="truncate text-sm font-semibold">
+                {isAuthenticated && userDisplayName
+                  ? userDisplayName
+                  : "LanguagesAI"}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                v{packageJson.version}
+              </span>
+              </div>
             <div className="">
               <SidebarTrigger className="h-8 w-8 border-none" />
             </div>
