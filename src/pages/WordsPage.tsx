@@ -169,7 +169,7 @@ export default function WordsPage() {
   ).length;
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader
         title="Palabras"
         description="Gestiona tu vocabulario"

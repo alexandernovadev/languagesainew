@@ -133,7 +133,7 @@ export default function ExpressionsPage() {
   ).length;
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader
         title="Expresiones"
         description="Gestiona tus expresiones idiomáticas"

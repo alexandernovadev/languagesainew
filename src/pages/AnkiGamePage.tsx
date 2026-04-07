@@ -69,7 +69,7 @@ export default function AnkiGamePage() {
   const currentCard = cards[currentIndex];
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 space-y-4">
+    <div className="">
       <PageHeader
         title="Juego Anki"
         description="Practica con tarjetas Anki"

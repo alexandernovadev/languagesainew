@@ -96,7 +96,7 @@ export default function LecturesPage() {
   }).length;
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader
         title="Lecturas"
         description="Gestiona tus lecturas y contenido educativo"

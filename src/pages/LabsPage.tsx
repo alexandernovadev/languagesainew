@@ -112,7 +112,7 @@ export default function LabsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader title="Labs" description="Funciones experimentales y herramientas de desarrollo" />
 
       <div className="grid gap-4 md:grid-cols-2">

@@ -151,7 +151,7 @@ export default function AIConfigPage() {
   const currentFeature = FEATURE_CONFIG[activeFeature];
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="">
       <PageHeader
         title="Configuración de AI"
         description="Personaliza qué modelos de AI usar para cada funcionalidad"

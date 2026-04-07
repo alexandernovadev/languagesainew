@@ -25,7 +25,7 @@ export default function ExamGeneratorPage() {
   } = useExamGenerator();
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
+    <div className="">
       <PageHeader
         title="Generador de Exámenes"
         description="Genera exámenes de gramática con IA"

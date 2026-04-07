@@ -79,7 +79,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 overflow-x-hidden max-w-full">
+    <div className="">
       <PageHeader 
         title="Dashboard Gerencial"
         description="Vista general de tu plataforma LanguagesAI"

@@ -84,7 +84,7 @@ export default function UsersPage() {
   }, [setSearchTerm, clearFilters]);
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader
         title="Usuarios"
         description="Gestiona los usuarios del sistema"

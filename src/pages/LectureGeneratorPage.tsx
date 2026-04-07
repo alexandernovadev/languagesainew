@@ -75,7 +75,7 @@ export default function LectureGeneratorPage() {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="">
       <PageHeader
         title="Generador de Lecturas"
         description="Genera lecturas personalizadas con IA"

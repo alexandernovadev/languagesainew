@@ -73,7 +73,7 @@ export default function SystemInfoPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader
         title="Información del Sistema"
         description="Estado y detalles del servidor"

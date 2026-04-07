@@ -85,7 +85,7 @@ export default function ProfilePage() {
     "transition-[box-shadow,border-color] focus-within:ring-2 focus-within:ring-primary/25 focus-within:border-primary/40";
 
   return (
-    <div className="space-y-5 pb-8">
+    <div className="">
       <PageHeader
         title="Perfil"
         description="Aquí puedes actualizar tus datos y los idiomas de la app. Los cambios se aplican al pulsar Guardar."

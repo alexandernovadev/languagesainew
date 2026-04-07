@@ -131,7 +131,7 @@ export default function LectureDetailPage() {
   const wordPanelOpen = !!(selectedWord || wordLookupLoading || wordLookup);
 
   return (
-    <div className={cn("space-y-4 relative", wordPanelOpen && "pb-28")}>
+    <div>
       <PageHeader
         title={lectureTitle}
         description="Lee y disfruta del contenido"

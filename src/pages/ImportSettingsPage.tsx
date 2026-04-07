@@ -4,7 +4,7 @@ import { ImportTab } from "@/shared/components/import/ImportTab";
 
 export default function ImportSettingsPage() {
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader 
         title="Importar Datos" 
         description="Importa palabras, expresiones y lecturas desde archivos JSON"

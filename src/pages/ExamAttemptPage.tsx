@@ -238,7 +238,7 @@ export default function ExamAttemptPage() {
       : typeof currentAnswer !== "string" || currentAnswer.trim() !== "");
 
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-120px)] p-4 sm:p-6">
+    <div className="">
       <PageHeader
         title={exam.title}
       />

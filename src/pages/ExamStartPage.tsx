@@ -79,7 +79,7 @@ export default function ExamStartPage() {
   };
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
+    <div className="">
       <PageHeader
         title={exam.title}
         description="Revisa los detalles antes de comenzar"

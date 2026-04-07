@@ -74,7 +74,7 @@ export default function ExportSettingsPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <PageHeader 
         title="Exportar Datos" 
         description="Exporta los datos de la aplicación a archivos JSON para respaldo o migración"
