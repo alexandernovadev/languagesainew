@@ -223,7 +223,7 @@ Focus on extreme simplicity and tiny file size. BUT NOT bits images. `.replace(/
                     variant="outline"
                     size="sm"
                     onClick={() => onEdit(word)}
-                    className="sm:flex-initial text-sm sm:text-sm z-10"
+                    className="sm:flex-initial text-sm sm:text-sm"
                   >
                     <Edit className="h-4 w-4 sm:mr-1" />
                     <span className="hidden sm:inline">Edit</span>
