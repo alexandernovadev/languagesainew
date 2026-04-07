@@ -32,7 +32,7 @@ export default function AnkiGamePage() {
         difficulty,
         type: filters.types.length > 0 ? filters.types : undefined,
       });
-      
+
       if (response.success && response.data) {
         setCards(response.data);
         setCurrentIndex(0);
@@ -74,11 +74,37 @@ export default function AnkiGamePage() {
         title="Juego Anki"
         description="Practica con tarjetas Anki"
         actions={
-          <AnkiFilter
-            values={filters}
-            onChange={setFilters}
-            disabled={loading}
-          />
+          <>
+            <AnkiFilter
+              values={filters}
+              onChange={setFilters}
+              disabled={loading}
+            />
+            {/* Navigation */}
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                variant="yellow"
+                size="icon"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+
+              <span className="text-sm text-muted-foreground text-center">
+                {currentIndex + 1} / {cards.length}
+              </span>
+
+              <Button
+                onClick={handleNext}
+                disabled={currentIndex === cards.length - 1}
+                variant="yellow"
+                size="icon"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </>
         }
       />
 
@@ -98,52 +124,24 @@ export default function AnkiGamePage() {
       {!loading && cards.length === 0 && (
         <div className="flex flex-1 min-h-0 items-center justify-center">
           <Card className="w-full max-w-2xl mx-auto">
-          <CardContent className="p-8 text-center">
-            <p className="text-muted-foreground">No hay tarjetas disponibles</p>
-            <Button onClick={loadCards} className="mt-4">
-              Recargar
-            </Button>
-          </CardContent>
+            <CardContent className="p-8 text-center">
+              <p className="text-muted-foreground">No hay tarjetas disponibles</p>
+              <Button onClick={loadCards} className="mt-4">
+                Recargar
+              </Button>
+            </CardContent>
           </Card>
         </div>
       )}
 
       {/* Cards Display */}
       {!loading && cards.length > 0 && currentCard && (
-        <div className="flex flex-col items-center justify-start gap-4 flex-1 min-h-0 overflow-auto">
-          {/* Card Container - ocupa el espacio disponible, tarjeta arriba */}
-          <div className="w-full max-w-4xl flex-1 min-h-0 flex flex-col self-stretch">
-            <AnkiCard
-              word={currentCard}
-              isFlipped={isFlipped}
-              onFlip={() => setIsFlipped(!isFlipped)}
-            />
-          </div>
-
-          {/* Navigation */}
-          <div className="flex items-center gap-4 py-4">
-            <Button
-              onClick={handlePrevious}
-              disabled={currentIndex === 0}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            
-            <span className="text-sm text-muted-foreground min-w-[100px] text-center">
-              {currentIndex + 1} / {cards.length}
-            </span>
-            
-            <Button
-              onClick={handleNext}
-              disabled={currentIndex === cards.length - 1}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="bg-red-400 flex flex-col items-center justify-start flex-1  overflow-auto">
+          <AnkiCard
+            word={currentCard}
+            isFlipped={isFlipped}
+            onFlip={() => setIsFlipped(!isFlipped)}
+          />
         </div>
       )}
     </div>
