@@ -1,5 +1,5 @@
 html {
-  @apply dark;
+  @apply dark bg-background;
 }
 
 body {
