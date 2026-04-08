@@ -57,6 +57,16 @@ export default function LabsPage() {
         toast.error(response.message || "Failed to delete lectures");
       }
     },
+    exams: async () => {
+      const response = await labsService.deleteAllExams();
+      if (response.success) {
+        const { deletedCount, deletedAttempts, timestamp } = response.data;
+        toast.success(`✅ ${deletedCount} exámenes eliminados exitosamente`);
+        toast.info(`${deletedAttempts} intentos eliminados · ${new Date(timestamp).toLocaleString()}`, { duration: 5000 });
+      } else {
+        toast.error(response.message || "Failed to delete exams");
+      }
+    },
   });
 
   const handleCreateAdmin = async () => {
@@ -211,6 +221,12 @@ export default function LabsPage() {
             description="Elimina TODAS las lecturas de la base de datos. No se puede deshacer."
             loading={operationLoading && pendingOperation === 'lectures'}
             onDelete={() => trigger('lectures')}
+          />
+          <DangerZoneItem
+            title="Delete All Exams"
+            description="Elimina TODOS los exámenes y sus intentos de la base de datos. No se puede deshacer."
+            loading={operationLoading && pendingOperation === 'exams'}
+            onDelete={() => trigger('exams')}
           />
         </CardContent>
       </Card>

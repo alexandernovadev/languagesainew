@@ -35,6 +35,11 @@ class LabsService {
     return response.data;
   }
 
+  async deleteAllExams(): Promise<LabsResponse> {
+    const response = await api.delete("/api/labs/data/exams/delete-all");
+    return response.data;
+  }
+
   // Migrations
   async migrateSinonymsToSynonyms(): Promise<LabsResponse> {
     const response = await api.post("/api/labs/migrations/sinonyms-to-synonyms");

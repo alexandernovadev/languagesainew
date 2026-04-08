@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-type OperationKey = 'words' | 'expressions' | 'lectures';
+type OperationKey = 'words' | 'expressions' | 'lectures' | 'exams';
 
 interface DangerousOperationState {
   pendingOperation: OperationKey | null;
@@ -21,6 +21,7 @@ const LABELS: Record<OperationKey, string> = {
   words: 'palabras',
   expressions: 'expresiones',
   lectures: 'lecturas',
+  exams: 'exámenes',
 };
 
 export function useDangerousOperation(
