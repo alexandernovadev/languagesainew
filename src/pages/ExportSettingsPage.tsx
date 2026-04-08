@@ -4,9 +4,9 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { exportService } from "@/services/exportService";
 import { toast } from "sonner";
-import { Download, Loader2, BookOpen, MessageSquare, Users, FileText } from "lucide-react";
+import { Download, Loader2, BookOpen, MessageSquare, Users, FileText, GraduationCap } from "lucide-react";
 
-type ExportType = "words" | "expressions" | "lectures" | "users" | null;
+type ExportType = "words" | "expressions" | "lectures" | "users" | "exams" | null;
 
 export default function ExportSettingsPage() {
   const [loading, setLoading] = useState<ExportType>(null);
@@ -33,6 +33,10 @@ export default function ExportSettingsPage() {
         case "users":
           result = await exportService.exportUsers();
           toast.success(`Usuarios exportados exitosamente: ${result.filename}`);
+          break;
+        case "exams":
+          result = await exportService.exportExams();
+          toast.success(`Exámenes exportados exitosamente: ${result.filename}`);
           break;
       }
     } catch (error: any) {
@@ -70,6 +74,13 @@ export default function ExportSettingsPage() {
       description: "Exporta todos los usuarios del sistema a un archivo JSON",
       icon: Users,
       color: "text-orange-600",
+    },
+    {
+      type: "exams" as ExportType,
+      title: "Exportar Exámenes",
+      description: "Exporta todos los exámenes y sus preguntas a un archivo JSON",
+      icon: GraduationCap,
+      color: "text-red-600",
     },
   ];
 

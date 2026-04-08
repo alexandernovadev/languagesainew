@@ -102,6 +102,33 @@ export const exportService = {
   },
 
   /**
+   * Export exams to JSON file
+   */
+  async exportExams() {
+    try {
+      const response = await api.get("/api/exams/export-file", {
+        responseType: "blob",
+      });
+
+      const contentDisposition = response.headers["content-disposition"];
+      let filename = "exams-export.json";
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      downloadFile(response.data, filename);
+      return { success: true, filename };
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || "Error al exportar exámenes"
+      );
+    }
+  },
+
+  /**
    * Export users to JSON file
    */
   async exportUsers() {

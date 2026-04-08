@@ -10,30 +10,38 @@ export default function ImportSettingsPage() {
       />
       
       <Tabs defaultValue="words" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="words">Words</TabsTrigger>
           <TabsTrigger value="expressions">Expressions</TabsTrigger>
           <TabsTrigger value="lectures">Lectures</TabsTrigger>
+          <TabsTrigger value="exams">Exams</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="words" className="mt-4">
-          <ImportTab 
+          <ImportTab
             type="words"
             title="Importar Palabras"
           />
         </TabsContent>
-        
+
         <TabsContent value="expressions" className="mt-4">
-          <ImportTab 
+          <ImportTab
             type="expressions"
             title="Importar Expresiones"
           />
         </TabsContent>
-        
+
         <TabsContent value="lectures" className="mt-4">
-          <ImportTab 
+          <ImportTab
             type="lectures"
             title="Importar Lecturas"
+          />
+        </TabsContent>
+
+        <TabsContent value="exams" className="mt-4">
+          <ImportTab
+            type="exams"
+            title="Importar Exámenes"
           />
         </TabsContent>
       </Tabs>
