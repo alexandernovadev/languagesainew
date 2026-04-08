@@ -1,10 +1,106 @@
 {
   "success": true,
-  "message": "Backup generated 30 expressions successfully",
+  "message": "Exported 34 expressions successfully",
   "data": {
-    "totalExpressions": 30,
-    "exportDate": "2025-10-09T04:30:00.978Z",
+    "totalExpressions": 34,
+    "exportDate": "2026-04-08T00:29:43.189Z",
     "expressions": [
+      {
+        "_id": "69b5ee3126d6a44cff758aec",
+        "expression": "Dar um jeitinho",
+        "language": "pt",
+        "definition": "Resolver um problema ou situação de maneira criativa e improvisada, muitas vezes contornando regras ou dificuldades.",
+        "examples": [
+          "Quando o carro quebrou, ele conseguiu dar um jeitinho e chegou a tempo na reunião.",
+          "Ela sempre dá um jeitinho para conseguir o que quer, mesmo quando parece impossível.",
+          "Precisamos dar um jeitinho para terminar o projeto antes do prazo.",
+          "Ele deu um jeitinho e conseguiu entrar na festa sem convite.",
+          "Mesmo sem os ingredientes certos, ela deu um jeitinho e fez um jantar delicioso."
+        ],
+        "type": ["idiom", "informal"],
+        "context": "Usado em situações onde é necessário encontrar soluções criativas ou alternativas para problemas, geralmente de forma não convencional. É uma expressão comum no Brasil e pode ter uma conotação tanto positiva quanto negativa, dependendo do contexto.",
+        "difficulty": "medium",
+        "spanish": {
+          "definition": "Resolver un problema o situación de manera creativa e improvisada, a menudo eludiendo reglas o dificultades.",
+          "expression": "Buscarse la vida"
+        },
+        "chat": [],
+        "createdAt": "2026-03-14T23:24:33.066Z",
+        "updatedAt": "2026-03-14T23:24:33.066Z",
+        "__v": 0
+      },
+      {
+        "_id": "69b5ee1e26d6a44cff758ae6",
+        "expression": "Ficar de boa",
+        "language": "pt",
+        "definition": "Estar ou permanecer tranquilo, relaxado, sem preocupações ou estresse.",
+        "examples": [
+          "Depois do trabalho, eu gosto de ficar de boa assistindo TV.",
+          "Ele decidiu ficar de boa e não se envolver na discussão.",
+          "No fim de semana, vamos para a praia e ficamos de boa o dia todo.",
+          "Ela prefere ficar de boa em casa do que sair para festas.",
+          "Após resolver todos os problemas, finalmente pude ficar de boa."
+        ],
+        "type": ["informal", "phrase"],
+        "context": "Usada em situações informais para indicar que alguém está relaxado ou não está se preocupando com algo. É comum em conversas entre amigos ou em ambientes descontraídos.",
+        "difficulty": "easy",
+        "spanish": {
+          "definition": "Estar o permanecer tranquilo, relajado, sin preocupaciones o estrés.",
+          "expression": "Estar tranquilo"
+        },
+        "chat": [],
+        "createdAt": "2026-03-14T23:24:14.556Z",
+        "updatedAt": "2026-03-14T23:24:14.556Z",
+        "__v": 0
+      },
+      {
+        "_id": "69b5ee0226d6a44cff758ae0",
+        "expression": "Quebrar um galho",
+        "language": "pt",
+        "definition": "Ajudar alguém de maneira improvisada ou temporária, resolver um problema de forma rápida e prática.",
+        "examples": [
+          "Eu estava sem dinheiro para o almoço, mas meu amigo quebrou um galho e me emprestou um pouco.",
+          "Quando meu computador quebrou, meu irmão quebrou um galho e me emprestou o dele.",
+          "Precisei de uma carona para o trabalho e minha vizinha quebrou um galho me levando.",
+          "O professor quebrou um galho e adiou a entrega do trabalho para a próxima semana.",
+          "Ela sempre quebra um galho quando alguém precisa de ajuda com as tarefas domésticas."
+        ],
+        "type": ["idiom", "informal"],
+        "context": "Usada em situações informais para indicar que alguém está ajudando de maneira prática e rápida, geralmente de forma temporária ou improvisada.",
+        "difficulty": "medium",
+        "spanish": {
+          "definition": "Ayudar a alguien de manera improvisada o temporal, resolver un problema de forma rápida y práctica.",
+          "expression": "Echar una mano"
+        },
+        "chat": [],
+        "createdAt": "2026-03-14T23:23:46.807Z",
+        "updatedAt": "2026-03-14T23:23:46.807Z",
+        "__v": 0
+      },
+      {
+        "_id": "69801bdc9bc16c6bac0c746e",
+        "expression": "get caught up",
+        "language": "en",
+        "definition": "To become involved in something, often unintentionally, or to become so involved in an activity that you do not notice other things.",
+        "examples": [
+          "She got caught up in the excitement of the concert and forgot to call her parents.",
+          "He got caught up in a conversation and missed his train.",
+          "Don't get caught up in the details; focus on the big picture.",
+          "They got caught up in the moment and decided to extend their vacation.",
+          "I got caught up in work and didn't realize how late it was."
+        ],
+        "type": ["phrase", "informal"],
+        "context": "This expression is often used to describe situations where someone becomes deeply involved in an activity or situation, sometimes to the point of distraction or neglecting other responsibilities. It is commonly used in informal settings.",
+        "difficulty": "medium",
+        "spanish": {
+          "definition": "Involucrarse en algo, a menudo sin querer, o estar tan involucrado en una actividad que no se notan otras cosas.",
+          "expression": "quedar atrapado en"
+        },
+        "chat": [],
+        "createdAt": "2026-02-02T03:37:00.074Z",
+        "updatedAt": "2026-02-02T03:37:00.074Z",
+        "__v": 0
+      },
       {
         "_id": "68b277b5e72cf78b8957cce2",
         "expression": "beats around the bush",
@@ -17,10 +113,7 @@
           "I wish you wouldn't beat around the bush and just say what's on your mind.",
           "She tends to beat around the bush when she's nervous about giving bad news."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used when someone is avoiding the main topic or not speaking directly about an issue. It is often used in informal contexts to encourage someone to be more direct.",
         "difficulty": "medium",
         "spanish": {
@@ -44,10 +137,7 @@
           "He learned not to sweat the small stuff after realizing it wasn't worth the anxiety.",
           "Try not to sweat the small stuff when planning the event; everything will work out fine."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used to advise someone not to worry about trivial matters and to focus on more important issues. It is often used in informal settings.",
         "difficulty": "medium",
         "spanish": {
@@ -71,10 +161,7 @@
           "The team agreed to call it a day after the successful meeting.",
           "Once the sun set, the farmers called it a day and headed back to their homes."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is commonly used in informal settings, often in workplaces or situations where a task or activity is being concluded for the day.",
         "difficulty": "easy",
         "spanish": {
@@ -98,10 +185,7 @@
           "The coach calls the shots on the field, and the players follow his strategy.",
           "In our household, my mom calls the shots when it comes to family vacations."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal contexts to indicate who has the authority or control in a particular situation. It is often used in workplaces, teams, or any group setting where decisions need to be made.",
         "difficulty": "medium",
         "spanish": {
@@ -125,10 +209,7 @@
           "She was on her way out when she remembered she forgot her keys.",
           "I'm on my way out to meet some friends for dinner."
         ],
-        "type": [
-          "phrase",
-          "informal"
-        ],
+        "type": ["phrase", "informal"],
         "context": "This expression is commonly used in informal settings to indicate that someone is leaving or about to leave a location. It can be used in both personal and professional contexts.",
         "difficulty": "easy",
         "spanish": {
@@ -152,10 +233,7 @@
           "The coach told the team to quit their whining and focus on improving their skills.",
           "After listening to his friend complain about the weather for an hour, he finally said, 'Quit your whining, it's just a bit of rain.'"
         ],
-        "type": [
-          "informal",
-          "phrase"
-        ],
+        "type": ["informal", "phrase"],
         "context": "This expression is used in informal contexts to tell someone to stop complaining or expressing dissatisfaction, especially when it is perceived as excessive or annoying.",
         "difficulty": "medium",
         "spanish": {
@@ -179,10 +257,7 @@
           "Do you mind if I tag along to the concert? I love that band!",
           "The kids always tag along with their parents when they go to the park."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal contexts to describe joining someone or a group, often spontaneously or without prior invitation. It is commonly used in social situations.",
         "difficulty": "medium",
         "spanish": {
@@ -206,10 +281,7 @@
           "We were talking about our old teacher, and speak of the devil, she walked into the café.",
           "Speak of the devil, we were just mentioning your name!"
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is often used in informal conversations when someone appears just after being mentioned. It is typically used in a light-hearted or humorous context.",
         "difficulty": "medium",
         "spanish": {
@@ -233,10 +305,7 @@
           "He threatened to tell on me if I didn't share my lunch with him.",
           "The teacher asked the students not to tell on each other for minor mistakes."
         ],
-        "type": [
-          "phrase",
-          "informal"
-        ],
+        "type": ["phrase", "informal"],
         "context": "This expression is often used in informal contexts, especially among children or in situations where someone might report another's misbehavior to an authority figure.",
         "difficulty": "easy",
         "spanish": {
@@ -260,8 +329,8 @@
           }
         ],
         "createdAt": "2025-08-21T05:46:59.375Z",
-        "updatedAt": "2025-08-21T05:47:54.701Z",
-        "__v": 2
+        "updatedAt": "2025-08-21T05:46:59.375Z",
+        "__v": 0
       },
       {
         "_id": "68a539c6bcce82147578f76d",
@@ -275,9 +344,7 @@
           "Despite being over a century old, the painting's timeless appeal draws visitors from all over the globe.",
           "The architecture of the ancient city has a timeless appeal that fascinates historians and tourists alike."
         ],
-        "type": [
-          "phrase"
-        ],
+        "type": ["phrase"],
         "context": "This expression is often used to describe things like fashion, art, literature, or music that remain popular and admired over long periods. It suggests that the item or concept is not subject to the whims of trends or time.",
         "difficulty": "medium",
         "spanish": {
@@ -301,8 +368,8 @@
           }
         ],
         "createdAt": "2025-08-20T02:58:14.703Z",
-        "updatedAt": "2025-08-20T02:58:38.361Z",
-        "__v": 2
+        "updatedAt": "2025-08-20T02:58:14.703Z",
+        "__v": 0
       },
       {
         "_id": "68a49e0c4ca5253e2cb05bbb",
@@ -316,10 +383,7 @@
           "Living next door to a bakery means I wake up to the smell of fresh bread every morning.",
           "The noise from the construction site next door is quite bothersome."
         ],
-        "type": [
-          "phrase",
-          "collocation"
-        ],
+        "type": ["phrase", "collocation"],
         "context": "This expression is used to describe the physical proximity of one's residence to another's. It is commonly used in everyday conversation to talk about neighbors or nearby locations.",
         "difficulty": "easy",
         "spanish": {
@@ -343,10 +407,7 @@
           "The team got ahead of themselves by celebrating the victory before the game was over.",
           "You shouldn't get ahead of yourself by assuming you'll get the job before the interview."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used to caution someone against making premature decisions or assumptions. It often implies that someone is overly eager or optimistic about future events without considering the present situation.",
         "difficulty": "medium",
         "spanish": {
@@ -370,9 +431,7 @@
           "The project is successful, but there's room for growth in terms of efficiency.",
           "His performance was good, but there's room for growth in his public speaking skills."
         ],
-        "type": [
-          "phrase"
-        ],
+        "type": ["phrase"],
         "context": "This expression is used to indicate that while something is satisfactory, it can still be improved or expanded. It is often used in professional, educational, or personal development contexts.",
         "difficulty": "medium",
         "spanish": {
@@ -396,8 +455,8 @@
           }
         ],
         "createdAt": "2025-08-19T04:38:06.604Z",
-        "updatedAt": "2025-08-19T04:38:22.647Z",
-        "__v": 2
+        "updatedAt": "2025-08-19T04:38:06.604Z",
+        "__v": 0
       },
       {
         "_id": "68a3de2ecc498ca7f2e9deef",
@@ -411,10 +470,7 @@
           "He has been warned time and again about the dangers of smoking.",
           "Time and again, history has shown us the importance of learning from past mistakes."
         ],
-        "type": [
-          "idiom",
-          "phrase"
-        ],
+        "type": ["idiom", "phrase"],
         "context": "This expression is used to emphasize the frequency or regularity of an action or event. It is often used in both formal and informal contexts to highlight persistence or repetition.",
         "difficulty": "medium",
         "spanish": {
@@ -438,8 +494,8 @@
           }
         ],
         "createdAt": "2025-08-19T02:15:10.615Z",
-        "updatedAt": "2025-08-19T02:20:44.883Z",
-        "__v": 2
+        "updatedAt": "2025-08-19T02:15:10.615Z",
+        "__v": 0
       },
       {
         "_id": "68a3b264cc498ca7f2e9de66",
@@ -453,9 +509,7 @@
           "This week went badly for me as I failed my driving test and had an argument with my friend.",
           "With all the deadlines and stress, this week went badly for me."
         ],
-        "type": [
-          "phrase"
-        ],
+        "type": ["phrase"],
         "context": "This expression is typically used in informal conversations to express dissatisfaction or disappointment about how the events of the week unfolded.",
         "difficulty": "easy",
         "spanish": {
@@ -479,11 +533,9 @@
           "If the evidence doesn't add up, the jury might not convict the defendant.",
           "The expenses listed in the budget don't add up to the total amount claimed."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is commonly used in informal contexts to express doubt or skepticism about the truth or logic of a statement or situation.",
+        "img": "https://res.cloudinary.com/dv8wurqdp/image/upload/v1755545744/languagesai/expressions/icpwuhjyrwto6zunmvi1.png",
         "difficulty": "medium",
         "spanish": {
           "definition": "Usado para indicar que algo no es lógico o no tiene sentido.",
@@ -491,9 +543,8 @@
         },
         "chat": [],
         "createdAt": "2025-08-18T15:44:33.158Z",
-        "updatedAt": "2025-08-18T19:36:09.726Z",
-        "__v": 0,
-        "img": "https://res.cloudinary.com/dv8wurqdp/image/upload/v1755545744/languagesai/expressions/icpwuhjyrwto6zunmvi1.png"
+        "updatedAt": "2025-08-18T15:44:33.158Z",
+        "__v": 0
       },
       {
         "_id": "68a34a26f2625639056c8565",
@@ -507,11 +558,9 @@
           "He was disappointed with the service at the budget hotel, but you get what you pay for.",
           "I tried the discount brand of shoes, but they wore out quickly. You get what you pay for."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is often used in informal contexts to explain or justify why something inexpensive may not meet expectations in terms of quality or performance. It is commonly used in consumer situations.",
+        "img": "https://res.cloudinary.com/dv8wurqdp/image/upload/v1755547998/languagesai/expressions/mvjqduruckjyfiwqsf6z.png",
         "difficulty": "medium",
         "spanish": {
           "definition": "Esta expresión significa que la calidad de algo generalmente se refleja en su precio; si pagas poco, debes esperar menor calidad.",
@@ -519,9 +568,8 @@
         },
         "chat": [],
         "createdAt": "2025-08-18T15:43:34.691Z",
-        "updatedAt": "2025-08-18T20:13:28.437Z",
-        "__v": 0,
-        "img": "https://res.cloudinary.com/dv8wurqdp/image/upload/v1755547998/languagesai/expressions/mvjqduruckjyfiwqsf6z.png"
+        "updatedAt": "2025-08-18T15:43:34.691Z",
+        "__v": 0
       },
       {
         "_id": "68a2a809f2625639056c849b",
@@ -535,9 +583,7 @@
           "Her calm demeanor hides more than what meets the eye.",
           "The book is deeper than what meets the eye at first glance."
         ],
-        "type": [
-          "idiom"
-        ],
+        "type": ["idiom"],
         "context": "This expression is used to suggest that there is more to a situation, person, or thing than is immediately apparent. It is often used to encourage looking beyond the surface.",
         "difficulty": "medium",
         "spanish": {
@@ -561,10 +607,7 @@
           "Some parents use books to help explain the birds and the bees to their children.",
           "It's important to discuss the birds and the bees with kids in an age-appropriate way."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is typically used in informal settings when referring to the conversation about sex education, especially with children. It is often used to avoid directly mentioning sex.",
         "difficulty": "medium",
         "spanish": {
@@ -588,10 +631,7 @@
           "Stop bugging me about going to the gym; I'll go when I'm ready.",
           "His habit of interrupting others during meetings bugs everyone in the office."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal contexts to describe a situation where someone is being persistently annoying or irritating. It is commonly used in everyday conversation.",
         "difficulty": "easy",
         "spanish": {
@@ -615,10 +655,7 @@
           "He believes his new car is the bee’s knees and loves showing it off.",
           "The concert last night was the bee’s knees; I had such a great time!"
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is often used in informal settings to compliment or praise something or someone. It conveys a sense of admiration and approval.",
         "difficulty": "medium",
         "spanish": {
@@ -642,10 +679,7 @@
           "I overheard them talking about my project, but I decided it was none of my beeswax to interfere.",
           "She wanted to know why I was late, but I said it was none of her beeswax."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal settings to tell someone that they should not be concerned with or involved in a particular matter. It is often used in a light-hearted or humorous way.",
         "difficulty": "medium",
         "spanish": {
@@ -669,8 +703,8 @@
           }
         ],
         "createdAt": "2025-08-18T02:06:30.743Z",
-        "updatedAt": "2025-08-18T02:07:07.998Z",
-        "__v": 2
+        "updatedAt": "2025-08-18T02:06:30.743Z",
+        "__v": 0
       },
       {
         "_id": "68a28a50f2625639056c8373",
@@ -684,10 +718,7 @@
           "He said he met a celebrity at the grocery store, but I suspect he's pulling my leg.",
           "Are you pulling my leg, or did you really get a pet tiger?"
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal settings when someone is joking or teasing another person by making them believe something that is not true. It is often used in a light-hearted manner.",
         "difficulty": "medium",
         "spanish": {
@@ -711,9 +742,7 @@
           "Imagine being a fly on the wall in the courtroom during that famous trial.",
           "She felt like a fly on the wall at the party, listening to all the interesting conversations."
         ],
-        "type": [
-          "idiom"
-        ],
+        "type": ["idiom"],
         "context": "This expression is used when someone wants to observe a situation without being noticed, often to gain insight or information that is not publicly available.",
         "difficulty": "medium",
         "spanish": {
@@ -737,10 +766,7 @@
           "He wrapped himself in the thick quilt and felt as snug as a bug.",
           "The children were as snug as a bug in their sleeping bags during the camping trip."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used to describe someone who is very comfortable and warm, often in a cozy or small space. It is informal and often used in friendly or familial settings.",
         "difficulty": "medium",
         "spanish": {
@@ -764,9 +790,7 @@
           "The new product launch went off with flying colors, exceeding all sales expectations.",
           "Despite the challenges, she defended her thesis with flying colors and received her degree."
         ],
-        "type": [
-          "idiom"
-        ],
+        "type": ["idiom"],
         "context": "This expression is used to describe a situation where someone has succeeded or performed exceptionally well, often in an exam, test, or challenge.",
         "difficulty": "medium",
         "spanish": {
@@ -790,10 +814,7 @@
           "Even though they disagreed on many things, they always found a way to kiss and wake up.",
           "The siblings had a heated argument, but they kissed and woke up by the next family dinner."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal contexts to describe the act of making up after a disagreement, especially in personal relationships. It suggests a positive resolution and a return to normalcy.",
         "difficulty": "medium",
         "spanish": {
@@ -817,10 +838,7 @@
           "Even though they had a rough past, they chose to let bygones be bygones and work together.",
           "She apologized for her mistakes, and he was willing to let bygones be bygones."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used when people want to forgive and forget past conflicts or issues, often to improve relationships or move forward positively.",
         "difficulty": "medium",
         "spanish": {
@@ -844,10 +862,7 @@
           "Whenever she's nervous, it's as if the cat's got her tongue.",
           "He usually has a lot to say, but today it seems the cat got his tongue."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is used in informal settings when someone is unusually quiet or seems unable to speak. It is often used humorously or teasingly.",
         "difficulty": "medium",
         "spanish": {
@@ -871,10 +886,7 @@
           "Can we cut to the chase? I need to know if you're interested in the job offer.",
           "Instead of beating around the bush, she cut to the chase and told him the truth."
         ],
-        "type": [
-          "idiom",
-          "informal"
-        ],
+        "type": ["idiom", "informal"],
         "context": "This expression is often used in informal settings when someone wants to focus on the most important part of a conversation or presentation without unnecessary details.",
         "difficulty": "medium",
         "spanish": {
