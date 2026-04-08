@@ -48,7 +48,7 @@ export function WordsTable({
       ? word.type.join(', ') 
       : 'unknown';
     
-    const prompt = `Make an animated image related to '${word.word}',
+    const prompt = `Make an full animated image related to '${word.word}',
     without text,letters,numbers,labels,watermarks,logos,etc. 
     whose definition is '${word.spanish?.definition || word.definition}', and whose 
     word type is '${types}'. JUST If the word is homonyms or multiple meanings, 
